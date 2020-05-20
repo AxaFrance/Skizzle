@@ -1,0 +1,22 @@
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="448" height="448" version="1.1" inkscape:version="0.91 r13725" sodipodi:docname="status-success.svg"><rect id="backgroundrect" width="100%" height="100%" x="0" y="0" fill="none" stroke="none"/>
+  <title id="title3339">status-success</title>
+  <defs id="defs4">
+    <pattern y="0" x="0" height="6" width="6" patternUnits="userSpaceOnUse" id="EMFhbasepattern"/>
+  </defs>
+  <sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="1.4" inkscape:cx="297.02476" inkscape:cy="237.74672" inkscape:document-units="px" inkscape:current-layer="layer1" showgrid="true" fit-margin-top="448" fit-margin-right="384" fit-margin-left="0" fit-margin-bottom="0" units="px" inkscape:window-width="1592" inkscape:window-height="1057" inkscape:window-x="132" inkscape:window-y="451" inkscape:window-maximized="0" inkscape:snap-bbox="true" inkscape:bbox-nodes="true" inkscape:object-nodes="true" inkscape:snap-nodes="false">
+    <inkscape:grid type="xygrid" id="grid3347" spacingx="16" spacingy="16" empspacing="2" originx="0" originy="-1.7498462e-005"/>
+  </sodipodi:namedview>
+  <metadata id="metadata7">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <dc:title>status-success</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  
+<g class="currentLayer" style=""><title>Layer 1</title><g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" class="" fill="#009900" fill-opacity="1">
+    <g style="font-style: normal; font-variant: normal; font-weight: 400; font-size: 13.8125px; line-height: 125%; font-family: Calibri; text-align: start; letter-spacing: 0px; word-spacing: 0px; text-anchor: start; stroke: none;" id="text3351" fill="#009900" fill-opacity="1"/>
+    <path style="stroke: none; stroke-opacity: 1;" d="M224,0 A224,224 0 0 0 0,224 A224,224 0 0 0 224,448 A224,224 0 0 0 448,224 A224,224 0 0 0 224,0 zM340,80 L384,123.42773 L175,384 L32,232 L76,188.57227 L175,286.28516 L340,80 z" id="path3337" fill="#009900" fill-opacity="1"/>
+  </g></g></svg>

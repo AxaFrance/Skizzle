@@ -1,0 +1,114 @@
+{
+  "name": "Skizzle",
+  "version": "3.4.0-beta",
+  "appId": "skizzle",
+  "description": "Visualisation des pull requests",
+  "main": "public/electron.js",
+  "homepage": "./",
+  "scripts": {
+    "precommit": "lint-staged pretty-quick --staged",
+    "build": "rollup -c --extend",
+    "autobuild": "rollup -c -w --extend",
+    "start": "npm-run-all -p dev electron",
+    "electron": "electron .",
+    "dev": "run-p start:dev autobuild",
+    "test": "jest --watch=true",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --no-cache",
+    "lint": "./node_modules/.bin/eslint --fix ./src",
+    "start:prod": "sirv --port 4567 public",
+    "start:dev": "sirv --port 4567 public --dev",
+    "electron:windows": "rm -rf release && npm run build && npx electron-builder build --windows",
+    "electron:mac": "rm -rf release && npm run build && npx electron-builder build --mac"
+  },
+  "keywords": [
+    "electron",
+    "svelte"
+  ],
+  "author": {
+    "name": "Mathieu De Baerdemaeker",
+    "email": "mathieu.debaerdemaeker@gmail.com",
+    "url": "https://github.com/Debaerdm"
+  },
+  "contributors": {
+    "name": "Jerome Boukorras",
+    "email": "jerome.boukorras@gmail.com",
+    "url": "https://github.com/itupix"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "7.8.7",
+    "@babel/plugin-transform-runtime": "7.8.3",
+    "@babel/preset-env": "7.8.7",
+    "@babel/runtime": "7.8.7",
+    "babel-core": "6.26.3",
+    "babel-jest": "25.1.0",
+    "babel-polyfill": "6.26.0",
+    "electron": "8.0.1",
+    "electron-builder": "22.4.0",
+    "eslint": "6.8.0",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-plugin-import": "2.20.1",
+    "eslint-plugin-jest": "23.8.2",
+    "eslint-plugin-svelte3": "2.7.3",
+    "husky": "4.2.3",
+    "jest": "25.1.0",
+    "jest-localstorage-mock": "2.4.0",
+    "jest-transform-svelte": "2.1.1",
+    "lint-staged": "10.0.8",
+    "npm-run-all": "4.1.5",
+    "prettier": "1.19.1",
+    "pretty-quick": "2.0.1",
+    "node-sass": "4.13.1",
+    "rollup": "2.0.2",
+    "@rollup/plugin-commonjs": "11.0.2",
+    "rollup-plugin-livereload": "1.0.4",
+    "@rollup/plugin-node-resolve": "7.1.1",
+    "@testing-library/jest-dom": "5.1.1",
+    "@testing-library/svelte": "1.11.0",
+    "rollup-plugin-svelte": "5.1.1",
+    "rollup-plugin-terser": "5.2.0",
+    "svelte": "3.19.2",
+    "svelte-jester": "1.0.5",
+    "svelte-preprocess": "3.4.0"
+  },
+  "dependencies": {
+    "electron-reload": "1.5.0",
+    "sirv-cli": "0.4.5"
+  },
+  "build": {
+    "appId": "skizzle",
+    "compression": "normal",
+    "productName": "Skizzle",
+    "copyright": "Copyright © 2020 Axa France IARD / Axa France VIE",
+    "win": {
+      "target": "nsis"
+    },
+    "files": [
+      "public/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "type": "distribution",
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.news"
+    },
+    "directories": {
+      "buildResources": "buildResources/",
+      "output": "release/"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
+}

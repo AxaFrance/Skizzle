@@ -1,0 +1,16 @@
+.skz-comments-counter {
+  font-size: 0.8rem;
+  color: #aaa;
+  animation: fadeIn 0.2s;
+
+  &:after {
+    content: '\EA4C';
+    margin-left: 0.25rem;
+    font-family: 'Icons';
+    vertical-align: bottom;
+  }
+
+  &--all-resolved {
+    color: #9fd9b4;
+  }
+}

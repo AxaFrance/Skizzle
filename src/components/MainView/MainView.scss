@@ -1,0 +1,80 @@
+.skz-pullrequests-list {
+  margin-bottom: 0;
+  list-style: none;
+
+  li:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  &__empty {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%);
+  }
+}
+
+.skz-fetching-status {
+  font-size: 0.6rem;
+  color: #000;
+  font-weight: normal;
+}
+
+.skz-pullrequests__search-container {
+  margin-bottom: 1rem;
+}
+
+.skz-pullrequests {
+  margin: -1rem;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 250px);
+  font-family: 'Source Sans Pro', sans-serif;
+
+  &__list-container {
+    position: relative;
+    padding-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__list {
+    list-style: none;
+    display: flex;
+    flex-flow: wrap;
+    width: 85%;
+
+    > :global(:nth-child(n + 6)) {
+      display: none;
+    }
+
+    &--show > :global(:nth-child(n)) {
+      display: block;
+    }
+
+    &-more {
+      background-color: transparent;
+      color: #fff;
+      font-size: x-small;
+      margin-bottom: 0.5rem;
+      width: 15%;
+      height: 2rem;
+
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .skz-fetching-status {
+    color: #aaa;
+  }
+
+  .skz-pullrequests-list__empty {
+    color: #ccc;
+  }
+}

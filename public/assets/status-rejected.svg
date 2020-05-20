@@ -1,0 +1,21 @@
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="448" height="448" version="1.1" inkscape:version="0.91 r13725" sodipodi:docname="status-failure.svg" style=""><rect id="backgroundrect" width="100%" height="100%" x="0" y="0" fill="none" stroke="none"/>
+  <title id="title3336">status-failure</title>
+  <defs id="defs4">
+    <pattern y="0" x="0" height="6" width="6" patternUnits="userSpaceOnUse" id="EMFhbasepattern"/>
+  </defs>
+  <sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="1.4" inkscape:cx="338.94584" inkscape:cy="220.73212" inkscape:document-units="px" inkscape:current-layer="layer1" showgrid="true" units="px" inkscape:snap-bbox="true" inkscape:bbox-nodes="true" inkscape:window-width="1302" inkscape:window-height="902" inkscape:window-x="357" inkscape:window-y="1119" inkscape:window-maximized="0" inkscape:object-nodes="true" inkscape:snap-grids="true" inkscape:snap-to-guides="false" inkscape:snap-nodes="true">
+    <inkscape:grid type="xygrid" id="grid3336" spacingx="16" spacingy="16" empspacing="2"/>
+  </sodipodi:namedview>
+  <metadata id="metadata7">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <dc:title>status-failure</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  
+<g class="currentLayer" style=""><title>Layer 1</title><g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" class="selected" fill="#e84141" fill-opacity="1">
+    <path style="stroke: none;" d="m224,0.000029453124966494215 a224,223.99999 0 0 0 -224,224 a224,223.99999 0 0 0 224,224.00001 a224,223.99999 0 0 0 224,-224.00001 a224,223.99999 0 0 0 -224,-224 zm-95.78943,84 L224,179.789459453125 L319.78943,84.00002945312497 L364,128.21059945312504 L268.21057,224.00002945312497 L364,319.789459453125 L319.78943,364.00002945312497 L224,268.21059945312504 L128.21057,364.00002945312497 L84,319.789459453125 L179.78943,224.00002945312497 L84,128.21059945312504 L128.21057,84.00002945312497 z" id="path3358" inkscape:connector-curvature="0" fill="#e84141" fill-opacity="1"/>
+  </g></g></svg>
