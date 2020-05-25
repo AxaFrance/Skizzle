@@ -92,10 +92,7 @@ export const pullRequests = writable([]);
 const getSettingsByKey = (key, initial, type = undefined) => {
   let value = getItem(key);
 
-  if (
-    (typeof value !== 'boolean' && !value && value !== 0) ||
-    (value === undefined && value === null)
-  ) {
+  if (typeof value !== 'boolean' && !value && value !== 0) {
     value = initial;
     addItem(key, value);
 
