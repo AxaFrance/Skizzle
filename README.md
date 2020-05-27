@@ -31,7 +31,7 @@ For logging into the app, you have to use your Azure devOps e-mail and a token. 
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/AxaGuilDEv/skizzle/CONTRIBUTING.md) for details on our [code of conduct](https://github.com/AxaGuilDEv/skizzle/CODE_OF_CONDUCT.md), and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our [code of conduct](CODE_OF_CONDUCT.md), and the process for submitting pull requests to us.
 
 ## Authors
 
@@ -40,4 +40,4 @@ DE BAERDEMAEKER Mathieu - Software Engineer.
 
 ## License
 
-This project is licensed under MIT License - see the [LICENSE.md](https://github.com/AxaGuilDEv/Skizzle/LICENSE.md) file for details
+This project is licensed under MIT License - see the [LICENSE.md](LICENSE.md) file for details
