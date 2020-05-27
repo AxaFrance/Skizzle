@@ -40,4 +40,4 @@ DE BAERDEMAEKER Mathieu - Software Engineer.
 
 ## License
 
-This project is licensed under MIT License - see the [LICENSE.md](https://github.com/AxaGuilDEv/skizzle/LICENSE.md) file for details
+This project is licensed under MIT License - see the [LICENSE.md](https://github.com/AxaGuilDEv/Skizzle/LICENSE.md) file for details
