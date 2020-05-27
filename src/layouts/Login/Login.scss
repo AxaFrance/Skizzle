@@ -12,6 +12,10 @@
     animation: slideUp 0.7s;
     animation-fill-mode: both;
     animation-timing-function: ease-in-out;
+
+    &--dark {
+      display: none;
+    }
   }
 
   &__intro {
@@ -46,13 +50,13 @@
     }
 
     &:before {
-      content: '';
+      content: "";
       position: absolute;
       left: 1rem;
       top: 50%;
       width: 1.5rem;
       height: 1.5rem;
-      background: url('../assets/logo-azure-devops.png') no-repeat;
+      background: url("../assets/logo-azure-devops.png") no-repeat;
       background-size: cover;
       transform: translateY(-50%);
     }
@@ -69,6 +73,14 @@
 @media (prefers-color-scheme: dark) {
   .skz-login {
     background-color: #333;
+
+    &__logo {
+      display: none;
+
+      &--dark {
+        display: block;
+      }
+    }
 
     &__intro {
       color: #fff;
