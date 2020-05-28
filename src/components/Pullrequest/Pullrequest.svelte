@@ -74,6 +74,11 @@
       <span>{pullRequest.repository.project.name}</span>
     </h2>
     <h3 class="skz-pullrequest__title">
+      {#if pullRequest.autoCompleteSetBy}
+        <span class="skz-pullrequest__status skz-pullrequest__status--auto-complete">
+          Auto complete
+        </span>
+      {/if}
       {#if pullRequest.isDraft}
         <span class="skz-pullrequest__status skz-pullrequest__status--draft">
           Draft

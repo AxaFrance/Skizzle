@@ -152,6 +152,11 @@
     border-color: red;
     color: red;
   }
+
+  &--auto-complete {
+    border-color: green;
+    color: green;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
