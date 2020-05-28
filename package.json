@@ -1,10 +1,14 @@
 {
-  "name": "Skizzle",
-  "version": "3.4.0-beta",
+  "name": "skizzle",
+  "version": "0.0.0",
   "appId": "skizzle",
   "description": "Visualisation des pull requests",
   "main": "public/electron.js",
   "homepage": "./",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AxaGuilDEv/skizzle.git"
+  },
   "scripts": {
     "precommit": "lint-staged pretty-quick --staged",
     "build": "rollup -c --extend",
@@ -30,11 +34,11 @@
     "email": "mathieu.debaerdemaeker@gmail.com",
     "url": "https://github.com/Debaerdm"
   },
-  "contributors": {
+  "contributors": [{
     "name": "Jerome Boukorras",
     "email": "jerome.boukorras@gmail.com",
     "url": "https://github.com/itupix"
-  },
+  }],
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "7.8.7",
