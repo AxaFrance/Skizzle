@@ -1,6 +1,19 @@
 require('electron-reload')(__dirname);
+const os = require('os');
 const electron = require('electron');
 const { app, BrowserWindow, Menu, Notification, ipcMain, Tray } = electron;
+
+const platforms = {
+  WINDOWS: 'WINDOWS',
+  MAC: 'MAC',
+};
+
+const platformsNames = {
+  win32: platforms.WINDOWS,
+  darwin: platforms.MAC,
+};
+
+const currentPlatform = platformsNames[os.platform()];
 
 const config = {
   clientId: '26940866-2575-4627-B2A4-DFF5972172B3',
@@ -15,6 +28,7 @@ const config = {
   scope:
     'vso.analytics vso.build vso.code vso.connected_server vso.dashboards vso.entitlements vso.extension vso.extension.data vso.graph vso.identity vso.loadtest vso.machinegroup_manage vso.memberentitlementmanagement vso.notification vso.packaging vso.project vso.release vso.securefiles_read vso.serviceendpoint vso.symbols vso.taskgroups_read vso.test vso.variablegroups_read vso.wiki vso.work',
 };
+
 function setAppUserModelId() {
   global.appUserModelId = 'skizzle';
   app.setAppUserModelId('skizzle');
@@ -47,7 +61,7 @@ function createWindow() {
     },
   });
 
-  window.loadURL('file:///' + __dirname + '/index.html');
+  window.loadURL(`file:///${__dirname}/index.html`);
 
   window.on('closed', () => {
     window = null;
@@ -56,7 +70,11 @@ function createWindow() {
   window.once('focus', () => window.flashFrame(false));
   window.flashFrame(true);
 
-  const iconName = '/assets/icon.png';
+  const iconName =
+    currentPlatform === platforms.MAC
+      ? '/assets/icon-macos.png'
+      : '/assets/icon.png';
+
   const iconPath = __dirname + iconName;
   tray = new Tray(iconPath);
   tray.setToolTip('Skizzle application');
@@ -101,7 +119,7 @@ function createWindow() {
       accelerator: 'CommandOrControl+O',
     },
     {
-      label: "Recharger l'application",
+      label: `Recharger l'application`,
       click: () => window.reload(),
       accelerator: 'F5',
     },
