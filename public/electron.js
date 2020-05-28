@@ -2,6 +2,12 @@ require('electron-reload')(__dirname);
 const os = require('os');
 const electron = require('electron');
 const { app, BrowserWindow, Menu, Notification, ipcMain, Tray } = electron;
+const log = require('electron-log');
+const { autoUpdater } = require('electron-updater');
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
 
 const platforms = {
   WINDOWS: 'WINDOWS',
@@ -38,8 +44,12 @@ setAppUserModelId();
 
 let tray;
 let window;
-
 let onlineStatusWindow;
+
+function sendStatusToWindow(text) {
+  log.info(text);
+  window.webContents.send('message', text);
+}
 
 app.whenReady().then(() => {
   onlineStatusWindow = new BrowserWindow({ width: 0, height: 0, show: false });
@@ -64,6 +74,9 @@ function createWindow() {
   window.loadURL(`file:///${__dirname}/index.html`);
 
   window.on('closed', () => {
+    if (tray && !tray.isDestroyed()) {
+      tray.destroy();
+    }
     window = null;
   });
 
@@ -141,6 +154,35 @@ function createWindow() {
   });
 }
 
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...');
+});
+autoUpdater.on('update-available', info => {
+  sendStatusToWindow('Update available.');
+});
+autoUpdater.on('update-not-available', info => {
+  sendStatusToWindow('Update not available.');
+});
+autoUpdater.on('error', err => {
+  sendStatusToWindow('Error in auto-updater. ' + err);
+});
+autoUpdater.on('download-progress', progressObj => {
+  let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message =
+    log_message +
+    ' (' +
+    progressObj.transferred +
+    '/' +
+    progressObj.total +
+    ')';
+  sendStatusToWindow(log_message);
+});
+autoUpdater.on('update-downloaded', info => {
+  sendStatusToWindow('Update downloaded');
+  autoUpdater.quitAndInstall();
+});
+
 if (app.isPackaged) {
   const settings = app.getLoginItemSettings();
 
@@ -170,7 +212,10 @@ if (!gotTheLock) {
 
   app.commandLine.appendSwitch('no-proxy-server');
   app.commandLine.appendSwitch('disable-site-isolation-trials');
-  app.on('ready', createWindow);
+  app.on('ready', () => {
+    createWindow();
+    autoUpdater.checkForUpdatesAndNotify();
+  });
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
       app.quit();

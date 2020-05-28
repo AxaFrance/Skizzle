@@ -1,6 +1,6 @@
 {
   "name": "skizzle",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "appId": "skizzle",
   "description": "Visualisation des pull requests",
   "main": "public/electron.js",
@@ -22,8 +22,9 @@
     "lint": "./node_modules/.bin/eslint --fix ./src",
     "start:prod": "sirv --port 4567 public",
     "start:dev": "sirv --port 4567 public --dev",
-    "electron:windows": "rm -rf release && npm run build && npx electron-builder build --windows",
-    "electron:mac": "rm -rf release && npm run build && npx electron-builder build --mac"
+    "electron:windows": "npm run build && npx electron-builder build --windows",
+    "electron:mac": "npm run build && npx electron-builder build --mac",
+    "electron:publish": "npm run build && npx electron-builder build -p onTag"
   },
   "keywords": [
     "electron",
@@ -34,11 +35,13 @@
     "email": "mathieu.debaerdemaeker@gmail.com",
     "url": "https://github.com/Debaerdm"
   },
-  "contributors": [{
-    "name": "Jerome Boukorras",
-    "email": "jerome.boukorras@gmail.com",
-    "url": "https://github.com/itupix"
-  }],
+  "contributors": [
+    {
+      "name": "Jerome Boukorras",
+      "email": "jerome.boukorras@gmail.com",
+      "url": "https://github.com/itupix"
+    }
+  ],
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "7.8.7",
@@ -77,31 +80,28 @@
     "svelte-preprocess": "3.4.0"
   },
   "dependencies": {
+    "electron-log": "^4.2.0",
     "electron-reload": "1.5.0",
+    "electron-updater": "^4.3.1",
     "sirv-cli": "0.4.5"
   },
   "build": {
     "appId": "skizzle",
-    "compression": "normal",
     "productName": "Skizzle",
     "copyright": "Copyright © 2020 Axa France IARD / Axa France VIE",
     "win": {
       "target": "nsis"
     },
-    "files": [
-      "public/**/*",
-      "node_modules/**/*"
-    ],
     "mac": {
       "type": "distribution",
       "target": [
+        "zip",
         "dmg"
       ],
       "category": "public.app-category.news"
     },
     "directories": {
-      "buildResources": "buildResources/",
-      "output": "release/"
+      "buildResources": "buildResources/"
     }
   },
   "husky": {
