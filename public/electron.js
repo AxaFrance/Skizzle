@@ -13,6 +13,10 @@ const platformsNames = {
   darwin: platforms.MAC,
 };
 
+let proxyLogin = null;
+let proxyPassword = null;
+let authWindow = null;
+
 const currentPlatform = platformsNames[os.platform()];
 
 const config = {
@@ -182,6 +186,13 @@ if (!gotTheLock) {
     }
   });
 
+  app.on('login', (event, webContents, request, authInfo, callback) => {
+    if (authInfo.isProxy || authInfo.scheme === 'ntlm') {
+      event.preventDefault();
+      callback(proxyLogin, proxyPassword);
+    }
+  });
+
   ipcMain.on('notifier', (event, arg) => {
     const { body, title } = arg;
 
@@ -190,47 +201,57 @@ if (!gotTheLock) {
     }
   });
 
+  ipcMain.on('proxy-config', (event, arg) => {
+    proxyLogin = arg.proxyLogin;
+    proxyPassword = arg.proxyPassword;
+
+    if (authWindow) {
+      authWindow.close();
+    }
+  });
+
   ipcMain.on('azure-devops-oauth', (event, arg) => {
-    let authWindow = new BrowserWindow({
-      show: false,
-      modal: true,
-      autoHideMenuBar: true,
-      parent: window,
-      webPreferences: {
-        nodeIntegration: false,
-        contextIsolation: true,
-      },
-    });
+    if (!authWindow) {
+      authWindow = new BrowserWindow({
+        autoHideMenuBar: true,
+        parent: window,
+        webPreferences: {
+          nodeIntegration: false,
+          contextIsolation: true,
+        },
+      });
 
-    authWindow.show();
+      authWindow.show();
 
-    authWindow.webContents.loadURL(
-      `${config.authorizationUrl}?client_id=${config.clientId}&client_secret=${config.clientSecret}&response_type=code&redirect_uri=${config.redirectUri}&response_mode=query&scope=${config.scope}`,
-    );
+      authWindow.webContents.loadURL(
+        `${config.authorizationUrl}?client_id=${config.clientId}&client_secret=${config.clientSecret}&response_type=code&redirect_uri=${config.redirectUri}&response_mode=query&scope=${config.scope}`,
+      );
 
-    authWindow.on('closed', () => {
-      authWindow = null;
-    });
-    authWindow.webContents.on('will-redirect', (e, url) => {
-      const details = url;
+      authWindow.on('closed', () => {
+        authWindow = null;
+      });
 
-      if (details && details.startsWith(config.redirectUri)) {
-        const _url = details.split('?')[1];
-        const _params = new URLSearchParams(_url);
-        const _accessCode = _params.get('code');
+      authWindow.webContents.on('will-redirect', (e, url) => {
+        const details = url;
 
-        if (_accessCode) {
-          event.sender.send('getToken', {
-            url: config.tokenUrl,
-            redirect_uri: config.redirectUri,
-            client_assertion: config.clientAssertion,
-            access_code: _accessCode,
-          });
+        if (details && details.startsWith(config.redirectUri)) {
+          const _url = details.split('?')[1];
+          const _params = new URLSearchParams(_url);
+          const _accessCode = _params.get('code');
 
-          authWindow.close();
+          if (_accessCode) {
+            event.sender.send('getToken', {
+              url: config.tokenUrl,
+              redirect_uri: config.redirectUri,
+              client_assertion: config.clientAssertion,
+              access_code: _accessCode,
+            });
+
+            authWindow.close();
+          }
         }
-      }
-    });
+      });
+    }
   });
 
   ipcMain.on('logout', () => {

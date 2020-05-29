@@ -309,16 +309,6 @@ input[type='radio']:checked + .skz-profile__modal-label:after {
   animation: fadeIn 0.3s;
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
 @media (prefers-color-scheme: dark) {
   .skz-profile-name {
     color: #ccc;
