@@ -27,7 +27,7 @@ npm start
 ### Installing
 
 Installing Skizzle is pretty basic. Just follow the installer.
-For logging into the app, you have to use your Azure devOps e-mail and a token. This token have to be created from [Azure](https://dev.azure.com) and must be configured as "All accessible organizations" and the Scopes have to be "full access".
+For logging into the app, you have to use your Azure devOps account.
 
 ## Contributing
 
