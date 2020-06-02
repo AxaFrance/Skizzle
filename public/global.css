@@ -1,10 +1,6 @@
-::-webkit-scrollbar {
-  display: none;
-}
-
 @font-face {
-  font-family: 'Icons';
-  src: url('./assets/icons.woff');
+  font-family: "Icons";
+  src: url("./assets/icons.woff");
 }
 
 * {
@@ -32,8 +28,8 @@ body {
 
 body {
   background-color: white;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 a {
@@ -97,7 +93,7 @@ input:disabled {
 }
 
 .window-controls .button:before {
-  content: '';
+  content: "";
   position: absolute;
   left: 50%;
   top: 50%;
