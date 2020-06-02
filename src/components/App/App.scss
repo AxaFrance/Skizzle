@@ -5,3 +5,13 @@
   text-align: center;
   background-color: #ff1721;
 }
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
