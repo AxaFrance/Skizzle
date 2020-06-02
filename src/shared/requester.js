@@ -21,6 +21,7 @@ let data = [];
 let loadedRepositories = 0;
 let loadedOrganizations = 0;
 let loadedPullRequests = [];
+let brokenOrganizations = [];
 let refreshing = false;
 
 export const getHeader = () => {
@@ -203,26 +204,35 @@ export const getProjects = async ({ organization, numberOfOrganizations }) => {
     `https://dev.azure.com/${organization.accountName}/_apis/projects?$top=1000&api-version=5.1`,
   );
 
+  let result = {
+    value: [],
+  };
+
   if (res.ok) {
-    const result = await res.json();
+    result = await res.json();
+  } else {
+    brokenOrganizations.push(organization.accountName);
+  }
 
-    data = data.map(organizationItem => ({
-      ...organizationItem,
-      projects:
-        organizationItem.accountId === organization.accountId
-          ? result.value
-          : organizationItem.projects,
-    }));
+  loadedOrganizations += 1;
 
-    loadedOrganizations += 1;
+  data = data.map(organizationItem => ({
+    ...organizationItem,
+    isBroken: brokenOrganizations.includes(organizationItem.accountName),
+    projects:
+      organizationItem.accountId === organization.accountId
+        ? result.value
+        : organizationItem.projects,
+  }));
 
-    if (loadedOrganizations === numberOfOrganizations) {
-      const numberOfProjects = data.reduce((acc, curr) => {
-        acc += curr.projects.length;
-        return acc;
-      }, 0);
+  if (loadedOrganizations === numberOfOrganizations) {
+    const numberOfProjects = data.reduce((acc, curr) => {
+      acc += curr.projects ? curr.projects.length : 0;
+      return acc;
+    }, 0);
 
-      data.forEach(organizationItem => {
+    data.forEach(organizationItem => {
+      if (organizationItem.projects) {
         organizationItem.projects.forEach(({ id: projectId }) =>
           getRepositories({
             projectId,
@@ -230,10 +240,8 @@ export const getProjects = async ({ organization, numberOfOrganizations }) => {
             numberOfProjects,
           }),
         );
-      });
-    }
-  } else {
-    throw new Error(res);
+      }
+    });
   }
 };
 
