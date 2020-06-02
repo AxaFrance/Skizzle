@@ -248,6 +248,11 @@
     top: 0;
     visibility: hidden;
 
+    &:disabled,
+    &:disabled + label {
+      opacity: 0.5;
+    }
+
     &:before {
       visibility: visible;
       content: '';
