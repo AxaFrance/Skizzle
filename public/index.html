@@ -1,44 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf8" />
-    <meta name="viewport" content="width=device-width" />
+	<head>
+		<meta charset="utf8" />
+		<meta name="viewport" content="width=device-width" />
 
-    <title>Skizzle</title>
+		<title>Skizzle</title>
 
-    <link rel="icon" type="image/png" href="./assets/logo-skizzle.svg" />
-    <link rel="stylesheet" href="global.css" />
-    <link rel="stylesheet" href="build/bundle.css" />
-  </head>
+		<link rel="icon" type="image/png" href="./assets/logo-skizzle.svg" />
+		<link rel="stylesheet" href="./global.css" />
+		<link rel="stylesheet" href="./build/bundle.css" />
+	</head>
 
-  <body>
-    <header class="titlebar">
-      <div class="drag-region">
-        <div class="window-controls">
-          <button
-            id="minimize"
-            class="button min-button"
-            data-icon="—"
-          ></button>
-          <button
-            id="maximize"
-            class="button max-button"
-            data-icon="➕"
-          ></button>
-          <button
-            id="restore"
-            class="button restore-button"
-            data-icon="➕"
-          ></button>
-          <button
-            id="close"
-            class="button close-button"
-            data-icon="❌"
-          ></button>
-        </div>
-      </div>
-    </header>
-    <script src="build/bundle.js"></script>
-  </body>
-  <script src="frame.js"></script>
+	<body>
+		<script defer src="./build/bundle.js"></script>
+	</body>
 </html>
