@@ -1,2 +1,5 @@
 import Modal from './Modal.svelte';
-export default Modal;
+import GlobalModal from './Global';
+import PullRequestModal from './PullRequest';
+
+export { Modal, GlobalModal, PullRequestModal };
