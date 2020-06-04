@@ -69,6 +69,22 @@
   }
 }
 
+.skz-refresh-button {
+  border: 0;
+  font-size: 1rem;
+  background-color: transparent;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: #fff;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   .skz-fetching-status {
     color: #aaa;
