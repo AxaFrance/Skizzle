@@ -8,11 +8,14 @@
   import { cleanStore } from '../../shared/store';
   import { clear } from '../../shared/requester.js';
 
-  const logout = () => {
-    ipcRenderer.send('logout');
+  ipcRenderer.on('loggedOut', () => {
     removeItem('clientToken');
     cleanStore();
     clear();
+  });
+
+  const logout = () => {
+    ipcRenderer.send('logout');
   }
 
   const components = [
