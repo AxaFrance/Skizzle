@@ -16,6 +16,7 @@ const platformsNames = {
 let proxyLogin = null;
 let proxyPassword = null;
 let authWindow = null;
+let logoutWindow = null;
 
 const currentPlatform = platformsNames[os.platform()];
 
@@ -26,9 +27,11 @@ const config = {
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im9PdmN6NU1fN3AtSGpJS2xGWHo5M3VfVjBabyJ9.eyJjaWQiOiIyNjk0MDg2Ni0yNTc1LTQ2MjctYjJhNC1kZmY1OTcyMTcyYjMiLCJjc2kiOiJlMmMyNmQyOC00MDljLTQ2OTAtYWM4Mi1mZDc5Y2U3NDk0NjgiLCJuYW1laWQiOiI2ZTBkMzcwYi01ZDA1LTY3ODgtYjk0ZC1lY2E2ODU5ZTRhZTEiLCJpc3MiOiJhcHAudnN0b2tlbi52aXN1YWxzdHVkaW8uY29tIiwiYXVkIjoiYXBwLnZzdG9rZW4udmlzdWFsc3R1ZGlvLmNvbSIsIm5iZiI6MTU3OTg4MjU4OSwiZXhwIjoxNzM3NzM1Mzg5fQ.JZ3XeXL22-nw-9BHi3sigm_Wruj1uPKBO-bA_um3tFaauex2eTvsEPPJZ3C5GYOdldroMRE_UGZUvBNctL2Ya6JjjESWEwwhTb2kkHs9r466ewnU7l-UfjdWV-cPJoKWlfEhU7IfH1PD1eSPJijXeB6zQYpPkM-TNAyVZl3PwOoOFdqkQrV1_eufxfiYeO9aBaxCCtzo_b3PsgvSVuZxGVWVdS0svX8bB_RKiwcWCcR089-5OnhK38OZVfx-RVP2HF2Eb-xmqTsQjcvWMdBam_sND3HKeo02GnxrByBizvTLyb6cE1yJJ-K1YY9vIGuWMaYjBLXFWEykYD60tr_bog',
   authorizationUrl: 'https://app.vssps.visualstudio.com/oauth2/authorize',
   tokenUrl: 'https://app.vssps.visualstudio.com/oauth2/token',
-  logout: 'https://app.vsaex.visualstudio.com/_signout',
+  logout: 'https://app.vssps.visualstudio.com/_signout',
   useBasicAuthorizationHeader: false,
   redirectUri: 'https://localhost:3000/',
+  postLogoutRedirectUri:
+    'https://login.microsoftonline.com/common/oauth2/authorize',
   scope:
     'vso.analytics vso.build vso.code vso.connected_server vso.dashboards vso.entitlements vso.extension vso.extension.data vso.graph vso.identity vso.loadtest vso.machinegroup_manage vso.memberentitlementmanagement vso.notification vso.packaging vso.project vso.release vso.securefiles_read vso.serviceendpoint vso.symbols vso.taskgroups_read vso.test vso.variablegroups_read vso.wiki vso.work',
 };
@@ -211,7 +214,7 @@ if (!gotTheLock) {
   });
 
   ipcMain.on('azure-devops-oauth', (event, arg) => {
-    if (!authWindow) {
+    if (!authWindow && !logoutWindow) {
       authWindow = new BrowserWindow({
         autoHideMenuBar: true,
         parent: window,
@@ -224,7 +227,7 @@ if (!gotTheLock) {
       authWindow.show();
 
       authWindow.webContents.loadURL(
-        `${config.authorizationUrl}?client_id=${config.clientId}&client_secret=${config.clientSecret}&response_type=code&redirect_uri=${config.redirectUri}&response_mode=query&scope=${config.scope}`,
+        `${config.authorizationUrl}?client_id=${config.clientId}&client_secret=${config.clientSecret}&response_type=code&redirect_uri=${config.redirectUri}&post_logout_redirect_uri=https://google.fr&response_mode=query&scope=${config.scope}`,
       );
 
       authWindow.on('closed', () => {
@@ -248,14 +251,15 @@ if (!gotTheLock) {
             });
 
             authWindow.close();
+            authWindow = null;
           }
         }
       });
     }
   });
 
-  ipcMain.on('logout', () => {
-    let logoutWindow = new BrowserWindow({
+  ipcMain.on('logout', (event, arg) => {
+    logoutWindow = new BrowserWindow({
       show: false,
       modal: true,
       autoHideMenuBar: true,
@@ -264,12 +268,14 @@ if (!gotTheLock) {
 
     logoutWindow.show();
 
-    logoutWindow.webContents.loadURL(
-      `${config.logout}?redirect_uri=${config.redirectUri}`,
-    );
+    logoutWindow.webContents.loadURL(config.logout);
 
-    logoutWindow.on('closed', () => {
-      logoutWindow = null;
+    logoutWindow.webContents.on('did-redirect-navigation', (e, url) => {
+      if (url.startsWith(config.postLogoutRedirectUri)) {
+        event.sender.send('loggedOut');
+        logoutWindow.close();
+        logoutWindow = null;
+      }
     });
   });
 }
