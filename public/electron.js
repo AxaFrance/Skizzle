@@ -18,7 +18,7 @@ const setAppUserModelId = () => {
 };
 
 const sendStatusToWindow = text => {
-	log.info(text);
+	logger.info(text);
 };
 
 setAppUserModelId();
