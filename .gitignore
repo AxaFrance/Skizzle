@@ -11,6 +11,8 @@ build
 release
 dist
 
+*.provisionprofile
+
 # misc
 .DS_Store
 .env.local
