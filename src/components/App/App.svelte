@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import Login from '../../layouts/Login';
 	import Home from '../../layouts/Home';
+	import Header from '../Header';
 	import { getToken } from '../../shared/requester.js';
 	import { clientToken, isOffline } from '../../shared/store';
 
@@ -16,6 +17,7 @@
 
 <style src="./App.scss"></style>
 
+<Header />
 {#if $isOffline}
 	<div class="skz-offline-banner">
 		<p>Vous n'êtes pas connecté à Internet. Il est impossible de rafraîchir la liste et certaines fonctionnalités sont désactivées.</p>

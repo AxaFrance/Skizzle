@@ -1,24 +1,43 @@
-require('electron-reload')(__dirname);
-const os = require('os');
+const unhandled = require('electron-unhandled');
+const contextMenu = require('electron-context-menu');
+const { openNewGitHubIssue, debugInfo, is } = require('electron-util');
+const debug = require('electron-debug');
+const logger = require('electron-log');
+const { autoUpdater } = require('electron-updater');
 const electron = require('electron');
+
 const { app, BrowserWindow, Menu, Notification, ipcMain, Tray } = electron;
 
-const platforms = {
-  WINDOWS: 'WINDOWS',
-  MAC: 'MAC',
+try {
+	require('electron-reloader')(module);
+} catch (_) {}
+
+const setAppUserModelId = () => {
+	global.appUserModelId = 'skizzle';
+	app.setAppUserModelId('skizzle');
 };
 
-const platformsNames = {
-  win32: platforms.WINDOWS,
-  darwin: platforms.MAC,
+const sendStatusToWindow = text => {
+	log.info(text);
 };
 
-let proxyLogin = null;
-let proxyPassword = null;
-let authWindow = null;
-let logoutWindow = null;
+setAppUserModelId();
+debug();
+autoUpdater.logger = logger;
 
-const currentPlatform = platformsNames[os.platform()];
+contextMenu({
+	showCopyImage: false,
+	showSearchWithGoogle: false,
+});
+
+unhandled({
+	reportButton: error => {
+		openNewGitHubIssue({
+			repoUrl: 'https://github.com/AxaGuilDEv/skizzle',
+			body: `\`\`\`\n${error.stack}\n\`\`\`\n\n---\n\n${debugInfo()}`,
+		});
+	},
+});
 
 const config = {
   clientId: '26940866-2575-4627-B2A4-DFF5972172B3',
@@ -36,136 +55,124 @@ const config = {
     'vso.analytics vso.build vso.code vso.connected_server vso.dashboards vso.entitlements vso.extension vso.extension.data vso.graph vso.identity vso.loadtest vso.machinegroup_manage vso.memberentitlementmanagement vso.notification vso.packaging vso.project vso.release vso.securefiles_read vso.serviceendpoint vso.symbols vso.taskgroups_read vso.test vso.variablegroups_read vso.wiki vso.work',
 };
 
-function setAppUserModelId() {
-  global.appUserModelId = 'skizzle';
-  app.setAppUserModelId('skizzle');
-}
-
-setAppUserModelId();
-
-let tray;
+let proxyLogin = null;
+let proxyPassword = null;
 let window;
-
-let onlineStatusWindow;
-
-app.whenReady().then(() => {
-  onlineStatusWindow = new BrowserWindow({ width: 0, height: 0, show: false });
-  onlineStatusWindow.loadURL(`file://${__dirname}/online-status.html`);
-});
+let authWindow;
+let logoutWindow;
+let tray;
 
 function createWindow() {
-  window = new BrowserWindow({
-    title: 'Skizzle',
-    center: true,
-    width: 1024,
-    height: 768,
-    resizable: true,
-    frame: false,
-    webPreferences: {
-      nodeIntegration: true,
-      experimentalFeatures: true,
-      webviewTag: true,
-    },
-  });
+	window = new BrowserWindow({
+		title: 'Skizzle',
+		center: true,
+		width: 1024,
+		height: 768,
+		resizable: true,
+		frame: false,
+		webPreferences: {
+			nodeIntegration: true,
+			experimentalFeatures: true,
+			webviewTag: true,
+		},
+	});
 
-  window.loadURL(`file:///${__dirname}/index.html`);
+	window.loadURL(`file:///${__dirname}/index.html`);
 
-  window.on('closed', () => {
-    window = null;
-  });
+	window.on('closed', () => {
+		window = null;
+	});
 
-  window.once('focus', () => window.flashFrame(false));
-  window.flashFrame(true);
+	window.once('focus', () => window.flashFrame(false));
+	window.flashFrame(true);
 
-  const iconName =
-    currentPlatform === platforms.MAC
-      ? '/assets/icon-macos.png'
-      : '/assets/icon.png';
+	const iconName =
+		is.macAppStore || is.macos ? '/assets/icon-macos.png' : '/assets/icon.png';
 
-  const iconPath = __dirname + iconName;
-  tray = new Tray(iconPath);
-  tray.setToolTip('Skizzle application');
+	const iconPath = __dirname + iconName;
+	tray = new Tray(iconPath);
+	tray.setToolTip('Skizzle application');
 
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Application',
-      submenu: [
-        {
-          label: 'About Application',
-          selector: 'orderFrontStandardAboutPanel:',
-        },
-        { type: 'separator' },
-        {
-          label: 'Quit',
-          accelerator: 'Command+Q',
-          click: function() {
-            app.quit();
-          },
-        },
-      ],
-    },
-    {
-      label: 'Edit',
-      submenu: [
-        { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
-        { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
-        { type: 'separator' },
-        { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
-        { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-        { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-        {
-          label: 'Select All',
-          accelerator: 'CmdOrCtrl+A',
-          selector: 'selectAll:',
-        },
-      ],
-    },
-    {
-      label: 'Ouvrir la console de développement',
-      click: () => window.webContents.openDevTools({ mode: 'detach' }),
-      accelerator: 'CommandOrControl+O',
-    },
-    {
-      label: `Recharger l'application`,
-      click: () => window.reload(),
-      accelerator: 'F5',
-    },
-    { type: 'separator' },
-    {
-      label: 'Quitter',
-      click: () => app.quit(),
-      accelerator: 'CommandOrControl+Q',
-    },
-  ]);
+	const contextMenu = Menu.buildFromTemplate([
+		{
+			label: 'Application',
+			submenu: [
+				{
+					label: 'About Application',
+					selector: 'orderFrontStandardAboutPanel:',
+				},
+				{ type: 'separator' },
+				{
+					label: 'Quit',
+					accelerator: 'Command+Q',
+					click() {
+						app.quit();
+					},
+				},
+			],
+		},
+		{
+			label: 'Edit',
+			submenu: [
+				{ label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
+				{ label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
+				{ type: 'separator' },
+				{ label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+				{ label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+				{ label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
+				{
+					label: 'Select All',
+					accelerator: 'CmdOrCtrl+A',
+					selector: 'selectAll:',
+				},
+			],
+		},
+		{
+			label: 'Ouvrir la console de développement',
+			click: () => window.webContents.openDevTools({ mode: 'detach' }),
+			accelerator: 'CommandOrControl+O',
+		},
+		{
+			label: "Recharger l'application",
+			click: () => window.reload(),
+			accelerator: 'F5',
+		},
+		{ type: 'separator' },
+		{
+			label: 'Quitter',
+			click: () => app.quit(),
+			accelerator: 'CommandOrControl+Q',
+		},
+	]);
 
-  tray.setContextMenu(contextMenu);
-  Menu.setApplicationMenu(contextMenu);
+	tray.setContextMenu(contextMenu);
+	Menu.setApplicationMenu(contextMenu);
 
-  tray.on('click', () => {
-    if (window.isMinimized()) window.restore();
-    if (!window.isVisible()) window.show();
-    window.focus();
-  });
+	tray.on('click', () => {
+		if (window.isMinimized()) window.restore();
+		if (!window.isVisible()) window.show();
+		window.focus();
+	});
 }
 
 if (app.isPackaged) {
-  const settings = app.getLoginItemSettings();
+	const settings = app.getLoginItemSettings();
 
-  app.setLoginItemSettings({
-    openAtLogin: settings.openAtLogin,
-  });
+	app.setLoginItemSettings({
+		openAtLogin: settings.openAtLogin,
+	});
 
-  ipcMain.on('launch-startup', (event, arg) => {
-    app.setLoginItemSettings({
-      openAtLogin: arg,
-    });
-  });
+	ipcMain.on('launch-startup', (event, arg) => {
+		app.setLoginItemSettings({
+			openAtLogin: arg,
+		});
+	});
 }
 
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
-  app.quit();
+	app.quit();
 } else {
   app.on('second-instance', (event, commandLine, workingDirectory) => {
     if (window) {
@@ -278,4 +285,39 @@ if (!gotTheLock) {
       }
     });
   });
+}
+
+autoUpdater.on('checking-for-update', () => {
+	sendStatusToWindow('Checking for update...');
+});
+
+autoUpdater.on('update-available', info => {
+	sendStatusToWindow('Update available.');
+});
+
+autoUpdater.on('update-not-available', info => {
+	sendStatusToWindow('Update not available.');
+});
+
+autoUpdater.on('error', err => {
+	sendStatusToWindow(`Error in auto-updater. ${err}`);
+});
+
+autoUpdater.on('download-progress', progressObj => {
+	let log_message = `Download speed: ${progressObj.bytesPerSecond}`;
+	log_message = `${log_message} - Downloaded ${progressObj.percent}%`;
+	log_message = `${log_message} (${progressObj.transferred}/${progressObj.total})`;
+	sendStatusToWindow(log_message);
+});
+
+autoUpdater.on('update-downloaded', info => {
+	sendStatusToWindow('Update downloaded');
+	autoUpdater.quitAndInstall();
+});
+
+function updateApp() {
+	if (!is.macAppStore) {
+		autoUpdater.checkForUpdatesAndNotify();
+	}
+>>>>>>> feature(Electron): add many electron feature for performance improvement and automatic build
 }
