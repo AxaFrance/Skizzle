@@ -1,5 +1,10 @@
 # Skizzle
 
+![Check tests](https://github.com/AxaGuilDEv/skizzle/workflows/Check%20tests/badge.svg)
+![Check coverage](https://github.com/AxaGuilDEv/skizzle/workflows/Check%20coverage/badge.svg)
+![Build/release](https://github.com/AxaGuilDEv/skizzle/workflows/Build/release/badge.svg)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/AxaGuilDEv/skizzle?logo=github&sort=semver)](https://github.com/AxaGuilDEv/skizzle/releases)
+
 Skizzle is a Svelte + Electron application fetch and group the pull requests from all your projects from Azure DevOps. Skizzle notify you when a new pull request is available.
 
 This app uses the [Azure DevOps API](https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-5.1) API, and it is built with [Electron](https://electronjs.org/) and [Svelte](https://svelte.dev).
