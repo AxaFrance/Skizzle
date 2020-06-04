@@ -1,7 +1,7 @@
 # Skizzle
 
-![Check tests](https://github.com/AxaGuilDEv/skizzle/workflows/Check%20tests/badge.svg)
-![Check coverage](https://github.com/AxaGuilDEv/skizzle/workflows/Check%20coverage/badge.svg)
+![Check tests](https://github.com/AxaGuilDEv/skizzle/workflows/Check%20tests/badge.svg?branch=master)
+![Check coverage](https://github.com/AxaGuilDEv/skizzle/workflows/Check%20coverage/badge.svg?branch=master)
 ![Build/release](https://github.com/AxaGuilDEv/skizzle/workflows/Build/release/badge.svg)
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/AxaGuilDEv/skizzle?logo=github&sort=semver)](https://github.com/AxaGuilDEv/skizzle/releases)
 
