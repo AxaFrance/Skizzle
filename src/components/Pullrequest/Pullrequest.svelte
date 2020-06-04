@@ -118,7 +118,7 @@
 			{#await getComments(pullRequest)}
 				<Loader mini="{true}" />
 			{:then comments}
-				<CommentsCounter comments="comments" />
+				<CommentsCounter comments="{comments}" />
 			{/await}
 		</div>
 	</div>
