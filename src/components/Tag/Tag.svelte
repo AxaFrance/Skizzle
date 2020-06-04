@@ -1,33 +1,33 @@
+<style src="./Tag.scss">
+
+</style>
+
 <script>
-    import { createEventDispatcher } from 'svelte';
-    export let tag;
+	import { createEventDispatcher } from 'svelte';
 
-    let dispatch = createEventDispatcher();
-    let selected = false;
+	export let tag;
 
-    const tagSelected = ({ target }) => {
-        const checked = target.checked;
-        
-        dispatch('tag', {
-            tag,
-            checked
-        });
+	const dispatch = createEventDispatcher();
+	let selected = false;
 
-        selected = checked;
-    }
+	const tagSelected = ({ target }) => {
+		const { checked } = target;
+
+		dispatch('tag', {
+			tag,
+			checked,
+		});
+
+		selected = checked;
+	};
 </script>
 
-<style src="./Tag.scss"></style>
-
 <li class="skz-tag {selected ? 'skz-tag--selected' : ''}">
-    <label class="skz-tag__labels" for={tag}>
-        {tag}
-    </label>
-    <input
-        type="checkbox"
-        id={tag}
-        class="skz-tag__check"
-        on:change={tagSelected}
-        value={selected}
-    />
+	<label class="skz-tag__labels" for="{tag}">{tag}</label>
+	<input
+		type="checkbox"
+		id="{tag}"
+		class="skz-tag__check"
+		on:change="{tagSelected}"
+		value="{selected}" />
 </li>

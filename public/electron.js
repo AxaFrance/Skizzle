@@ -5,6 +5,7 @@ const debug = require('electron-debug');
 const logger = require('electron-log');
 const { autoUpdater } = require('electron-updater');
 const electron = require('electron');
+
 const { app, BrowserWindow, Menu, Notification, ipcMain, Tray } = electron;
 
 try {
@@ -54,7 +55,10 @@ const config = {
 
 let proxyLogin = null;
 let proxyPassword = null;
-let window, authWindow, logoutWindow, tray;
+let window;
+let authWindow;
+let logoutWindow;
+let tray;
 
 function createWindow() {
 	window = new BrowserWindow({
@@ -99,7 +103,7 @@ function createWindow() {
 				{
 					label: 'Quit',
 					accelerator: 'Command+Q',
-					click: function() {
+					click() {
 						app.quit();
 					},
 				},
@@ -127,7 +131,7 @@ function createWindow() {
 			accelerator: 'CommandOrControl+O',
 		},
 		{
-			label: `Recharger l'application`,
+			label: "Recharger l'application",
 			click: () => window.reload(),
 			accelerator: 'F5',
 		},
@@ -294,19 +298,13 @@ autoUpdater.on('update-not-available', info => {
 });
 
 autoUpdater.on('error', err => {
-	sendStatusToWindow('Error in auto-updater. ' + err);
+	sendStatusToWindow(`Error in auto-updater. ${err}`);
 });
 
 autoUpdater.on('download-progress', progressObj => {
-	let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
-	log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-	log_message =
-		log_message +
-		' (' +
-		progressObj.transferred +
-		'/' +
-		progressObj.total +
-		')';
+	let log_message = `Download speed: ${progressObj.bytesPerSecond}`;
+	log_message = `${log_message} - Downloaded ${progressObj.percent}%`;
+	log_message = `${log_message} (${progressObj.transferred}/${progressObj.total})`;
 	sendStatusToWindow(log_message);
 });
 

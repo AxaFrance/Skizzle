@@ -1,16 +1,16 @@
-import Labels from './Labels.svelte';
 import { render } from '@testing-library/svelte';
+import Labels from './Labels.svelte';
 
 describe('Labels Component', () => {
-  it('should render', () => {
-    const { getByText } = render(Labels, {
-      labels: [
-        {
-          name: 'name',
-        },
-      ],
-    });
+	it('should render', () => {
+		const { getByText } = render(Labels, {
+			labels: [
+				{
+					name: 'name',
+				},
+			],
+		});
 
-    expect(getByText('name')).toBeInTheDocument();
-  });
+		expect(getByText('name')).toBeInTheDocument();
+	});
 });
