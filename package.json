@@ -22,7 +22,8 @@
 		"test:coverage": "jest --coverage --no-cache",
 		"lint": "./node_modules/.bin/eslint ./src --ext .js,.svelte --fix",
 		"start:prod": "sirv --port 4567 public",
-		"start:dev": "sirv --port 4567 public --dev"
+		"start:dev": "sirv --port 4567 public --dev",
+		"electron:win": "npm run build & electron-builder build --win"
 	},
 	"keywords": [
 		"electron",
@@ -80,12 +81,12 @@
 		"svelte-preprocess": "3.4.0"
 	},
 	"dependencies": {
-		"electron-log": "^4.2.0",
 		"electron-context-menu": "^2.0.1",
 		"electron-debug": "^3.1.0",
+		"electron-log": "^4.2.0",
 		"electron-unhandled": "^3.0.2",
-		"electron-util": "^0.14.1",
 		"electron-updater": "^4.3.1",
+		"electron-util": "^0.14.1",
 		"sirv-cli": "0.4.5"
 	},
 	"build": {

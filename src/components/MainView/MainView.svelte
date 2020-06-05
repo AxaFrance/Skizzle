@@ -31,7 +31,7 @@
   onDestroy(stopRefresh);
 
   organizations.subscribe(organizationsList => {
-    if(organizationsList.length) {
+    if(organizationsList.length && $profile) {
       getPullRequests({ isFiltered: $listIsFiltered, organizations: organizationsList, profileId: $profile.id })
     }
   });

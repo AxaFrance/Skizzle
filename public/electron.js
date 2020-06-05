@@ -5,7 +5,6 @@ const debug = require('electron-debug');
 const logger = require('electron-log');
 const { autoUpdater } = require('electron-updater');
 const electron = require('electron');
-
 const { app, BrowserWindow, Menu, Notification, ipcMain, Tray } = electron;
 
 try {
@@ -50,7 +49,7 @@ const config = {
 	useBasicAuthorizationHeader: false,
 	redirectUri: 'https://localhost:3000/',
 	postLogoutRedirectUri:
-		'https://login.microsoftonline.com/common/oauth2/authorize',
+		'https://login.microsoftonline.com/common/oauth2/logout',
 	scope:
 		'vso.analytics vso.build vso.code vso.connected_server vso.dashboards vso.entitlements vso.extension vso.extension.data vso.graph vso.identity vso.loadtest vso.machinegroup_manage vso.memberentitlementmanagement vso.notification vso.packaging vso.project vso.release vso.securefiles_read vso.serviceendpoint vso.symbols vso.taskgroups_read vso.test vso.variablegroups_read vso.wiki vso.work',
 };
@@ -182,9 +181,12 @@ if (!gotTheLock) {
 		}
 	});
 
-	app.commandLine.appendSwitch('no-proxy-server');
 	app.commandLine.appendSwitch('disable-site-isolation-trials');
-	app.on('ready', createWindow);
+	app.on('ready', () => {
+		updateApp();
+		createWindow();
+	});
+
 	app.on('window-all-closed', () => {
 		if (process.platform !== 'darwin') {
 			app.quit();
@@ -234,7 +236,7 @@ if (!gotTheLock) {
 			authWindow.show();
 
 			authWindow.webContents.loadURL(
-				`${config.authorizationUrl}?client_id=${config.clientId}&client_secret=${config.clientSecret}&response_type=code&redirect_uri=${config.redirectUri}&post_logout_redirect_uri=https://google.fr&response_mode=query&scope=${config.scope}`,
+				`${config.authorizationUrl}?client_id=${config.clientId}&client_secret=${config.clientSecret}&response_type=code&redirect_uri=${config.redirectUri}&post_logout_redirect_uri=https://localhost:3000/&response_mode=query&scope=${config.scope}`,
 			);
 
 			authWindow.on('closed', () => {
@@ -275,52 +277,18 @@ if (!gotTheLock) {
 
 		logoutWindow.show();
 
-		logoutWindow.webContents.loadURL(config.logout);
-
-		console.log(logoutWindow.webContents.url);
-
-		logoutWindow.webContents.on('did-redirect-navigation', (e, url) => {
+		logoutWindow.webContents.on('did-navigate', (e, url) => {
 			if (url.startsWith(config.postLogoutRedirectUri)) {
 				event.sender.send('loggedOut');
-				logoutWindow.close();
-				logoutWindow = null;
+				setTimeout(() => {
+					logoutWindow.close();
+					logoutWindow = null;
+				}, 2000);
 			}
 		});
+
+		logoutWindow.webContents.loadURL(config.logout);
 	});
-}
-
-autoUpdater.on('checking-for-update', () => {
-	sendStatusToWindow('Checking for update...');
-});
-
-autoUpdater.on('update-available', info => {
-	sendStatusToWindow('Update available.');
-});
-
-autoUpdater.on('update-not-available', info => {
-	sendStatusToWindow('Update not available.');
-});
-
-autoUpdater.on('error', err => {
-	sendStatusToWindow(`Error in auto-updater. ${err}`);
-});
-
-autoUpdater.on('download-progress', progressObj => {
-	let log_message = `Download speed: ${progressObj.bytesPerSecond}`;
-	log_message = `${log_message} - Downloaded ${progressObj.percent}%`;
-	log_message = `${log_message} (${progressObj.transferred}/${progressObj.total})`;
-	sendStatusToWindow(log_message);
-});
-
-autoUpdater.on('update-downloaded', info => {
-	sendStatusToWindow('Update downloaded');
-	autoUpdater.quitAndInstall();
-});
-
-function updateApp() {
-	if (!is.macAppStore) {
-		autoUpdater.checkForUpdatesAndNotify();
-	}
 }
 
 autoUpdater.on('checking-for-update', () => {
