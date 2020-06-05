@@ -1,0 +1,53 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+  displayName: 'Install Node.js'
+
+- task: SonarCloudPrepare@1
+  displayName: 'Prepare analysis on SonarCloud'
+  inputs:
+    SonarCloud: SonarCloud
+    organization: axaguildev
+    scannerMode: CLI
+    configMode: manual
+    cliProjectKey: 'skizzle'
+    cliProjectName: 'skizzle'
+    extraProperties: |
+      # Additional properties that will be passed to the scanner, 
+      # Put one key=value per line, example:
+      sonar.exclusions=**/*.stories.js,**/*.spec.js,**/*.spec.ts, **/*.spec.tsx, **/index.ts, **/index.js,public/**,scripts/**,coverage/**,**/node_modules/**,**/dist/**,**/__mocks__/**,examples/**,jest.config.js
+      sonar.javascript.lcov.reportPaths=coverage/lcov.info
+      sonar.sourceEncoding=UTF-8
+      sonar.verbose=true
+      sonar.host.url=https://sonarcloud.io
+      sonar.cfamily.build-wrapper-output.bypass=true
+  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))
+
+- script: npm install
+  displayName: 'npm install'
+
+- script: npm run test:coverage
+  displayName: 'npm test'
+
+- script: npm run build
+  displayName: 'build svelte'
+
+- task: SonarCloudAnalyze@1
+  displayName: 'Run Code Analysis'
+  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))
+
+- task: SonarCloudPublish@1
+  displayName: 'Publish Quality Gate Result'
+  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))
