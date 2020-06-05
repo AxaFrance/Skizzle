@@ -22,8 +22,7 @@
 		"test:coverage": "jest --coverage --no-cache",
 		"lint": "./node_modules/.bin/eslint ./src --ext .js,.svelte --fix",
 		"start:prod": "sirv --port 4567 public",
-		"start:dev": "sirv --port 4567 public --dev",
-		"electron:win": "npm run build & electron-builder build --win"
+		"start:dev": "sirv --port 4567 public --dev"
 	},
 	"keywords": [
 		"electron",
