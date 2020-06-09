@@ -1,0 +1,55 @@
+.window-controls {
+	align-items: center;
+	display: flex;
+	-webkit-app-region: no-drag;
+	justify-content: space-evenly;
+	padding-left: 0.75rem;
+}
+
+.window-controls .button {
+	position: relative;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	margin: 0 0.25rem;
+	transition: 200ms;
+
+	& svg {
+		transition: 200ms;
+		transition-timing-function: ease-in-out;
+		display: none;
+	}
+}
+
+.window-controls:hover svg {
+	display: flex;
+}
+
+.close-button {
+	background-color: #fe6057;
+
+	&:active {
+		background-color: #e9574f;
+	}
+}
+
+.min-button {
+	background-color: #ffbf2b;
+
+	&:active {
+		background-color: #d8a225;
+	}
+}
+
+.restore-button,
+.max-button {
+	background-color: #28cd41;
+
+	&:active {
+		background-color: #22aa36;
+	}
+
+	& svg {
+		transform: rotate(-45deg);
+	}
+}
