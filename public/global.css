@@ -58,6 +58,10 @@ input:disabled {
 	background: #ccc;
 }
 
+::-webkit-scrollbar-corner {
+	background-color: #fff;
+}
+
 @media (prefers-color-scheme: dark) {
 	body {
 		background-color: #222;
@@ -65,6 +69,10 @@ input:disabled {
 
 	::-webkit-scrollbar-thumb {
 		background: #666;
+	}
+
+	::-webkit-scrollbar-corner {
+		background-color: #444;
 	}
 }
 

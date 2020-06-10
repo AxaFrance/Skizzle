@@ -126,7 +126,9 @@
             <Tag tag={tag} on:tag={setTag} />
           {/each}
         </ul>
-        <button class="skz-pullrequests__list-more" on:click={() => show = !show}> Voir {show ? 'moins' : 'plus'}...</button>
+        {#if tags.length > 5}
+          <button class="skz-pullrequests__list-more" on:click={() => show = !show}> Voir {show ? 'moins' : 'plus'}...</button>
+        {/if}
       {/if}
     </div>
     <ul class="skz-pullrequests-list">
