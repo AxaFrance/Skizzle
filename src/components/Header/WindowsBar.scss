@@ -1,3 +1,8 @@
+$close-color: #b40d1b;
+$button-hover-light: #ddd;
+$button-hover-dark: #666;
+$svg-fill: #fff;
+
 .window-controls {
 	align-items: center;
 	display: flex;
@@ -19,27 +24,27 @@
 }
 
 .close-button:hover {
-	background-color: red;
+	background-color: $close-color;
 }
 
 .restore-button:hover,
 .max-button:hover,
 .min-button:hover {
-	background-color: #ddd;
+	background-color: $button-hover-light;
 }
 
 .close-button:hover path {
-	fill: white;
+	fill: $svg-fill;
 }
 
 @media (prefers-color-scheme: dark) {
 	.button path {
-		fill: white;
+		fill: $svg-fill;
 	}
 
 	.restore-button:hover,
 	.max-button:hover,
 	.min-button:hover {
-		background-color: #666;
+		background-color: $button-hover-dark;
 	}
 }

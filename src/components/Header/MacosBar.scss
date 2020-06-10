@@ -1,3 +1,10 @@
+$close-color: #fe6057;
+$close-color-active: #e9574f;
+$min-color: #ffbf2b;
+$min-color-active: #d8a225;
+$max-color: #28cd41;
+$max-color-active: #22aa36;
+
 .window-controls {
 	align-items: center;
 	display: flex;
@@ -26,27 +33,27 @@
 }
 
 .close-button {
-	background-color: #fe6057;
+	background-color: $close-color;
 
 	&:active {
-		background-color: #e9574f;
+		background-color: $close-color-active;
 	}
 }
 
 .min-button {
-	background-color: #ffbf2b;
+	background-color: $min-color;
 
 	&:active {
-		background-color: #d8a225;
+		background-color: $min-color-active;
 	}
 }
 
 .restore-button,
 .max-button {
-	background-color: #28cd41;
+	background-color: $max-color;
 
 	&:active {
-		background-color: #22aa36;
+		background-color: $max-color-active;
 	}
 
 	& svg {
