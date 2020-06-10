@@ -46,6 +46,8 @@
 		"@babel/plugin-transform-runtime": "7.8.3",
 		"@babel/preset-env": "7.8.7",
 		"@babel/runtime": "7.8.7",
+		"@commitlint/cli": "^8.3.5",
+		"@commitlint/config-conventional": "8.3.4",
 		"@rollup/plugin-commonjs": "11.0.2",
 		"@rollup/plugin-node-resolve": "7.1.1",
 		"@testing-library/jest-dom": "5.1.1",
@@ -55,8 +57,8 @@
 		"babel-polyfill": "6.26.0",
 		"electron": "8.0.1",
 		"electron-builder": "22.4.0",
-		"electron-builder-notarize": "^1.1.2",
-		"electron-reloader": "^1.0.1",
+		"electron-builder-notarize": "1.1.2",
+		"electron-reloader": "1.0.1",
 		"eslint": "6.8.0",
 		"eslint-config-airbnb-base": "14.0.0",
 		"eslint-plugin-import": "2.20.1",
@@ -80,12 +82,12 @@
 		"svelte-preprocess": "3.4.0"
 	},
 	"dependencies": {
-		"electron-context-menu": "^2.0.1",
-		"electron-debug": "^3.1.0",
-		"electron-log": "^4.2.0",
-		"electron-unhandled": "^3.0.2",
-		"electron-updater": "^4.3.1",
-		"electron-util": "^0.14.1",
+		"electron-context-menu": "2.0.1",
+		"electron-debug": "3.1.0",
+		"electron-log": "4.2.0",
+		"electron-unhandled": "3.0.2",
+		"electron-updater": "4.3.1",
+		"electron-util": "0.14.1",
 		"sirv-cli": "0.4.5"
 	},
 	"build": {
@@ -124,7 +126,8 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "pretty-quick --staged"
+			"pre-commit": "pretty-quick --staged",
+			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
 		}
 	},
 	"lint-staged": {

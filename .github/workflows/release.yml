@@ -1,17 +1,15 @@
 # .github/workflows/release.yml
-name: Release
-
+name: Bump version
 on:
-  pull_request:
-    types: closed
-
+ push:
+  branches:
+   - master
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Tag
-        uses: K-Phoen/semver-release-action@master
-        with:
-          release_branch: master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ build:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@master
+   - name: Bump version and push tag
+     uses: mathieudutour/github-tag-action@v4.5
+     with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
