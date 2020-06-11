@@ -30,32 +30,6 @@
 
   const openUrl = () => shell.openExternal(makeUrl(pullRequest));
 
-  const hasStatusLabel = pullrequest => (pullrequest.mergeStatus && pullrequest.mergeStatus === "conflicts") || pullrequest.isDraft;
-
-  const getStatusLabel = pullrequest => {
-    if (pullrequest.mergeStatus && pullrequest.mergeStatus === "conflicts") {
-      return 'Conflicts';
-    } 
-
-    if (pullrequest.isDraft) {
-      return 'Draft';
-    }
-
-    return '';
-  }
-
-  const getStatusStyle = pullrequest => {
-    if (pullrequest.mergeStatus && pullrequest.mergeStatus === "conflicts") {
-      return '--conflicts';
-    } 
-
-    if (pullrequest.isDraft) {
-      return '--draft';
-    }
-
-    return '';
-  }
-
   const getAvatarUrl = pr => getAvatar(pr.createdBy.id, pr.organizationName, pr.createdBy.descriptor);
 
   const getTime = pullrequest => {
@@ -100,9 +74,19 @@
       <span>{pullRequest.repository.project.name}</span>
     </h2>
     <h3 class="skz-pullrequest__title">
-      {#if hasStatusLabel(pullRequest)}
-        <span class="skz-pullrequest__status skz-pullrequest__status{getStatusStyle(pullRequest)}">
-          {getStatusLabel(pullRequest)}
+      {#if pullRequest.autoCompleteSetBy}
+        <span class="skz-pullrequest__status skz-pullrequest__status--auto-complete">
+          Auto complete
+        </span>
+      {/if}
+      {#if pullRequest.isDraft}
+        <span class="skz-pullrequest__status skz-pullrequest__status--draft">
+          Draft
+        </span>
+      {/if}
+      {#if pullRequest.mergeStatus && pullRequest.mergeStatus === 'conflicts'}
+        <span class="skz-pullrequest__status skz-pullrequest__status--conflicts">
+          Conflicts
         </span>
       {/if}
       {pullRequest.title}

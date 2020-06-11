@@ -12,6 +12,10 @@
     animation: slideUp 0.7s;
     animation-fill-mode: both;
     animation-timing-function: ease-in-out;
+
+    &--dark {
+      display: none;
+    }
   }
 
   &__intro {
@@ -57,6 +61,120 @@
       transform: translateY(-50%);
     }
   }
+
+  &__config {
+    position: absolute;
+    bottom: -4rem;
+    left: 0;
+    right: 0;
+    transition: transform linear 0.2s;
+
+    &--open {
+      transform: translateY(-4rem);
+    }
+
+    .skz-button {
+      background-color: transparent;
+      border: 0;
+      color: #333;
+      font-size: 0.8rem;
+      font-family: sans-serif;
+      margin: 1rem;
+      text-decoration: underline;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        color: #fff;
+      }
+    }
+
+    form {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      background-color: #fff;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: #444;
+      }
+
+      label {
+        color: #333;
+        margin-right: 0.5rem;
+        font-size: 0.8rem;
+        line-height: 1;
+
+        @media (prefers-color-scheme: dark) {
+          color: #fff;
+        }
+      }
+    }
+
+    input {
+      height: 2rem;
+      margin-right: 2rem;
+      padding: 0.5rem;
+      border: 0;
+      line-height: 1;
+      font-size: 0.8rem;
+      color: #333;
+      background-color: #eee;
+
+      @media (prefers-color-scheme: dark) {
+        color: #fff;
+        background-color: #333;
+      }
+    }
+
+    [type='submit'] {
+      color: #fff;
+      border-radius: 4px;
+      background-color: #aaa;
+      cursor: pointer;
+      transition: opacity linear 0.2s;
+
+      @media (prefers-color-scheme: dark) {
+        color: #fff;
+        background-color: #333;
+      }
+
+      &:not(:disabled):hover {
+        opacity: 0.8;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+.skz-confirmation {
+  color: #333;
+  font-size: 0.8rem;
+  animation: fadeIn 0.3s;
+
+  &:before {
+    content: '✓';
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+    color: #fff;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.5rem;
+    border-radius: 50%;
+    background-color: green;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: #fff;
+  }
 }
 
 .input--valid {
@@ -69,6 +187,14 @@
 @media (prefers-color-scheme: dark) {
   .skz-login {
     background-color: #333;
+
+    &__logo {
+      display: none;
+
+      &--dark {
+        display: block;
+      }
+    }
 
     &__intro {
       color: #fff;

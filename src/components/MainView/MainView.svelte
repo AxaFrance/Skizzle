@@ -31,7 +31,7 @@
   onDestroy(stopRefresh);
 
   organizations.subscribe(organizationsList => {
-    if(organizationsList.length) {
+    if(organizationsList.length && $profile) {
       getPullRequests({ isFiltered: $listIsFiltered, organizations: organizationsList, profileId: $profile.id })
     }
   });
@@ -102,6 +102,8 @@
     }
   }
 
+  const manualRefresh = () => getPullRequests({ isFiltered: $listIsFiltered, organizations: $organizations, shouldNotify: true, profileId: $profile.id })
+
   $: tags = getAllTags($pullRequests);
   $: numberOfCheckedOrganizations = $organizations.filter(({ checked }) => checked).length;
   $: searchablePullRequests = selected.length > 0 ? $pullRequests.filter(x => x.labels && x.labels.filter(y => y.active && selected.includes(y.name.toLowerCase())).length > 0) : $pullRequests;
@@ -124,7 +126,9 @@
             <Tag tag={tag} on:tag={setTag} />
           {/each}
         </ul>
-        <button class="skz-pullrequests__list-more" on:click={() => show = !show}> Voir {show ? 'moins' : 'plus'}...</button>
+        {#if tags.length > 5}
+          <button class="skz-pullrequests__list-more" on:click={() => show = !show}> Voir {show ? 'moins' : 'plus'}...</button>
+        {/if}
       {/if}
     </div>
     <ul class="skz-pullrequests-list">
@@ -132,7 +136,12 @@
         <Pullrequest pullRequest={pullRequest}/>
       {:else}
         <li>
-          <p class="skz-pullrequests-list__empty">Il n'y a aucune pull request dans vos projets pour le moment.</p>
+          <p class="skz-pullrequests-list__empty">
+            Il n'y a aucune pull request dans vos projets pour le moment.
+            {#if !$isOffline && !$refreshDelay && !$isFetchingPullRequests}
+              <button class="skz-refresh-button" on:click={manualRefresh}>Rafraîchir</button>
+            {/if}
+          </p>
         </li>
       {/each}
     </ul>

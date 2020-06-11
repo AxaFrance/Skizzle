@@ -3,14 +3,14 @@
 ## Reporting Issues
 
 Should you run into issues with the project, please don't hesitate to let us know by
-[filing an issue](https://github.com/axa-group/Skizzle/issues/new).
+[filing an issue](https://github.com/axa-group/skizzle/issues/new).
 
 Pull requests containing only failing tests demonstrating the issue are welcomed
 and this also helps ensure that your issue won't regress in the future once it's fixed.
 
 ## Pull Requests
 
-We accept [pull requests](https://github.com/axa-group/Skizzle/pull/new/master)!
+We accept [pull requests](https://github.com/axa-group/skizzle/pull/new/master)!
 
 Generally we like to see pull requests that
 

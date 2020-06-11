@@ -4,6 +4,8 @@
   export let init;
   import { updateOrganization, isOffline } from '../../shared/store';
 
+  const getIsDisabled = organization => $isOffline || organization.isBroken;
+  const getIsChecked = organization => organization.checked && !organization.isBroken;
 </script>
 
 <style src="./Settings.scss"></style>
@@ -13,7 +15,7 @@
   <ul class="skz-organizations__list">
     {#each $organizations as organization}
       <li>
-        <input disabled={$isOffline} type="checkbox" id={organization.accountName} on:change={e => updateOrganization(e, organization)} checked={organization.checked} />
+        <input disabled={getIsDisabled(organization)} type="checkbox" id={organization.accountName} on:change={e => updateOrganization(e, organization)} checked={getIsChecked(organization)} />
         <label for={organization.accountName}>{organization.accountName}</label>
       </li>
     {/each}

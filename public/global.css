@@ -1,193 +1,89 @@
-::-webkit-scrollbar {
-  display: none;
-}
-
 @font-face {
-  font-family: 'Icons';
-  src: url('./assets/icons.woff');
+	font-family: 'Icons';
+	src: url('./assets/icons.woff');
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  vertical-align: baseline;
-  box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: baseline;
+	box-sizing: border-box;
 }
 
 *:before,
 *:after {
-  box-sizing: inherit;
+	box-sizing: inherit;
 }
 
 html {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 html,
 body {
-  margin: 0;
-  height: 100%;
+	margin: 0;
+	height: 100%;
 }
 
 body {
-  background-color: white;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+	overflow: hidden;
+	background-color: white;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans,
+		Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
 
 a {
-  color: rgb(0, 100, 200);
-  text-decoration: none;
+	color: rgb(0, 100, 200);
+	text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
 a:visited {
-  color: rgb(0, 80, 160);
+	color: rgb(0, 80, 160);
 }
 
 input:disabled {
-  color: #ccc;
+	color: #ccc;
 }
 
-.titlebar {
-  position: relative;
-  display: block;
-  height: 32px;
-  border-bottom: 1px solid #eee;
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #ccc;
+}
+
+::-webkit-scrollbar-corner {
+	background-color: #fff;
 }
 
 @media (prefers-color-scheme: dark) {
-  body {
-    background-color: #222;
-  }
-  .titlebar {
-    border-bottom-color: #444;
-  }
-}
+	body {
+		background-color: #222;
+	}
 
-.titlebar .drag-region {
-  width: 100%;
-  height: 100%;
-  -webkit-app-region: drag;
-}
+	::-webkit-scrollbar-thumb {
+		background: #666;
+	}
 
-.window-controls {
-  display: grid;
-  grid-template-columns: repeat(3, 32px);
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  font-size: 10px;
-  -webkit-app-region: no-drag;
-}
-
-.window-controls .button {
-  position: relative;
-  grid-row: 1 / span 1;
-  user-select: none;
-  cursor: default;
-  vertical-align: middle;
-  border: 0;
-  background-color: transparent;
-}
-
-.window-controls .button:before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: rgba(33, 33, 33, 0.8);
-  transform: translateX(-50%) translateY(-50%);
-}
-
-.window-controls .button:after {
-  content: attr(data-icon);
-  opacity: 0;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  font-family: sans-serif;
-  font-size: 0.6rem;
-  transform: translateX(-50%) translateY(-50%);
-}
-
-.window-controls .button:hover:after {
-  opacity: 1;
-}
-
-.window-controls .min-button {
-  grid-column: 1;
-}
-
-.window-controls .max-button,
-.window-controls .restore-button {
-  grid-column: 2;
-}
-
-.window-controls .close-button {
-  grid-column: 3;
-}
-
-.window-controls .close-button:before {
-  background-color: #fe6057;
-}
-
-.window-controls .min-button:before {
-  background-color: #ffbf2b;
-}
-
-.window-controls .restore-button:before,
-.window-controls .max-button:before {
-  background-color: #28cd41;
-}
-
-.window-controls .restore-button {
-  display: none;
-}
-
-.titlebar .drag-region {
-  display: grid;
-  grid-template-columns: auto 138px;
-}
-
-.window-title {
-  grid-column: 1;
-  display: flex;
-  align-items: center;
-  font-size: 0.8rem;
-  line-height: 1;
-  color: #333;
-  font-family: sans-serif;
-  padding-left: 0.5rem;
-  overflow-x: hidden;
-}
-
-.window-title .titlebar-title {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  padding-left: 0.5rem;
+	::-webkit-scrollbar-corner {
+		background-color: #444;
+	}
 }
 
 button.link {
-  color: blue;
-  cursor: pointer;
-  text-decoration: underline;
-  border: 0;
-  background-color: transparent;
+	color: blue;
+	cursor: pointer;
+	text-decoration: underline;
+	border: 0;
+	background-color: transparent;
 }
 
 button.link:hover {
-  text-decoration: none;
+	text-decoration: none;
 }

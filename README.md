@@ -1,5 +1,10 @@
 # Skizzle
 
+![Check tests](https://github.com/AxaGuilDEv/skizzle/workflows/Check%20tests/badge.svg?branch=master)
+![Check coverage](https://github.com/AxaGuilDEv/skizzle/workflows/Check%20coverage/badge.svg?branch=master)
+![Build/release](https://github.com/AxaGuilDEv/skizzle/workflows/Build/release/badge.svg)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/AxaGuilDEv/skizzle?logo=github&sort=semver)](https://github.com/AxaGuilDEv/skizzle/releases)
+
 Skizzle is a Svelte + Electron application fetch and group the pull requests from all your projects from Azure DevOps. Skizzle notify you when a new pull request is available.
 
 This app uses the [Azure DevOps API](https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-5.1) API, and it is built with [Electron](https://electronjs.org/) and [Svelte](https://svelte.dev).
@@ -27,11 +32,11 @@ npm start
 ### Installing
 
 Installing Skizzle is pretty basic. Just follow the installer.
-For logging into the app, you have to use your Azure devOps e-mail and a token. This token have to be created from [Azure](https://dev.azure.com) and must be configured as "All accessible organizations" and the Scopes have to be "full access".
+For logging into the app, you have to use your Azure devOps account.
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/AxaGuilDEv/skizzle/CONTRIBUTING.md) for details on our [code of conduct](https://github.com/AxaGuilDEv/skizzle/CODE_OF_CONDUCT.md), and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our [code of conduct](CODE_OF_CONDUCT.md), and the process for submitting pull requests to us.
 
 ## Authors
 
@@ -40,4 +45,4 @@ DE BAERDEMAEKER Mathieu - Software Engineer.
 
 ## License
 
-This project is licensed under MIT License - see the [LICENSE.md](https://github.com/AxaGuilDEv/Skizzle/LICENSE.md) file for details
+This project is licensed under MIT License - see the [LICENSE.md](LICENSE.md) file for details
