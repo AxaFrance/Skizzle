@@ -1,73 +1,91 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf8" />
-		<meta name="viewport" content="width=device-width" />
+const { is } = require('electron-util');
+const { autoUpdater } = require('electron-updater');
+const { app } = require('electron');
 
-		<title>Skizzle</title>
+let notifiedWindow;
+let mainWindow;
+autoUpdater.autoDownload = false;
 
-		<link rel="icon" type="image/png" href="./assets/logo-skizzle.svg" />
-		<link rel="stylesheet" href="global.css" />
-	</head>
-	<body>
-		<div class="skz-splashscreen">
-			<img
-				class="skz-splashscreen__logo"
-				src="./assets/logo-skizzle.svg"
-				alt="Skizzle"
-			/>
-			<img
-				class="skz-splashscreen__logo skz-splashscreen__logo--dark"
-				src="./assets/logo-skizzle-dark-context.svg"
-				alt="Skizzle"
-			/>
-			<p class="skz-splashscreen__label">
-				Chargement...
-			</p>
-			<div class="skz-splashscreen__progress">
-				<div class="skz-splashscreen__progress--bar"></div>
-			</div>
-		</div>
+autoUpdater.on('error', error => {
+	notifiedWindow.webContents.send('message', {
+		text: `Une erreur est survenue lors de la mise à jour`,
+	});
 
-		<script>
-			function update() {
-				var ipcRenderer = require('electron').ipcRenderer;
-				const label = document.getElementsByClassName('skz-splashscreen__label')[0];
-				const download = document.getElementsByClassName(
-					'skz-splashscreen__info',
-				)[0];
-				const div = document.getElementsByClassName(
-					'skz-splashscreen__progress',
-				)[0];
+	if (!app.isPackaged) {
+		setTimeout(() => {
+			notifiedWindow.hide();
+			mainWindow.show();
+		}, 2000);
+	}
+});
 
-				let width = updateWidth(0);
+autoUpdater.on('checking-for-update', () => {
+	notifiedWindow.webContents.send('message', {
+		text: 'Recherche de mise à jour...',
+	});
+});
 
-				ipcRenderer.on('message', (event, args) => {
-					const { text, data } = args;
+autoUpdater.on('update-available', () => {
+	notifiedWindow.webContents.send('message', {
+		text: 'Une mise à jour est disponible',
+	});
 
-					label.innerHTML = text;
+	autoUpdater.downloadUpdate();
+});
 
-					if (data) {
-						const percent = Math.floor(data.percent);
+autoUpdater.on('update-not-available', () => {
+	notifiedWindow.webContents.send('message', {
+		text: 'Votre application est à jour',
+	});
 
-						updateWidth(percent);
-					}
-				});
-			}
+	setTimeout(() => {
+		notifiedWindow.hide();
+		mainWindow.show();
+	}, 2000);
+});
 
-			function updateWidth(value) {
-				let width = value < 0 ? 0 : value > 100 ? 100 : value;
+autoUpdater.on('download-progress', progressObj => {
+	notifiedWindow.webContents.send('message', {
+		text: 'Téléchargement en cours...',
+		data: { ...progressObj },
+	});
+});
 
-				const bar = document.getElementsByClassName(
-					'skz-splashscreen__progress--bar',
-				)[0];
+autoUpdater.on('update-downloaded', () => {
+	notifiedWindow.webContents.send('message', {
+		text: 'Installation de la mise à jour',
+	});
 
-				bar.style.width = `${width}%`;
+	let seconds = 5;
 
-				return width;
-			}
+	setInterval(() => {
+		notifiedWindow.webContents.send('message', {
+			text: `Redémarrage dans ${seconds} seconde${seconds > 1 ? 's' : ''}`,
+		});
 
-			update();
-		</script>
-	</body>
-</html>
+		if (seconds > 0) {
+			seconds = seconds - 1;
+		}
+	}, 1000);
+
+	setTimeout(() => {
+		setImmediate(() => autoUpdater.quitAndInstall(true, true));
+	}, 5000);
+});
+
+function checkForUpdates(secondWindow, primayWindow) {
+	notifiedWindow = secondWindow;
+	mainWindow = primayWindow;
+
+	if (!is.macAppStore) {
+		const log = require('electron-log');
+		log.transports.file.level = 'debug';
+		autoUpdater.logger = log;
+
+		setTimeout(() => {
+			autoUpdater.checkForUpdates();
+		}, 2000);
+	}
+}
+
+module.exports.checkForUpdates = checkForUpdates;
