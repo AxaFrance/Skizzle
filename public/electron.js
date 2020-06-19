@@ -2,10 +2,9 @@ const unhandled = require('electron-unhandled');
 const contextMenu = require('electron-context-menu');
 const { openNewGitHubIssue, debugInfo, is } = require('electron-util');
 const debug = require('electron-debug');
-const logger = require('electron-log');
-const { autoUpdater } = require('electron-updater');
 const electron = require('electron');
 const { app, BrowserWindow, Menu, Notification, ipcMain, Tray } = electron;
+const { checkForUpdates } = require('./updater.js');
 
 try {
 	require('electron-reloader')(module);
@@ -16,13 +15,8 @@ const setAppUserModelId = () => {
 	app.setAppUserModelId('skizzle');
 };
 
-const sendStatusToWindow = text => {
-	logger.info(text);
-};
-
 setAppUserModelId();
 debug();
-autoUpdater.logger = logger;
 
 contextMenu({
 	showCopyImage: false,
@@ -59,6 +53,7 @@ let proxyPassword = null;
 let window;
 let authWindow;
 let logoutWindow;
+let splashscreen;
 let tray;
 
 function createWindow() {
@@ -69,6 +64,7 @@ function createWindow() {
 		height: 768,
 		resizable: true,
 		frame: false,
+		show: false,
 		webPreferences: {
 			nodeIntegration: true,
 			experimentalFeatures: true,
@@ -152,6 +148,25 @@ function createWindow() {
 		if (!window.isVisible()) window.show();
 		window.focus();
 	});
+
+	splashscreen = new BrowserWindow({
+		autoHideMenuBar: true,
+		frame: false,
+		width: 525,
+		height: 265,
+		resizable: false,
+		show: true,
+		skipTaskbar: true,
+		webPreferences: {
+			nodeIntegration: true,
+		},
+	});
+
+	splashscreen.loadURL(`file:///${__dirname}/splashscreen.html`);
+
+	splashscreen.on('closed', () => {
+		splashscreen = null;
+	});
 }
 
 if (app.isPackaged) {
@@ -183,8 +198,8 @@ if (!gotTheLock) {
 
 	app.commandLine.appendSwitch('disable-site-isolation-trials');
 	app.on('ready', () => {
-		updateApp();
 		createWindow();
+		checkForUpdates(splashscreen, window);
 	});
 
 	app.on('window-all-closed', () => {
@@ -289,38 +304,4 @@ if (!gotTheLock) {
 
 		logoutWindow.webContents.loadURL(config.logout);
 	});
-}
-
-autoUpdater.on('checking-for-update', () => {
-	sendStatusToWindow('Checking for update...');
-});
-
-autoUpdater.on('update-available', info => {
-	sendStatusToWindow('Update available.');
-});
-
-autoUpdater.on('update-not-available', info => {
-	sendStatusToWindow('Update not available.');
-});
-
-autoUpdater.on('error', err => {
-	sendStatusToWindow(`Error in auto-updater. ${err}`);
-});
-
-autoUpdater.on('download-progress', progressObj => {
-	let log_message = `Download speed: ${progressObj.bytesPerSecond}`;
-	log_message = `${log_message} - Downloaded ${progressObj.percent}%`;
-	log_message = `${log_message} (${progressObj.transferred}/${progressObj.total})`;
-	sendStatusToWindow(log_message);
-});
-
-autoUpdater.on('update-downloaded', info => {
-	sendStatusToWindow('Update downloaded');
-	autoUpdater.quitAndInstall();
-});
-
-function updateApp() {
-	if (!is.macAppStore) {
-		autoUpdater.checkForUpdatesAndNotify();
-	}
 }

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf8" />
+		<meta name="viewport" content="width=device-width" />
+
+		<title>Skizzle</title>
+
+		<link rel="icon" type="image/png" href="./assets/logo-skizzle.svg" />
+		<link rel="stylesheet" href="global.css" />
+	</head>
+	<body>
+		<div class="skz-splashscreen">
+			<img
+				class="skz-splashscreen__logo"
+				src="./assets/logo-skizzle.svg"
+				alt="Skizzle"
+			/>
+			<img
+				class="skz-splashscreen__logo skz-splashscreen__logo--dark"
+				src="./assets/logo-skizzle-dark-context.svg"
+				alt="Skizzle"
+			/>
+			<p class="skz-splashscreen__label">
+				Chargement...
+			</p>
+			<div class="skz-splashscreen__progress">
+				<div class="skz-splashscreen__progress--bar"></div>
+			</div>
+		</div>
+
+		<script>
+			function update() {
+				var ipcRenderer = require('electron').ipcRenderer;
+				const label = document.getElementsByClassName('skz-splashscreen__label')[0];
+				const download = document.getElementsByClassName(
+					'skz-splashscreen__info',
+				)[0];
+				const div = document.getElementsByClassName(
+					'skz-splashscreen__progress',
+				)[0];
+
+				let width = updateWidth(0);
+
+				ipcRenderer.on('message', (event, args) => {
+					const { text, data } = args;
+
+					label.innerHTML = text;
+
+					if (data) {
+						const percent = Math.floor(data.percent);
+
+						updateWidth(percent);
+					}
+				});
+			}
+
+			function updateWidth(value) {
+				let width = value < 0 ? 0 : value > 100 ? 100 : value;
+
+				const bar = document.getElementsByClassName(
+					'skz-splashscreen__progress--bar',
+				)[0];
+
+				bar.style.width = `${width}%`;
+
+				return width;
+			}
+
+			update();
+		</script>
+	</body>
+</html>
