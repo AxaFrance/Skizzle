@@ -43,7 +43,7 @@
 		list-style: none;
 		display: flex;
 		flex-flow: wrap;
-		width: 85%;
+		width: 90%;
 
 		> :global(:nth-child(n + 6)) {
 			display: none;
@@ -58,8 +58,7 @@
 			color: #000;
 			font-size: x-small;
 			margin-bottom: 0.5rem;
-			width: 15%;
-			height: 2rem;
+			width: 10%;
 
 			&:hover {
 				text-decoration: underline;
