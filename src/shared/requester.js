@@ -104,6 +104,13 @@ export const getToken = async ({
 			client_assertion,
 			current_date,
 		});
+	} else {
+		removeItem('clientToken');
+		isFetchingProfile.set(false);
+		profile.set({
+			...profile,
+			hasError: true,
+		});
 	}
 
 	refreshing = false;

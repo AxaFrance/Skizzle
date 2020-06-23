@@ -16,7 +16,6 @@ const setAppUserModelId = () => {
 };
 
 setAppUserModelId();
-debug();
 
 contextMenu({
 	showCopyImage: false,
