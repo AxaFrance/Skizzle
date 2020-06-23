@@ -399,6 +399,7 @@ export const getPullRequests = async ({
 	isFiltered,
 	profileId,
 }) => {
+	numberOfLoadedPullRequests = 0;
 	if (organizations.length) {
 		const repositoriesToFetch = organizations
 			.filter(checkedElements)
