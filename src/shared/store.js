@@ -28,57 +28,58 @@ export const listIsFiltered = writable(false);
 /**
  * Organizations
  */
+export const organizationsHasError = writable([]);
 export const organizations = writable([]);
 export const updateOrganization = (e, organization) => {
-  organization.checked = e.target.checked;
+	organization.checked = e.target.checked;
 
-  if (organization.checked) {
-    updateItem('organizations', organization.accountId);
-  } else {
-    removeValueFromKey('organizations', organization.accountId);
-  }
-  organizations.update(organizationsList =>
-    organizationsList.map(organizationItem => {
-      let newOrganization = organizationItem;
+	if (organization.checked) {
+		updateItem('organizations', organization.accountId);
+	} else {
+		removeValueFromKey('organizations', organization.accountId);
+	}
+	organizations.update(organizationsList =>
+		organizationsList.map(organizationItem => {
+			let newOrganization = organizationItem;
 
-      if (organizationItem.accountId === organization.accountId) {
-        newOrganization = organization;
-      }
+			if (organizationItem.accountId === organization.accountId) {
+				newOrganization = organization;
+			}
 
-      return newOrganization;
-    }),
-  );
+			return newOrganization;
+		}),
+	);
 };
 
 /**
  * Repositories
  */
 export const updateRepository = (e, repository) => {
-  repository.checked = e.target.checked;
+	repository.checked = e.target.checked;
 
-  if (repository.checked) {
-    updateItem('repositories', repository.id);
-  } else {
-    removeValueFromKey('repositories', repository.id);
-  }
+	if (repository.checked) {
+		updateItem('repositories', repository.id);
+	} else {
+		removeValueFromKey('repositories', repository.id);
+	}
 
-  organizations.update(organizationsList =>
-    organizationsList.map(organizationItem => ({
-      ...organizationItem,
-      projects: organizationItem.projects.map(project => ({
-        ...project,
-        repositories: project.repositories.map(repositoryItem => {
-          let newRepository = repositoryItem;
+	organizations.update(organizationsList =>
+		organizationsList.map(organizationItem => ({
+			...organizationItem,
+			projects: organizationItem.projects.map(project => ({
+				...project,
+				repositories: project.repositories.map(repositoryItem => {
+					let newRepository = repositoryItem;
 
-          if (repositoryItem.id === repository.id) {
-            newRepository = repository;
-          }
+					if (repositoryItem.id === repository.id) {
+						newRepository = repository;
+					}
 
-          return newRepository;
-        }),
-      })),
-    })),
-  );
+					return newRepository;
+				}),
+			})),
+		})),
+	);
 };
 
 export const repositories = writable([]);
@@ -90,32 +91,32 @@ export const pullRequests = writable([]);
  */
 
 const getSettingsByKey = (key, initial, type = undefined) => {
-  let value = getItem(key);
+	let value = getItem(key);
 
   if (typeof value !== 'boolean' && !value && value !== 0) {
     value = initial;
     addItem(key, value);
 
-    if (key === 'startup') {
-      ipcRenderer.send('launch-startup', value);
-    }
-  }
+		if (key === 'startup') {
+			ipcRenderer.send('launch-startup', value);
+		}
+	}
 
-  return type ? type(value) : value;
+	return type ? type(value) : value;
 };
 
 export const refreshDelay = writable(
-  getSettingsByKey('refreshDelay', 5, Number),
+	getSettingsByKey('refreshDelay', 5, Number),
 );
 
 export const startup = writable(getSettingsByKey('startup', true));
 
 export const cleanStore = () => {
-  clientToken.set(undefined);
-  isOffline.set(false);
-  isFetchingProfile.set(false);
-  profile.set(undefined);
-  organizations.set([]);
-  repositories.set([]);
-  pullRequests.set([]);
+	clientToken.set(undefined);
+	isOffline.set(false);
+	isFetchingProfile.set(false);
+	profile.set(undefined);
+	organizations.set([]);
+	repositories.set([]);
+	pullRequests.set([]);
 };

@@ -4,6 +4,7 @@
     import Projects from '../Projects';
     import Settings from '../Settings';
     import Loader from '../Loader';
+    import ErrorMessage from '../ErrorMessage';
     import { profile, organizations, isFetchingProfile, isSidebarHidden, theme } from '../../shared/store';
     import { getProfile } from '../../shared/requester';
     import { addItem } from '../../shared/storage';
@@ -57,6 +58,9 @@
     {#if !$profile || $isFetchingProfile}
         <Loader/>
     {:else}
+    {#if $profile.hasError}
+        <ErrorMessage retry={getProfile} label="Impossible de charger votre profil."/>
+    {:else}
         <div class="skz-avatar__gradient skz-avatar__gradient--{$theme}"></div>
         <div class="skz-avatar">
             {#await $profile.avatar}
@@ -94,4 +98,5 @@
             </div>
         </div>
     {/if}
+   {/if} 
 </div>

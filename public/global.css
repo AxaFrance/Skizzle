@@ -62,18 +62,52 @@ input:disabled {
 	background-color: #fff;
 }
 
-@media (prefers-color-scheme: dark) {
-	body {
-		background-color: #222;
-	}
+.skz-splashscreen {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: column;
+}
 
-	::-webkit-scrollbar-thumb {
-		background: #666;
-	}
+.skz-splashscreen__logo {
+	height: 100%;
+	width: 100%;
+	animation: slideUp 0.7s;
+	animation-fill-mode: both;
+	animation-timing-function: ease-in-out;
+}
 
-	::-webkit-scrollbar-corner {
-		background-color: #444;
-	}
+.skz-splashscreen__logo--dark {
+	display: none;
+}
+
+.skz-splashscreen__progress {
+	width: 100%;
+	text-align: center;
+	background-color: #eee;
+	position: relative;
+	height: 2rem;
+}
+
+.skz-splashscreen__progress--bar {
+	height: 100%;
+	background-color: #23cc56;
+}
+
+.skz-splashscreen__label {
+	position: relative;
+	height: 15%;
+}
+
+.btn {
+	background-color: #00008f;
+	border: none;
+	color: white;
+	padding: 12px 16px;
+	font-size: 16px;
+	cursor: pointer;
 }
 
 button.link {
@@ -86,4 +120,34 @@ button.link {
 
 button.link:hover {
 	text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		background-color: #222;
+	}
+
+	.skz-splashscreen__logo {
+		display: none;
+	}
+
+	.skz-splashscreen__logo--dark {
+		display: block;
+	}
+
+	.skz-splashscreen__progress {
+		background-color: #333;
+	}
+
+	.skz-splashscreen__label {
+		color: #fff;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: #666;
+	}
+
+	::-webkit-scrollbar-corner {
+		background-color: #444;
+	}
 }
