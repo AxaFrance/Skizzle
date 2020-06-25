@@ -93,12 +93,9 @@ export const pullRequests = writable([]);
 const getSettingsByKey = (key, initial, type = undefined) => {
 	let value = getItem(key);
 
-	if (
-		(typeof value !== 'boolean' && !value && value !== 0) ||
-		(value === undefined && value === null)
-	) {
-		value = initial;
-		addItem(key, value);
+  if (typeof value !== 'boolean' && !value && value !== 0) {
+    value = initial;
+    addItem(key, value);
 
 		if (key === 'startup') {
 			ipcRenderer.send('launch-startup', value);
