@@ -1,8 +1,9 @@
 <script>
   import { onDestroy } from "svelte";
-  import { pullRequests, refreshDelay, organizations, isFetchingPullRequests, isFetchingProfile, profile, listIsFiltered, isOffline } from '../../shared/store';
+  import { pullRequests, refreshDelay, organizations, isFetchingPullRequests, pullRequestsFetchHasError, isFetchingProfile, profile, listIsFiltered, isOffline } from '../../shared/store';
   import { getPullRequests } from '../../shared/requester';
   import Pullrequest from '../Pullrequest';
+  import ErrorMessage from '../ErrorMessage';
   import Loader from '../Loader';
   import ListHeader from '../ListHeader';
   import Tag from '../Tag';
@@ -135,6 +136,9 @@
       {#each searchablePullRequests as pullRequest}
         <Pullrequest pullRequest={pullRequest}/>
       {:else}
+        {#if $pullRequestsFetchHasError}
+          <ErrorMessage retry={manualRefresh} label={'Impossible de récupérer vos pull requests.'} />
+        {:else}
         <li>
           <p class="skz-pullrequests-list__empty">
             Il n'y a aucune pull request dans vos projets pour le moment.
@@ -143,6 +147,7 @@
             {/if}
           </p>
         </li>
+        {/if}
       {/each}
     </ul>
   {/if}

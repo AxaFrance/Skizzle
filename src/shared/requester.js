@@ -13,6 +13,7 @@ import {
 	organizations,
 	isFetchingPullRequests,
 	isFetchingProfile,
+	pullRequestsFetchHasError,
 } from './store';
 import { ORGANIZATIONS, IMAGES } from './constant';
 import { getDiffDays } from './helpers';
@@ -406,6 +407,7 @@ export const getPullRequests = async ({
 	isFiltered,
 	profileId,
 }) => {
+	pullRequestsFetchHasError.set(false);
 	numberOfLoadedPullRequests = 0;
 	if (organizations.length) {
 		const repositoriesToFetch = organizations
@@ -441,12 +443,14 @@ export const fetchPullRequests = async ({
 		`https://dev.azure.com/${organizationName}/${projectId}/_apis/git/repositories/${id}/pullRequests?searchCriteria.status=active&includeLinks=true&api-version=5.0`,
 	);
 
-	if (res.ok) {
+	if (res.ok && res.status === 200) {
 		const result = await res.json();
 
 		loadedPullRequests.push(
 			result.value.map(value => ({ ...value, organizationName })),
 		);
+	} else {
+		pullRequestsFetchHasError.set(true);
 	}
 
 	numberOfLoadedPullRequests += 1;
