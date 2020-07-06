@@ -84,6 +84,7 @@ export const updateRepository = (e, repository) => {
 
 export const repositories = writable([]);
 export const isFetchingPullRequests = writable(false);
+export const pullRequestsFetchHasError = writable(false);
 export const pullRequests = writable([]);
 
 /**
@@ -93,9 +94,9 @@ export const pullRequests = writable([]);
 const getSettingsByKey = (key, initial, type = undefined) => {
 	let value = getItem(key);
 
-  if (typeof value !== 'boolean' && !value && value !== 0) {
-    value = initial;
-    addItem(key, value);
+	if (typeof value !== 'boolean' && !value && value !== 0) {
+		value = initial;
+		addItem(key, value);
 
 		if (key === 'startup') {
 			ipcRenderer.send('launch-startup', value);
