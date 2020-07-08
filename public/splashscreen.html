@@ -32,16 +32,10 @@
 
 		<script>
 			function update() {
-				var ipcRenderer = require('electron').ipcRenderer;
+				const ipcRenderer = require('electron').ipcRenderer;
 				const label = document.getElementsByClassName('skz-splashscreen__label')[0];
-				const download = document.getElementsByClassName(
-					'skz-splashscreen__info',
-				)[0];
-				const div = document.getElementsByClassName(
-					'skz-splashscreen__progress',
-				)[0];
 
-				let width = updateWidth(0);
+				updateWidth(0);
 
 				ipcRenderer.on('message', (event, args) => {
 					const { text, data } = args;
