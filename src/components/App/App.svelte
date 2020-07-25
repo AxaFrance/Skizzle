@@ -1,5 +1,6 @@
 <script>
 	const { ipcRenderer } = require('electron');
+	const { translate } = require('./i18n.js');
 	import { onMount } from 'svelte';
 	import Login from '../../layouts/Login';
 	import Home from '../../layouts/Home';
@@ -12,7 +13,7 @@
 	});
 
 	window.addEventListener('online', () => isOffline.set(false));
-  	window.addEventListener('offline', () => isOffline.set(true));
+	window.addEventListener('offline', () => isOffline.set(true));
 </script>
 
 <style src="./App.scss"></style>
@@ -20,7 +21,7 @@
 <Header />
 {#if $isOffline}
 	<div class="skz-offline-banner">
-		<p>Vous n'êtes pas connecté à Internet. Il est impossible de rafraîchir la liste et certaines fonctionnalités sont désactivées.</p>
+		<p>{translate('Offline')}</p>
 	</div>
 {/if}
 {#if $clientToken && $clientToken.clientToken}

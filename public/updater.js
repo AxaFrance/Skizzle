@@ -1,6 +1,7 @@
 const { is } = require('electron-util');
 const { autoUpdater } = require('electron-updater');
 const { app } = require('electron');
+const { translate } = require('./i18n.js');
 
 let notifiedWindow;
 let mainWindow;
@@ -8,7 +9,7 @@ autoUpdater.autoDownload = false;
 
 autoUpdater.on('error', error => {
 	notifiedWindow.webContents.send('message', {
-		text: `Une erreur est survenue lors de la mise à jour`,
+		text: !app.isPackaged ? translate('UpdateDevMode') : translate('UpdateError'),
 	});
 
 	if (!app.isPackaged) {
@@ -21,13 +22,13 @@ autoUpdater.on('error', error => {
 
 autoUpdater.on('checking-for-update', () => {
 	notifiedWindow.webContents.send('message', {
-		text: 'Recherche de mise à jour...',
+		text: translate('UpdateCheck'),
 	});
 });
 
 autoUpdater.on('update-available', () => {
 	notifiedWindow.webContents.send('message', {
-		text: 'Une mise à jour est disponible',
+		text: translate('UpdateAvailable'),
 	});
 
 	autoUpdater.downloadUpdate();
@@ -35,7 +36,7 @@ autoUpdater.on('update-available', () => {
 
 autoUpdater.on('update-not-available', () => {
 	notifiedWindow.webContents.send('message', {
-		text: 'Votre application est à jour',
+		text: translate('UpdateNotAvailable'),
 	});
 
 	setTimeout(() => {
@@ -46,21 +47,21 @@ autoUpdater.on('update-not-available', () => {
 
 autoUpdater.on('download-progress', progressObj => {
 	notifiedWindow.webContents.send('message', {
-		text: 'Téléchargement en cours...',
+		text: translate('UpdateDownloading'),
 		data: { ...progressObj },
 	});
 });
 
 autoUpdater.on('update-downloaded', () => {
 	notifiedWindow.webContents.send('message', {
-		text: 'Installation de la mise à jour',
+		text: translate('UpdateDownloaded'),
 	});
 
 	let seconds = 5;
 
 	setInterval(() => {
 		notifiedWindow.webContents.send('message', {
-			text: `Redémarrage dans ${seconds} seconde${seconds > 1 ? 's' : ''}`,
+			text: translate('UpdateNotified', seconds, seconds > 1 ? 's' : ''),
 		});
 
 		if (seconds > 0) {

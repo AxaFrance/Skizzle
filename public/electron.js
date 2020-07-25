@@ -5,6 +5,7 @@ const debug = require('electron-debug');
 const electron = require('electron');
 const { app, BrowserWindow, Menu, Notification, ipcMain, Tray } = electron;
 const { checkForUpdates } = require('./updater.js');
+const { translate } = require('./i18n.js');
 
 try {
 	require('electron-reloader')(module);
@@ -92,12 +93,12 @@ function createWindow() {
 			label: 'Application',
 			submenu: [
 				{
-					label: 'About Application',
+					label: translate('About Application'),
 					selector: 'orderFrontStandardAboutPanel:',
 				},
 				{ type: 'separator' },
 				{
-					label: 'Quit',
+					label: translate('Quit'),
 					accelerator: 'Command+Q',
 					click() {
 						app.quit();
@@ -106,34 +107,42 @@ function createWindow() {
 			],
 		},
 		{
-			label: 'Edit',
+			label: translate('Edit'),
 			submenu: [
-				{ label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
-				{ label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
-				{ type: 'separator' },
-				{ label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
-				{ label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-				{ label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
+				{ label: translate('Undo'), accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
 				{
-					label: 'Select All',
+					label: translate('Redo'),
+					accelerator: 'Shift+CmdOrCtrl+Z',
+					selector: 'redo:',
+				},
+				{ type: 'separator' },
+				{ label: translate('Cut'), accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+				{ label: translate('Copy'), accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+				{
+					label: translate('Paste'),
+					accelerator: 'CmdOrCtrl+V',
+					selector: 'paste:',
+				},
+				{
+					label: translate('Select All'),
 					accelerator: 'CmdOrCtrl+A',
 					selector: 'selectAll:',
 				},
 			],
 		},
 		{
-			label: 'Ouvrir la console de développement',
+			label: translate('Open devtool'),
 			click: () => window.webContents.openDevTools({ mode: 'detach' }),
 			accelerator: 'CommandOrControl+O',
 		},
 		{
-			label: "Recharger l'application",
+			label: translate('Reload application'),
 			click: () => window.reload(),
 			accelerator: 'F5',
 		},
 		{ type: 'separator' },
 		{
-			label: 'Quitter',
+			label: translate('Quit'),
 			click: () => app.quit(),
 			accelerator: 'CommandOrControl+Q',
 		},
