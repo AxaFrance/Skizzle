@@ -1,4 +1,5 @@
 <script>
+  const { translate } = require('./i18n.js');
   import { onDestroy } from "svelte";
   import { pullRequests, refreshDelay, organizations, isFetchingPullRequests, pullRequestsFetchHasError, isFetchingProfile, profile, listIsFiltered, isOffline } from '../../shared/store';
   import { getPullRequests } from '../../shared/requester';
@@ -128,7 +129,7 @@
           {/each}
         </ul>
         {#if tags.length > 5}
-          <button class="skz-pullrequests__list-more" on:click={() => show = !show}> Voir {show ? 'moins' : 'plus'}...</button>
+          <button class="skz-pullrequests__list-more" on:click={() => show = !show}> {translate('show')} {show ? translate('less') : translate('more')}...</button>
         {/if}
       {/if}
     </div>
@@ -137,13 +138,13 @@
         <Pullrequest pullRequest={pullRequest}/>
       {:else}
         {#if $pullRequestsFetchHasError}
-          <ErrorMessage retry={manualRefresh} label={'Impossible de récupérer vos pull requests.'} />
+          <ErrorMessage retry={manualRefresh} label={translate('PullRequestsError')} />
         {:else}
         <li>
           <p class="skz-pullrequests-list__empty">
-            Il n'y a aucune pull request dans vos projets pour le moment.
+            {translate('PullRequestsEmpty')}
             {#if !$isOffline && !$refreshDelay && !$isFetchingPullRequests}
-              <button class="skz-refresh-button" on:click={manualRefresh}>Rafraîchir</button>
+              <button class="skz-refresh-button" on:click={manualRefresh}>{translate('Refresh')}</button>
             {/if}
           </p>
         </li>

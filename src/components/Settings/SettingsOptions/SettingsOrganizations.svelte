@@ -1,18 +1,21 @@
 <script>
-  import { refreshDelay, organizations } from '../../shared/store';
-  import { addItem } from '../../shared/storage';
+  const { translate } = require('./i18n.js');
+  import { refreshDelay, organizations, updateOrganization, isOffline } from '../../../shared/store';
+  import { addItem } from '../../../shared/storage';
+
   export let init;
-  import { updateOrganization, isOffline } from '../../shared/store';
+  export let title;
 
   const getIsDisabled = organization => $isOffline || organization.isBroken;
   const getIsChecked = organization => organization.checked && !organization.isBroken;
 </script>
 
-<style src="./Settings.scss"></style>
+<style src="../Settings.scss"></style>
 
-<button class="skz-settings-back" on:click={init}>Retour</button>
+<button class="skz-settings-back" on:click={init}>{translate('Back')}</button>
+<h1 class="skz-settings-title">{title}</h1>
 {#if $organizations.length}
-  <p class="skz-organizations__intro">Sélectionnez les organisations pour lesquelles vous voulez voir les projets.</p>
+  <p class="skz-organizations__intro">{translate('ProjectsOrganizations')}</p>
 {/if}
 <ul class="skz-organizations__list">
   {#each $organizations as organization}
@@ -21,7 +24,7 @@
       <label for={organization.accountName}>{organization.accountName}</label>
     </li>
   {:else}
-    <p>Il n'y a aucune organisation valide sur votre compte.</p>
+    <p>{translate('OrganizationsEmpty')}</p>
   {/each}
 </ul>
 

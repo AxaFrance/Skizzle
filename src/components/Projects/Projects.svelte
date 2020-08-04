@@ -1,15 +1,16 @@
 <script>
+  const { translate } = require('./i18n.js');
   import { createEventDispatcher } from 'svelte';
   import Project from '../Project';
   export let projects;
 
-  const titles = ['Aucun projet', '1 Projet'];
+  const titles = [translate('NoProject'), translate('OneProject')];
   let searchInput = '';
   let searchableProject = [];
 
   $: searchableProject = projects.filter(p => p.name.toLowerCase().indexOf(searchInput.toLowerCase()) !== -1 || p.repositories.filter(r => r.name.toLowerCase().indexOf(searchInput.toLowerCase()) !== -1).length > 0);
   $: checked = searchableProject.length > 0 && searchableProject.length <= 5;
-  $: title = titles[searchableProject.length] || `${searchableProject.length} Projets`;
+  $: title = titles[searchableProject.length] || `${searchableProject.length} ${translate('Projects')}`;
 
   const dispatch = createEventDispatcher();
   let map = {}
@@ -33,7 +34,7 @@
 <div class="skz-projects">
   <header class="skz-projects__header">
     <div class="skz-projects__search">
-      <input id="search" type="text" bind:value={searchInput} placeholder="Chercher"/>
+      <input id="search" type="text" bind:value={searchInput} placeholder={translate('Search')}/>
     </div>
     <h2>{title}</h2>
   </header>
@@ -44,7 +45,7 @@
       {:else}
         <li>
           <p class="skz-projects__empty">
-            Les organisations actuellement selectionnées ne contiennent aucun projet.
+            {translate('NoProjectOnOrganization')}
           </p>
         </li>
       {/each}

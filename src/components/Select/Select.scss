@@ -1,0 +1,51 @@
+.skz-select__container {
+	position: relative;
+	border: 1px solid #ccc;
+	background: #fff;
+	display: inline-block;
+
+	.skz-select__input {
+		font-family: 'Icons', Source Sans Pro, Arial, sans-serif;
+		border: 0;
+		background: 0 0;
+		position: relative;
+		z-index: 1;
+		padding: 0.6rem 1.8rem 0.55rem 0.5rem;
+		width: 100%;
+		font-size: 1em;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		text-indent: 0.01px;
+		margin: 0;
+		line-height: inherit;
+		touch-action: manipulation;
+		text-transform: none;
+	}
+
+	.glyphicon-menu-down {
+		position: absolute;
+		right: 0.5rem;
+		font-size: 0.7em;
+		top: 50%;
+		-webkit-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);
+
+		&:before {
+			content: '\EAA5';
+		}
+	}
+}
+
+.glyphicon {
+	font-family: icons;
+	position: relative;
+	top: 0;
+	display: inline-block;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}

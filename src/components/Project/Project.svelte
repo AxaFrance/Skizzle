@@ -22,6 +22,6 @@
     {project.name}
   </label>
   {#if isOpen}
-  <Repositories repositories={project.repositories} />
+    <Repositories repositories={project.repositories} />
   {/if}
 </li>

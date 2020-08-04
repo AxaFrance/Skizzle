@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 import { removeValueFromKey, getItem, addItem, updateItem } from './storage';
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, remote } = require('electron');
+const { updateLanguage } = require('./i18n.js');
 
 /**
  * Token
@@ -11,6 +12,15 @@ export const clientToken = writable(getItem('clientToken') || undefined);
  * isOffline
  */
 export const isOffline = writable(false);
+
+/**
+ * Language
+ */
+export const language = writable(getItem('language') || remote.app.getLocale());
+language.subscribe(lang => {
+	addItem('language', lang);
+	updateLanguage(lang);
+});
 
 /**
  * Profile

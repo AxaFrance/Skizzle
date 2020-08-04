@@ -1,4 +1,5 @@
 <script>
+  const { translate } = require('./i18n.js');
   import { updateRepository, isOffline } from '../../shared/store';
   export let repositories = [];
 </script>
@@ -22,6 +23,6 @@
   </ul>
 {:else}
   <div class="skz-repos">
-    <p>Aucun repository pour ce projet.</p>
+    <p>{translate('NoRepository')}</p>
   </div>
 {/if}

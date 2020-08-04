@@ -3,6 +3,7 @@ const contextMenu = require('electron-context-menu');
 const { openNewGitHubIssue, debugInfo, is } = require('electron-util');
 const debug = require('electron-debug');
 const electron = require('electron');
+const log = require('electron-log');
 const { app, BrowserWindow, Menu, Notification, ipcMain, Tray } = electron;
 const { checkForUpdates } = require('./updater.js');
 const { translate } = require('./i18n.js');
@@ -17,7 +18,6 @@ const setAppUserModelId = () => {
 };
 
 setAppUserModelId();
-
 contextMenu({
 	showCopyImage: false,
 	showSearchWithGoogle: false,
@@ -245,6 +245,28 @@ if (!gotTheLock) {
 		}
 	});
 
+	const login = (event, url) => {
+		const details = url;
+
+		if (details && details.startsWith(config.redirectUri)) {
+			const _url = details.split('?')[1];
+			const _params = new URLSearchParams(_url);
+			const _accessCode = _params.get('code');
+
+			if (_accessCode) {
+				event.sender.send('getToken', {
+					url: config.tokenUrl,
+					redirect_uri: config.redirectUri,
+					client_assertion: config.clientAssertion,
+					access_code: _accessCode,
+				});
+
+				authWindow.close();
+				authWindow = null;
+			}
+		}
+	};
+
 	ipcMain.on('azure-devops-oauth', (event, arg) => {
 		if (!authWindow && !logoutWindow) {
 			authWindow = new BrowserWindow({
@@ -266,27 +288,8 @@ if (!gotTheLock) {
 				authWindow = null;
 			});
 
-			authWindow.webContents.on('will-redirect', (e, url) => {
-				const details = url;
-
-				if (details && details.startsWith(config.redirectUri)) {
-					const _url = details.split('?')[1];
-					const _params = new URLSearchParams(_url);
-					const _accessCode = _params.get('code');
-
-					if (_accessCode) {
-						event.sender.send('getToken', {
-							url: config.tokenUrl,
-							redirect_uri: config.redirectUri,
-							client_assertion: config.clientAssertion,
-							access_code: _accessCode,
-						});
-
-						authWindow.close();
-						authWindow = null;
-					}
-				}
-			});
+			authWindow.webContents.on('will-navigate', (e, url) => login(event, url));
+			authWindow.webContents.on('will-redirect', (e, url) => login(event, url));
 		}
 	});
 

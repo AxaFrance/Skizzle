@@ -1,4 +1,5 @@
 <script>
+    const { translate } = require('./i18n.js');
     import { onMount } from 'svelte';
     import Modal from '../Modal';
     import Projects from '../Projects';
@@ -59,34 +60,34 @@
         <Loader/>
     {:else}
     {#if $profile.hasError}
-        <ErrorMessage retry={getProfile} label="Impossible de charger votre profil."/>
+        <ErrorMessage retry={getProfile} label={translate('ProfileNotFound')}/>
     {:else}
         <div class="skz-avatar__gradient skz-avatar__gradient--{$theme}"></div>
         <div class="skz-avatar">
             {#await $profile.avatar}
-            <img
-                class="skz-avatar__image"
-                alt={$profile.displayName}
-                src="./assets/user.svg"
-            />
-            {:then avatar}
-                <img 
-                    class="skz-avatar__image" 
-                    alt={$profile.displayName} 
-                    src="data:image/jpeg;base64,{avatar.value}" />
-            {:catch error}
-            <img
-                class="skz-avatar__image"
-                alt={$profile.displayName}
-                src="./assets/user.svg"
-            />
+                <img
+                    class="skz-avatar__image"
+                    alt={$profile.displayName}
+                    src="./assets/user.svg"
+                />
+                {:then avatar}
+                    <img 
+                        class="skz-avatar__image" 
+                        alt={$profile.displayName} 
+                        src="data:image/jpeg;base64,{avatar.value}" />
+                {:catch error}
+                <img
+                    class="skz-avatar__image"
+                    alt={$profile.displayName}
+                    src="./assets/user.svg"
+                />
             {/await}
-            <button class="skz-profile-toggle" on:click={toggleSidebar}>Menu</button>
+            <button class="skz-profile-toggle" on:click={toggleSidebar}>{translate('Menu')}</button>
         </div>
         <p class="skz-profile-name">{$profile.displayName}</p>
         <nav class="skz-profile-nav skz-profile-nav--{currentTabIndex}">
-        <button on:click={() => onTabChange(1)} class="skz-profile-nav__item skz-profile-nav__item--projects">Projets</button>
-        <button on:click={() => onTabChange(2)} class="skz-profile-nav__item skz-profile-nav__item--settings">Réglages</button>
+        <button on:click={() => onTabChange(1)} class="skz-profile-nav__item skz-profile-nav__item--projects">{translate('Projects')}</button>
+        <button on:click={() => onTabChange(2)} class="skz-profile-nav__item skz-profile-nav__item--settings">{translate('Settings')}</button>
         <span class="skz-profile-nav__indicator"></span>
         </nav>
         <div class="skz-profile-content skz-profile-content--{currentTabIndex}">

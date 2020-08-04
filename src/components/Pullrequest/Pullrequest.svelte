@@ -1,4 +1,5 @@
 <script>
+  const { translate } = require('./i18n.js');
   const { shell } = require('electron');
   import Loader from '../Loader';
   import CommentsCounter from '../CommentsCounter';
@@ -37,9 +38,9 @@
     const diffDays = getDiffDays(creationDate);
 
     switch(diffDays) {
-      case 0: return 'Aujourd\'hui';
-      case 1: return 'Hier';
-      default: return `il y a ${diffDays} jours`;
+      case 0: return translate('Today');
+      case 1: return translate('Yesterday');
+      default: return translate('Time', diffDays);
     }
   }
 </script>
@@ -76,17 +77,17 @@
     <h3 class="skz-pullrequest__title">
       {#if pullRequest.autoCompleteSetBy}
         <span class="skz-pullrequest__status skz-pullrequest__status--auto-complete">
-          Auto complete
+          {translate('AutoComplete')}
         </span>
       {/if}
       {#if pullRequest.isDraft}
         <span class="skz-pullrequest__status skz-pullrequest__status--draft">
-          Draft
+          {translate('Draft')}
         </span>
       {/if}
       {#if pullRequest.mergeStatus && pullRequest.mergeStatus === 'conflicts'}
         <span class="skz-pullrequest__status skz-pullrequest__status--conflicts">
-          Conflicts
+          {translate('Conflicts')}
         </span>
       {/if}
       {pullRequest.title}
