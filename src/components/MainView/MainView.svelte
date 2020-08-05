@@ -1,7 +1,7 @@
 <script>
-  const { translate } = require('./i18n.js');
+  
   import { onDestroy } from "svelte";
-  import { pullRequests, refreshDelay, organizations, isFetchingPullRequests, pullRequestsFetchHasError, isFetchingProfile, profile, listIsFiltered, isOffline } from '../../shared/store';
+  import { pullRequests, refreshDelay, organizations, isFetchingPullRequests, pullRequestsFetchHasError, isFetchingProfile, profile, listIsFiltered, isOffline, language } from '../../shared/store';
   import { getPullRequests } from '../../shared/requester';
   import Pullrequest from '../Pullrequest';
   import ErrorMessage from '../ErrorMessage';
@@ -129,7 +129,7 @@
           {/each}
         </ul>
         {#if tags.length > 5}
-          <button class="skz-pullrequests__list-more" on:click={() => show = !show}> {translate('show')} {show ? translate('less') : translate('more')}...</button>
+          <button class="skz-pullrequests__list-more" on:click={() => show = !show}> {language.getWord('show')} {show ? language.getWord('less') : language.getWord('more')}...</button>
         {/if}
       {/if}
     </div>
@@ -138,13 +138,13 @@
         <Pullrequest pullRequest={pullRequest}/>
       {:else}
         {#if $pullRequestsFetchHasError}
-          <ErrorMessage retry={manualRefresh} label={translate('PullRequestsError')} />
+          <ErrorMessage retry={manualRefresh} label={language.getWord('PullRequestsError')} />
         {:else}
         <li>
           <p class="skz-pullrequests-list__empty">
-            {translate('PullRequestsEmpty')}
+            {language.getWord('PullRequestsEmpty')}
             {#if !$isOffline && !$refreshDelay && !$isFetchingPullRequests}
-              <button class="skz-refresh-button" on:click={manualRefresh}>{translate('Refresh')}</button>
+              <button class="skz-refresh-button" on:click={manualRefresh}>{language.getWord('Refresh')}</button>
             {/if}
           </p>
         </li>

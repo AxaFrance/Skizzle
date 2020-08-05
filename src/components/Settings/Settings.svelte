@@ -1,9 +1,9 @@
 <script>
-  const { translate } = require('./i18n.js');
+  
   const { shell, remote, ipcRenderer } = require('electron');
   import { SettingsRefresh, SettingsStartup, SettingsOrganizations, SettingsTheme, SettingsGlobals } from './SettingsOptions';
   import { removeItem } from '../../shared/storage';
-  import { cleanStore } from '../../shared/store';
+  import { cleanStore, language } from '../../shared/store';
   import { clear } from '../../shared/requester.js';
 
   ipcRenderer.on('loggedOut', () => {
@@ -17,13 +17,13 @@
   }
 
   const components = [
-    { state: 'globals', label: translate('Globals'), className: 'skz-settings-button', component: SettingsGlobals, action: () => setSelected('globals')},
-    { state: 'refresh', label: translate('Refreshment'), className: 'skz-settings-button', component: SettingsRefresh, action: () => setSelected('refresh')},
-    { state: 'startup', label: translate('StartUp'), className: 'skz-settings-button', component: SettingsStartup, action: () => setSelected('startup')},
-    { state: 'organizations', label: translate('Organizations'), className: 'skz-settings-button', component: SettingsOrganizations, action: () => setSelected('organizations')},
-    { state: 'theme', label: translate('Theme'), className: 'skz-settings-button', component: SettingsTheme, action: () => setSelected('theme')},
-    { label: `${translate('Version')} ${remote.app.getVersion()}`, className: 'skz-settings-version', action: () => shell.openExternal('https://electronjs.org/')},
-    { label: translate('SignOut'), className: 'skz-settings-logout', action: logout}
+    { state: 'globals', label: language.getWord('Globals'), className: 'skz-settings-button', component: SettingsGlobals, action: () => setSelected('globals')},
+    { state: 'refresh', label: language.getWord('Refreshment'), className: 'skz-settings-button', component: SettingsRefresh, action: () => setSelected('refresh')},
+    { state: 'startup', label: language.getWord('StartUp'), className: 'skz-settings-button', component: SettingsStartup, action: () => setSelected('startup')},
+    { state: 'organizations', label: language.getWord('Organizations'), className: 'skz-settings-button', component: SettingsOrganizations, action: () => setSelected('organizations')},
+    { state: 'theme', label: language.getWord('Theme'), className: 'skz-settings-button', component: SettingsTheme, action: () => setSelected('theme')},
+    { label: `${language.getWord('Version')} ${remote.app.getVersion()}`, className: 'skz-settings-version', action: () => shell.openExternal('https://electronjs.org/')},
+    { label: language.getWord('SignOut'), className: 'skz-settings-logout', action: logout}
   ];
 
   let selected = {

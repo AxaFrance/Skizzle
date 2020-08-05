@@ -59,7 +59,11 @@
 	"HideMenu": "Hide menu",
 	"Login": "Skizzle allows you to group the pull requests of your teams. <br/>To get started <b>log in</b> with your account.",
 	"Globals": "General",
-	"ChooseLanguage": "Choose your language:",
+	"ChooseLanguage": "Choose your language",
 	"DefaultValue": "Choose a value",
-	"Loading": "Loading..."
+	"Loading": "Loading...",
+	"Yes": "Yes, I do",
+	"No": "No, thanks",
+	"ChangingLanguageTitle": "Do you want to change your language?",
+	"ChangingLanguageMessage": "Are you going to change your language? (This requires a reboot of the application)"
 }

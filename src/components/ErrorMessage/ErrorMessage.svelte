@@ -1,5 +1,5 @@
 <script>
-  const { translate } = require('./i18n.js');
+  import { language } from '../../shared/store';
 
   export let retry;
   export let label;
@@ -9,5 +9,5 @@
 
 <div class="skz-error-message">
     <p>{label}</p>
-    <button on:click={retry}>{translate('Retry')}</button>
+    <button on:click={retry}>{language.getWord('Retry')}</button>
 </div>

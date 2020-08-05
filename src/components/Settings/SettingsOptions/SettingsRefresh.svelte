@@ -1,6 +1,6 @@
 <script>
-  const { translate } = require('./i18n.js');
-  import { refreshDelay } from '../../../shared/store';
+  
+  import { refreshDelay, language } from '../../../shared/store';
   import { addItem } from '../../../shared/storage';
   
   export let init;
@@ -14,7 +14,7 @@
 
 <style src="../Settings.scss"></style>
 
-<button class="skz-settings-back" on:click={init}>{translate('Back')}</button>
+<button class="skz-settings-back" on:click={init}>{language.getWord('Back')}</button>
 <h1 class="skz-settings-title">{title}</h1>
 <input
   class="skz-refresh-delay"
@@ -25,5 +25,5 @@
   value={$refreshDelay}
   on:input={setTimer} />
 <small>
-  {$refreshDelay === 0 ? translate('Manually') : translate('EveryMinutes', $refreshDelay)}
+  {$refreshDelay === 0 ? language.getWord('Manually') : language.getWord('EveryMinutes', $refreshDelay)}
 </small>

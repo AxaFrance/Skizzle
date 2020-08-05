@@ -1,6 +1,5 @@
 <script>
-  const { translate } = require('./i18n.js');
-  import { updateRepository, isOffline } from '../../shared/store';
+  import { updateRepository, isOffline, language } from '../../shared/store';
   export let repositories = [];
 </script>
 
@@ -23,6 +22,6 @@
   </ul>
 {:else}
   <div class="skz-repos">
-    <p>{translate('NoRepository')}</p>
+    <p>{language.getWord('NoRepository')}</p>
   </div>
 {/if}

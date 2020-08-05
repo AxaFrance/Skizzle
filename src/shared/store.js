@@ -1,7 +1,7 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 import { removeValueFromKey, getItem, addItem, updateItem } from './storage';
+const fs = require('fs');
 const { ipcRenderer, remote } = require('electron');
-const { updateLanguage } = require('./i18n.js');
 
 /**
  * Token
@@ -16,10 +16,85 @@ export const isOffline = writable(false);
 /**
  * Language
  */
-export const language = writable(getItem('language') || remote.app.getLocale());
-language.subscribe(lang => {
-	addItem('language', lang);
-	updateLanguage(lang);
+const lang = () => {
+	const directory = '/assets/langs/';
+
+	let loadedLanguage;
+	const language = getItem('language');
+
+	if (language && language.lang) {
+		loadedLanguage = {
+			lang: language.lang,
+			...JSON.parse(
+				fs.readFileSync(`${__dirname}${directory}${language.lang}.json`, 'utf8'),
+			),
+		};
+	} else if (fs.existsSync(`${directory}${remote.app.getLocale()}.json`)) {
+		loadedLanguage = {
+			lang: remote.app.getLocale(),
+			...JSON.parse(
+				fs.readFileSync(
+					`${__dirname}${directory}${remote.app.getLocale()}.json`,
+					'utf8',
+				),
+			),
+		};
+	} else {
+		loadedLanguage = {
+			lang: 'en',
+			...JSON.parse(fs.readFileSync(`${__dirname}${directory}en.json`, 'utf8')),
+		};
+	}
+
+	addItem('language', loadedLanguage);
+	const { subscribe, set } = writable(loadedLanguage);
+
+	return {
+		subscribe,
+		set,
+		setLanguage: lang =>
+			set({
+				lang,
+				...JSON.parse(
+					fs.readFileSync(`${__dirname}${directory}${lang}.json`, 'utf8'),
+				),
+			}),
+		getWord: (word, ...format) => {
+			let translation = loadedLanguage[word];
+
+			if (translation === undefined) {
+				translation = word;
+			}
+
+			if (translation && format) {
+				for (let i = 0; i < format.length + 1; i++) {
+					translation = translation.replace('$' + i, format[i]);
+				}
+			}
+
+			return translation;
+		},
+		reset: () => set(loadedLanguage),
+	};
+};
+
+export const language = lang();
+
+language.subscribe(params => {
+	const storage = getItem('language');
+
+	if (params.lang !== storage.lang) {
+		ipcRenderer.send('update-language', params);
+		ipcRenderer.on('update-language-res', (event, res) => {
+			if (!res) {
+				language.set({ ...storage, lang: storage.lang });
+			} else {
+				addItem('language', params);
+				language.setLanguage(params.lang);
+			}
+			console.log({ params, language: get(language), storage });
+		});
+	}
 });
 
 /**

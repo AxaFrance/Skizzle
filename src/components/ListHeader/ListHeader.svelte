@@ -1,6 +1,5 @@
 <script>
-  const { translate } = require('./i18n.js');
-  import { pullRequests, refreshDelay, organizations, isFetchingPullRequests, profile, listIsFiltered, isOffline } from '../../shared/store';
+  import { pullRequests, refreshDelay, organizations, isFetchingPullRequests, profile, listIsFiltered, isOffline, language } from '../../shared/store';
   import { getPullRequests } from '../../shared/requester';
 
   const toggleFilter = () => {
@@ -19,13 +18,13 @@
     {#if !$isOffline}
       {#if !$refreshDelay && !$isFetchingPullRequests}
         <button class="skz-refresh-button" on:click={onClick}>
-          {translate('Refresh')}
+          {language.getWord('Refresh')}
         </button>
       {/if}
       {#if $isFetchingPullRequests}
-        <small class="skz-fetching-status">{translate('Updating')}</small>
+        <small class="skz-fetching-status">{language.getWord('Updating')}</small>
       {/if}
     {/if}
   </h1>
-  <button disabled={$isOffline} class="skz-pullrequests-filters" on:click={toggleFilter}>{$listIsFiltered ? translate('ViewFullList') : translate('FilterList')}</button>
+  <button disabled={$isOffline} class="skz-pullrequests-filters" on:click={toggleFilter}>{$listIsFiltered ? $language['ViewFullList'] : language.getWord('FilterList')}</button>
 </header>

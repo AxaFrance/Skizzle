@@ -1,9 +1,10 @@
 <script>
-    const { translate } = require('./i18n.js');
+    import { language } from '../../shared/store';
+        
     export let binding;
     export let optionalValue = false;
     export let options = [];
-    export let defaultMessage = translate('DefaultValue');
+    export let defaultMessage = language.getWord('DefaultValue');
     
     let className = ''
     export { className as class }

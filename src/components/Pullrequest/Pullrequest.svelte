@@ -1,11 +1,12 @@
 <script>
-  const { translate } = require('./i18n.js');
+  
   const { shell } = require('electron');
   import Loader from '../Loader';
   import CommentsCounter from '../CommentsCounter';
   import Labels from '../Labels';
   import { getAvatar, fetchPullRequestComments } from '../../shared/requester';
   import { getDiffDays } from '../../shared/helpers';
+  import { language } from '../../shared/store';
   export let pullRequest;
 
   const isNotSystemComments = comments => comments.every(({ commentType }) => commentType !== 'system');
@@ -38,9 +39,9 @@
     const diffDays = getDiffDays(creationDate);
 
     switch(diffDays) {
-      case 0: return translate('Today');
-      case 1: return translate('Yesterday');
-      default: return translate('Time', diffDays);
+      case 0: return language.getWord('Today');
+      case 1: return language.getWord('Yesterday');
+      default: return language.getWord('Time', diffDays);
     }
   }
 </script>
@@ -77,17 +78,17 @@
     <h3 class="skz-pullrequest__title">
       {#if pullRequest.autoCompleteSetBy}
         <span class="skz-pullrequest__status skz-pullrequest__status--auto-complete">
-          {translate('AutoComplete')}
+          {language.getWord('AutoComplete')}
         </span>
       {/if}
       {#if pullRequest.isDraft}
         <span class="skz-pullrequest__status skz-pullrequest__status--draft">
-          {translate('Draft')}
+          {language.getWord('Draft')}
         </span>
       {/if}
       {#if pullRequest.mergeStatus && pullRequest.mergeStatus === 'conflicts'}
         <span class="skz-pullrequest__status skz-pullrequest__status--conflicts">
-          {translate('Conflicts')}
+          {language.getWord('Conflicts')}
         </span>
       {/if}
       {pullRequest.title}

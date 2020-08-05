@@ -1,6 +1,4 @@
 <script>
-  const { translate } = require('./i18n.js');
-  const path = require('path');
   const fs = require('fs');
   import { onMount } from 'svelte';
   import { language } from '../../../shared/store';
@@ -12,15 +10,15 @@
   let langs = [];
 
   onMount(() => {
-    const files = fs.readdirSync(path.join(__dirname, 'assets/langs'));
+    const files = fs.readdirSync(`${__dirname}/assets/langs/`);
     let svgs = [];
 
     for(let i = 0; i < files.length; i++) {
-      const filename = path.join(__dirname, 'assets/langs', files[i]);
+      const filename = `${__dirname}/assets/langs/${files[i]}`;
       const stat = fs.lstatSync(filename);
       if (stat.isDirectory()){
         svgs = fs.readdirSync(filename).map(x => ({
-          svg: path.join(__dirname, 'assets/langs', files[i], x),
+          svg: `${__dirname}/assets/langs/${files[i]}/${x}`,
           label: x.replace(/\.[^/.]+$/, "")
         }));
       }
@@ -37,15 +35,15 @@
 
 <style src="../Settings.scss"></style>
 
-<button class="skz-settings-back" on:click={init}>{translate('Back')}</button>
+<button class="skz-settings-back" on:click={init}>{language.getWord('Back')}</button>
 <h1 class="skz-settings-title">{title}</h1>
 {#if langs}
-  <p>{translate('ChooseLanguage')}</p>
+  <p>{language.getWord('ChooseLanguage')}</p>
   <Select 
-    bind:binding={$language}
+    bind:binding={$language.lang}
     optionalValue={true}
     options={langs}
-    defaultMessage={translate('ChooseLanguage')}
+    defaultMessage={language.getWord('ChooseLanguage')}
   />
 {/if}
 

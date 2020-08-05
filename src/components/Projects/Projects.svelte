@@ -1,16 +1,17 @@
 <script>
-  const { translate } = require('./i18n.js');
+  
   import { createEventDispatcher } from 'svelte';
+  import { language } from '../../shared/store';
   import Project from '../Project';
   export let projects;
 
-  const titles = [translate('NoProject'), translate('OneProject')];
+  const titles = [language.getWord('NoProject'), language.getWord('OneProject')];
   let searchInput = '';
   let searchableProject = [];
 
   $: searchableProject = projects.filter(p => p.name.toLowerCase().indexOf(searchInput.toLowerCase()) !== -1 || p.repositories.filter(r => r.name.toLowerCase().indexOf(searchInput.toLowerCase()) !== -1).length > 0);
   $: checked = searchableProject.length > 0 && searchableProject.length <= 5;
-  $: title = titles[searchableProject.length] || `${searchableProject.length} ${translate('Projects')}`;
+  $: title = titles[searchableProject.length] || `${searchableProject.length} ${language.getWord('Projects')}`;
 
   const dispatch = createEventDispatcher();
   let map = {}
@@ -34,7 +35,7 @@
 <div class="skz-projects">
   <header class="skz-projects__header">
     <div class="skz-projects__search">
-      <input id="search" type="text" bind:value={searchInput} placeholder={translate('Search')}/>
+      <input id="search" type="text" bind:value={searchInput} placeholder={language.getWord('Search')}/>
     </div>
     <h2>{title}</h2>
   </header>
@@ -45,7 +46,7 @@
       {:else}
         <li>
           <p class="skz-projects__empty">
-            {translate('NoProjectOnOrganization')}
+            {language.getWord('NoProjectOnOrganization')}
           </p>
         </li>
       {/each}

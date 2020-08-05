@@ -22,9 +22,7 @@
 				src="./assets/logo-skizzle-dark-context.svg"
 				alt="Skizzle"
 			/>
-			<p id="loading" class="skz-splashscreen__label">
-				Chargement...
-			</p>
+			<p id="loading" class="skz-splashscreen__label"></p>
 			<div class="skz-splashscreen__progress">
 				<div class="skz-splashscreen__progress--bar"></div>
 			</div>
@@ -61,9 +59,6 @@
 
 				return width;
 			}
-
-			const { translate } = require('./i18n.js');
-			document.getElementById('loading').innerHTML = translate('loading');
 
 			update();
 		</script>

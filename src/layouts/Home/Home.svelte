@@ -1,8 +1,8 @@
 <script>
-  const { translate } = require('./i18n.js');
+  
   import Profile from "../../components/Profile";
   import MainView from "../../components/MainView";
-  import { isSidebarHidden } from '../../shared/store';
+  import { isSidebarHidden, language } from '../../shared/store';
 
   let className = '';
 
@@ -19,7 +19,7 @@
   <nav class={`skz-sidebar${className}`}>
     <Profile />
   </nav>
-  <button class="skz-sidebar-overlay" on:click={toggleSidebar}>{translate('HideMenu')}</button>
+  <button class="skz-sidebar-overlay" on:click={toggleSidebar}>{language.getWord('HideMenu')}</button>
   <main class="skz-content">
     <MainView />
   </main>

@@ -1,6 +1,6 @@
 <script>
-  const { translate } = require('./i18n.js');
-  import { refreshDelay, organizations, theme } from '../../../shared/store';
+  
+  import { refreshDelay, organizations, theme, language } from '../../../shared/store';
   import { addItem } from '../../../shared/storage';
   
   export let init;
@@ -18,9 +18,9 @@
 
 <style src="../Settings.scss"></style>
 
-<button class="skz-settings-back" on:click={init}>{translate('Back')}</button>
+<button class="skz-settings-back" on:click={init}>{language.getWord('Back')}</button>
 <h1 class="skz-settings-title">{title}</h1>
-<p class="skz-organizations__intro">{translate('ConfigTheme')}</p>
+<p class="skz-organizations__intro">{language.getWord('ConfigTheme')}</p>
 <ul class="skz-themes">
 {#each themes as themeItem}
   <li class="skz-theme">

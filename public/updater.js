@@ -1,10 +1,10 @@
 const { is } = require('electron-util');
 const { autoUpdater } = require('electron-updater');
 const { app } = require('electron');
-const { translate } = require('./i18n.js');
 
 let notifiedWindow;
 let mainWindow;
+let translate;
 autoUpdater.autoDownload = false;
 
 autoUpdater.on('error', error => {
@@ -74,14 +74,19 @@ autoUpdater.on('update-downloaded', () => {
 	}, 5000);
 });
 
-function checkForUpdates(secondWindow, primayWindow) {
+function checkForUpdates(secondWindow, primayWindow, getWord) {
 	notifiedWindow = secondWindow;
 	mainWindow = primayWindow;
+	translate = getWord;
 
 	if (!is.macAppStore) {
 		const log = require('electron-log');
 		log.transports.file.level = 'debug';
 		autoUpdater.logger = log;
+
+		notifiedWindow.webContents.send('message', {
+			text: translate('Loading'),
+		});
 
 		setTimeout(() => {
 			autoUpdater.checkForUpdates();

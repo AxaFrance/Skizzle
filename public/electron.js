@@ -1,12 +1,21 @@
+const electron = require('electron');
+const fs = require('fs');
+const path = require('path');
 const unhandled = require('electron-unhandled');
 const contextMenu = require('electron-context-menu');
-const { openNewGitHubIssue, debugInfo, is } = require('electron-util');
-const debug = require('electron-debug');
-const electron = require('electron');
 const log = require('electron-log');
-const { app, BrowserWindow, Menu, Notification, ipcMain, Tray } = electron;
+const debug = require('electron-debug');
+const { openNewGitHubIssue, debugInfo, is } = require('electron-util');
+const {
+	app,
+	BrowserWindow,
+	Menu,
+	Notification,
+	ipcMain,
+	Tray,
+	dialog,
+} = electron;
 const { checkForUpdates } = require('./updater.js');
-const { translate } = require('./i18n.js');
 
 try {
 	require('electron-reloader')(module);
@@ -22,7 +31,6 @@ contextMenu({
 	showCopyImage: false,
 	showSearchWithGoogle: false,
 });
-
 unhandled({
 	reportButton: error => {
 		openNewGitHubIssue({
@@ -32,6 +40,7 @@ unhandled({
 	},
 });
 
+const directory = '/assets/langs/';
 const config = {
 	clientId: '26940866-2575-4627-B2A4-DFF5972172B3',
 	clientSecret: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIs',
@@ -55,6 +64,23 @@ let authWindow;
 let logoutWindow;
 let splashscreen;
 let tray;
+let translate;
+
+function getWord(word, ...format) {
+	let translation = translate[word];
+
+	if (translation === undefined) {
+		translation = word;
+	}
+
+	if (translation && format) {
+		for (let i = 0; i < format.length + 1; i++) {
+			translation = translation.replace('$' + i, format[i]);
+		}
+	}
+
+	return translation;
+}
 
 function createWindow() {
 	window = new BrowserWindow({
@@ -93,12 +119,12 @@ function createWindow() {
 			label: 'Application',
 			submenu: [
 				{
-					label: translate('About Application'),
+					label: getWord('About Application'),
 					selector: 'orderFrontStandardAboutPanel:',
 				},
 				{ type: 'separator' },
 				{
-					label: translate('Quit'),
+					label: getWord('Quit'),
 					accelerator: 'Command+Q',
 					click() {
 						app.quit();
@@ -107,42 +133,42 @@ function createWindow() {
 			],
 		},
 		{
-			label: translate('Edit'),
+			label: getWord('Edit'),
 			submenu: [
-				{ label: translate('Undo'), accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
+				{ label: getWord('Undo'), accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
 				{
-					label: translate('Redo'),
+					label: getWord('Redo'),
 					accelerator: 'Shift+CmdOrCtrl+Z',
 					selector: 'redo:',
 				},
 				{ type: 'separator' },
-				{ label: translate('Cut'), accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
-				{ label: translate('Copy'), accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+				{ label: getWord('Cut'), accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+				{ label: getWord('Copy'), accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
 				{
-					label: translate('Paste'),
+					label: getWord('Paste'),
 					accelerator: 'CmdOrCtrl+V',
 					selector: 'paste:',
 				},
 				{
-					label: translate('Select All'),
+					label: getWord('Select All'),
 					accelerator: 'CmdOrCtrl+A',
 					selector: 'selectAll:',
 				},
 			],
 		},
 		{
-			label: translate('Open devtool'),
+			label: getWord('Open devtool'),
 			click: () => window.webContents.openDevTools({ mode: 'detach' }),
 			accelerator: 'CommandOrControl+O',
 		},
 		{
-			label: translate('Reload application'),
+			label: getWord('Reload application'),
 			click: () => window.reload(),
 			accelerator: 'F5',
 		},
 		{ type: 'separator' },
 		{
-			label: translate('Quit'),
+			label: getWord('Quit'),
 			click: () => app.quit(),
 			accelerator: 'CommandOrControl+Q',
 		},
@@ -206,8 +232,22 @@ if (!gotTheLock) {
 
 	app.commandLine.appendSwitch('disable-site-isolation-trials');
 	app.on('ready', () => {
+		let argv = process.argv;
+		let lang = argv.find(x => x.startsWith('--skizzle-language='));
+		let currentLanguage = app.getLocale();
+
+		if (lang) {
+			currentLanguage = lang.split('=')[1];
+		}
+
+		translate = JSON.parse(
+			fs.readFileSync(
+				path.join(__dirname, directory, currentLanguage + '.json'),
+				'utf8',
+			),
+		);
 		createWindow();
-		checkForUpdates(splashscreen, window);
+		checkForUpdates(splashscreen, window, getWord);
 	});
 
 	app.on('window-all-closed', () => {
@@ -233,6 +273,38 @@ if (!gotTheLock) {
 
 		if (Notification.isSupported()) {
 			new Notification({ body, title }).show();
+		}
+	});
+
+	ipcMain.on('update-language', (event, loadedLanguage) => {
+		translate = loadedLanguage;
+		let argv = [...process.argv.slice(1)];
+
+		let exist = argv.findIndex(x => x.startsWith('--skizzle-language='));
+
+		if (exist !== -1) {
+			argv = argv.filter(x => !x.startsWith('--skizzle-language='));
+		}
+
+		const response = dialog.showMessageBoxSync(window, {
+			buttons: [getWord('Yes'), getWord('No')],
+			type: 'question',
+			title: getWord('ChangingLanguageTitle'),
+			message: getWord('ChangingLanguageMessage'),
+			cancelId: 2,
+		});
+
+		if (response === 0) {
+			event.sender.send('update-language-res', true);
+
+			setTimeout(() => {
+				app.relaunch({
+					args: [...argv, '--skizzle-language=' + loadedLanguage.lang],
+				});
+				app.exit(0);
+			}, 1000);
+		} else {
+			event.sender.send('update-language-res', false);
 		}
 	});
 

@@ -59,7 +59,11 @@
 	"HideMenu": "Masquer le menu",
 	"Login": "Skizzle vous permet de regrouper les pull requests de vos équipes. <br/>Pour commencer <b>connectez vous</b> avec votre compte.",
 	"Globals": "Général",
-	"ChooseLanguage": "Choisissez votre langage :",
+	"ChooseLanguage": "Choisissez votre langage",
 	"DefaultValue": "Choisissez une valeur",
-	"Loading": "Chargement..."
+	"Loading": "Chargement...",
+	"Yes": "Oui, je le veux",
+	"No": "Non, merci",
+	"ChangingLanguageTitle": "Voulez-vous changer de langage ?",
+	"ChangingLanguageMessage": "Vous allez changer de langage ? (Cela nécéssite un redémarrage de l'application)"
 }

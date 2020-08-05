@@ -1,12 +1,12 @@
 <script>
-    const { translate } = require('./i18n.js');
+    
     import { onMount } from 'svelte';
     import Modal from '../Modal';
     import Projects from '../Projects';
     import Settings from '../Settings';
     import Loader from '../Loader';
     import ErrorMessage from '../ErrorMessage';
-    import { profile, organizations, isFetchingProfile, isSidebarHidden, theme } from '../../shared/store';
+    import { profile, organizations, isFetchingProfile, isSidebarHidden, theme, language } from '../../shared/store';
     import { getProfile } from '../../shared/requester';
     import { addItem } from '../../shared/storage';
     
@@ -60,7 +60,7 @@
         <Loader/>
     {:else}
     {#if $profile.hasError}
-        <ErrorMessage retry={getProfile} label={translate('ProfileNotFound')}/>
+        <ErrorMessage retry={getProfile} label={language.getWord('ProfileNotFound')}/>
     {:else}
         <div class="skz-avatar__gradient skz-avatar__gradient--{$theme}"></div>
         <div class="skz-avatar">
@@ -82,12 +82,12 @@
                     src="./assets/user.svg"
                 />
             {/await}
-            <button class="skz-profile-toggle" on:click={toggleSidebar}>{translate('Menu')}</button>
+            <button class="skz-profile-toggle" on:click={toggleSidebar}>{language.getWord('Menu')}</button>
         </div>
         <p class="skz-profile-name">{$profile.displayName}</p>
         <nav class="skz-profile-nav skz-profile-nav--{currentTabIndex}">
-        <button on:click={() => onTabChange(1)} class="skz-profile-nav__item skz-profile-nav__item--projects">{translate('Projects')}</button>
-        <button on:click={() => onTabChange(2)} class="skz-profile-nav__item skz-profile-nav__item--settings">{translate('Settings')}</button>
+        <button on:click={() => onTabChange(1)} class="skz-profile-nav__item skz-profile-nav__item--projects">{language.getWord('Projects')}</button>
+        <button on:click={() => onTabChange(2)} class="skz-profile-nav__item skz-profile-nav__item--settings">{language.getWord('Settings')}</button>
         <span class="skz-profile-nav__indicator"></span>
         </nav>
         <div class="skz-profile-content skz-profile-content--{currentTabIndex}">

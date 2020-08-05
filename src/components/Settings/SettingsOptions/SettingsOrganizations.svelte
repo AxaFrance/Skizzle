@@ -1,6 +1,6 @@
 <script>
-  const { translate } = require('./i18n.js');
-  import { refreshDelay, organizations, updateOrganization, isOffline } from '../../../shared/store';
+  
+  import { refreshDelay, organizations, updateOrganization, isOffline, language } from '../../../shared/store';
   import { addItem } from '../../../shared/storage';
 
   export let init;
@@ -12,10 +12,10 @@
 
 <style src="../Settings.scss"></style>
 
-<button class="skz-settings-back" on:click={init}>{translate('Back')}</button>
+<button class="skz-settings-back" on:click={init}>{language.getWord('Back')}</button>
 <h1 class="skz-settings-title">{title}</h1>
 {#if $organizations.length}
-  <p class="skz-organizations__intro">{translate('ProjectsOrganizations')}</p>
+  <p class="skz-organizations__intro">{language.getWord('ProjectsOrganizations')}</p>
 {/if}
 <ul class="skz-organizations__list">
   {#each $organizations as organization}
@@ -24,7 +24,7 @@
       <label for={organization.accountName}>{organization.accountName}</label>
     </li>
   {:else}
-    <p>{translate('OrganizationsEmpty')}</p>
+    <p>{language.getWord('OrganizationsEmpty')}</p>
   {/each}
 </ul>
 
