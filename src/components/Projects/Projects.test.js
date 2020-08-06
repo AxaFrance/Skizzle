@@ -7,11 +7,7 @@ describe('Projects Component', () => {
 			projects: [],
 		});
 
-		expect(
-			getByText(
-				'The currently selected organizations do not contain any projects.',
-			),
-		).toBeInTheDocument();
+		expect(getByText('NoProject')).toBeInTheDocument();
 	});
 
 	it('should render title with project', () => {
@@ -19,7 +15,7 @@ describe('Projects Component', () => {
 			projects: [{ id: '1', checked: true, name: 'name', repositories: [] }],
 		});
 
-		expect(getByText('1 Project')).toBeInTheDocument();
+		expect(getByText('OneProject')).toBeInTheDocument();
 	});
 
 	it('should render title with projects', () => {

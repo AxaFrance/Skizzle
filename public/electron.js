@@ -67,7 +67,7 @@ let tray;
 let translate;
 
 function getWord(word, ...format) {
-	let translation = translate[word];
+	let translation = translate.words[word];
 
 	if (translation === undefined) {
 		translation = word;
@@ -240,12 +240,17 @@ if (!gotTheLock) {
 			currentLanguage = lang.split('=')[1];
 		}
 
-		translate = JSON.parse(
-			fs.readFileSync(
-				path.join(__dirname, directory, currentLanguage + '.json'),
-				'utf8',
+		let languages = JSON.parse(
+			fs.readFileSync(`${__dirname}/assets/langs/langs.json`, 'utf8'),
+		).find(x => x.code === currentLanguage.toUpperCase());
+
+		translate = {
+			...languages,
+			words: JSON.parse(
+				fs.readFileSync(`${__dirname}/${languages.words}`, 'utf8'),
 			),
-		);
+		};
+
 		createWindow();
 		checkForUpdates(splashscreen, window, getWord);
 	});
@@ -299,7 +304,7 @@ if (!gotTheLock) {
 
 			setTimeout(() => {
 				app.relaunch({
-					args: [...argv, '--skizzle-language=' + loadedLanguage.lang],
+					args: [...argv, '--skizzle-language=' + loadedLanguage.code],
 				});
 				app.exit(0);
 			}, 1000);

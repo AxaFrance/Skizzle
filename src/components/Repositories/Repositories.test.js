@@ -7,7 +7,7 @@ describe('Repositories Component', () => {
 			repositories: [],
 		});
 
-		expect(getByText('No repository for this project.')).toBeInTheDocument();
+		expect(getByText('NoRepository')).toBeInTheDocument();
 	});
 
 	it('should render with repositories', () => {

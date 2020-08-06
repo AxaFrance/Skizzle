@@ -1,4 +1,4 @@
-import { writable, get } from 'svelte/store';
+import { writable, get, readable } from 'svelte/store';
 import { removeValueFromKey, getItem, addItem, updateItem } from './storage';
 const fs = require('fs');
 const { ipcRenderer, remote } = require('electron');
@@ -16,51 +16,44 @@ export const isOffline = writable(false);
 /**
  * Language
  */
-const lang = () => {
+const lang = languages => {
 	const directory = '/assets/langs/';
 
 	let loadedLanguage;
+	let lang = languages.find(x => x.code === 'EN');
+
 	const language = getItem('language');
 
-	if (language && language.lang) {
-		loadedLanguage = {
-			lang: language.lang,
-			...JSON.parse(
-				fs.readFileSync(`${__dirname}${directory}${language.lang}.json`, 'utf8'),
-			),
-		};
-	} else if (fs.existsSync(`${directory}${remote.app.getLocale()}.json`)) {
-		loadedLanguage = {
-			lang: remote.app.getLocale(),
-			...JSON.parse(
-				fs.readFileSync(
-					`${__dirname}${directory}${remote.app.getLocale()}.json`,
-					'utf8',
-				),
-			),
-		};
-	} else {
-		loadedLanguage = {
-			lang: 'en',
-			...JSON.parse(fs.readFileSync(`${__dirname}${directory}en.json`, 'utf8')),
-		};
+	if (language && languages.some(x => x.code === language)) {
+		lang = languages.find(x => x.code === language);
+	} else if (
+		languages.some(x => x.code === remote.app.getLocale().toUpperCase())
+	) {
+		lang = languages.find(x => x.code === remote.app.getLocale().toUpperCase());
 	}
 
-	addItem('language', loadedLanguage);
-	const { subscribe, set } = writable(loadedLanguage);
+	loadedLanguage = {
+		...lang,
+		words: JSON.parse(fs.readFileSync(`${__dirname}/${lang.words}`, 'utf8')),
+	};
+
+	addItem('language', loadedLanguage.code);
+	const { subscribe, set, update } = writable(loadedLanguage);
 
 	return {
 		subscribe,
 		set,
-		setLanguage: lang =>
+		update,
+		setLanguage: lang => {
+			lang = languages.find(x => x.code === lang.toUpperCase());
+
 			set({
-				lang,
-				...JSON.parse(
-					fs.readFileSync(`${__dirname}${directory}${lang}.json`, 'utf8'),
-				),
-			}),
+				...lang,
+				words: JSON.parse(fs.readFileSync(`${__dirname}/${lang.words}`, 'utf8')),
+			});
+		},
 		getWord: (word, ...format) => {
-			let translation = loadedLanguage[word];
+			let translation = loadedLanguage.words[word];
 
 			if (translation === undefined) {
 				translation = word;
@@ -78,21 +71,26 @@ const lang = () => {
 	};
 };
 
-export const language = lang();
+export const languages = readable(
+	JSON.parse(fs.readFileSync(`${__dirname}/assets/langs/langs.json`, 'utf8')),
+);
+export const language = lang(get(languages));
 
 language.subscribe(params => {
 	const storage = getItem('language');
 
-	if (params.lang !== storage.lang) {
+	if (params.code !== storage) {
 		ipcRenderer.send('update-language', params);
 		ipcRenderer.on('update-language-res', (event, res) => {
-			if (!res) {
-				language.set({ ...storage, lang: storage.lang });
+			if (res) {
+				addItem('language', params.code);
+				language.setLanguage(params.code);
 			} else {
-				addItem('language', params);
-				language.setLanguage(params.lang);
+				language.update(n => ({
+					...n,
+					code: storage,
+				}));
 			}
-			console.log({ params, language: get(language), storage });
 		});
 	}
 });

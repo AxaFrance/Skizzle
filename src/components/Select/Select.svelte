@@ -20,11 +20,6 @@
         {#each options as option}
             {#if Number.isInteger(option)}
                 <option value={option}>{option}</option>
-            {:else if option.label && option.svg}
-                <option value={option.label}>
-                    {option.label.toUpperCase()}
-                    <img src={option.svg} alt={option.label} width="32" height="32">
-                </option>
             {:else}
                 <option value={option.code}>{option.label}</option>
             {/if}
