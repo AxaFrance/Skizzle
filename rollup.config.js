@@ -3,12 +3,12 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
-import { scss } from 'svelte-preprocess';
+import sveltePreprocess from 'svelte-preprocess';
 
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/main.js',
+	input: 'src/main.ts',
 	output: {
 		sourcemap: !production,
 		format: 'iife',
@@ -18,12 +18,9 @@ export default {
 	plugins: [
 		svelte({
 			dev: !production,
-			preprocess: [
-				scss({
-					output: true,
-					failOnError: true,
-				}),
-			],
+			preprocess: sveltePreprocess({
+				sourceMap: !production,
+			}),
 			css: css => {
 				css.write('public/build/bundle.css');
 			},

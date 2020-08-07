@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import { removeValueFromKey, getItem, addItem, updateItem } from './storage';
-const { ipcRenderer } = require('electron');
+import { ipcRenderer } from 'electron';
 
 /**
  * Token

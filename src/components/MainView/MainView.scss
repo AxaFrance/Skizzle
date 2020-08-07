@@ -16,16 +16,6 @@
 	}
 }
 
-.skz-fetching-status {
-	font-size: 0.6rem;
-	color: #000;
-	font-weight: normal;
-}
-
-.skz-pullrequests__search-container {
-	margin-bottom: 1rem;
-}
-
 .skz-pullrequests {
 	margin: -1rem;
 	display: flex;
@@ -90,10 +80,6 @@
 }
 
 @media (prefers-color-scheme: dark) {
-	.skz-fetching-status {
-		color: #aaa;
-	}
-
 	.skz-pullrequests-list__empty {
 		color: #ccc;
 	}

@@ -21,6 +21,7 @@
 		"test:watch": "jest --watch",
 		"test:coverage": "jest --coverage --no-cache",
 		"lint": "./node_modules/.bin/eslint ./src --ext .js,.svelte --fix",
+		"svelte-check": "svelte-check --workspace src/",
 		"start:prod": "sirv --port 4567 public",
 		"start:dev": "sirv --port 4567 public --dev"
 	},
@@ -54,8 +55,10 @@
 		"@commitlint/config-conventional": "9.1.1",
 		"@rollup/plugin-commonjs": "14.0.0",
 		"@rollup/plugin-node-resolve": "8.4.0",
+		"@rollup/plugin-typescript": "^5.0.2",
 		"@testing-library/jest-dom": "5.11.1",
 		"@testing-library/svelte": "3.0.0",
+		"@tsconfig/svelte": "^1.0.8",
 		"babel-core": "6.26.3",
 		"babel-jest": "26.1.0",
 		"babel-polyfill": "6.26.0",
@@ -82,8 +85,10 @@
 		"rollup-plugin-svelte": "5.2.3",
 		"rollup-plugin-terser": "6.1.0",
 		"svelte": "3.24.0",
+		"svelte-check": "^1.0.9",
 		"svelte-jester": "1.0.6",
-		"svelte-preprocess": "4.0.8"
+		"svelte-preprocess": "4.0.8",
+		"typescript": "^3.9.7"
 	},
 	"dependencies": {
 		"electron-context-menu": "2.2.0",

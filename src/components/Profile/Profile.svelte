@@ -1,102 +1,114 @@
 <script>
-    import { onMount } from 'svelte';
-    import Modal from '../Modal';
-    import Projects from '../Projects';
-    import Settings from '../Settings';
-    import Loader from '../Loader';
-    import ErrorMessage from '../ErrorMessage';
-    import { profile, organizations, isFetchingProfile, isSidebarHidden, theme } from '../../shared/store';
-    import { getProfile } from '../../shared/requester';
-    import { addItem } from '../../shared/storage';
-    
-    let currentTabIndex = 1;
-    let projects = [];
+	import { onMount } from 'svelte';
+	import Projects from '../Projects';
+	import Settings from '../Settings';
+	import Loader from '../Loader';
+	import ErrorMessage from '../ErrorMessage';
+	import {
+		profile,
+		organizations,
+		isFetchingProfile,
+		isSidebarHidden,
+		theme,
+	} from '../../shared/store';
+	import { getProfile } from '../../shared/requester';
 
-    const onTabChange = (index) => {
-        currentTabIndex = index
-    }
+	let currentTabIndex = 1;
+	let projects = [];
 
-    onMount(() => {
-        if(!$profile) {
-            getProfile()
-        }
-    })
+	const onTabChange = index => {
+		currentTabIndex = index;
+	};
 
-    organizations.subscribe(organizationsList => {
-        projects = organizationsList.reduce((acc, cur) => {
-            if(cur.checked) {
-                acc.push(cur);
-            }
-            return acc;
-        }, [])
-    })
+	onMount(() => {
+		if (!$profile) {
+			getProfile();
+		}
+	});
 
-    const getSelectedOrganizationProjects = (acc, curr) => {
-        if(curr.checked) {
-            acc.push(...curr.projects)
-        }
-        return acc;
-    }
+	organizations.subscribe(organizationsList => {
+		projects = organizationsList.reduce((acc, cur) => {
+			if (cur.checked) {
+				acc.push(cur);
+			}
+			return acc;
+		}, []);
+	});
 
-    $:projects = $organizations
-        .reduce(getSelectedOrganizationProjects, [])
-        .sort((a, b) => (a.name > b.name) ? 1 : -1);
+	const getSelectedOrganizationProjects = (acc, curr) => {
+		if (curr.checked) {
+			acc.push(...curr.projects);
+		}
+		return acc;
+	};
 
-    const toggleSidebar = () => {
-        isSidebarHidden.update(isHidden => !isHidden)
-    }
+	$: projects = $organizations
+		.reduce(getSelectedOrganizationProjects, [])
+		.sort((a, b) => (a.name > b.name ? 1 : -1));
 
-    const setFocus = (e, index) => {
-        currentTabIndex = index;
-        document.getElementById(e.detail).focus();
-    }
+	const toggleSidebar = () => {
+		isSidebarHidden.update(isHidden => !isHidden);
+	};
+
+	const setFocus = (e, index) => {
+		currentTabIndex = index;
+		document.getElementById(e.detail).focus();
+	};
 </script>
 
-<style src="./Profile.scss"></style>
+<style src="./Profile.scss">
+
+</style>
 
 <div class="skz-profile">
-    {#if !$profile || $isFetchingProfile}
-        <Loader/>
-    {:else}
-    {#if $profile.hasError}
-        <ErrorMessage retry={getProfile} label="Impossible de charger votre profil."/>
-    {:else}
-        <div class="skz-avatar__gradient skz-avatar__gradient--{$theme}"></div>
-        <div class="skz-avatar">
-            {#await $profile.avatar}
-            <img
-                class="skz-avatar__image"
-                alt={$profile.displayName}
-                src="./assets/user.svg"
-            />
-            {:then avatar}
-                <img 
-                    class="skz-avatar__image" 
-                    alt={$profile.displayName} 
-                    src="data:image/jpeg;base64,{avatar.value}" />
-            {:catch error}
-            <img
-                class="skz-avatar__image"
-                alt={$profile.displayName}
-                src="./assets/user.svg"
-            />
-            {/await}
-            <button class="skz-profile-toggle" on:click={toggleSidebar}>Menu</button>
-        </div>
-        <p class="skz-profile-name">{$profile.displayName}</p>
-        <nav class="skz-profile-nav skz-profile-nav--{currentTabIndex}">
-        <button on:click={() => onTabChange(1)} class="skz-profile-nav__item skz-profile-nav__item--projects">Projets</button>
-        <button on:click={() => onTabChange(2)} class="skz-profile-nav__item skz-profile-nav__item--settings">Réglages</button>
-        <span class="skz-profile-nav__indicator"></span>
-        </nav>
-        <div class="skz-profile-content skz-profile-content--{currentTabIndex}">
-            <div class="skz-profile-content__item">
-                <Projects projects={projects} on:focus={e => setFocus(e, 1)} />
-            </div>
-            <div class="skz-profile-content__item">
-                <Settings />
-            </div>
-        </div>
-    {/if}
-   {/if} 
+	{#if !$profile || $isFetchingProfile}
+		<Loader />
+	{:else if $profile.hasError}
+		<ErrorMessage
+			retry={getProfile}
+			label="Impossible de charger votre profil." />
+	{:else}
+		<div class="skz-avatar__gradient skz-avatar__gradient--{$theme}" />
+		<div class="skz-avatar">
+			{#await $profile.avatar}
+				<img
+					class="skz-avatar__image"
+					alt={$profile.displayName}
+					src="./assets/user.svg" />
+			{:then avatar}
+				<img
+					class="skz-avatar__image"
+					alt={$profile.displayName}
+					src="data:image/jpeg;base64,{avatar.value}" />
+			{:catch}
+				<img
+					class="skz-avatar__image"
+					alt={$profile.displayName}
+					src="./assets/user.svg" />
+			{/await}
+			<button class="skz-profile-toggle" on:click={toggleSidebar}>Menu</button>
+		</div>
+		<p class="skz-profile-name">{$profile.displayName}</p>
+		<nav class="skz-profile-nav skz-profile-nav--{currentTabIndex}">
+			<button
+				on:click={() => onTabChange(1)}
+				class="skz-profile-nav__item skz-profile-nav__item--projects">
+				Projets
+			</button>
+			<button
+				on:click={() => onTabChange(2)}
+				class="skz-profile-nav__item skz-profile-nav__item--settings">
+				Réglages
+			</button>
+			<span class="skz-profile-nav__indicator" />
+		</nav>
+		<div class="skz-profile-content skz-profile-content--{currentTabIndex}">
+			<div class="skz-profile-content__item">
+				<Projects {projects} on:focus={e => setFocus(e, 1)} />
+			</div>
+			<div class="skz-profile-content__item">
+				<Settings />
+			</div>
+		</div>
+	{/if}
 </div>

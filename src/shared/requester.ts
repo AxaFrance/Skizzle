@@ -15,7 +15,6 @@ import {
 	isFetchingProfile,
 	pullRequestsFetchHasError,
 } from './store';
-import { ORGANIZATIONS, IMAGES } from './constant';
 import { getDiffDays } from './helpers';
 
 let data = [];
@@ -196,7 +195,7 @@ export const getOrganizations = async id => {
 		data.push(
 			...result.value.map(organization => ({
 				...organization,
-				checked: existValue(getItem(ORGANIZATIONS), organization.accountId),
+				checked: existValue(getItem('organizations'), organization.accountId),
 			})),
 		);
 
@@ -479,7 +478,7 @@ export const fetchPullRequestComments = async ({
 };
 
 export const getAvatar = async (userId, organization, subjectDescriptor) => {
-	const imgs = getItem(IMAGES);
+	const imgs = getItem('images');
 	let avatar;
 
 	if (imgs && imgs.length > 0) {
@@ -497,7 +496,7 @@ export const getAvatar = async (userId, organization, subjectDescriptor) => {
 			const response = res.json();
 
 			response.then(x => {
-				updateSubItem(IMAGES, userId, x.value);
+				updateSubItem('images', userId, x.value);
 			});
 
 			return response;
