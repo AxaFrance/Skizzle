@@ -1,3 +1,7 @@
+- regExp: ".*\\.ts+$"
+  labels: ['typescript']
+- regExp: '.*.spec..*+$'
+  labels: ['testing']
 - regExp: ".*\\.svelte+$"
   labels: ['svelte', 'component']
 - regExp: ".*\\.js+$"
