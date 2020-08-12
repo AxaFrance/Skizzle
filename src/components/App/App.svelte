@@ -1,4 +1,5 @@
 <script>
+	// @ts-ignore
 	const { ipcRenderer } = require('electron');
 	import { onMount } from 'svelte';
 	import Login from '../../layouts/Login';

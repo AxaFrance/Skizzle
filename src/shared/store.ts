@@ -1,36 +1,36 @@
 import { writable } from 'svelte/store';
 import { removeValueFromKey, getItem, addItem, updateItem } from './storage';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 
 /**
  * Token
  */
-export const clientToken = writable(getItem('clientToken') || undefined);
+export const clientToken = writable<any>(getItem('clientToken') || undefined);
 
 /**
  * isOffline
  */
-export const isOffline = writable(false);
+export const isOffline = writable<boolean>(false);
 
 /**
  * Profile
  */
-export const isFetchingProfile = writable(false);
-export const profile = writable(undefined);
-export const isSidebarHidden = writable(false);
-export const theme = writable(getItem('theme') || 1);
+export const isFetchingProfile = writable<boolean>(false);
+export const profile = writable<any>(undefined);
+export const isSidebarHidden = writable<boolean>(false);
+export const theme = writable<number>(getItem('theme') || 1);
 
 /**
  * List
  */
-export const listIsFiltered = writable(false);
+export const listIsFiltered = writable<boolean>(false);
 
 /**
  * Organizations
  */
-export const organizationsHasError = writable([]);
-export const organizations = writable([]);
-export const updateOrganization = (e, organization) => {
+export const organizationsHasError = writable<any[]>([]);
+export const organizations = writable<any[]>([]);
+export const updateOrganization = (e: any, organization: any) => {
 	organization.checked = e.target.checked;
 
 	if (organization.checked) {
@@ -54,7 +54,7 @@ export const updateOrganization = (e, organization) => {
 /**
  * Repositories
  */
-export const updateRepository = (e, repository) => {
+export const updateRepository = (e: any, repository: any) => {
 	repository.checked = e.target.checked;
 
 	if (repository.checked) {
@@ -66,9 +66,9 @@ export const updateRepository = (e, repository) => {
 	organizations.update(organizationsList =>
 		organizationsList.map(organizationItem => ({
 			...organizationItem,
-			projects: organizationItem.projects.map(project => ({
+			projects: organizationItem.projects.map((project: any) => ({
 				...project,
-				repositories: project.repositories.map(repositoryItem => {
+				repositories: project.repositories.map((repositoryItem: any) => {
 					let newRepository = repositoryItem;
 
 					if (repositoryItem.id === repository.id) {
@@ -82,16 +82,16 @@ export const updateRepository = (e, repository) => {
 	);
 };
 
-export const repositories = writable([]);
-export const isFetchingPullRequests = writable(false);
-export const pullRequestsFetchHasError = writable(false);
-export const pullRequests = writable([]);
+export const repositories = writable<any[]>([]);
+export const isFetchingPullRequests = writable<boolean>(false);
+export const pullRequestsFetchHasError = writable<boolean>(false);
+export const pullRequests = writable<any[]>([]);
 
 /**
  * Settings
  */
 
-const getSettingsByKey = (key, initial, type = undefined) => {
+const getSettingsByKey = (key: string, initial: any, type: any) => {
 	let value = getItem(key);
 
 	if (typeof value !== 'boolean' && !value && value !== 0) {
@@ -107,10 +107,10 @@ const getSettingsByKey = (key, initial, type = undefined) => {
 };
 
 export const refreshDelay = writable(
-	getSettingsByKey('refreshDelay', 5, Number),
+	getSettingsByKey('refreshDelay', 5, Number.parseInt),
 );
 
-export const startup = writable(getSettingsByKey('startup', true));
+export const startup = writable(getSettingsByKey('startup', true, undefined));
 
 export const cleanStore = () => {
 	clientToken.set(undefined);

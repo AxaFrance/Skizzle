@@ -1,4 +1,4 @@
-export const addItem = (key, value) => {
+export const addItem = (key: string, value: any): void => {
 	if (typeof value === 'string') {
 		localStorage.setItem(key, value);
 	} else {
@@ -6,11 +6,12 @@ export const addItem = (key, value) => {
 	}
 };
 
-export const removeItem = key => localStorage.removeItem(key);
+export const removeItem = (key: string): void => localStorage.removeItem(key);
 
-export const removeItems = keys => keys.map(key => removeItem(key));
+export const removeItems = (keys: string[]): void =>
+	keys.forEach(key => removeItem(key));
 
-export const removeValueFromKey = (key, value) => {
+export const removeValueFromKey = (key: string, value: any) => {
 	let exist = getItem(key);
 
 	if (Array.isArray(exist) && exist.length <= 1) {
@@ -22,7 +23,7 @@ export const removeValueFromKey = (key, value) => {
 	}
 };
 
-export const updateItem = (key, value) => {
+export const updateItem = (key: string, value: any): void => {
 	let exist = getItem(key);
 
 	if (exist && Array.isArray(exist)) {
@@ -35,7 +36,11 @@ export const updateItem = (key, value) => {
 	}
 };
 
-export const updateSubItem = (key, subKey, value) => {
+export const updateSubItem = (
+	key: string,
+	subKey: string,
+	value: any,
+): void => {
 	let exist = getItem(key);
 
 	if (exist && Array.isArray(exist)) {
@@ -57,11 +62,11 @@ export const updateSubItem = (key, subKey, value) => {
 	}
 };
 
-export const getItem = key => {
-	let object = localStorage.getItem(key);
+export const getItem = (key: string): any => {
+	let object = localStorage.getItem(key) || '';
 
 	return JSON.parse(object);
 };
 
-export const existValue = (items, value) =>
+export const existValue = (items: any[], value: any) =>
 	!!items && items.some(x => x === value);

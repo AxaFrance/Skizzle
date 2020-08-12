@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
+import typescript from '@rollup/plugin-typescript';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -16,21 +17,20 @@ export default {
 		file: 'public/build/bundle.js',
 	},
 	plugins: [
+		//typeCheck(),
 		svelte({
 			dev: !production,
-			preprocess: sveltePreprocess({
-				sourceMap: !production,
-			}),
+			preprocess: sveltePreprocess(),
 			css: css => {
 				css.write('public/build/bundle.css');
 			},
 		}),
+		typescript({ sourceMap: !production }),
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
 		}),
 		commonjs(),
-		!production && serve(),
 		!production && livereload('public'),
 		production && terser(),
 	],
@@ -39,14 +39,13 @@ export default {
 	},
 };
 
-function serve() {
-	let started = false;
-
+function typeCheck() {
 	return {
 		writeBundle() {
-			if (!started) {
-				started = true;
-			}
+			require('child_process').spawn('svelte-check', {
+				stdio: ['ignore', 'inherit', 'inherit'],
+				shell: true,
+			});
 		},
 	};
 }

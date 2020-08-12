@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron');
+import { ipcRenderer } from 'electron';
 import {
 	getItem,
 	existValue,
@@ -17,12 +17,12 @@ import {
 } from './store';
 import { getDiffDays } from './helpers';
 
-let data = [];
+let data: any[] = [];
 let loadedRepositories = 0;
 let loadedOrganizations = 0;
 let numberOfLoadedPullRequests = 0;
-let loadedPullRequests = [];
-let brokenOrganizations = [];
+let loadedPullRequests: any[] = [];
+let brokenOrganizations: any[] = [];
 let refreshing = false;
 
 export const getHeader = () => {
@@ -47,6 +47,12 @@ export const getToken = async ({
 	client_assertion,
 	access_code,
 	refresh_token,
+}: {
+	url: string;
+	redirect_uri: string;
+	client_assertion: string;
+	access_code: string;
+	refresh_token: string;
 }) => {
 	refreshing = true;
 	const body = `client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=${client_assertion}&grant_type=${
@@ -59,7 +65,7 @@ export const getToken = async ({
 
 	const headers = new window.Headers();
 	headers.append('Content-Type', 'application/x-www-form-urlencoded');
-	headers.append('Content-Length', body.length);
+	headers.append('Content-Length', body.length.toString());
 
 	const result = await fetch(url, {
 		method: 'POST',
@@ -116,7 +122,7 @@ export const getToken = async ({
 	refreshing = false;
 };
 
-export const customFetch = async (url, onError = undefined) => {
+export const customFetch = async (url: string) => {
 	const client = getItem('clientToken');
 
 	if (!client) {
@@ -169,11 +175,11 @@ export const getProfile = async () => {
 			hasError: true,
 		});
 		isFetchingProfile.set(false);
-		throw new Error(res);
+		throw new Error(res.statusText);
 	}
 };
 
-export const getOrganizations = async id => {
+export const getOrganizations = async (id: string) => {
 	const res = await customFetch(
 		`https://app.vssps.visualstudio.com/_apis/accounts?memberId=${id}&api-version=5.1-preview.1`,
 	);
@@ -193,7 +199,7 @@ export const getOrganizations = async id => {
 		}
 
 		data.push(
-			...result.value.map(organization => ({
+			...result.value.map((organization: any) => ({
 				...organization,
 				checked: existValue(getItem('organizations'), organization.accountId),
 			})),
@@ -208,11 +214,17 @@ export const getOrganizations = async id => {
 			hasError: true,
 		}));
 		isFetchingProfile.set(false);
-		throw new Error(res);
+		throw new Error(res.statusText);
 	}
 };
 
-export const getProjects = async ({ organization, numberOfOrganizations }) => {
+export const getProjects = async ({
+	organization,
+	numberOfOrganizations,
+}: {
+	organization: any;
+	numberOfOrganizations: number;
+}) => {
 	const res = await customFetch(
 		`https://dev.azure.com/${organization.accountName}/_apis/projects?$top=1000&api-version=5.1`,
 	);
@@ -246,7 +258,7 @@ export const getProjects = async ({ organization, numberOfOrganizations }) => {
 
 		data.forEach(organizationItem => {
 			if (organizationItem.projects) {
-				organizationItem.projects.forEach(({ id: projectId }) =>
+				organizationItem.projects.forEach(({ id: projectId }: { id: string }) =>
 					getRepositories({
 						projectId,
 						organizationName: organizationItem.accountName,
@@ -262,6 +274,10 @@ export const getRepositories = async ({
 	projectId,
 	organizationName,
 	numberOfProjects,
+}: {
+	projectId: string;
+	organizationName: string;
+	numberOfProjects: number;
 }) => {
 	const res = await customFetch(
 		`https://dev.azure.com/${organizationName}/${projectId}/_apis/git/repositories?includeLinks=true&api-version=5.0`,
@@ -274,24 +290,26 @@ export const getRepositories = async ({
 			let newOrganizationItem = { ...organizationItem };
 
 			if (organizationItem.accountName === organizationName) {
-				newOrganizationItem.projects = newOrganizationItem.projects.map(project => {
-					const newProject = { ...project };
+				newOrganizationItem.projects = newOrganizationItem.projects.map(
+					(project: any) => {
+						const newProject = { ...project };
 
-					if (project.id === projectId) {
-						newProject.repositories = result.value
-							.map(repository => {
-								const checked = getItem('repositories') || [];
+						if (project.id === projectId) {
+							newProject.repositories = result.value
+								.map((repository: any) => {
+									const checked = getItem('repositories') || [];
 
-								return {
-									...repository,
-									checked: checked.includes(repository.id),
-								};
-							})
-							.sort((a, b) => (a.name > b.name ? 1 : -1));
-					}
+									return {
+										...repository,
+										checked: checked.includes(repository.id),
+									};
+								})
+								.sort((a: any, b: any) => (a.name > b.name ? 1 : -1));
+						}
 
-					return newProject;
-				});
+						return newProject;
+					},
+				);
 			}
 
 			return newOrganizationItem;
@@ -304,7 +322,7 @@ export const getRepositories = async ({
 			organizations.set(data);
 		}
 	} else {
-		throw new Error(res);
+		throw new Error(res.statusText);
 	}
 };
 
@@ -312,6 +330,10 @@ export const updatePullRequestsStore = ({
 	shouldNotify = false,
 	isFiltered = false,
 	profileId,
+}: {
+	shouldNotify: boolean;
+	isFiltered: boolean;
+	profileId: string;
 }) => {
 	pullRequests.update(pullRequestsList => {
 		const newList = loadedPullRequests.reduce((acc, curr) => {
@@ -319,13 +341,13 @@ export const updatePullRequestsStore = ({
 			return acc;
 		}, []);
 		const filteredList = isFiltered
-			? newList.filter(item => {
+			? newList.filter((item: any) => {
 					return (
 						item.isDraft === false &&
 						item.mergeStatus !== 'conflicts' &&
 						profileId !== item.createdBy.id &&
 						getDiffDays(item.creationDate) < 30 &&
-						!item.reviewers.find(({ id }) => id === profileId)
+						!item.reviewers.find(({ id }: { id: string }) => id === profileId)
 					);
 			  })
 			: newList;
@@ -336,7 +358,7 @@ export const updatePullRequestsStore = ({
 			pullRequestsList.length < filteredList.length
 		) {
 			const newPullRequests = filteredList.filter(
-				item =>
+				(item: any) =>
 					!pullRequestsList.find(
 						({ pullRequestId }) => pullRequestId === item.pullRequestId,
 					),
@@ -347,7 +369,7 @@ export const updatePullRequestsStore = ({
 				let body = `Le projet ${newPullRequests[0].repository.project.name} a une nouvelle pull request.`;
 
 				if (newPullRequests.length > 1) {
-					const projectsNames = newPullRequests.reduce((acc, curr) => {
+					const projectsNames = newPullRequests.reduce((acc: any, curr: any) => {
 						if (!acc.includes(curr.repository.project.name)) {
 							acc.push(curr.repository.project.name);
 						}
@@ -355,7 +377,7 @@ export const updatePullRequestsStore = ({
 					}, []);
 
 					title = 'Nouvelles pull requests';
-					body = `Les projets ${projectsNames.reduce((acc, curr) => {
+					body = `Les projets ${projectsNames.reduce((acc: any, curr: any) => {
 						acc = `${curr}, `;
 						return acc;
 					}, '')} ont de nouvelles pull requests`;
@@ -369,7 +391,8 @@ export const updatePullRequestsStore = ({
 		}
 
 		return filteredList.sort(
-			(a, b) => new Date(b.creationDate) - new Date(a.creationDate),
+			(a: any, b: any) =>
+				new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime(),
 		);
 	});
 
@@ -377,25 +400,41 @@ export const updatePullRequestsStore = ({
 	loadedPullRequests = [];
 };
 
-export const checkedElements = ({ checked }) => !!checked;
+export const checkedElements = ({ checked }: { checked: boolean }) => !!checked;
 export const getCheckedRepositories = (
-	allProjects,
-	{ projects, accountName: organizationName },
+	allProjects: any,
+	{
+		projects,
+		accountName: organizationName,
+	}: { projects: any; accountName: string },
 ) => {
 	allProjects.push(
-		...projects.reduce((allRepositories, { repositories }) => {
-			allRepositories.push(
-				...repositories
-					.filter(checkedElements)
-					.map(({ id, creationDate, project: { id: projectId } }) => ({
-						id,
-						projectId,
-						organizationName,
-						creationDate,
-					})),
-			);
-			return allRepositories;
-		}, []),
+		...projects.reduce(
+			(allRepositories: any, { repositories }: { repositories: any }) => {
+				allRepositories.push(
+					...repositories
+						.filter(checkedElements)
+						.map(
+							({
+								id,
+								creationDate,
+								project: { id: projectId },
+							}: {
+								id: string;
+								creationDate: string;
+								project: { id: string };
+							}) => ({
+								id,
+								projectId,
+								organizationName,
+								creationDate,
+							}),
+						),
+				);
+				return allRepositories;
+			},
+			[],
+		),
 	);
 	return allProjects;
 };
@@ -405,6 +444,11 @@ export const getPullRequests = async ({
 	shouldNotify = false,
 	isFiltered,
 	profileId,
+}: {
+	organizations: any;
+	shouldNotify: boolean;
+	isFiltered: boolean;
+	profileId: string;
 }) => {
 	pullRequestsFetchHasError.set(false);
 	numberOfLoadedPullRequests = 0;
@@ -414,7 +458,7 @@ export const getPullRequests = async ({
 			.reduce(getCheckedRepositories, []);
 		if (repositoriesToFetch.length) {
 			isFetchingPullRequests.set(true);
-			repositoriesToFetch.forEach(repo =>
+			repositoriesToFetch.forEach((repo: any) =>
 				fetchPullRequests({
 					...repo,
 					shouldNotify,
@@ -437,6 +481,14 @@ export const fetchPullRequests = async ({
 	isFiltered,
 	profileId,
 	repositoriesToFetch,
+}: {
+	id: string;
+	projectId: string;
+	organizationName: string;
+	shouldNotify: boolean;
+	isFiltered: boolean;
+	profileId: string;
+	repositoriesToFetch: any[];
 }) => {
 	const res = await customFetch(
 		`https://dev.azure.com/${organizationName}/${projectId}/_apis/git/repositories/${id}/pullRequests?searchCriteria.status=active&includeLinks=true&api-version=5.0`,
@@ -446,7 +498,7 @@ export const fetchPullRequests = async ({
 		const result = await res.json();
 
 		loadedPullRequests.push(
-			result.value.map(value => ({ ...value, organizationName })),
+			result.value.map((value: any[]) => ({ ...value, organizationName })),
 		);
 	} else {
 		pullRequestsFetchHasError.set(true);
@@ -465,6 +517,11 @@ export const fetchPullRequestComments = async ({
 	repositoryId,
 	projectId,
 	organizationName,
+}: {
+	pullRequestId: string;
+	repositoryId: string;
+	projectId: string;
+	organizationName: string;
 }) => {
 	const res = await customFetch(
 		`https://dev.azure.com/${organizationName}/${projectId}/_apis/git/repositories/${repositoryId}/pullRequests/${pullRequestId}/threads?api-version=5.1`,
@@ -473,16 +530,20 @@ export const fetchPullRequestComments = async ({
 	if (res.ok) {
 		return await res.json();
 	} else {
-		throw new Error(res);
+		throw new Error(res.statusText);
 	}
 };
 
-export const getAvatar = async (userId, organization, subjectDescriptor) => {
+export const getAvatar = async (
+	userId: string,
+	organization: string,
+	subjectDescriptor: string,
+) => {
 	const imgs = getItem('images');
 	let avatar;
 
 	if (imgs && imgs.length > 0) {
-		avatar = imgs.find(x => x[userId]);
+		avatar = imgs.find((x: any) => x[userId]);
 	}
 
 	if (avatar) {
@@ -501,12 +562,12 @@ export const getAvatar = async (userId, organization, subjectDescriptor) => {
 
 			return response;
 		} else {
-			throw new Error(res);
+			throw new Error(res.statusText);
 		}
 	}
 };
 
-export const getDescriptor = async userId => {
+export const getDescriptor = async (userId: string) => {
 	const response = await customFetch(
 		`https://vssps.dev.azure.com/_apis/graph/descriptors/${userId}?api-version=5.0-preview.1`,
 	);
@@ -514,7 +575,7 @@ export const getDescriptor = async userId => {
 	if (response.ok) {
 		return response.json();
 	} else {
-		throw new Error(response);
+		throw new Error(response.statusText);
 	}
 };
 
