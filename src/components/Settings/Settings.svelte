@@ -1,5 +1,5 @@
 <script>
-	const { shell, remote, ipcRenderer } = require('electron');
+	const app = require('electron');
 	import SettingsRefresh from './SettingsRefresh.svelte';
 	import SettingsStartup from './SettingsStartup.svelte';
 	import SettingsOrganizations from './SettingsOrganizations.svelte';
@@ -8,14 +8,14 @@
 	import { cleanStore } from '../../shared/store';
 	import { clear } from '../../shared/requester';
 
-	ipcRenderer.on('loggedOut', () => {
+	app.ipcRenderer.on('loggedOut', () => {
 		removeItem('clientToken');
 		cleanStore();
 		clear();
 	});
 
 	const logout = () => {
-		ipcRenderer.send('logout');
+		app.ipcRenderer.send('logout');
 	};
 
 	const components = [
@@ -48,9 +48,9 @@
 			action: () => setSelected('theme'),
 		},
 		{
-			label: `Version ${remote.app.getVersion()}`,
+			label: `Version ${app.remote.app.getVersion()}`,
 			className: 'skz-settings-version',
-			action: () => shell.openExternal('https://electronjs.org/'),
+			action: () => app.shell.openExternal('https://electronjs.org/'),
 		},
 		{ label: 'Se déconnecter', className: 'skz-settings-logout', action: logout },
 	];

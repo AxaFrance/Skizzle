@@ -23,7 +23,8 @@
 		"lint": "./node_modules/.bin/eslint ./src --ext .js,.svelte --fix",
 		"validate": "svelte-check --workspace src/",
 		"start:prod": "sirv --port 4567 public",
-		"start:dev": "sirv --port 4567 public --dev"
+		"start:dev": "sirv --port 4567 public --dev",
+		"electron:windows": "rm -rf release && npm run build && npx electron-builder build --windows"
 	},
 	"keywords": [
 		"electron",
@@ -59,7 +60,7 @@
 		"@testing-library/jest-dom": "5.11.2",
 		"@testing-library/svelte": "3.0.0",
 		"@tsconfig/svelte": "1.0.8",
-		"@types/node": "14.0.27",
+		"@types/node": "^14.0.27",
 		"babel-core": "6.26.3",
 		"babel-jest": "26.2.2",
 		"babel-polyfill": "6.26.0",
@@ -93,12 +94,12 @@
 		"typescript": "3.9.7"
 	},
 	"dependencies": {
-		"electron-context-menu": "2.3.0",
 		"electron-debug": "3.1.0",
 		"electron-log": "4.2.2",
-		"electron-unhandled": "3.0.2",
 		"electron-updater": "4.3.4",
 		"electron-util": "0.14.2",
+		"electron-context-menu": "2.3.0",
+		"electron-unhandled": "3.0.2",
 		"sirv-cli": "1.0.5"
 	},
 	"build": {

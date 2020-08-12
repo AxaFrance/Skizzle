@@ -1,6 +1,5 @@
 <script>
-	// @ts-ignore
-	const { ipcRenderer } = require('electron');
+	const app = require('electron').ipcRenderer;
 	import { onMount } from 'svelte';
 	import Login from '../../layouts/Login';
 	import Home from '../../layouts/Home';
@@ -9,7 +8,7 @@
 	import { clientToken, isOffline } from '../../shared/store';
 
 	onMount(() => {
-		ipcRenderer.on('getToken', async (_, args) => await getToken(args));
+		app.on('getToken', async (_, args) => await getToken(args));
 	});
 
 	window.addEventListener('online', () => isOffline.set(false));

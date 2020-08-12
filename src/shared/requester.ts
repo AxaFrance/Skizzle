@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+const app = require('electron').ipcRenderer;
 import {
 	getItem,
 	existValue,
@@ -383,7 +383,7 @@ export const updatePullRequestsStore = ({
 					}, '')} ont de nouvelles pull requests`;
 				}
 
-				ipcRenderer.send('notifier', {
+				app.send('notifier', {
 					title,
 					body,
 				});

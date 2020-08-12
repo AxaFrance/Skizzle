@@ -1,5 +1,5 @@
 <script>
-	const { shell } = require('electron');
+	const app = require('electron').shell;
 	import Loader from '../Loader';
 	import CommentsCounter from '../CommentsCounter';
 	import Labels from '../Labels';
@@ -29,7 +29,7 @@
 	const makeUrl = ({ organizationName, repository, pullRequestId }) =>
 		`https://dev.azure.com/${organizationName}/${repository.project.name}/_git/${repository.name}/pullrequest/${pullRequestId}`;
 
-	const openUrl = () => shell.openExternal(makeUrl(pullRequest));
+	const openUrl = () => app.openExternal(makeUrl(pullRequest));
 
 	const getAvatarUrl = pr =>
 		getAvatar(pr.createdBy.id, pr.organizationName, pr.createdBy.descriptor);

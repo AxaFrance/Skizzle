@@ -1,7 +1,7 @@
 <script>
 	import { startup } from '../../shared/store';
 	import { addItem } from '../../shared/storage';
-	const { ipcRenderer } = require('electron');
+	const app = require('electron').ipcRenderer;
 
 	export let init;
 	export let title;
@@ -10,7 +10,7 @@
 		addItem('startup', checked);
 		startup.set(checked);
 
-		ipcRenderer.send('launch-startup', checked);
+		app.send('launch-startup', checked);
 	};
 </script>
 

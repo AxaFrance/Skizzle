@@ -1,5 +1,5 @@
 <script>
-	const { ipcRenderer } = require('electron');
+	const app = require('electron').ipcRenderer;
 
 	let isFormOpen = false;
 	let proxyLogin = null;
@@ -20,7 +20,7 @@
 	const configureProxy = e => {
 		e.preventDefault();
 		isValidated = true;
-		ipcRenderer.send('proxy-config', {
+		app.send('proxy-config', {
 			proxyLogin,
 			proxyPassword,
 		});
@@ -46,7 +46,7 @@
 	</p>
 	<button
 		class="skz-login__button skz-login__button--azure"
-		on:click={() => ipcRenderer.send('azure-devops-oauth')}>
+		on:click={() => app.send('azure-devops-oauth')}>
 		Azure DevOps
 	</button>
 

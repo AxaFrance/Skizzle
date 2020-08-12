@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import { removeValueFromKey, getItem, addItem, updateItem } from './storage';
-const { ipcRenderer } = require('electron');
+const app = require('electron').ipcRenderer;
 
 /**
  * Token
@@ -99,7 +99,7 @@ const getSettingsByKey = (key: string, initial: any, type: any) => {
 		addItem(key, value);
 
 		if (key === 'startup') {
-			ipcRenderer.send('launch-startup', value);
+			app.send('launch-startup', value);
 		}
 	}
 

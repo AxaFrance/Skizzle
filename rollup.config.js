@@ -17,7 +17,7 @@ export default {
 		file: 'public/build/bundle.js',
 	},
 	plugins: [
-		//typeCheck(),
+		typeCheck(),
 		svelte({
 			dev: !production,
 			preprocess: sveltePreprocess(),
@@ -25,15 +25,16 @@ export default {
 				css.write('public/build/bundle.css');
 			},
 		}),
-		typescript({ sourceMap: !production }),
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
 		}),
 		commonjs(),
+		typescript({ sourceMap: !production }),
 		!production && livereload('public'),
 		production && terser(),
 	],
+	external: ['electron', 'child_process', 'fs', 'path', 'url', 'module', 'os'],
 	watch: {
 		clearScreen: false,
 	},
