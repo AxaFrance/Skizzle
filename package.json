@@ -23,8 +23,7 @@
 		"lint": "./node_modules/.bin/eslint ./src --ext .js,.svelte --fix",
 		"validate": "svelte-check --workspace src/",
 		"start:prod": "sirv --port 4567 public",
-		"start:dev": "sirv --port 4567 public --dev",
-		"electron:windows": "rm -rf release && npm run build && npx electron-builder build --windows"
+		"start:dev": "sirv --port 4567 public --dev"
 	},
 	"keywords": [
 		"electron",
