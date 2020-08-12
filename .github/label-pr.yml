@@ -1,0 +1,8 @@
+- regExp: ".*\\.svelte+$"
+  labels: ['svelte', 'component']
+- regExp: ".*\\.js+$"
+  labels: ['javascript', 'configuration']
+- regExp: ".*\\.md+$"
+  labels: ['documentation']
+- regExp: "^(pom\\.xml|package\\.json|build\\.gradle)$"
+  labels: ['dependencies']
