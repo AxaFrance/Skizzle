@@ -65,7 +65,11 @@ export const updateSubItem = (
 export const getItem = (key: string): any => {
 	let object = localStorage.getItem(key) || '';
 
-	return JSON.parse(object);
+	try {
+		return JSON.parse(object);
+	} catch {}
+
+	return object;
 };
 
 export const existValue = (items: any[], value: any) =>
