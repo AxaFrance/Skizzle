@@ -4,7 +4,12 @@ module.exports = {
 		'\\.(ts)$': 'ts-jest',
 		'^.+\\.svelte$': [
 			'svelte-jester',
-			{ preprocess: require('./svelte.config').createPreprocessors },
+			{
+				preprocess: require('./svelte.config').createPreprocessors,
+				compilerOptions: {
+					css: false,
+				},
+			},
 		],
 		'^.+\\.js$': 'babel-jest',
 	},
