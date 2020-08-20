@@ -11,6 +11,7 @@
 	},
 	"scripts": {
 		"postinstall": "electron-builder install-app-deps",
+		"package-lock-sanitizer": "package-lock-sanitizer",
 		"precommit": "lint-staged pretty-quick --staged",
 		"build": "rollup -c --extend",
 		"autobuild": "rollup -c -w --extend",
@@ -79,6 +80,7 @@
 		"jest-transform-svelte": "^2.1.1",
 		"lint-staged": "^10.2.11",
 		"npm-run-all": "^4.1.5",
+		"package-lock-sanitizer": "^1.0.1",
 		"prettier": "^2.0.5",
 		"pretty-quick": "^2.0.1",
 		"rollup": "^2.23.1",
@@ -90,9 +92,9 @@
 		"svelte-check": "^1.0.10",
 		"svelte-jester": "^1.0.6",
 		"svelte-preprocess": "^4.0.10",
+		"ts-jest": "^26.2.0",
 		"tslib": "^2.0.1",
-		"typescript": "^3.9.7",
-		"ts-jest": "^26.2.0"
+		"typescript": "^3.9.7"
 	},
 	"dependencies": {
 		"electron-debug": "3.1.0",
@@ -128,7 +130,7 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "pretty-quick --staged",
+			"pre-commit": "npm run precommit && npm run package-lock-sanitizer && git add package-lock.json",
 			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
 		}
 	},
