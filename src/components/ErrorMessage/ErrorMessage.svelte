@@ -1,6 +1,6 @@
 <script>
-	export let retry: any;
-	export let label: string;
+	export let retry;
+	export let label;
 </script>
 
 <style src="./ErrorMessage.scss">

@@ -12,7 +12,7 @@
 	"scripts": {
 		"postinstall": "electron-builder install-app-deps",
 		"package-lock-sanitizer": "package-lock-sanitizer",
-		"precommit": "lint-staged pretty-quick --staged",
+		"precommit": "pretty-quick --staged",
 		"build": "rollup -c --extend",
 		"autobuild": "rollup -c -w --extend",
 		"start": "npm-run-all -p dev electron",

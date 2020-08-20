@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Error Message Component should render with empty props 1`] = `
+<body>
+  <div>
+    <div
+      class="skz-error-message"
+    >
+      <p>
+        
+      </p>
+       
+      <button>
+        Réessayer
+      </button>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`Testing Error Message Component should render with label 1`] = `
+<body>
+  <div>
+    <div
+      class="skz-error-message"
+    >
+      <p>
+        An error occurred!
+      </p>
+       
+      <button>
+        Réessayer
+      </button>
+    </div>
+  </div>
+</body>
+`;
