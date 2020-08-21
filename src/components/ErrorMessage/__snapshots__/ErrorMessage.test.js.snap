@@ -4,13 +4,17 @@ exports[`Testing Error Message Component should render with empty props 1`] = `
 <body>
   <div>
     <div
-      class="skz-error-message"
+      class="skz-error-message svelte-jok4ho"
     >
-      <p>
+      <p
+        class="svelte-jok4ho"
+      >
         
       </p>
        
-      <button>
+      <button
+        class="svelte-jok4ho"
+      >
         Réessayer
       </button>
     </div>
@@ -22,13 +26,17 @@ exports[`Testing Error Message Component should render with label 1`] = `
 <body>
   <div>
     <div
-      class="skz-error-message"
+      class="skz-error-message svelte-jok4ho"
     >
-      <p>
+      <p
+        class="svelte-jok4ho"
+      >
         An error occurred!
       </p>
        
-      <button>
+      <button
+        class="svelte-jok4ho"
+      >
         Réessayer
       </button>
     </div>

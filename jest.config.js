@@ -2,15 +2,7 @@ module.exports = {
 	setupFiles: ['jest-localstorage-mock', './src/setupTests.js'],
 	transform: {
 		'\\.(ts)$': 'ts-jest',
-		'^.+\\.svelte$': [
-			'svelte-jester',
-			{
-				preprocess: require('./svelte.config').createPreprocessors,
-				compilerOptions: {
-					css: false,
-				},
-			},
-		],
+		'^.+\\.svelte$': ['svelte-jester', { preprocess: true }],
 		'^.+\\.js$': 'babel-jest',
 	},
 	moduleFileExtensions: ['js', 'ts', 'json', 'svelte'],
