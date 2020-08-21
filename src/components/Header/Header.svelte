@@ -1,19 +1,22 @@
 <script>
-	const { getCurrentWindow } = require('electron').remote;
+	const app = require('electron').remote;
 	import WindowsBar from './WindowsBar.svelte';
 	import MacosBar from './MacosBar.svelte';
-    
+
 	let currentPlatform = navigator.platform === 'Win32' ? 'windows' : 'others';
-	let isMaximized = getCurrentWindow().isMaximized();
-	
-	getCurrentWindow().on('maximize', () => isMaximized = true);
-	getCurrentWindow().on('unmaximize', () => isMaximized = false);
+	let isMaximized = app.getCurrentWindow().isMaximized();
+
+	app.getCurrentWindow().on('maximize', () => (isMaximized = true));
+	app.getCurrentWindow().on('unmaximize', () => (isMaximized = false));
 </script>
 
-<style src="./Header.scss"></style>
+<style src="./Header.scss">
+
+</style>
 
 <header class="titlebar">
-	<div class="drag-region {currentPlatform ? `drag-region--${currentPlatform}` : ''}">
+	<div
+		class="drag-region {currentPlatform ? `drag-region--${currentPlatform}` : ''}">
 		{#if currentPlatform === 'others'}
 			<MacosBar bind:isMaximized />
 		{:else}
