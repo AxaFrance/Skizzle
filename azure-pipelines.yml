@@ -25,14 +25,21 @@ steps:
   inputs:
     SonarCloud: 'SonarCloud'
     organization: 'axaguildev'
-    scannerMode: 'MSBuild'
-    projectKey: 'skizzle'
-    projectVersion: '1.0.1'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'skizzle'
+    cliProjectName: 'skizzle'
+    cliProjectVersion: '1.0.1'
+    cliSources: 'src'
+    extraProperties: |
+      # Additional properties that will be passed to the scanner, 
+      # Put one key=value per line, example:
+      sonar.tests=src
+      sonar.test.inclusions=src/**/*.test.js
+      sonar.javascript.lcov.reportPaths=coverage/lcov.info
 
-- script: |
-    npm install
-    npm run build
-    npm run test:coverage
-  displayName: 'npm install, build and test coverage'
+- script: npm install && npm run bootstrap
+  displayName: 'npm install and bootstrap'
 
-- task: SonarCloudAnalyze@1
+- script: npm test -- --coverage
+  displayName: 'npm run test:coverage'
