@@ -33,7 +33,7 @@ export const getHeader = () => {
 		`Bearer ${getItem('clientToken').clientToken}`,
 	);
 
-	let params = {
+	const params = {
 		method: 'GET',
 		headers,
 	};
@@ -59,9 +59,7 @@ export const getToken = async ({
 		refresh_token
 			? 'refresh_token'
 			: 'urn:ietf:params:oauth:grant-type:jwt-bearer'
-	}&assertion=${
-		refresh_token ? refresh_token : access_code
-	}&redirect_uri=${redirect_uri}`;
+	}&assertion=${refresh_token || access_code}&redirect_uri=${redirect_uri}`;
 
 	const headers = new window.Headers();
 	headers.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -110,13 +108,6 @@ export const getToken = async ({
 			client_assertion,
 			current_date,
 		});
-	} else {
-		removeItem('clientToken');
-		isFetchingProfile.set(false);
-		profile.set({
-			...profile,
-			hasError: true,
-		});
 	}
 
 	refreshing = false;
@@ -143,6 +134,19 @@ export const customFetch = async (url: string) => {
 	const params = getHeader();
 
 	return await fetch(url, params);
+};
+
+export const getMemberName = async memberId => {
+	const res = await customFetch(
+		`https://app.vssps.visualstudio.com/_apis/profile/profiles/${memberId}?api-version=5.1`,
+	);
+
+	if (res.ok) {
+		const data = await res.json();
+		return data.displayName;
+	}
+
+	return '';
 };
 
 export const getProfile = async () => {
@@ -287,7 +291,7 @@ export const getRepositories = async ({
 		const result = await res.json();
 
 		data = data.map(organizationItem => {
-			let newOrganizationItem = { ...organizationItem };
+			const newOrganizationItem = { ...organizationItem };
 
 			if (organizationItem.accountName === organizationName) {
 				newOrganizationItem.projects = newOrganizationItem.projects.map(
@@ -396,7 +400,6 @@ export const updatePullRequestsStore = ({
 		);
 	});
 
-	numberOfLoadedPullRequests = 0;
 	loadedPullRequests = [];
 };
 
@@ -548,22 +551,21 @@ export const getAvatar = async (
 
 	if (avatar) {
 		return Promise.resolve({ value: avatar[userId] });
+	}
+	const res = await customFetch(
+		`https://vssps.dev.azure.com/${organization}/_apis/graph/Subjects/${subjectDescriptor}/avatars?size=large&api-version=5.1-preview.1`,
+	);
+
+	if (res.ok) {
+		const response = res.json();
+
+		response.then(x => {
+			updateSubItem('images', userId, x.value);
+		});
+
+		return response;
 	} else {
-		const res = await customFetch(
-			`https://vssps.dev.azure.com/${organization}/_apis/graph/Subjects/${subjectDescriptor}/avatars?size=large&api-version=5.1-preview.1`,
-		);
-
-		if (res.ok) {
-			const response = res.json();
-
-			response.then(x => {
-				updateSubItem('images', userId, x.value);
-			});
-
-			return response;
-		} else {
-			throw new Error(res.statusText);
-		}
+		throw new Error(res.statusText);
 	}
 };
 
@@ -585,4 +587,20 @@ export const clear = () => {
 	loadedOrganizations = 0;
 	loadedPullRequests = [];
 	numberOfLoadedPullRequests = 0;
+};
+
+export const getPullRequestFiles = async (
+	projectId,
+	repositoryId,
+	organization,
+	pullRequestId,
+) => {
+	const response = await customFetch(
+		`https://dev.azure.com/${organization}/${projectId}/_apis/git/repositories/${repositoryId}/pullRequests/${pullRequestId}/attachments/?api-version=5.1-preview.1`,
+	);
+
+	if (response.ok) {
+		return response.json();
+	}
+	throw new Error(response.statusText);
 };

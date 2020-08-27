@@ -3,6 +3,12 @@ import { removeValueFromKey, getItem, addItem, updateItem } from './storage';
 const app = require('electron').ipcRenderer;
 
 /**
+ * Comments
+ */
+export const mentionsHistory = writable([]);
+export const responsesHistory = writable([]);
+
+/**
  * Token
  */
 export const clientToken = writable<any>(getItem('clientToken') || undefined);
@@ -19,6 +25,7 @@ export const isFetchingProfile = writable<boolean>(false);
 export const profile = writable<any>(undefined);
 export const isSidebarHidden = writable<boolean>(false);
 export const theme = writable<number>(getItem('theme') || 1);
+export const othersProfile = writable([]);
 
 /**
  * List

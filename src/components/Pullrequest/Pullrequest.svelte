@@ -1,11 +1,46 @@
 <script>
-	const app = require('electron').shell;
+	import { getContext } from 'svelte';
+	import { get } from 'svelte/store';
+	import { getAvatar, fetchPullRequestComments } from '../../shared/requester';
+	import { getDiffDays } from '../../shared/helpers';
+	import {
+		mentionsHistory,
+		responsesHistory,
+		profile,
+	} from '../../shared/store';
 	import Loader from '../Loader';
 	import CommentsCounter from '../CommentsCounter';
 	import Labels from '../Labels';
-	import { getAvatar, fetchPullRequestComments } from '../../shared/requester';
-	import { getDiffDays } from '../../shared/helpers';
+	import {
+		manageNotification,
+		getMentionedComments,
+		getAuthorRespondedComments,
+		showPullRequestModal,
+	} from './Pullrequest.utils.js';
+	import { PullRequestModal } from '../Modal';
+
 	export let pullRequest;
+
+	const { open } = getContext('modal');
+
+	const profileId = get(profile).id.toUpperCase();
+
+	let mentionsHistoryValue = [];
+	let responsesHistoryValue = [];
+	let mentioned = [];
+	let authorResponses = [];
+	let comments = [];
+
+	mentionsHistory.subscribe(value => {
+		mentionsHistoryValue = value;
+	});
+
+	responsesHistory.subscribe(value => {
+		responsesHistoryValue = value;
+	});
+
+	const isMentioned = () => mentioned.length > 0;
+	const hasResponse = () => authorResponses.length > 0;
 
 	const isNotSystemComments = comments =>
 		comments.every(({ commentType }) => commentType !== 'system');
@@ -19,17 +54,46 @@
 		});
 
 		if (response.value && response.value.length > 0) {
-			return response.value.filter(
+			const commentsGroup = response.value.filter(
 				({ identities, isDeleted, comments }) =>
 					identities === null && !isDeleted && isNotSystemComments(comments),
 			);
+
+			if (commentsGroup.length > 0) {
+				mentioned = getMentionedComments(commentsGroup, profileId);
+				authorResponses = getAuthorRespondedComments(commentsGroup, profileId);
+			}
+
+			const data = {
+				mentioned,
+				mentionsHistoryValue,
+				authorResponses,
+				responsesHistoryValue,
+				pullRequestTitle: pullRequest.title,
+				comments: commentsGroup,
+				organizationName: pullRequest.organizationName,
+				PullRequestModal,
+				open,
+				pullRequestId: pullRequest.pullRequestId,
+			};
+			manageNotification(data);
+
+			comments = commentsGroup;
+			return commentsGroup;
 		}
 	};
 
 	const makeUrl = ({ organizationName, repository, pullRequestId }) =>
 		`https://dev.azure.com/${organizationName}/${repository.project.name}/_git/${repository.name}/pullrequest/${pullRequestId}`;
 
-	const openUrl = () => app.openExternal(makeUrl(pullRequest));
+	const openModal = () =>
+		showPullRequestModal(
+			{ title: pullRequest.title, url: makeUrl(pullRequest) },
+			comments,
+			pullRequest.organizationName,
+			PullRequestModal,
+			open,
+		);
 
 	const getAvatarUrl = pr =>
 		getAvatar(pr.createdBy.id, pr.organizationName, pr.createdBy.descriptor);
@@ -53,7 +117,7 @@
 
 </style>
 
-<div class="skz-pullrequest" on:click={openUrl}>
+<div class="skz-pullrequest" on:click={openModal}>
 	<div class="skz-pullrequest__avatar">
 		{#await getAvatarUrl(pullRequest)}
 			<img
@@ -65,7 +129,7 @@
 				class="skz-pullrequest__thumbnail"
 				alt={pullRequest.createdBy.displayName}
 				src="data:image/jpeg;base64,{avatar.value}" />
-		{:catch}
+		{:catch error}
 			<img
 				class="skz-pullrequest__thumbnail"
 				alt={pullRequest.createdBy.displayName}
@@ -116,7 +180,12 @@
 			{#await getComments(pullRequest)}
 				<Loader mini={true} />
 			{:then comments}
-				<CommentsCounter {comments} />
+				{#if isMentioned()}
+					<h1 class="skz-pullrequest__mention">@</h1>
+				{/if}
+				<div>
+					<CommentsCounter {comments} hasResponse={hasResponse()} />
+				</div>
 			{/await}
 		</div>
 	</div>
