@@ -4,50 +4,50 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- master
+ - master
 
 pr:
-  branches:
-    include:
-    - master
+ branches:
+  include:
+   - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+ vmImage: 'ubuntu-latest'
 
 steps:
-- task: NodeTool@0
-  inputs:
+ - task: NodeTool@0
+   inputs:
     versionSpec: '12.x'
     checkLatest: true
-  displayName: 'Install Node.js'
-  
-- task: SonarCloudPrepare@1
-  inputs:
+   displayName: 'Install Node.js'
+
+ - task: SonarCloudPrepare@1
+   inputs:
     SonarCloud: 'SonarCloud'
     organization: 'axaguildev'
     scannerMode: 'CLI'
     configMode: 'manual'
     cliProjectKey: 'skizzle'
     cliProjectName: 'skizzle'
-    cliProjectVersion: '1.0.1'
+    cliProjectVersion: '1.0.2'
     cliSources: 'src'
     extraProperties: |
-      # Additional properties that will be passed to the scanner, 
-      # Put one key=value per line, example:
-      sonar.tests=src
-      sonar.test.inclusions=src/**/*.test.js
-      sonar.javascript.lcov.reportPaths=coverage/lcov.info
+     # Additional properties that will be passed to the scanner, 
+     # Put one key=value per line, example:
+     sonar.tests=src
+     sonar.test.inclusions=src/**/*.test.js
+     sonar.javascript.lcov.reportPaths=coverage/lcov.info
 
-- script: npm install && npm run build
-  displayName: 'npm install and build'
+ - script: npm install && npm run build
+   displayName: 'npm install and build'
 
-- script: npm test -- --coverage
-  displayName: 'npm run test:coverage'
+ - script: npm test -- --coverage
+   displayName: 'npm run test:coverage'
 
-- task: SonarCloudAnalyze@1
-  displayName: 'Run Code Analysis'
-  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))
+ - task: SonarCloudAnalyze@1
+   displayName: 'Run Code Analysis'
+   condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))
 
-- task: SonarCloudPublish@1
-  displayName: 'Publish Quality Gate Result'
-  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))
+ - task: SonarCloudPublish@1
+   displayName: 'Publish Quality Gate Result'
+   condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))

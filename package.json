@@ -1,6 +1,6 @@
 {
 	"name": "skizzle",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"appId": "skizzle",
 	"description": "Visualisation des pull requests",
 	"main": "public/electron.js",

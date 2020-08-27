@@ -105,7 +105,7 @@
 			</p>
 		</footer>
 		<script>
-			var version = '1.0.1';
+			var version = '1.0.2';
 
 			function getFileName() {
 				var platform = window.navigator.platform;
@@ -114,6 +114,7 @@
 					'https://github.com/AxaGuilDEv/skizzle/releases/download/' +
 					version +
 					'/Skizzle-' +
+					(macosPlatforms.indexOf(platform) !== -1 ? '' : 'Setup-') +
 					version;
 
 				if (macosPlatforms.indexOf(platform) !== -1) {

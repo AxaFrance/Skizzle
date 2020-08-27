@@ -5,7 +5,7 @@ jest.mock('electron', () => ({
 	},
 	remote: {
 		app: {
-			getVersion: () => '1.0.1',
+			getVersion: () => '1.0.2',
 		},
 		getCurrentWindow: () => ({
 			isMaximized: jest.fn(),
