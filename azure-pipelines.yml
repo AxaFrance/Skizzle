@@ -33,10 +33,6 @@ steps:
     npm install
     npm run build
     npm run test:coverage
-  displayName: 'npm install and build'
+  displayName: 'npm install, build and test coverage'
 
 - task: SonarCloudAnalyze@1
-
-- task: SonarCloudPublish@1
-  inputs:
-    pollingTimeoutSec: '30'
