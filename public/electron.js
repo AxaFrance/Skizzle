@@ -231,7 +231,29 @@ if (!gotTheLock) {
 
       notification.show();
     }
-  });
+	});
+	
+	const login = (event, url) => {
+		const details = url;
+
+		if (details && details.startsWith(config.redirectUri)) {
+			const _url = details.split('?')[1];
+			const _params = new URLSearchParams(_url);
+			const _accessCode = _params.get('code');
+
+			if (_accessCode) {
+				event.sender.send('getToken', {
+					url: config.tokenUrl,
+					redirect_uri: config.redirectUri,
+					client_assertion: config.clientAssertion,
+					access_code: _accessCode,
+				});
+
+				authWindow.close();
+				authWindow = null;
+			}
+		}
+	};
 
 	ipcMain.on('notifier', (event, arg) => {
 		const { body, title } = arg;
@@ -271,27 +293,8 @@ if (!gotTheLock) {
 				authWindow = null;
 			});
 
-			authWindow.webContents.on('will-redirect', (e, url) => {
-				const details = url;
-
-				if (details && details.startsWith(config.redirectUri)) {
-					const _url = details.split('?')[1];
-					const _params = new URLSearchParams(_url);
-					const _accessCode = _params.get('code');
-
-					if (_accessCode) {
-						event.sender.send('getToken', {
-							url: config.tokenUrl,
-							redirect_uri: config.redirectUri,
-							client_assertion: config.clientAssertion,
-							access_code: _accessCode,
-						});
-
-						authWindow.close();
-						authWindow = null;
-					}
-				}
-			});
+			authWindow.webContents.on('will-navigate', (e, url) => login(event, url));
+			authWindow.webContents.on('will-redirect', (e, url) => login(event, url));
 		}
 	});
 

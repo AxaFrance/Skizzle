@@ -4,18 +4,29 @@ const { app } = require('electron');
 
 let notifiedWindow;
 let mainWindow;
+let retry = 0;
 autoUpdater.autoDownload = false;
 
 autoUpdater.on('error', error => {
-	notifiedWindow.webContents.send('message', {
-		text: `Une erreur est survenue lors de la mise à jour`,
-	});
-
 	if (!app.isPackaged) {
+		notifiedWindow.webContents.send('message', {
+			text: "Mode de développement, passage de l'étape de mise à jour",
+		});
+
 		setTimeout(() => {
 			notifiedWindow.hide();
 			mainWindow.show();
 		}, 2000);
+	} else {
+		retry++;
+
+		if (retry > 5) {
+			notifiedWindow.webContents.send('message', {
+				text: 'Une erreur est survenue lors de la mise à jour',
+			});
+		} else {
+			timer(() => check(), retry > 1 ? 30 : 5);
+		}
 	}
 });
 
@@ -56,21 +67,9 @@ autoUpdater.on('update-downloaded', () => {
 		text: 'Installation de la mise à jour',
 	});
 
-	let seconds = 5;
-
-	setInterval(() => {
-		notifiedWindow.webContents.send('message', {
-			text: `Redémarrage dans ${seconds} seconde${seconds > 1 ? 's' : ''}`,
-		});
-
-		if (seconds > 0) {
-			seconds = seconds - 1;
-		}
-	}, 1000);
-
 	setTimeout(() => {
-		setImmediate(() => autoUpdater.quitAndInstall(true, true));
-	}, 5000);
+		autoUpdater.quitAndInstall(true, true);
+	}, 2000);
 });
 
 function checkForUpdates(secondWindow, primayWindow) {
@@ -82,10 +81,30 @@ function checkForUpdates(secondWindow, primayWindow) {
 		log.transports.file.level = 'debug';
 		autoUpdater.logger = log;
 
-		setTimeout(() => {
-			autoUpdater.checkForUpdates();
-		}, 2000);
+		check();
 	}
+}
+
+function check() {
+	setTimeout(() => {
+		autoUpdater.checkForUpdates();
+	}, 2000);
+}
+
+function timer(callback, seconds) {
+	let value = seconds;
+
+	setInterval(() => {
+		notifiedWindow.webContents.send('message', {
+			text: `Nouvelle tentative dans ${value} seconde${value > 1 ? 's' : ''}`,
+		});
+
+		if (value > 0) {
+			value--;
+		}
+	}, 1000);
+
+	setTimeout(() => callback(), seconds * 1000);
 }
 
 module.exports.checkForUpdates = checkForUpdates;
