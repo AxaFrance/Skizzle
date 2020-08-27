@@ -43,3 +43,11 @@ steps:
 
 - script: npm test -- --coverage
   displayName: 'npm run test:coverage'
+
+- task: SonarCloudAnalyze@1
+  displayName: 'Run Code Analysis'
+  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))
+
+- task: SonarCloudPublish@1
+  displayName: 'Publish Quality Gate Result'
+  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))
