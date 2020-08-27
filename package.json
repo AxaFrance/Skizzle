@@ -26,7 +26,14 @@
 		"start:prod": "sirv --port 4567 public",
 		"start:dev": "sirv --port 4567 public --dev",
 		"electron:windows": "rm -rf release && npm run build && npx electron-builder build --windows",
-		"electron:mac": "rm -rf release && npm run build && npx electron-builder build --mac"
+		"electron:mac": "rm -rf release && npm run build && npx electron-builder build --mac",
+		"changelog": "auto-changelog"
+	},
+	"auto-changelog": {
+		"template": "./changelog-template.hbs",
+		"unreleased": true,
+		"commitLimit": false,
+		"package": true
 	},
 	"keywords": [
 		"electron",
@@ -99,12 +106,13 @@
 		"typescript": "^3.9.7"
 	},
 	"dependencies": {
+		"auto-changelog": "^2.2.0",
+		"electron-context-menu": "2.3.0",
 		"electron-debug": "3.1.0",
 		"electron-log": "4.2.2",
+		"electron-unhandled": "3.0.2",
 		"electron-updater": "4.3.4",
 		"electron-util": "0.14.2",
-		"electron-context-menu": "2.3.0",
-		"electron-unhandled": "3.0.2",
 		"sirv-cli": "1.0.5"
 	},
 	"build": {
