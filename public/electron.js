@@ -68,6 +68,7 @@ function createWindow() {
 			nodeIntegration: true,
 			experimentalFeatures: true,
 			webviewTag: true,
+			enableRemoteModule: true,
 		},
 	});
 
@@ -219,19 +220,19 @@ if (!gotTheLock) {
 		}
 	});
 
-  ipcMain.on('mentioned', (event, args) => {
-    const { body, title, pullRequestId } = args;
+	ipcMain.on('mentioned', (event, args) => {
+		const { body, title, pullRequestId } = args;
 
-    if (Notification.isSupported()) {
-      const notification = new Notification({ body, title });
+		if (Notification.isSupported()) {
+			const notification = new Notification({ body, title });
 
-      notification.on('click', () => {
-        event.sender.send(`mentioned-${pullRequestId}:clicked`);
-      });
+			notification.on('click', () => {
+				event.sender.send(`mentioned-${pullRequestId}:clicked`);
+			});
 
-      notification.show();
-    }
-  });
+			notification.show();
+		}
+	});
 
 	ipcMain.on('notifier', (event, arg) => {
 		const { body, title } = arg;
