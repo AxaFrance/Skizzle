@@ -3,8 +3,10 @@ const { autoUpdater } = require('electron-updater');
 const { app } = require('electron');
 
 let notifiedWindow;
-let mainWindow;
+let createWindow;
 let retry = 0;
+let interval;
+let called = false;
 autoUpdater.autoDownload = false;
 
 autoUpdater.on('error', error => {
@@ -15,18 +17,16 @@ autoUpdater.on('error', error => {
 
 		setTimeout(() => {
 			notifiedWindow.hide();
-			mainWindow.show();
+			createWindow();
 		}, 2000);
 	} else {
-		retry++;
+		notifiedWindow.webContents.send('message', {
+			text: 'Une erreur est survenue !',
+		});
 
-		if (retry > 5) {
-			notifiedWindow.webContents.send('message', {
-				text: 'Une erreur est survenue lors de la mise à jour',
-			});
-		} else {
-			timer(() => check(), retry > 1 ? 30 : 5);
-		}
+		retry++;
+		clear();
+		timer(check, retry > 1 ? 30 : 5);
 	}
 });
 
@@ -41,6 +41,7 @@ autoUpdater.on('update-available', () => {
 		text: 'Une mise à jour est disponible',
 	});
 
+	clear();
 	autoUpdater.downloadUpdate();
 });
 
@@ -51,8 +52,10 @@ autoUpdater.on('update-not-available', () => {
 
 	setTimeout(() => {
 		notifiedWindow.hide();
-		mainWindow.show();
+		createWindow();
 	}, 2000);
+
+	clear();
 });
 
 autoUpdater.on('download-progress', progressObj => {
@@ -72,9 +75,9 @@ autoUpdater.on('update-downloaded', () => {
 	}, 2000);
 });
 
-function checkForUpdates(secondWindow, primayWindow) {
+function checkForUpdates(secondWindow, window) {
 	notifiedWindow = secondWindow;
-	mainWindow = primayWindow;
+	createWindow = window;
 
 	if (!is.macAppStore) {
 		const log = require('electron-log');
@@ -94,17 +97,26 @@ function check() {
 function timer(callback, seconds) {
 	let value = seconds;
 
-	setInterval(() => {
+	interval = setInterval(() => {
 		notifiedWindow.webContents.send('message', {
 			text: `Nouvelle tentative dans ${value} seconde${value > 1 ? 's' : ''}`,
 		});
 
-		if (value > 0) {
+		if (value > 1) {
 			value--;
+		} else {
+			if (!called) {
+				callback();
+
+				called = true;
+			}
 		}
 	}, 1000);
+}
 
-	setTimeout(() => callback(), seconds * 1000);
+function clear() {
+	clearInterval(interval);
+	called = false;
 }
 
 module.exports.checkForUpdates = checkForUpdates;
