@@ -29,7 +29,7 @@ steps:
     configMode: 'manual'
     cliProjectKey: 'skizzle'
     cliProjectName: 'skizzle'
-    cliProjectVersion: '1.0.2'
+    cliProjectVersion: '1.0.3'
     cliSources: 'src'
     extraProperties: |
      # Additional properties that will be passed to the scanner, 
@@ -51,3 +51,7 @@ steps:
  - task: SonarCloudPublish@1
    displayName: 'Publish Quality Gate Result'
    condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))
+
+ - script: node ./scripts/publish-changelog.js $(Github.Token)
+   displayName: 'Generate Changelog'
+   condition: and(succeeded(), ne(variables['App.Version'], 'none'), eq(variables['System.PullRequest.IsFork'], 'False'))
