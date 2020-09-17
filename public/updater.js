@@ -3,19 +3,30 @@ const { autoUpdater } = require('electron-updater');
 const { app } = require('electron');
 
 let notifiedWindow;
-let mainWindow;
+let createWindow;
+let retry = 0;
+let interval;
+let called = false;
 autoUpdater.autoDownload = false;
 
 autoUpdater.on('error', error => {
-	notifiedWindow.webContents.send('message', {
-		text: `Une erreur est survenue lors de la mise à jour`,
-	});
-
 	if (!app.isPackaged) {
+		notifiedWindow.webContents.send('message', {
+			text: "Mode de développement, passage de l'étape de mise à jour",
+		});
+
 		setTimeout(() => {
 			notifiedWindow.hide();
-			mainWindow.show();
+			createWindow();
 		}, 2000);
+	} else {
+		notifiedWindow.webContents.send('message', {
+			text: 'Une erreur est survenue !',
+		});
+
+		retry++;
+		clear();
+		timer(check, retry > 1 ? 30 : 5);
 	}
 });
 
@@ -30,6 +41,7 @@ autoUpdater.on('update-available', () => {
 		text: 'Une mise à jour est disponible',
 	});
 
+	clear();
 	autoUpdater.downloadUpdate();
 });
 
@@ -40,8 +52,10 @@ autoUpdater.on('update-not-available', () => {
 
 	setTimeout(() => {
 		notifiedWindow.hide();
-		mainWindow.show();
+		createWindow();
 	}, 2000);
+
+	clear();
 });
 
 autoUpdater.on('download-progress', progressObj => {
@@ -56,36 +70,53 @@ autoUpdater.on('update-downloaded', () => {
 		text: 'Installation de la mise à jour',
 	});
 
-	let seconds = 5;
-
-	setInterval(() => {
-		notifiedWindow.webContents.send('message', {
-			text: `Redémarrage dans ${seconds} seconde${seconds > 1 ? 's' : ''}`,
-		});
-
-		if (seconds > 0) {
-			seconds = seconds - 1;
-		}
-	}, 1000);
-
 	setTimeout(() => {
-		setImmediate(() => autoUpdater.quitAndInstall(true, true));
-	}, 5000);
+		autoUpdater.quitAndInstall(true, true);
+	}, 2000);
 });
 
-function checkForUpdates(secondWindow, primayWindow) {
+function checkForUpdates(secondWindow, window) {
 	notifiedWindow = secondWindow;
-	mainWindow = primayWindow;
+	createWindow = window;
 
 	if (!is.macAppStore) {
 		const log = require('electron-log');
 		log.transports.file.level = 'debug';
 		autoUpdater.logger = log;
 
-		setTimeout(() => {
-			autoUpdater.checkForUpdates();
-		}, 2000);
+		check();
 	}
+}
+
+function check() {
+	setTimeout(() => {
+		autoUpdater.checkForUpdates();
+	}, 2000);
+}
+
+function timer(callback, seconds) {
+	let value = seconds;
+
+	interval = setInterval(() => {
+		notifiedWindow.webContents.send('message', {
+			text: `Nouvelle tentative dans ${value} seconde${value > 1 ? 's' : ''}`,
+		});
+
+		if (value > 1) {
+			value--;
+		} else {
+			if (!called) {
+				callback();
+
+				called = true;
+			}
+		}
+	}, 1000);
+}
+
+function clear() {
+	clearInterval(interval);
+	called = false;
 }
 
 module.exports.checkForUpdates = checkForUpdates;

@@ -5,6 +5,7 @@ const debug = require('electron-debug');
 const electron = require('electron');
 const { app, BrowserWindow, Menu, Notification, ipcMain, Tray } = electron;
 const { checkForUpdates } = require('./updater.js');
+const { dialog } = require('electron');
 
 try {
 	require('electron-reloader')(module);
@@ -23,6 +24,7 @@ contextMenu({
 });
 
 unhandled({
+	showDialog: false,
 	reportButton: error => {
 		openNewGitHubIssue({
 			repoUrl: 'https://github.com/AxaGuilDEv/skizzle',
@@ -55,6 +57,43 @@ let logoutWindow;
 let splashscreen;
 let tray;
 
+function createSplashScreen() {
+	splashscreen = new BrowserWindow({
+		autoHideMenuBar: true,
+		frame: false,
+		width: 525,
+		height: 265,
+		resizable: false,
+		skipTaskbar: true,
+		webPreferences: {
+			nodeIntegration: true,
+		},
+	});
+
+	splashscreen.loadURL(`file:///${__dirname}/splashscreen.html`);
+
+	splashscreen.on('closed', () => {
+		splashscreen = null;
+	});
+}
+
+function hangOrCrash() {
+	const options = {
+		type: 'info',
+		title: 'Renderer PRocess Hanging',
+		message: 'This process is hanging.',
+		buttons: ['Reload', 'Close'],
+	};
+
+	dialog.showMessageBox(options, index => {
+		if (index === 0) {
+			window.reload();
+		} else {
+			window.close();
+		}
+	});
+}
+
 function createWindow() {
 	window = new BrowserWindow({
 		title: 'Skizzle',
@@ -63,7 +102,6 @@ function createWindow() {
 		height: 768,
 		resizable: true,
 		frame: false,
-		show: false,
 		webPreferences: {
 			nodeIntegration: true,
 			experimentalFeatures: true,
@@ -76,6 +114,9 @@ function createWindow() {
 	window.on('closed', () => {
 		window = null;
 	});
+
+	window.on('render-process-gone', () => hangOrCrash());
+	window.on('unresponsive', () => hangOrCrash());
 
 	window.once('focus', () => window.flashFrame(false));
 	window.flashFrame(true);
@@ -147,25 +188,6 @@ function createWindow() {
 		if (!window.isVisible()) window.show();
 		window.focus();
 	});
-
-	splashscreen = new BrowserWindow({
-		autoHideMenuBar: true,
-		frame: false,
-		width: 525,
-		height: 265,
-		resizable: false,
-		show: true,
-		skipTaskbar: true,
-		webPreferences: {
-			nodeIntegration: true,
-		},
-	});
-
-	splashscreen.loadURL(`file:///${__dirname}/splashscreen.html`);
-
-	splashscreen.on('closed', () => {
-		splashscreen = null;
-	});
 }
 
 if (app.isPackaged) {
@@ -197,13 +219,17 @@ if (!gotTheLock) {
 
 	app.commandLine.appendSwitch('disable-site-isolation-trials');
 	app.on('ready', () => {
-		createWindow();
-		checkForUpdates(splashscreen, window);
+		createSplashScreen();
+		checkForUpdates(splashscreen, createWindow);
 	});
 
 	app.on('window-all-closed', () => {
 		if (process.platform !== 'darwin') {
 			app.quit();
+		}
+
+		if (tray) {
+			tray.destroy();
 		}
 	});
 	app.on('activate', () => {
@@ -219,19 +245,41 @@ if (!gotTheLock) {
 		}
 	});
 
-  ipcMain.on('mentioned', (event, args) => {
-    const { body, title, pullRequestId } = args;
+	ipcMain.on('mentioned', (event, args) => {
+		const { body, title, pullRequestId } = args;
 
-    if (Notification.isSupported()) {
-      const notification = new Notification({ body, title });
+		if (Notification.isSupported()) {
+			const notification = new Notification({ body, title });
 
-      notification.on('click', () => {
-        event.sender.send(`mentioned-${pullRequestId}:clicked`);
-      });
+			notification.on('click', () => {
+				event.sender.send(`mentioned-${pullRequestId}:clicked`);
+			});
 
-      notification.show();
-    }
-  });
+			notification.show();
+		}
+	});
+
+	const login = (event, url) => {
+		const details = url;
+
+		if (details && details.startsWith(config.redirectUri)) {
+			const _url = details.split('?')[1];
+			const _params = new URLSearchParams(_url);
+			const _accessCode = _params.get('code');
+
+			if (_accessCode) {
+				event.sender.send('getToken', {
+					url: config.tokenUrl,
+					redirect_uri: config.redirectUri,
+					client_assertion: config.clientAssertion,
+					access_code: _accessCode,
+				});
+
+				authWindow.close();
+				authWindow = null;
+			}
+		}
+	};
 
 	ipcMain.on('notifier', (event, arg) => {
 		const { body, title } = arg;
@@ -271,27 +319,8 @@ if (!gotTheLock) {
 				authWindow = null;
 			});
 
-			authWindow.webContents.on('will-redirect', (e, url) => {
-				const details = url;
-
-				if (details && details.startsWith(config.redirectUri)) {
-					const _url = details.split('?')[1];
-					const _params = new URLSearchParams(_url);
-					const _accessCode = _params.get('code');
-
-					if (_accessCode) {
-						event.sender.send('getToken', {
-							url: config.tokenUrl,
-							redirect_uri: config.redirectUri,
-							client_assertion: config.clientAssertion,
-							access_code: _accessCode,
-						});
-
-						authWindow.close();
-						authWindow = null;
-					}
-				}
-			});
+			authWindow.webContents.on('will-navigate', (e, url) => login(event, url));
+			authWindow.webContents.on('will-redirect', (e, url) => login(event, url));
 		}
 	});
 
