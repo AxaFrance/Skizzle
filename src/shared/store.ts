@@ -2,6 +2,12 @@ import { writable } from 'svelte/store';
 import { removeValueFromKey, getItem, addItem, updateItem } from './storage';
 const app = require('electron').ipcRenderer;
 
+const defaultState = {
+	theme: 1,
+	refresh: 5,
+	startup: false,
+};
+
 /**
  * Comments
  */
@@ -24,7 +30,6 @@ export const isOffline = writable<boolean>(false);
 export const isFetchingProfile = writable<boolean>(false);
 export const profile = writable<any>(undefined);
 export const isSidebarHidden = writable<boolean>(false);
-export const theme = writable<number>(getItem('theme') || 1);
 export const othersProfile = writable([]);
 
 /**
@@ -98,26 +103,43 @@ export const pullRequests = writable<any[]>([]);
  * Settings
  */
 
-const getSettingsByKey = (key: string, initial: any, type: any) => {
-	let value = getItem(key);
+const derivedStore = <T>(
+	key: string,
+	defaultState: T,
+	channel?: string,
+	renderer?: (channel: string, args: T) => void,
+) => {
+	let value = <T>getItem(key);
 
-	if (typeof value !== 'boolean' && !value && value !== 0) {
-		value = initial;
+	const { subscribe, set, update } = writable<T>(value || defaultState);
+
+	const setValue = (value: T) => {
 		addItem(key, value);
-
-		if (key === 'startup') {
-			app.send('launch-startup', value);
+		if (channel && renderer) {
+			renderer(channel, value);
 		}
-	}
+		set(value);
+	};
 
-	return type ? type(value) : value;
+	return {
+		subscribe,
+		update,
+		set: setValue,
+		reset: () => setValue(defaultState),
+	};
 };
 
-export const refreshDelay = writable(
-	getSettingsByKey('refreshDelay', 5, Number.parseInt),
+export const refreshDelay = derivedStore<number>(
+	'refreshDelay',
+	defaultState.refresh,
 );
-
-export const startup = writable(getSettingsByKey('startup', true, undefined));
+export const startup = derivedStore<boolean>(
+	'startup',
+	defaultState.startup,
+	'launch-startup',
+	app.send,
+);
+export const theme = derivedStore<number>('theme', defaultState.theme);
 
 export const cleanStore = () => {
 	clientToken.set(undefined);
@@ -127,4 +149,8 @@ export const cleanStore = () => {
 	organizations.set([]);
 	repositories.set([]);
 	pullRequests.set([]);
+
+	refreshDelay.reset();
+	startup.reset();
+	theme.reset();
 };
