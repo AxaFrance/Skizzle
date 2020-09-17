@@ -51,3 +51,7 @@ steps:
  - task: SonarCloudPublish@1
    displayName: 'Publish Quality Gate Result'
    condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'False'))
+
+ - script: node ./scripts/publish-changelog.js $(Github.Token)
+   displayName: 'Generate Changelog'
+   condition: and(succeeded(), ne(variables['App.Version'], 'none'), eq(variables['System.PullRequest.IsFork'], 'False'))
