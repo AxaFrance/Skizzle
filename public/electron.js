@@ -106,6 +106,7 @@ function createWindow() {
 			nodeIntegration: true,
 			experimentalFeatures: true,
 			webviewTag: true,
+			enableRemoteModule: true,
 		},
 	});
 
