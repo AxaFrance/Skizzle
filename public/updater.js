@@ -16,8 +16,8 @@ autoUpdater.on('error', error => {
 		});
 
 		setTimeout(() => {
-			notifiedWindow.hide();
 			createWindow();
+			notifiedWindow.close();
 		}, 2000);
 	} else {
 		notifiedWindow.webContents.send('message', {
@@ -51,8 +51,8 @@ autoUpdater.on('update-not-available', () => {
 	});
 
 	setTimeout(() => {
-		notifiedWindow.hide();
 		createWindow();
+		notifiedWindow.close();
 	}, 2000);
 
 	clear();

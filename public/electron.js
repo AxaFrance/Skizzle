@@ -22,9 +22,9 @@ contextMenu({
 	showCopyImage: false,
 	showSearchWithGoogle: false,
 });
-
+debug();
 unhandled({
-	showDialog: false,
+	showDialog: !app.isPackaged,
 	reportButton: error => {
 		openNewGitHubIssue({
 			repoUrl: 'https://github.com/AxaGuilDEv/skizzle',
