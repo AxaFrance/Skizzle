@@ -27,7 +27,7 @@ describe('Testing Error Message Component', () => {
 			retry,
 		});
 
-		const button = getByText('Réessayer');
+		const button = getByText('Retry');
 
 		await fireEvent.click(button);
 

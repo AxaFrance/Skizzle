@@ -1,212 +1,204 @@
 .skz-login {
-  display: flex;
-  width: 100vw;
-  height: 95vh;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  background-color: #f5f5f5;
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	background-color: #f5f5f5;
 
-  &__logo {
-    width: 300px;
-    animation: slideUp 0.7s;
-    animation-fill-mode: both;
-    animation-timing-function: ease-in-out;
+	&__logo {
+		width: 300px;
+		animation: slideUp 0.7s;
+		animation-fill-mode: both;
+		animation-timing-function: ease-in-out;
 
-    &--dark {
-      display: none;
-    }
-  }
+		&--dark {
+			display: none;
+		}
+	}
 
-  &__intro {
-    margin-bottom: 1rem;
-    text-align: center;
-    color: #333;
-    animation: slideUp 0.7s;
-    animation-delay: 0.1s;
-    animation-fill-mode: both;
-    animation-timing-function: ease-in-out;
-  }
+	&__intro {
+		margin-bottom: 1rem;
+		text-align: center;
+		color: #333;
+		animation: slideUp 0.7s;
+		animation-delay: 0.1s;
+		animation-fill-mode: both;
+		animation-timing-function: ease-in-out;
+	}
 
-  &__button {
-    position: relative;
-    display: block;
-    padding: 1rem 1rem 1rem 3.5rem;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    border: 0;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(100, 100, 100, 0.1);
-    background-color: #fff;
-    transition: transform linear 0.2s;
-    animation: slideUp 0.7s;
-    animation-delay: 0.2s;
-    animation-fill-mode: both;
-    animation-timing-function: ease-in-out;
+	&__button {
+		position: relative;
+		display: block;
+		padding: 1rem 1rem 1rem 3.5rem;
+		font-size: 1rem;
+		font-weight: bold;
+		cursor: pointer;
+		border: 0;
+		border-radius: 4px;
+		box-shadow: 0 2px 5px rgba(100, 100, 100, 0.1);
+		background-color: #fff;
+		transition: transform linear 0.2s;
+		animation: slideUp 0.7s;
+		animation-delay: 0.2s;
+		animation-fill-mode: both;
+		animation-timing-function: ease-in-out;
 
-    &:active {
-      transform: scale(0.97);
-    }
+		&:active {
+			transform: scale(0.97);
+		}
 
-    &:before {
-      content: '';
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      width: 1.5rem;
-      height: 1.5rem;
-      background: url('../assets/logo-azure-devops.png') no-repeat;
-      background-size: cover;
-      transform: translateY(-50%);
-    }
-  }
+		&:before {
+			content: '';
+			position: absolute;
+			left: 1rem;
+			top: 50%;
+			width: 1.5rem;
+			height: 1.5rem;
+			background: url('../assets/logo-azure-devops.png') no-repeat;
+			background-size: cover;
+			transform: translateY(-50%);
+		}
+	}
 
-  &__config {
-    position: absolute;
-    bottom: -4rem;
-    left: 0;
-    right: 0;
-    transition: transform linear 0.2s;
+	&__config {
+		position: absolute;
+		bottom: -4rem;
+		left: 0;
+		right: 0;
+		transition: transform linear 0.2s;
 
-    &--open {
-      transform: translateY(-4rem);
-    }
+		&--open {
+			transform: translateY(-4rem);
+		}
 
-    .skz-button {
-      background-color: transparent;
-      border: 0;
-      color: #333;
-      font-size: 0.8rem;
-      font-family: sans-serif;
-      margin: 1rem;
-      text-decoration: underline;
-      cursor: pointer;
+		.skz-button {
+			background-color: transparent;
+			border: 0;
+			color: #333;
+			font-size: 0.8rem;
+			font-family: sans-serif;
+			margin: 1rem;
+			text-decoration: underline;
+			cursor: pointer;
 
-      &:hover {
-        text-decoration: none;
-      }
+			&:hover {
+				text-decoration: none;
+			}
 
-      @media (prefers-color-scheme: dark) {
-        color: #fff;
-      }
-    }
+			@media (prefers-color-scheme: dark) {
+				color: #fff;
+			}
+		}
 
-    form {
-      display: flex;
-      align-items: center;
-      padding: 1rem;
-      background-color: #fff;
+		form {
+			display: flex;
+			align-items: center;
+			padding: 1rem;
+			background-color: #fff;
 
-      @media (prefers-color-scheme: dark) {
-        background-color: #444;
-      }
+			@media (prefers-color-scheme: dark) {
+				background-color: #444;
+			}
 
-      label {
-        color: #333;
-        margin-right: 0.5rem;
-        font-size: 0.8rem;
-        line-height: 1;
+			label {
+				color: #333;
+				margin-right: 0.5rem;
+				font-size: 0.8rem;
+				line-height: 1;
 
-        @media (prefers-color-scheme: dark) {
-          color: #fff;
-        }
-      }
-    }
+				@media (prefers-color-scheme: dark) {
+					color: #fff;
+				}
+			}
+		}
 
-    input {
-      height: 2rem;
-      margin-right: 2rem;
-      padding: 0.5rem;
-      border: 0;
-      line-height: 1;
-      font-size: 0.8rem;
-      color: #333;
-      background-color: #eee;
+		input {
+			height: 2rem;
+			margin-right: 2rem;
+			padding: 0.5rem;
+			border: 0;
+			line-height: 1;
+			font-size: 0.8rem;
+			color: #333;
+			background-color: #eee;
 
-      @media (prefers-color-scheme: dark) {
-        color: #fff;
-        background-color: #333;
-      }
-    }
+			@media (prefers-color-scheme: dark) {
+				color: #fff;
+				background-color: #333;
+			}
+		}
 
-    [type='submit'] {
-      color: #fff;
-      border-radius: 4px;
-      background-color: #aaa;
-      cursor: pointer;
-      transition: opacity linear 0.2s;
+		[type='submit'] {
+			color: #fff;
+			border-radius: 4px;
+			background-color: #aaa;
+			cursor: pointer;
+			transition: opacity linear 0.2s;
 
-      @media (prefers-color-scheme: dark) {
-        color: #fff;
-        background-color: #333;
-      }
+			@media (prefers-color-scheme: dark) {
+				color: #fff;
+				background-color: #333;
+			}
 
-      &:not(:disabled):hover {
-        opacity: 0.8;
-      }
+			&:not(:disabled):hover {
+				opacity: 0.8;
+			}
 
-      &:disabled {
-        opacity: 0.5;
-      }
-    }
-  }
+			&:disabled {
+				opacity: 0.5;
+			}
+		}
+	}
 }
 
 .skz-confirmation {
-  color: #333;
-  font-size: 0.8rem;
-  animation: fadeIn 0.3s;
+	color: #333;
+	font-size: 0.8rem;
+	animation: fadeIn 0.3s;
 
-  &:before {
-    content: '✓';
-    display: inline-block;
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-right: 0.5rem;
-    color: #fff;
-    font-size: 1rem;
-    text-align: center;
-    line-height: 1.5rem;
-    border-radius: 50%;
-    background-color: green;
-  }
+	&:before {
+		content: '✓';
+		display: inline-block;
+		width: 1.5rem;
+		height: 1.5rem;
+		margin-right: 0.5rem;
+		color: #fff;
+		font-size: 1rem;
+		text-align: center;
+		line-height: 1.5rem;
+		border-radius: 50%;
+		background-color: green;
+	}
 
-  @media (prefers-color-scheme: dark) {
-    color: #fff;
-  }
-}
-
-.input--valid {
-  background-image: url(data:image/png;base64,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);
-  background-repeat: no-repeat;
-  background-size: 24px;
-  background-position: calc(100% - 0.5rem) center;
+	@media (prefers-color-scheme: dark) {
+		color: #fff;
+	}
 }
 
 @media (prefers-color-scheme: dark) {
-  .skz-login {
-    background-color: #333;
+	.skz-login {
+		background-color: #333;
 
-    &__logo {
-      display: none;
+		&__logo {
+			display: none;
 
-      &--dark {
-        display: block;
-      }
-    }
+			&--dark {
+				display: block;
+			}
+		}
 
-    &__intro {
-      color: #fff;
-    }
+		&__intro {
+			color: #fff;
+		}
 
-    &__button {
-      color: #fff;
-      background-color: #555;
+		&__button {
+			color: #fff;
+			background-color: #555;
 
-      &:hover {
-        background-color: #666;
-      }
-    }
-  }
+			&:hover {
+				background-color: #666;
+			}
+		}
+	}
 }

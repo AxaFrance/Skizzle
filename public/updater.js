@@ -7,12 +7,14 @@ let createWindow;
 let retry = 0;
 let interval;
 let called = false;
+let translate;
+
 autoUpdater.autoDownload = false;
 
 autoUpdater.on('error', error => {
 	if (!app.isPackaged) {
 		notifiedWindow.webContents.send('message', {
-			text: "Mode de développement, passage de l'étape de mise à jour",
+			text: translate('UpdateDevMode'),
 		});
 
 		setTimeout(() => {
@@ -21,7 +23,7 @@ autoUpdater.on('error', error => {
 		}, 2000);
 	} else {
 		notifiedWindow.webContents.send('message', {
-			text: 'Une erreur est survenue !',
+			text: translate('UpdateError'),
 		});
 
 		retry++;
@@ -32,13 +34,13 @@ autoUpdater.on('error', error => {
 
 autoUpdater.on('checking-for-update', () => {
 	notifiedWindow.webContents.send('message', {
-		text: 'Recherche de mise à jour...',
+		text: translate('UpdateCheck'),
 	});
 });
 
 autoUpdater.on('update-available', () => {
 	notifiedWindow.webContents.send('message', {
-		text: 'Une mise à jour est disponible',
+		text: translate('UpdateAvailable'),
 	});
 
 	clear();
@@ -47,7 +49,7 @@ autoUpdater.on('update-available', () => {
 
 autoUpdater.on('update-not-available', () => {
 	notifiedWindow.webContents.send('message', {
-		text: 'Votre application est à jour',
+		text: translate('UpdateNotAvailable'),
 	});
 
 	setTimeout(() => {
@@ -60,29 +62,46 @@ autoUpdater.on('update-not-available', () => {
 
 autoUpdater.on('download-progress', progressObj => {
 	notifiedWindow.webContents.send('message', {
-		text: 'Téléchargement en cours...',
+		text: translate('UpdateDownloading'),
 		data: { ...progressObj },
 	});
 });
 
 autoUpdater.on('update-downloaded', () => {
 	notifiedWindow.webContents.send('message', {
-		text: 'Installation de la mise à jour',
+		text: translate('UpdateDownloaded'),
 	});
+
+	let seconds = 5;
+
+	setInterval(() => {
+		notifiedWindow.webContents.send('message', {
+			text: translate('UpdateNotified', seconds, seconds > 1 ? 's' : ''),
+		});
+
+		if (seconds > 0) {
+			seconds = seconds - 1;
+		}
+	}, 1000);
 
 	setTimeout(() => {
 		autoUpdater.quitAndInstall(true, true);
-	}, 2000);
+	}, seconds * 1000);
 });
 
-function checkForUpdates(secondWindow, window) {
+function checkForUpdates(secondWindow, window, getWord) {
 	notifiedWindow = secondWindow;
 	createWindow = window;
+	translate = getWord;
 
 	if (!is.macAppStore) {
 		const log = require('electron-log');
 		log.transports.file.level = 'debug';
 		autoUpdater.logger = log;
+
+		notifiedWindow.webContents.send('message', {
+			text: translate('Loading'),
+		});
 
 		check();
 	}

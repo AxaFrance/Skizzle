@@ -1,6 +1,7 @@
 <script>
-	import { refreshDelay } from '../../shared/store';
+	import { refreshDelay, language } from '../../shared/store';
 	import { addItem } from '../../shared/storage';
+
 	export let init;
 	export let title;
 
@@ -14,8 +15,10 @@
 
 </style>
 
-<button class="skz-settings-back" on:click={init}>Retour</button>
-<label for="title">{title}</label>
+<button class="skz-settings-back" on:click={init}>
+	{language.getWord('Back')}
+</button>
+<h1 class="skz-settings-title">{title}</h1>
 <input
 	id="title"
 	class="skz-refresh-delay"
@@ -26,5 +29,5 @@
 	value={$refreshDelay}
 	on:input={setTimer} />
 <small>
-	{$refreshDelay === 0 ? 'Manuellement' : `Toutes les ${$refreshDelay} minutes`}
+	{$refreshDelay === 0 ? language.getWord('Manually') : language.getWord('EveryMinutes', $refreshDelay)}
 </small>

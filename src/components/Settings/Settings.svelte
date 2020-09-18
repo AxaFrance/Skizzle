@@ -4,8 +4,9 @@
 	import SettingsStartup from './SettingsStartup.svelte';
 	import SettingsOrganizations from './SettingsOrganizations.svelte';
 	import SettingsTheme from './SettingsTheme.svelte';
+	import SettingsLanguage from './SettingsLanguage.svelte';
 	import { removeItem } from '../../shared/storage';
-	import { cleanStore } from '../../shared/store';
+	import { cleanStore, language } from '../../shared/store';
 	import { clear } from '../../shared/requester';
 
 	app.ipcRenderer.on('loggedOut', () => {
@@ -21,38 +22,52 @@
 	const components = [
 		{
 			state: 'refresh',
-			label: 'Rafraîchissement',
+			label: language.getWord('Refreshment'),
 			className: 'skz-settings-button',
 			component: SettingsRefresh,
 			action: () => setSelected('refresh'),
 		},
 		{
 			state: 'startup',
-			label: 'Démarrage',
+			label: language.getWord('StartUp'),
 			className: 'skz-settings-button',
 			component: SettingsStartup,
 			action: () => setSelected('startup'),
 		},
 		{
 			state: 'organizations',
-			label: 'Organisations',
+			label: language.getWord('Organizations'),
 			className: 'skz-settings-button',
 			component: SettingsOrganizations,
 			action: () => setSelected('organizations'),
 		},
 		{
+			state: 'languages',
+			label: language.getWord('Languages'),
+			className: 'skz-settings-button',
+			component: SettingsLanguage,
+			action: () => setSelected('languages'),
+		},
+		{
 			state: 'theme',
-			label: 'Theme',
+			label: language.getWord('Theme'),
 			className: 'skz-settings-button',
 			component: SettingsTheme,
 			action: () => setSelected('theme'),
 		},
 		{
-			label: `Version ${app.remote.app.getVersion()}`,
+			label: `${language.getWord('Version')} ${app.remote.app.getVersion()}`,
 			className: 'skz-settings-version',
-			action: () => app.shell.openExternal('https://electronjs.org/'),
+			action: () =>
+				app.shell.openExternal(
+					'https://github.com/AxaGuilDEv/Skizzle/blob/master/CHANGELOG.md',
+				),
 		},
-		{ label: 'Se déconnecter', className: 'skz-settings-logout', action: logout },
+		{
+			label: language.getWord('SignOut'),
+			className: 'skz-settings-logout',
+			action: logout,
+		},
 	];
 
 	let selected = {

@@ -1,5 +1,5 @@
 <script>
-	import { startup } from '../../shared/store';
+	import { startup, language } from '../../shared/store';
 	import { addItem } from '../../shared/storage';
 	const app = require('electron').ipcRenderer;
 
@@ -18,10 +18,12 @@
 
 </style>
 
-<button class="skz-settings-back" on:click={init}>Retour</button>
-<span>{title}</span>
+<button class="skz-settings-back" on:click={init}>
+	{language.getWord('Back')}
+</button>
+<h1 class="skz-settings-title">{title}</h1>
 <div for="title" class="skz-settings-switchs">
-	<span>Lancer l'application au démarrage</span>
+	<span>{language.getWord('LaunchStartup')}</span>
 	<input
 		id="skz-startup"
 		class="skz-settings-switch"

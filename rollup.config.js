@@ -1,8 +1,10 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import replace from '@rollup/plugin-replace';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import filesize from 'rollup-plugin-filesize';
 import typescript from '@rollup/plugin-typescript';
 
 const createPreprocessors = require('./svelte.config').createPreprocessors;
@@ -17,7 +19,13 @@ export default {
 		file: 'public/build/bundle.js',
 	},
 	plugins: [
-		//typeCheck(),
+		replace({
+			process: JSON.stringify({
+				env: {
+					isProd: production,
+				},
+			}),
+		}),
 		svelte({
 			dev: !production,
 			preprocess: createPreprocessors(!production),
@@ -33,20 +41,10 @@ export default {
 		typescript({ sourceMap: !production }),
 		!production && livereload('public'),
 		production && terser(),
+		filesize(),
 	],
 	external: ['electron', 'child_process', 'fs', 'path', 'url', 'module', 'os'],
 	watch: {
 		clearScreen: false,
 	},
 };
-
-function typeCheck() {
-	return {
-		writeBundle() {
-			require('child_process').spawn('svelte-check', {
-				stdio: ['ignore', 'inherit', 'inherit'],
-				shell: true,
-			});
-		},
-	};
-}
