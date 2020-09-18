@@ -7,6 +7,7 @@
 		mentionsHistory,
 		responsesHistory,
 		profile,
+		language,
 	} from '../../shared/store';
 	import Loader from '../Loader';
 	import CommentsCounter from '../CommentsCounter';
@@ -104,11 +105,11 @@
 
 		switch (diffDays) {
 			case 0:
-				return "Aujourd'hui";
+				return language.getWord('Today');
 			case 1:
-				return 'Hier';
+				return language.getWord('Yesterday');
 			default:
-				return `il y a ${diffDays} jours`;
+				return language.getWord('Time', diffDays);
 		}
 	};
 </script>
@@ -145,17 +146,17 @@
 			{#if pullRequest.autoCompleteSetBy}
 				<span
 					class="skz-pullrequest__status skz-pullrequest__status--auto-complete">
-					Auto complete
+					{language.getWord('AutoComplete')}
 				</span>
 			{/if}
 			{#if pullRequest.isDraft}
 				<span class="skz-pullrequest__status skz-pullrequest__status--draft">
-					Draft
+					{language.getWord('Draft')}
 				</span>
 			{/if}
 			{#if pullRequest.mergeStatus && pullRequest.mergeStatus === 'conflicts'}
 				<span class="skz-pullrequest__status skz-pullrequest__status--conflicts">
-					Conflicts
+					{language.getWord('Conflicts')}
 				</span>
 			{/if}
 			{pullRequest.title}

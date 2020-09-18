@@ -15,7 +15,7 @@ exports[`Testing Error Message Component should render with empty props 1`] = `
       <button
         class="svelte-jok4ho"
       >
-        Réessayer
+        Retry
       </button>
     </div>
   </div>
@@ -37,7 +37,7 @@ exports[`Testing Error Message Component should render with label 1`] = `
       <button
         class="svelte-jok4ho"
       >
-        Réessayer
+        Retry
       </button>
     </div>
   </div>

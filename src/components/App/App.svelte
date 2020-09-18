@@ -5,7 +5,7 @@
 	import Home from '../../layouts/Home';
 	import Header from '../Header';
 	import { getToken } from '../../shared/requester';
-	import { clientToken, isOffline } from '../../shared/store';
+	import { clientToken, isOffline, language } from '../../shared/store';
 
 	onMount(() => {
 		app.on('getToken', async (_, args) => await getToken(args));
@@ -22,10 +22,7 @@
 <Header />
 {#if $isOffline}
 	<div class="skz-offline-banner">
-		<p>
-			Vous n'êtes pas connecté à Internet. Il est impossible de rafraîchir la liste
-			et certaines fonctionnalités sont désactivées.
-		</p>
+		<p>{language.getWord('Offline')}</p>
 	</div>
 {/if}
 {#if $clientToken && $clientToken.clientToken}

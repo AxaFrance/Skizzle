@@ -1,4 +1,5 @@
 <script>
+	import { language } from '../../shared/store';
 	const app = require('electron').ipcRenderer;
 
 	let isFormOpen = false;
@@ -38,11 +39,7 @@
 		src="./assets/logo-skizzle-dark-context.svg"
 		alt="Skizzle" />
 	<p class="skz-login__intro">
-		Skizzle vous permet de regrouper les pull requests de vos équipes.
-		<br />
-		Pour commencer
-		<b>connectez vous</b>
-		avec votre compte.
+		{@html language.getWord('Login')}
 	</p>
 	<button
 		class="skz-login__button skz-login__button--azure"

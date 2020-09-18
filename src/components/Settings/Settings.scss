@@ -6,6 +6,10 @@
 	position: relative;
 	overflow: hidden;
 	height: calc(100vh - 250px);
+
+	&-title {
+		margin-bottom: 1rem;
+	}
 }
 
 .skz-settings-version {

@@ -1,6 +1,8 @@
-import { writable } from 'svelte/store';
+import { writable, get, readable } from 'svelte/store';
 import { removeValueFromKey, getItem, addItem, updateItem } from './storage';
-const app = require('electron').ipcRenderer;
+const fs = require('fs');
+const app = require('electron');
+const { ipcRenderer, remote } = app;
 
 const defaultState = {
 	theme: 1,
@@ -23,6 +25,89 @@ export const clientToken = writable<any>(getItem('clientToken') || undefined);
  * isOffline
  */
 export const isOffline = writable<boolean>(false);
+
+/**
+ * Language
+ */
+const lang = languages => {
+	const directory = '/assets/langs/';
+
+	let loadedLanguage;
+	let lang = languages.find(x => x.code === 'EN');
+
+	const language = getItem('language');
+
+	if (language && languages.some(x => x.code === language)) {
+		lang = languages.find(x => x.code === language);
+	} else if (
+		languages.some(x => x.code === remote.app.getLocale().toUpperCase())
+	) {
+		lang = languages.find(x => x.code === remote.app.getLocale().toUpperCase());
+	}
+
+	loadedLanguage = {
+		...lang,
+		words: JSON.parse(fs.readFileSync(`${__dirname}/${lang.words}`, 'utf8')),
+	};
+
+	addItem('language', loadedLanguage.code);
+	const { subscribe, set, update } = writable(loadedLanguage);
+
+	return {
+		subscribe,
+		set,
+		update,
+		setLanguage: lang => {
+			lang = languages.find(x => x.code === lang.toUpperCase());
+
+			set({
+				...lang,
+				words: JSON.parse(fs.readFileSync(`${__dirname}/${lang.words}`, 'utf8')),
+			});
+		},
+		getWord: (word, ...format) => {
+			let translation = loadedLanguage.words[word];
+
+			if (translation === undefined) {
+				translation = word;
+			}
+
+			if (translation && format) {
+				for (let i = 0; i < format.length + 1; i++) {
+					translation = translation.replace('$' + i, format[i]);
+				}
+			}
+
+			return translation;
+		},
+		reset: () => set(loadedLanguage),
+	};
+};
+
+export const languages = readable(
+	JSON.parse(fs.readFileSync(`${__dirname}/assets/langs/langs.json`, 'utf8')),
+	x => console.log(x),
+);
+export const language = lang(get(languages));
+
+language.subscribe(params => {
+	const storage = getItem('language');
+
+	if (params.code !== storage) {
+		ipcRenderer.send('update-language', params);
+		ipcRenderer.on('update-language-res', (event, res) => {
+			if (res) {
+				addItem('language', params.code);
+				language.setLanguage(params.code);
+			} else {
+				language.update(n => ({
+					...n,
+					code: storage,
+				}));
+			}
+		});
+	}
+});
 
 /**
  * Profile

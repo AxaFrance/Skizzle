@@ -1,0 +1,12 @@
+[
+	{
+		"code": "EN",
+		"label": "English",
+		"words": "assets/langs/en.json"
+	},
+	{
+		"code": "FR",
+		"label": "Français",
+		"words": "assets/langs/fr.json"
+	}
+]
