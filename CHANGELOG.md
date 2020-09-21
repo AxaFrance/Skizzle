@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+#### [v1.0.5](http://github.com/AxaGuilDEv/skizzle/compare/v1.0.4...v1.0.5)
+
+> 21 September 2020
+
+- hotfix(css): css.write has changed, he write the folder public/build by Mathieu De Baerdemaeker
+
 #### [v1.0.4](http://github.com/AxaGuilDEv/skizzle/compare/v1.0.3...v1.0.4)
 
 > 18 September 2020

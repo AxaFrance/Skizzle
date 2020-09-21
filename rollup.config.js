@@ -30,7 +30,7 @@ export default {
 			dev: !production,
 			preprocess: createPreprocessors(!production),
 			css: css => {
-				css.write('public/build/bundle.css');
+				css.write('bundle.css', !production);
 			},
 		}),
 		resolve({
