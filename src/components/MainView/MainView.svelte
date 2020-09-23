@@ -155,7 +155,6 @@
 </script>
 
 <style src="./MainView.scss">
-
 </style>
 
 <GlobalModal>
@@ -174,12 +173,14 @@
 							<Tag {tag} on:tag={setTag} />
 						{/each}
 					</ul>
-					<button
-						class="skz-pullrequests__list-more"
-						on:click={() => (show = !show)}>
-						{language.getWord('show')}
-						{show ? language.getWord('less') : language.getWord('more')}...
-					</button>
+					{#if tags.length >= 5}
+						<button
+							class="skz-pullrequests__list-more"
+							on:click={() => (show = !show)}>
+							{language.getWord('show')}
+							{show ? language.getWord('less') : language.getWord('more')}...
+						</button>
+					{/if}
 				{/if}
 			</div>
 			<ul class="skz-pullrequests-list">

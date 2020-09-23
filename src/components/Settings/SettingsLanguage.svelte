@@ -7,7 +7,6 @@
 </script>
 
 <style src="./Settings.scss">
-
 </style>
 
 <button class="skz-settings-back" on:click={init}>
@@ -15,7 +14,7 @@
 </button>
 <h1 class="skz-settings-title">{title}</h1>
 {#if $languages}
-	<p>{language.getWord('ChooseLanguage')}</p>
+	<p class="skz-organizations__intro">{language.getWord('ChooseLanguage')}</p>
 	<Select
 		bind:binding={$language.code}
 		optionalValue={true}
