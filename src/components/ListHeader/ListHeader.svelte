@@ -30,7 +30,6 @@
 </script>
 
 <style src="./ListHeader.scss">
-
 </style>
 
 <header class="skz-pullrequests-header">
@@ -51,6 +50,6 @@
 		disabled={$isOffline}
 		class="skz-pullrequests-filters"
 		on:click={toggleFilter}>
-		{$listIsFiltered ? $language['ViewFullList'] : language.getWord('FilterList')}
+		{$listIsFiltered ? language.getWord('ViewFullList') : language.getWord('FilterList')}
 	</button>
 </header>

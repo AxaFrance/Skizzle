@@ -6,21 +6,14 @@
 
 	.skz-select__input {
 		font-family: 'Icons', Source Sans Pro, Arial, sans-serif;
-		border: 0;
 		background: 0 0;
 		position: relative;
-		z-index: 1;
 		padding: 0.6rem 1.8rem 0.55rem 0.5rem;
 		width: 100%;
 		font-size: 1em;
-		-webkit-appearance: none;
-		-moz-appearance: none;
 		appearance: none;
-		text-indent: 0.01px;
-		margin: 0;
-		line-height: inherit;
-		touch-action: manipulation;
-		text-transform: none;
+		align-items: center;
+		line-height: 1.5rem;
 	}
 
 	.glyphicon-menu-down {
