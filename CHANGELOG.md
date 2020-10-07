@@ -2,11 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+#### [v1.0.6](http://github.com/AxaGuilDEv/skizzle/compare/v1.0.5...v1.0.6)
+
+> 7 October 2020
+
+- fix(lang): change many english expression, and fix label on filter list [`#80`](http://github.com/AxaGuilDEv/skizzle/pull/80) by Mathieu De Baerdemaeker
+- update dependencies [`#79`](http://github.com/AxaGuilDEv/skizzle/pull/79) by github-actions[bot]
+- Update index.html [`39cd2d2`](http://github.com/AxaGuilDEv/skizzle/commit/39cd2d2e8572a85345d1a1ef9301f9ee218c3b0c) by Mathieu De Baerdemaeker
+
 #### [v1.0.5](http://github.com/AxaGuilDEv/skizzle/compare/v1.0.4...v1.0.5)
 
 > 21 September 2020
-
-- hotfix(css): css.write has changed, he write the folder public/build by Mathieu De Baerdemaeker
 
 #### [v1.0.4](http://github.com/AxaGuilDEv/skizzle/compare/v1.0.3...v1.0.4)
 

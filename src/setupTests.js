@@ -5,7 +5,7 @@ jest.mock('electron', () => ({
 	},
 	remote: {
 		app: {
-			getVersion: () => '1.0.5',
+			getVersion: () => '6',
 			on: jest.fn(),
 			getLocale: () => 'en',
 		},
