@@ -1,8 +1,6 @@
 const fs = require('fs');
-const path = require('path');
 const unhandled = require('electron-unhandled');
 const contextMenu = require('electron-context-menu');
-const log = require('electron-log');
 const { openNewGitHubIssue, debugInfo, is } = require('electron-util');
 const debug = require('electron-debug');
 const electron = require('electron');
@@ -51,7 +49,6 @@ const config = {
 	scope:
 		'vso.analytics vso.build vso.code vso.connected_server vso.dashboards vso.entitlements vso.extension vso.extension.data vso.graph vso.identity vso.loadtest vso.machinegroup_manage vso.memberentitlementmanagement vso.notification vso.packaging vso.project vso.release vso.securefiles_read vso.serviceendpoint vso.symbols vso.taskgroups_read vso.test vso.variablegroups_read vso.wiki vso.work',
 };
-const directory = '/assets/langs/';
 
 let proxyLogin = null;
 let proxyPassword = null;
@@ -69,7 +66,7 @@ function getWord(word, ...format) {
 		translation = word;
 	}
 
-	if (translation && format) {
+	if (translation) {
 		for (let i = 0; i < format.length + 1; i++) {
 			translation = translation.replace('$' + i, format[i]);
 		}
@@ -236,7 +233,7 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
 	app.quit();
 } else {
-	app.on('second-instance', (event, commandLine, workingDirectory) => {
+	app.on('second-instance', () => {
 		if (window) {
 			if (window.isMinimized()) window.restore();
 			if (!window.isVisible()) window.show();
@@ -376,7 +373,7 @@ if (!gotTheLock) {
 		}
 	});
 
-	ipcMain.on('azure-devops-oauth', (event, arg) => {
+	ipcMain.on('azure-devops-oauth', (event) => {
 		if (!authWindow && !logoutWindow) {
 			authWindow = new BrowserWindow({
 				autoHideMenuBar: true,
@@ -402,7 +399,7 @@ if (!gotTheLock) {
 		}
 	});
 
-	ipcMain.on('logout', (event, arg) => {
+	ipcMain.on('logout', (event) => {
 		logoutWindow = new BrowserWindow({
 			show: false,
 			modal: true,
