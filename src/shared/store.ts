@@ -30,8 +30,6 @@ export const isOffline = writable<boolean>(false);
  * Language
  */
 const lang = languages => {
-	const directory = '/assets/langs/';
-
 	let loadedLanguage;
 	let lang = languages.find(x => x.code === 'EN');
 
