@@ -12,7 +12,10 @@
 		color: #333;
 		font-weight: bold;
 		display: block;
-		width: 100px;
+		max-width: 10rem;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
 		text-align: center;
 		transition: background-color linear 0.2s;
 

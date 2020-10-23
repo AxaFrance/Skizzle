@@ -180,7 +180,7 @@
 
 .skz-settings-switchs {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 
 	span {
 		width: 75%;
@@ -200,12 +200,16 @@
 .skz-settings-switch-label {
 	position: relative;
 	display: block;
-	background-color: #e5e5e5;
+	background-color: #ccc;
 	width: 40px;
 	height: 20px;
 	border-radius: 20px;
-	border: 3px solid #eee;
 	transition: background-color linear 0.1s;
+	cursor: pointer;
+
+	@media (prefers-color-scheme: dark) {
+		background-color: #111;
+	}
 }
 
 .skz-settings-switch {
@@ -223,10 +227,10 @@
 		position: absolute;
 		content: '';
 		top: 50%;
-		left: 0;
+		left: 1px;
 		transform: translateY(-50%);
-		width: 20px;
-		height: 20px;
+		width: 18px;
+		height: 18px;
 		border-radius: 50%;
 		background-color: #ffffff;
 		transition: transform linear 0.1s;
