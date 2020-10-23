@@ -262,8 +262,12 @@ if (!gotTheLock) {
 			),
 		};
 
-		createSplashScreen();
-		checkForUpdates(splashscreen, createWindow, getWord);
+		if (process.platform !== 'darwin') {
+			createSplashScreen();
+			checkForUpdates(splashscreen, createWindow, getWord);
+		} else {
+			createWindow();
+		}
 	});
 
 	app.on('window-all-closed', () => {
@@ -373,7 +377,7 @@ if (!gotTheLock) {
 		}
 	});
 
-	ipcMain.on('azure-devops-oauth', (event) => {
+	ipcMain.on('azure-devops-oauth', event => {
 		if (!authWindow && !logoutWindow) {
 			authWindow = new BrowserWindow({
 				autoHideMenuBar: true,
@@ -399,7 +403,7 @@ if (!gotTheLock) {
 		}
 	});
 
-	ipcMain.on('logout', (event) => {
+	ipcMain.on('logout', event => {
 		logoutWindow = new BrowserWindow({
 			show: false,
 			modal: true,
