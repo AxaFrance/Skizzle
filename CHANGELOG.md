@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+#### [v1.1.0](http://github.com/AxaGuilDEv/skizzle/compare/v1.0.6...v1.1.0)
+
+> 23 October 2020
+
+- Fix/ui [`#87`](http://github.com/AxaGuilDEv/skizzle/pull/87) by Jérôme Boukorras
+- fix(pull request): button for comments display [`#86`](http://github.com/AxaGuilDEv/skizzle/pull/86) by Jérôme Boukorras
+- feat(auto update): disable for macOS [`#85`](http://github.com/AxaGuilDEv/skizzle/pull/85) by Jérôme Boukorras
+- refactor: remove unused code [`#84`](http://github.com/AxaGuilDEv/skizzle/pull/84) by Hamza Hamidi
+
 #### [v1.0.6](http://github.com/AxaGuilDEv/skizzle/compare/v1.0.5...v1.0.6)
 
 > 7 October 2020
