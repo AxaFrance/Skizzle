@@ -1,4 +1,5 @@
 <script>
+	const { shell } = require('electron');
 	import { getContext } from 'svelte';
 	import { get } from 'svelte/store';
 	import { getAvatar, fetchPullRequestComments } from '../../shared/requester';
@@ -96,6 +97,12 @@
 			open,
 		);
 
+	const openUrl = e => {
+		if (!e.target.className.includes('skz-comments-counter')) {
+			shell.openExternal(makeUrl(pullRequest));
+		}
+	};
+
 	const getAvatarUrl = pr =>
 		getAvatar(pr.createdBy.id, pr.organizationName, pr.createdBy.descriptor);
 
@@ -115,10 +122,9 @@
 </script>
 
 <style src="./Pullrequest.scss">
-
 </style>
 
-<div class="skz-pullrequest" on:click={openModal}>
+<div class="skz-pullrequest" on:click={openUrl}>
 	<div class="skz-pullrequest__avatar">
 		{#await getAvatarUrl(pullRequest)}
 			<img
@@ -185,7 +191,10 @@
 					<h1 class="skz-pullrequest__mention">@</h1>
 				{/if}
 				<div>
-					<CommentsCounter {comments} hasResponse={hasResponse()} />
+					<CommentsCounter
+						action={openModal}
+						{comments}
+						hasResponse={hasResponse()} />
 				</div>
 			{/await}
 		</div>
