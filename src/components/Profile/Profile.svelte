@@ -4,6 +4,7 @@
 	import Settings from '../Settings';
 	import Loader from '../Loader';
 	import ErrorMessage from '../ErrorMessage';
+	import PumpkinLoader from '../PumpkinLoader';
 	import {
 		profile,
 		organizations,
@@ -11,6 +12,7 @@
 		isSidebarHidden,
 		theme,
 		language,
+		event,
 	} from '../../shared/store';
 	import { getProfile } from '../../shared/requester';
 	import { addItem } from '../../shared/storage';
@@ -59,12 +61,15 @@
 </script>
 
 <style src="./Profile.scss">
-
 </style>
 
 <div class="skz-profile">
 	{#if !$profile || $isFetchingProfile}
-		<Loader />
+		{#if $event.isHalloween}
+			<PumpkinLoader />
+		{:else}
+			<Loader />
+		{/if}
 	{:else if $profile.hasError}
 		<ErrorMessage
 			retry={getProfile}
