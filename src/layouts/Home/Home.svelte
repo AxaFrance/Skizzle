@@ -1,7 +1,7 @@
 <script>
 	import Profile from '../../components/Profile';
 	import MainView from '../../components/MainView';
-	import { isSidebarHidden, language } from '../../shared/store';
+	import { isSidebarHidden, language, event } from '../../shared/store';
 
 	let className = '';
 
@@ -13,7 +13,6 @@
 </script>
 
 <style src="./Home.scss">
-
 </style>
 
 <div class="skz-container">
