@@ -4,6 +4,8 @@
 	import Settings from '../Settings';
 	import Loader from '../Loader';
 	import ErrorMessage from '../ErrorMessage';
+	import PumpkinLoader from '../PumpkinLoader';
+	import GhostAvatar from '../GhostAvatar';
 	import {
 		profile,
 		organizations,
@@ -11,6 +13,7 @@
 		isSidebarHidden,
 		theme,
 		language,
+		event,
 	} from '../../shared/store';
 	import { getProfile } from '../../shared/requester';
 	import { addItem } from '../../shared/storage';
@@ -59,12 +62,15 @@
 </script>
 
 <style src="./Profile.scss">
-
 </style>
 
 <div class="skz-profile">
 	{#if !$profile || $isFetchingProfile}
-		<Loader />
+		{#if $event.isHalloween}
+			<PumpkinLoader />
+		{:else}
+			<Loader />
+		{/if}
 	{:else if $profile.hasError}
 		<ErrorMessage
 			retry={getProfile}
@@ -78,10 +84,21 @@
 					alt={$profile.displayName}
 					src="./assets/user.svg" />
 			{:then avatar}
-				<img
-					class="skz-avatar__image"
-					alt={$profile.displayName}
-					src="data:image/jpeg;base64,{avatar.value}" />
+				{#if $event.isHalloween}
+					<div class="skz-avatar__image skz-avatar__image--halloween">
+						<GhostAvatar>
+							<img
+								class="skz-avatar__image"
+								alt={$profile.displayName}
+								src="data:image/jpeg;base64,{avatar.value}" />
+						</GhostAvatar>
+					</div>
+				{:else}
+					<img
+						class="skz-avatar__image"
+						alt={$profile.displayName}
+						src="data:image/jpeg;base64,{avatar.value}" />
+				{/if}
 			{:catch error}
 				<img
 					class="skz-avatar__image"

@@ -149,6 +149,22 @@ input[type='radio']:checked + .skz-profile__modal-label:after {
 	border-radius: 50%;
 	border: 2px solid #fff;
 	background-color: #f5f5f5;
+
+	&--halloween {
+		overflow: hidden;
+		background-color: #333;
+
+		img {
+			border: none;
+			transition: opacity linear 0.2s;
+		}
+
+		&:hover {
+			img {
+				opacity: 0;
+			}
+		}
+	}
 }
 
 .skz-profile {

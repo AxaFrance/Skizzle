@@ -237,3 +237,30 @@ export const cleanStore = () => {
 	startup.reset();
 	theme.reset();
 };
+
+export const event = writable({
+	isHalloween: false,
+});
+
+(() => {
+	const date = new Date(Date.now());
+
+	let halloweenDateBegin = new Date(date.getFullYear(), 9, 31, 0, 0, 0);
+	let halloweenDateEnd = new Date(date.getFullYear(), 9, 31, 0, 0, 0);
+
+	const halloweenDateBeginTime = halloweenDateBegin.setDate(
+		halloweenDateBegin.getDate() - 7,
+	);
+	const halloweenDateEndTime = halloweenDateEnd.setDate(
+		halloweenDateEnd.getDate() + 7,
+	);
+	const dateNowTime = date.getTime();
+
+	const isHalloween =
+		dateNowTime >= halloweenDateBeginTime && dateNowTime <= halloweenDateEndTime;
+
+	event.update(x => ({
+		...x,
+		isHalloween: isHalloween,
+	}));
+})();
