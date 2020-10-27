@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+#### [v1.1.1](http://github.com/AxaGuilDEv/skizzle/compare/v1.1.0...v1.1.1)
+
+> 27 October 2020
+
+- Feature/event [`#88`](http://github.com/AxaGuilDEv/skizzle/pull/88) by Jérôme Boukorras
+
 #### [v1.1.0](http://github.com/AxaGuilDEv/skizzle/compare/v1.0.6...v1.1.0)
 
 > 23 October 2020
