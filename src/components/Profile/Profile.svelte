@@ -5,6 +5,7 @@
 	import Loader from '../Loader';
 	import ErrorMessage from '../ErrorMessage';
 	import PumpkinLoader from '../PumpkinLoader';
+	import GhostAvatar from '../GhostAvatar';
 	import {
 		profile,
 		organizations,
@@ -83,10 +84,21 @@
 					alt={$profile.displayName}
 					src="./assets/user.svg" />
 			{:then avatar}
-				<img
-					class="skz-avatar__image"
-					alt={$profile.displayName}
-					src="data:image/jpeg;base64,{avatar.value}" />
+				{#if $event.isHalloween}
+					<div class="skz-avatar__image skz-avatar__image--halloween">
+						<GhostAvatar>
+							<img
+								class="skz-avatar__image"
+								alt={$profile.displayName}
+								src="data:image/jpeg;base64,{avatar.value}" />
+						</GhostAvatar>
+					</div>
+				{:else}
+					<img
+						class="skz-avatar__image"
+						alt={$profile.displayName}
+						src="data:image/jpeg;base64,{avatar.value}" />
+				{/if}
 			{:catch error}
 				<img
 					class="skz-avatar__image"
