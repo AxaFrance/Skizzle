@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+#### [v1.1.2](http://github.com/AxaGuilDEv/skizzle/compare/v1.1.1...v1.1.2)
+
+> 29 October 2020
+
+- feat(event): spider easter egg halloween [`#90`](http://github.com/AxaGuilDEv/skizzle/pull/90) by Francis Cornaire
+- update dependencies [`#89`](http://github.com/AxaGuilDEv/skizzle/pull/89) by github-actions[bot]
+
 #### [v1.1.1](http://github.com/AxaGuilDEv/skizzle/compare/v1.1.0...v1.1.1)
 
 > 27 October 2020
