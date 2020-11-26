@@ -40,6 +40,8 @@ npm start
 Installing Skizzle is pretty basic. Just follow the installer.
 For logging into the app, you have to use your Azure devOps account.
 
+**Note for Mac users** : Skizzle is not signed (yet). It can be a problem on some Macs. To fix it, you have to copy the Skizzle app in Application folder being administrator and then type the command : ```bash xattr -rc /Applications/Skizzle.app/.```
+
 # Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our [code of conduct](CODE_OF_CONDUCT.md), and the process for submitting pull requests to us.
