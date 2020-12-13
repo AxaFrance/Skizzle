@@ -20,16 +20,20 @@
 	}
 }
 
-.skz-pullrequest__avatar {
+.skz-pullrequest-avatar {
 	flex: 0 0 auto;
 	width: 4rem;
 	height: 4rem;
 	margin-top: -1rem;
 	margin-right: 0.5rem;
-	overflow: hidden;
-	border-radius: 50%;
-	border: 2px solid #fff;
-	background-color: #fff;
+	position: relative;
+
+	&__profile {
+		overflow: hidden;
+		border-radius: 50%;
+		border: 2px solid #fff;
+		background-color: #fff;
+	}
 }
 
 .skz-pullrequest__thumbnail {
@@ -163,6 +167,15 @@
 	margin-bottom: 0.3rem;
 	font-size: 1rem;
 	color: #d87c7c;
+}
+
+.skz-pullrequest-avatar__provider {
+	position: absolute;
+	bottom: 0;
+	width: 20px;
+	height: 20px;
+	z-index: 1;
+	right: 0;
 }
 
 @media (prefers-color-scheme: dark) {

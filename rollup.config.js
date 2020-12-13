@@ -1,17 +1,19 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import replace from '@rollup/plugin-replace';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import filesize from 'rollup-plugin-filesize';
 import typescript from '@rollup/plugin-typescript';
+import css from 'rollup-plugin-css-only';
+import replace from '@rollup/plugin-replace';
 
 const createPreprocessors = require('./svelte.config').createPreprocessors;
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/main.ts',
+	input: 'src/index.ts',
 	output: {
 		sourcemap: !production,
 		format: 'iife',
@@ -20,25 +22,26 @@ export default {
 	},
 	plugins: [
 		replace({
-			process: JSON.stringify({
-				env: {
-					isProd: production,
-				},
-			}),
+			'process.env.NODE_ENV': JSON.stringify('production'),
 		}),
+		nodePolyfills(),
 		svelte({
-			dev: !production,
-			preprocess: createPreprocessors(!production),
-			css: css => {
-				css.write('bundle.css', !production);
+			compilerOptions: {
+				// enable run-time checks when not in production
+				dev: !production,
 			},
+			preprocess: createPreprocessors(!production),
 		}),
+		css({ output: 'bundle.css' }),
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
 		}),
 		commonjs(),
-		typescript({ sourceMap: !production }),
+		typescript({
+			sourceMap: !production,
+			inlineSources: !production,
+		}),
 		!production && livereload('public'),
 		production && terser(),
 		filesize(),

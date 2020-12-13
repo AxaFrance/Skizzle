@@ -73,7 +73,7 @@ input:disabled {
 
 .skz-splashscreen__logo {
 	height: 100%;
-	width: 100%;
+	width: 85%;
 	animation: slideUp 0.7s;
 	animation-fill-mode: both;
 	animation-timing-function: ease-in-out;
@@ -149,5 +149,9 @@ button.link:hover {
 
 	::-webkit-scrollbar-corner {
 		background-color: #444;
+	}
+
+	::-webkit-scrollbar {
+		background-color: #333;
 	}
 }

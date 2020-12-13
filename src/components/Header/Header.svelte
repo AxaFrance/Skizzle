@@ -3,16 +3,14 @@
 	import WindowsBar from './WindowsBar.svelte';
 	import MacosBar from './MacosBar.svelte';
 
-	let currentPlatform = navigator.platform === 'Win32' ? 'windows' : 'others';
-	let isMaximized = app.getCurrentWindow().isMaximized();
+	let currentPlatform: string = navigator.platform === 'Win32' ? 'windows' : 'others';
+	let isMaximized: boolean = app.getCurrentWindow().isMaximized();
 
 	app.getCurrentWindow().on('maximize', () => (isMaximized = true));
 	app.getCurrentWindow().on('unmaximize', () => (isMaximized = false));
 </script>
 
-<style src="./Header.scss">
-
-</style>
+<style src="./Header.scss"></style>
 
 <header class="titlebar">
 	<div

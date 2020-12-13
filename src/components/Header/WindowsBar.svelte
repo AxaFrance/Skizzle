@@ -1,7 +1,7 @@
 <script>
 	const app = require('electron').remote;
 
-	export let isMaximized;
+	export let isMaximized: boolean;
 </script>
 
 <style src="./WindowsBar.scss">

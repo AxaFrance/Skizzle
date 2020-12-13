@@ -1,15 +1,15 @@
-<script>
-	import { language } from '../../shared/store';
+<script lang="ts">
+    import { createEventDispatcher } from 'svelte';
 
-	export let retry;
-	export let label;
+    export let condition: boolean;
+    export let message: string;
+
+    const dispatch = createEventDispatcher();
+
+    const retry = () => dispatch('retry')
 </script>
 
-<style src="./ErrorMessage.scss">
-
-</style>
-
-<div class="skz-error-message">
-	<p>{label}</p>
-	<button on:click={retry}>{language.getWord('Retry')}</button>
-</div>
+{#if condition}
+	<h3 style="color: #ff0000">{message}</h3>
+	<button on:click={retry}>Reesayer</button>
+{/if}
