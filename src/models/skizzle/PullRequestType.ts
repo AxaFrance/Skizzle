@@ -21,6 +21,7 @@ type PullRequestType = {
 	organizationName?: string;
 	repositoryName?: string;
 	projectName?: string;
+	owner?: string;
 	labels: LabelType[];
 	provider: ProviderEnum;
 };

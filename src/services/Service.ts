@@ -1,3 +1,4 @@
+import type { CommentType } from 'models/skizzle/CommentType';
 import type { OrganizationType } from 'models/skizzle/OrganizationType';
 import type { ProfileType } from 'models/skizzle/ProfileType';
 import type { ProjectType } from 'models/skizzle/ProjectType';
@@ -15,15 +16,17 @@ export type ServiceParams = {
 	organization?: OrganizationType;
 	project?: ProjectType;
 	repository?: RepositoryType;
+	pullRequest?: PullRequestType;
 };
 
 export interface IService {
-	getProfile(): Promise<ProfileType>;
+	getProfile(userId?: string): Promise<ProfileType>;
 	getAvatar(params: string, organizationName?: string): Promise<string>;
 	getOrganizations?(params: ServiceParams): Promise<OrganizationType[]>;
 	getProjects?(params: ServiceParams): Promise<ProjectType[]>;
 	getRepositories(params: ServiceParams): Promise<RepositoryType[]>;
 	getPullRequests(params: ServiceParams): Promise<PullRequestType[]>;
+	getComments(params: ServiceParams): Promise<CommentType[]>;
 }
 
 export class Service {
@@ -32,9 +35,12 @@ export class Service {
 		[ProviderEnum.Github]: OAuthGithubService.getInstance(),
 	};
 
-	public static async getProfile(provider: ProviderEnum): Promise<ProfileType> {
+	public static async getProfile(
+		provider: ProviderEnum,
+		userId?: string,
+	): Promise<ProfileType> {
 		isFetchingData.set(true);
-		const result = await Service.INSTANCES[provider].getProfile();
+		const result = await Service.INSTANCES[provider].getProfile(userId);
 		isFetchingData.set(false);
 		return result;
 	}
@@ -89,6 +95,16 @@ export class Service {
 	): Promise<PullRequestType[]> {
 		isFetchingData.set(true);
 		const result = await Service.INSTANCES[provider].getPullRequests(params);
+		isFetchingData.set(false);
+		return result;
+	}
+
+	public static async getComments(
+		provider: ProviderEnum,
+		params: ServiceParams,
+	): Promise<CommentType[]> {
+		isFetchingData.set(true);
+		const result = await Service.INSTANCES[provider].getComments(params);
 		isFetchingData.set(false);
 		return result;
 	}

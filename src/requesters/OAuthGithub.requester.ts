@@ -1,3 +1,7 @@
+import type {
+	GithubCommentApiType,
+	GithubCommentsApiType,
+} from 'models/api/CommentsApiType';
 import type { GithubOrganizationsApiType } from 'models/api/OrganizationsApiType';
 import type { GithubProfileApiType } from 'models/api/ProfileApiType';
 import type { GithubProjectsApiType } from 'models/api/ProjectsApiType';
@@ -78,6 +82,16 @@ export class OAuthGithubRequester extends Requester<OAuthGithubConfigType> {
 	): Promise<GithubPullRequestApiType[]> {
 		return await super.fetch<GithubPullRequestsApiType>(
 			`https://api.github.com/repos/${owner}/${repository}/pulls?state=open&sort=updated&direction=desc&per_page=20`,
+		);
+	}
+
+	public async getComments(
+		owner?: string,
+		repository?: string,
+		pullRequest?: string,
+	): Promise<GithubCommentApiType[]> {
+		return super.fetch<GithubCommentsApiType>(
+			`https://api.github.com/repos/${owner}/${repository}/issues/${pullRequest}/comments?sort=updated`,
 		);
 	}
 }

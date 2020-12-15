@@ -1,6 +1,9 @@
+import { CommentMapper } from 'mappers/CommentMapper';
 import { ProfileMapper } from 'mappers/ProfileMapper';
 import { PullRequestMapper } from 'mappers/PullRequestMapper';
 import { RepositoryMapper } from 'mappers/RepositoryMapper';
+import { GithubUserEnum } from 'models/api/CommentsApiType';
+import type { CommentType } from 'models/skizzle/CommentType';
 import type { ProfileType } from 'models/skizzle/ProfileType';
 import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import type { PullRequestType } from 'models/skizzle/PullRequestType';
@@ -50,7 +53,7 @@ export class OAuthGithubService implements IService {
 
 		const mapper = new RepositoryMapper();
 
-		return mapper.to(result, undefined, undefined, undefined, this.provider);
+		return mapper.to(result, { provider: this.provider });
 	}
 
 	public async getPullRequests({
@@ -62,14 +65,26 @@ export class OAuthGithubService implements IService {
 
 		const mapper = new PullRequestMapper();
 
-		return mapper.to(
-			result,
-			undefined,
-			undefined,
+		return mapper.to(result, {
+			owner,
 			repositoryId,
-			name,
-			undefined,
-			this.provider,
+			repositoryName: name,
+			provider: this.provider,
+		});
+	}
+
+	public async getComments({
+		pullRequest,
+	}: ServiceParams): Promise<CommentType[]> {
+		const { repositoryName, id, owner } = pullRequest;
+
+		const result = await this.requester.getComments(owner, repositoryName, id);
+		const comments = result.filter(
+			comment => comment.user.type === GithubUserEnum.User,
 		);
+
+		const mapper = new CommentMapper();
+
+		return mapper.to(comments, { provider: this.provider });
 	}
 }

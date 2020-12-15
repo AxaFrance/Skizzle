@@ -1,7 +1,8 @@
+import type { AzureDevOpsAvatarApiType } from 'models/api/AvatarApiType';
 import type {
-	AzureDevOpsAvatarApiType,
-	AzureDevOpsDescriptorApiType,
-} from 'models/api/AvatarApiType';
+	AzureDevOpsCommentApiType,
+	AzureDevOpsCommentsApiType,
+} from 'models/api/CommentsApiType';
 import type {
 	AzureDevOpsOrganizationApiType,
 	AzureDevOpsOrganizationsApiType,
@@ -39,9 +40,9 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		return params;
 	}
 
-	public async getProfile(): Promise<AzureDevOpsProfileApiType> {
+	public async getProfile(userId: string): Promise<AzureDevOpsProfileApiType> {
 		return super.fetch(
-			`https://app.vssps.visualstudio.com/_apis/profile/profiles/me?details=true&api-version=${this.API_VERSION}`,
+			`https://app.vssps.visualstudio.com/_apis/profile/profiles/${userId}?details=true&api-version=${this.API_VERSION}`,
 		);
 	}
 
@@ -101,5 +102,18 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		return pullRequests
 			.sort((a, b) => Date.parse(a.creationDate) - Date.parse(b.creationDate))
 			.slice(0, 20);
+	}
+
+	public async getComments(
+		organization?: string,
+		project?: string,
+		repository?: string,
+		pullRequest?: string,
+	): Promise<AzureDevOpsCommentApiType[]> {
+		return (
+			await super.fetch<AzureDevOpsCommentsApiType>(
+				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repository}/pullRequests/${pullRequest}/threads?api-version=${this.API_VERSION}`,
+			)
+		).value;
 	}
 }

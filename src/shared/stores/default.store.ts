@@ -19,7 +19,7 @@ export const repositories = createStore<RepositoryType[]>([], 'repositories');
 export const pullRequests = createStore<PullRequestType[]>([], 'pullRequests');
 export const settings = createStore<SettingsType>(
 	{
-		refresh_delay: 5,
+		refresh_delay: 1,
 	},
 	'settings',
 );
@@ -31,14 +31,17 @@ export const refreshPullRequests = async () => {
 
 	if (values.length > 0) {
 		let oldValues = get(pullRequests);
-		pullRequests.reset();
 
 		let result: PullRequestType[] = [];
 
-		for (const repository of values) {
-			result = result.concat(
-				await Service.getPullRequests(repository.provider, { repository }),
-			);
+		try {
+			for (const repository of values) {
+				result = result.concat(
+					await Service.getPullRequests(repository.provider, { repository }),
+				);
+			}
+		} catch {
+			return;
 		}
 
 		const newValues = result.filter(
@@ -61,7 +64,9 @@ export const refreshPullRequests = async () => {
 				body,
 			});
 		}
+		0;
 
+		pullRequests.reset();
 		pullRequests.set(result);
 	}
 };

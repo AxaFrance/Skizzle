@@ -15,3 +15,20 @@ export const existValue = <T>(items: T[], value: T) =>
 export type Dictionary<T> = {
 	[Key: string]: T;
 };
+
+export const getDateStr = (date: Date): string => {
+	const today = new Date();
+	const oneDay = 24 * 60 * 60 * 1000;
+	const diffDays = Math.round(
+		Math.abs((date.getTime() - today.getTime()) / oneDay),
+	);
+
+	switch (diffDays) {
+		case 0:
+			return "Aujourd'hui";
+		case 1:
+			return 'Hier';
+		default:
+			return `il y a ${diffDays} jours`;
+	}
+};

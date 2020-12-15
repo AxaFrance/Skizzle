@@ -38,7 +38,8 @@ export const getToken = async <T extends OAuthConfigType>(
 				}));
 			}
 		}
-	} catch {
+	} catch (err) {
+		console.log(err);
 		return;
 	}
 };

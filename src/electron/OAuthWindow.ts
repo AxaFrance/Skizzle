@@ -68,12 +68,12 @@ export default class OAuthWindow {
 				.send(body);
 
 			return result.body;
-		} catch {
+		} catch (error) {
 			if (this.window) {
 				this.window.hide();
 			}
 
-			throw new Error();
+			throw new Error(error);
 		}
 	}
 }

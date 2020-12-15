@@ -1,8 +1,3 @@
-import type { OrganizationsApiType } from 'models/api/OrganizationsApiType';
-import type { ProfileApiType } from 'models/api/ProfileApiType';
-import type { ProjectsApiType } from 'models/api/ProjectsApiType';
-import type { PullRequestsApiType } from 'models/api/PullRequestsApiType';
-import type { RepositoriesApiType } from 'models/api/RepositoriesApiType';
 import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import type { OAuthConfigType } from 'providers/OAuthConfig.provider';
 import { client, clientHasProvider } from 'shared/stores/authentication.store';

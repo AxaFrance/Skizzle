@@ -41,7 +41,7 @@ type GithubPullRequestApiType = {
 	body: string;
 	user: UserApiType;
 	updated_at: string;
-	id: number;
+	number: number;
 	labels: GithubLabelsApiType[];
 };
 

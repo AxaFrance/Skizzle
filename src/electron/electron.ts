@@ -238,9 +238,9 @@ if (!gotTheLock) {
 							body,
 						);
 				}
-			} catch {
+			} catch (err) {
 				return {
-					message: "Can't reach acces_token call",
+					message: `Can't reach acces_token call: ${err}`,
 				};
 			}
 		},
