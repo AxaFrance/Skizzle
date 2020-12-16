@@ -11,6 +11,7 @@ import OAuthWindow from './OAuthWindow';
 import { ProviderEnum } from '../models/skizzle/ProviderEnum';
 import * as path from 'path';
 import { Updater } from './Updater';
+import type { SettingsType } from '../models/skizzle/SettingsType';
 
 try {
 	require('electron-reloader')(module);
@@ -61,12 +62,9 @@ const createWindow = () => {
 		},
 	});
 
-	const mode = process.env.NODE_ENV;
-
-	const url =
-		mode === 'production'
-			? `file://${path.join(__dirname, '../public/index.html')}`
-			: 'http://localhost:3000';
+	const url = app.isPackaged
+		? `file://${path.join(__dirname, '../../index.html')}`
+		: 'http://localhost:3000';
 
 	window.loadURL(url);
 	window.on('closed', () => {
@@ -118,7 +116,6 @@ const createWindow = () => {
 				},
 			],
 		},
-		{ type: 'separator' },
 		{
 			label: 'Quit',
 			role: 'quit',
@@ -224,18 +221,27 @@ if (!gotTheLock) {
 
 	ipcMain.handle(
 		'token',
-		async (event, { key, body }: { key: ProviderEnum; body: any }) => {
+		async (
+			event,
+			{
+				key,
+				body,
+				settings,
+			}: { key: ProviderEnum; body: any; settings: SettingsType },
+		) => {
 			try {
 				switch (key) {
 					case ProviderEnum.AzureDevOps:
 						return azure.requestToken(
 							'https://app.vssps.visualstudio.com/oauth2/token',
 							body,
+							settings,
 						);
 					case ProviderEnum.Github:
 						return github.requestToken(
 							'https://github.com/login/oauth/access_token',
 							body,
+							settings,
 						);
 				}
 			} catch (err) {

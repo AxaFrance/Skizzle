@@ -20,6 +20,7 @@ export const pullRequests = createStore<PullRequestType[]>([], 'pullRequests');
 export const settings = createStore<SettingsType>(
 	{
 		refresh_delay: 1,
+		proxy: '',
 	},
 	'settings',
 );

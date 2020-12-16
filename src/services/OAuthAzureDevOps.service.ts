@@ -62,8 +62,6 @@ export class OAuthAzureDevOpsService implements IService {
 		descriptor: string,
 		organizationName?: string,
 	): Promise<string> {
-		console.log({ descriptor, organizationName });
-
 		const avatar = await this.requester.getAvatar(descriptor, organizationName);
 
 		return `data:image/png;base64,${avatar}`;

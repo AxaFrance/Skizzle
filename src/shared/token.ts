@@ -1,10 +1,11 @@
 import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
+import { get } from 'svelte/store';
 import type {
 	OAuthConfig,
 	OAuthConfigType,
 } from '../providers/OAuthConfig.provider';
 import { client } from './stores/authentication.store';
-import { isLoading } from './stores/default.store';
+import { isLoading, settings } from './stores/default.store';
 const app = require('electron').ipcRenderer;
 
 export const getToken = async <T extends OAuthConfigType>(
@@ -18,6 +19,7 @@ export const getToken = async <T extends OAuthConfigType>(
 		const result = await app.invoke('token', {
 			key: provider,
 			body,
+			settings: get(settings),
 		});
 
 		if (result.message) {

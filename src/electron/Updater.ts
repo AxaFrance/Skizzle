@@ -24,12 +24,9 @@ export class Updater {
 			},
 		});
 
-		const mode = process.env.NODE_ENV;
-
-		const url =
-			mode === 'production'
-				? `file://${path.join(__dirname, '../public/splashscreen.html')}`
-				: 'http://localhost:3000/splashscreen.html';
+		const url = app.isPackaged
+			? `file://${path.join(__dirname, '../../splashscreen.html')}`
+			: 'http://localhost:3000/splashscreen.html';
 
 		this.splashscreen.loadURL(url);
 

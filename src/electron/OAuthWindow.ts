@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron';
+import type { SettingsType } from '../models/skizzle/SettingsType';
 var request = require('superagent');
 require('superagent-proxy')(request);
 
@@ -60,12 +61,13 @@ export default class OAuthWindow {
 		}
 	}
 
-	public async requestToken(url: string, body: string | object) {
+	public async requestToken(
+		url: string,
+		body: string | object,
+		settings?: SettingsType,
+	) {
 		try {
-			const result = await request
-				.post(url)
-				.proxy(process.env.http_proxy || '')
-				.send(body);
+			const result = await request.post(url).proxy(settings.proxy).send(body);
 
 			return result.body;
 		} catch (error) {
