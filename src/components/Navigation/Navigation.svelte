@@ -1,12 +1,13 @@
 <script lang="ts">
 	import Icons from '../icons';
 	import { Views } from 'models/skizzle/ViewsEnum';
-	export let currentView;
-	export let onViewChange;
+	
+	export let currentView: Views;
+	export let onViewChange: Function;
 
-	const setView = view => () => onViewChange(view);
-	$: getClass = view => `${view} ${currentView === view ? 'selected' : ''}`;
-	$: getColor = view => (currentView === view ? `#fff` : '#d3d3d3');
+	const setView = (view: Views) => () => onViewChange(view);
+	$: getClass = (view: Views) => `${view} ${currentView === view ? 'selected' : ''}`;
+	$: getColor = (view: Views) => (currentView === view ? `#fff` : '#d3d3d3');
 </script>
 
 <style>

@@ -12,8 +12,8 @@
 		[Views.Settings]: Settings,
 	};
 
-	let currentView = Views.List;
-	const onViewChange = view => (currentView = view);
+	let currentView: Views = Views.List;
+	const onViewChange = (view: Views) => (currentView = view);
 </script>
 
 <style>

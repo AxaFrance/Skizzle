@@ -3,8 +3,18 @@
   import type { PullRequestType } from "models/skizzle/PullRequestType";
   import { Service } from "services/Service";
   import Labels from '../Labels';
+  import { createEventDispatcher } from "svelte";
+  import { isFetchingData } from '../../shared/stores/default.store';
 
   export let pullRequest: PullRequestType;
+
+  const dispatch = createEventDispatcher();
+
+	const getComments = (pullRequest: PullRequestType) => {
+		dispatch('comments', {
+			fetchedComment: Service.getComments(pullRequest.provider, { pullRequest })
+		});
+	}
 </script>
 
 <style src="./PullRequest.scss"></style>
@@ -37,6 +47,7 @@
     <p class="skz-pullrequest__repo">{pullRequest.repositoryName}</p>
     <div class="skz-pullrequest-infos">
       <Labels labels={pullRequest.labels} />
+      <button on:click={() => getComments(pullRequest)} disabled={$isFetchingData}>Comments</button>
     </div>
 	</div>
 </div>
