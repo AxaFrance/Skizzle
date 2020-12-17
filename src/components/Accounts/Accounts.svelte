@@ -13,9 +13,11 @@
 </script>
 
 <style>
-	div {
+	.content {
+		height: calc(100vh - 6rem);
 		flex: 1 0 auto;
 		padding: 1rem;
+		overflow: auto;
 		background-color: #4e4e4e;
 	}
 </style>

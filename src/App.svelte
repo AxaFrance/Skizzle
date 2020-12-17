@@ -29,6 +29,7 @@
 
 	:global(body) {
 		display: flex;
+		overflow: hidden;
 		flex-direction: column;
 		font-family: sans-serif;
 		color: #fff;
@@ -38,6 +39,7 @@
 	main {
 		display: flex;
 		flex: 1 0 auto;
+		height: calc(100vh - 2rem);
 	}
 
 	div {

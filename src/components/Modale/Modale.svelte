@@ -24,7 +24,6 @@
 		transform: translateX(-50%) translateY(-50%);
 		border-radius: 8px;
 		background-color: #5c5c5c;
-		animation-delay: 1s;
 		animation: fadeIn linear 0.3s;
 	}
 	button {

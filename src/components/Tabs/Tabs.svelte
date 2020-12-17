@@ -12,6 +12,8 @@
 
 	button {
 		padding: 1rem;
+		font-size: 1rem;
+		line-height: 1;
 		color: #fff;
 		border: none;
 		border-radius: 8px 8px 0 0;
