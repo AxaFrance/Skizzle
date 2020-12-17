@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { checkProject, checkRepository } from 'utils';
 	import { isFetchingData, repositories } from 'shared/stores/default.store';
-	export let projects;
+	import type { ProjectType } from 'models/skizzle/ProjectType';
+	
+	export let projects: ProjectType[];
 </script>
 
 <ul>

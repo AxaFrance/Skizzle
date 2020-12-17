@@ -76,9 +76,13 @@ export class OAuthGithubService implements IService {
 	public async getComments({
 		pullRequest,
 	}: ServiceParams): Promise<CommentType[]> {
-		const { repositoryName, id, owner } = pullRequest;
+		const { repositoryName, pullRequestId, owner } = pullRequest;
 
-		const result = await this.requester.getComments(owner, repositoryName, id);
+		const result = await this.requester.getComments(
+			owner,
+			repositoryName,
+			pullRequestId,
+		);
 		const comments = result.filter(
 			comment => comment.user.type === GithubUserEnum.User,
 		);
