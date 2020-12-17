@@ -25,7 +25,7 @@ export class PullRequestMapper {
 				});
 
 			return {
-				id: value.pullRequestId || value.number,
+				pullRequestId: value.pullRequestId || value.number,
 				title: value.title,
 				description: value.description || value.body,
 				date: value.creationDate || value.updated_at,

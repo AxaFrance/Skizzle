@@ -1,4 +1,4 @@
-import type { ProviderEnum } from './ProviderEnum';
+import type { CommonType } from './CommonType';
 
 type UserType = {
 	name: string;
@@ -10,20 +10,13 @@ type LabelType = {
 };
 
 type PullRequestType = {
-	id: string;
 	title: string;
 	description: string;
 	date: string;
 	dateStr: string;
 	user: UserType;
-	repositoryId?: string;
-	projectId?: string;
-	organizationName?: string;
-	repositoryName?: string;
-	projectName?: string;
 	owner?: string;
 	labels: LabelType[];
-	provider: ProviderEnum;
-};
+} & CommonType;
 
 export type { UserType, LabelType, PullRequestType };

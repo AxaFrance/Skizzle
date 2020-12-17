@@ -18,7 +18,6 @@ export type ServiceParams = {
 	repository?: RepositoryType;
 	pullRequest?: PullRequestType;
 };
-
 export interface IService {
 	getProfile(userId?: string): Promise<ProfileType>;
 	getAvatar(params: string, organizationName?: string): Promise<string>;

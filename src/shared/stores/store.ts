@@ -1,7 +1,14 @@
+import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import { addItem, getItem } from 'shared/utils';
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 
-export const createStore = <T>(initialValue: T, key?: string) => {
+export const createStore = <T>(
+	initialValue: T,
+	{
+		key,
+		predicate,
+	}: { key?: string; predicate?: (value?: T, provider?: ProviderEnum) => T },
+) => {
 	const storage = getItem<T>(key);
 
 	const store = writable(storage ? storage : initialValue);
@@ -15,7 +22,13 @@ export const createStore = <T>(initialValue: T, key?: string) => {
 		set,
 		subscribe,
 		update,
-		reset: () => set(initialValue),
+		reset: (provider?: ProviderEnum) => {
+			if (predicate) {
+				set(predicate(get(store), provider));
+			} else {
+				set(initialValue);
+			}
+		},
 		initialValue,
 	};
 };

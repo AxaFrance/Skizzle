@@ -1,19 +1,34 @@
 <script>
 	import { Service } from 'services/Service';
-	import { isFetchingData, organizations } from 'shared/stores/default.store';
+	import { isFetchingData, organizations, projects, pullRequests, repositories } from 'shared/stores/default.store';
 	import Settings from './settings.svg';
 	import Modale from 'components/Modale';
 	import AccountTitle from 'components/AccountTitle';
-	export let profile;
 	import {
 		checkOrganization,
 		checkProject,
 		checkRepository,
 		deleteRepository,
 	} from 'utils';
+	import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
+	import { client } from 'shared/stores/authentication.store';
+	import type { ProfileType } from 'models/skizzle/ProfileType';
 
+	export let profile: ProfileType;
 	let isSettingsDisplayed = false;
+
 	const onModaleClose = () => (isSettingsDisplayed = false);
+
+	const logout = (provider: ProviderEnum) => {
+		organizations.reset(provider);
+		projects.reset(provider);
+		repositories.reset(provider);
+		pullRequests.reset(provider);
+		client.update(n => ({
+			...n,
+			[provider]: {},
+		}));
+	}
 </script>
 
 <style>
@@ -97,11 +112,7 @@
 
 <div class="container">
 	<div class="avatar">
-		{#if $organizations.length > 0}
-			{#await Service.getAvatar(profile.provider, profile.avatar, $organizations[0].organizationName) then avatar}
-				<img width="64" height="64" src={avatar} alt={profile.name} />
-			{/await}
-		{/if}
+		<img width="64" height="64" src={profile.avatar} alt={profile.name} />
 	</div>
 	<div class="user">
 		<span class="name">{profile.name}</span>
@@ -110,6 +121,8 @@
 	<button
 		class="settings"
 		on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)}><Settings /></button>
+	<button
+		on:click={() => logout(profile.provider)}>Déconnexion</button>	
 </div>
 {#if isSettingsDisplayed}
 	<Modale onClose={onModaleClose}>
@@ -118,7 +131,7 @@
 		{:then organizations}
 			<div class="container header">
 				<div class="avatar big">
-					{#await Service.getAvatar(profile.provider, profile.avatar, organizations[0].organizationName) then avatar}
+					{#await Service.getAvatar(profile.provider, profile.descriptor, organizations[0].organizationName) then avatar}
 						<img width="64" height="64" src={avatar} alt={profile.name} />
 					{/await}
 				</div>

@@ -1,9 +1,6 @@
-import type { ProviderEnum } from './ProviderEnum';
+import type { CommonType } from './CommonType';
 
 export type ProjectType = {
-	projectId: string;
 	name: string;
-	organizationName?: string;
 	checked: boolean;
-	provider: ProviderEnum;
-};
+} & CommonType;

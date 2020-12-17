@@ -45,7 +45,7 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 
 	public async getProfile(userId: string): Promise<AzureDevOpsProfileApiType> {
 		return super.fetch(
-			`https://app.vssps.visualstudio.com/_apis/profile/profiles/${userId}?api-version=${this.API_VERSION}`,
+			`https://app.vssps.visualstudio.com/_apis/profile/profiles/${userId}?details=true&api-version=${this.API_VERSION}`,
 		);
 	}
 

@@ -1,29 +1,49 @@
+import type { CommonType } from 'models/skizzle/CommonType';
 import type { OrganizationType } from 'models/skizzle/OrganizationType';
 import type { ProjectType } from 'models/skizzle/ProjectType';
+import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import type { PullRequestType } from 'models/skizzle/PullRequestType';
 import type { RepositoryType } from 'models/skizzle/RepositoryType';
 import type { SettingsType } from 'models/skizzle/SettingsType';
-import { Service } from 'services/Service';
+import { Service, ServiceParams } from 'services/Service';
 import { get } from 'svelte/store';
 import { createStore } from './store';
 const app = require('electron').ipcRenderer;
 
-export const isLoading = createStore<boolean>(false);
-export const isFetchingData = createStore<boolean>(false);
-export const organizations = createStore<OrganizationType[]>(
-	[],
-	'organizations',
-);
-export const projects = createStore<ProjectType[]>([], 'projects');
-export const repositories = createStore<RepositoryType[]>([], 'repositories');
-export const pullRequests = createStore<PullRequestType[]>([], 'pullRequests');
+export const isLoading = createStore<boolean>(false, {});
+export const isFetchingData = createStore<boolean>(false, {});
 export const settings = createStore<SettingsType>(
 	{
 		refresh_delay: 1,
 		proxy: '',
 	},
-	'settings',
+	{ key: 'settings' },
 );
+
+const predicate = <T extends CommonType>(
+	value: T[],
+	provider: ProviderEnum,
+): T[] => {
+	return value.filter(x => x.provider !== provider);
+};
+
+export const organizations = createStore<OrganizationType[]>([], {
+	key: 'organizations',
+	predicate,
+});
+
+export const projects = createStore<ProjectType[]>([], {
+	key: 'projects',
+	predicate,
+});
+export const repositories = createStore<RepositoryType[]>([], {
+	key: 'repositories',
+	predicate,
+});
+export const pullRequests = createStore<PullRequestType[]>([], {
+	key: 'pullRequests',
+	predicate,
+});
 
 let timer: NodeJS.Timeout;
 
@@ -46,7 +66,10 @@ export const refreshPullRequests = async () => {
 		}
 
 		const newValues = result.filter(
-			pullRequest => !oldValues.some(({ id }) => pullRequest.id === id),
+			pullRequest =>
+				!oldValues.some(
+					({ pullRequestId }) => pullRequest.pullRequestId === pullRequestId,
+				),
 		);
 
 		if (newValues.length > 0) {

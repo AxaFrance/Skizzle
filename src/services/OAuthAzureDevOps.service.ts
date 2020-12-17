@@ -44,7 +44,7 @@ export class OAuthAzureDevOpsService implements IService {
 
 		const profileMapped = profileMapper.to(profile, {
 			provider: this.provider,
-			avatar: descriptor,
+			descriptor,
 		});
 
 		return profileMapped;
@@ -135,13 +135,18 @@ export class OAuthAzureDevOpsService implements IService {
 	public async getComments({
 		pullRequest,
 	}: ServiceParams): Promise<CommentType[]> {
-		const { repositoryId, id, projectId, organizationName } = pullRequest;
+		const {
+			repositoryId,
+			pullRequestId,
+			projectId,
+			organizationName,
+		} = pullRequest;
 
 		const result = await this.requester.getComments(
 			organizationName,
 			projectId,
 			repositoryId,
-			id,
+			pullRequestId,
 		);
 		result.forEach(
 			comment =>

@@ -1,7 +1,5 @@
-import type { ProviderEnum } from './ProviderEnum';
+import type { CommonType } from './CommonType';
 
 export type OrganizationType = {
-	organizationName?: string;
 	checked?: boolean;
-	provider?: ProviderEnum;
-};
+} & CommonType;

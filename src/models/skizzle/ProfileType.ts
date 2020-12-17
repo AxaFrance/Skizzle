@@ -5,5 +5,6 @@ export type ProfileType = {
 	email?: string;
 	id: string;
 	avatar?: string;
+	descriptor?: string;
 	provider?: ProviderEnum;
 };

@@ -19,7 +19,7 @@ import { createStore } from './store';
  */
 export const client = createStore<Dictionary<OAuthConfigType>>(
 	{},
-	'clientToken',
+	{ key: 'clientToken' },
 );
 export const clientHasProvider = (provider: ProviderEnum): boolean => {
 	const value = get(client) as Dictionary<OAuthConfigType>;
@@ -27,10 +27,13 @@ export const clientHasProvider = (provider: ProviderEnum): boolean => {
 	return value && value.hasOwnProperty(provider);
 };
 
-export const clientAuthenticated = createStore({
-	isGithubAuthenticated: false,
-	isAzureDevOpsAuthenticated: false,
-});
+export const clientAuthenticated = createStore(
+	{
+		isGithubAuthenticated: false,
+		isAzureDevOpsAuthenticated: false,
+	},
+	{},
+);
 
 const timer: Dictionary<NodeJS.Timeout> = {};
 
