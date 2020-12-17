@@ -1,0 +1,143 @@
+<script>
+	import { Service } from 'services/Service';
+	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
+	import { isFetchingData } from 'shared/stores/default.store';
+	import Settings from './settings.svg';
+	import Modale from 'components/Modale';
+	import AccountTitle from 'components/AccountTitle';
+	export let profile;
+	import {
+		checkOrganization,
+		checkProject,
+		checkRepository,
+		deleteRepository,
+	} from 'utils';
+
+	let isSettingsDisplayed = false;
+	const onModaleClose = () => (isSettingsDisplayed = false);
+</script>
+
+<style>
+	.container {
+		display: flex;
+		align-items: center;
+		padding: 1rem;
+		border-radius: 8px;
+		background-color: #5c5c5c;
+	}
+
+	.avatar {
+		width: 3rem;
+		height: 3rem;
+		margin-right: 0.5rem;
+		overflow: hidden;
+		border-radius: 50%;
+	}
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	span {
+		display: block;
+	}
+
+	.name {
+		font-size: 1rem;
+		font-weight: bold;
+	}
+
+	.email {
+		font-size: 0.8rem;
+	}
+
+	.settings {
+		width: 1.5rem;
+		height: 1.5rem;
+		cursor: pointer;
+		border: none;
+		background-color: transparent;
+		transition: opacity linear 0.2s;
+	}
+
+	.settings:hover {
+		opacity: 0.5;
+	}
+
+	.user {
+		margin-right: auto;
+	}
+
+	.big {
+		width: 6rem;
+		height: 6rem;
+	}
+
+	.header {
+		margin: -2rem -2rem 2rem;
+		padding: 2rem 2rem 1rem;
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+		background-color: #444;
+	}
+
+	.header .avatar {
+		margin-top: -2.5rem;
+	}
+
+	.organizations {
+		list-style: none;
+	}
+
+	.organizations li {
+		margin-bottom: 0.5rem;
+	}
+</style>
+
+<div class="container">
+	<div class="avatar">
+		<img width="64" height="64" src={profile.avatar} alt={profile.name} />
+	</div>
+	<div class="user">
+		<span class="name">{profile.name}</span>
+		<span class="email">{profile.email}</span>
+	</div>
+	<button
+		class="settings"
+		on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)}><Settings /></button>
+</div>
+{#if isSettingsDisplayed}
+	<Modale onClose={onModaleClose}>
+		{#await Service.getOrganizations(ProviderEnum.AzureDevOps, { profile })}
+			<p>Chargement...</p>
+		{:then organizations}
+			<div class="container header">
+				<div class="avatar big">
+					<img width="64" height="64" src={profile.avatar} alt={profile.name} />
+				</div>
+				<div class="user">
+					<span class="name">{profile.name}</span>
+					<span class="email">{profile.email}</span>
+				</div>
+			</div>
+			<AccountTitle>Organisations</AccountTitle>
+			<ul class="organizations">
+				{#each organizations as organization}
+					<li>
+						<input
+							type="checkbox"
+							id={organization.organizationName}
+							checked={organization.checked}
+							on:change={event => checkOrganization(event, organization)}
+							disabled={$isFetchingData} />
+						<label for={organization.organizationName}>
+							{organization.organizationName}
+						</label>
+					</li>
+				{/each}
+			</ul>
+		{/await}
+	</Modale>
+{/if}

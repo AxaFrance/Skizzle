@@ -12,17 +12,38 @@
 		[Views.Settings]: Settings,
 	};
 
-	let currentView: Views = Views.List;
+	let currentView: Views = Views.Accounts;
 	const onViewChange = (view: Views) => (currentView = view);
 </script>
 
 <style>
+	:global(*) {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	:global(html, body) {
+		height: 100%;
+	}
+
+	:global(body) {
+		display: flex;
+		flex-direction: column;
+		font-family: sans-serif;
+		color: #fff;
+		background-color: #333;
+	}
+
 	main {
 		display: flex;
 		flex: 1 0 auto;
 	}
 
 	div {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
 		flex: 1 1 auto;
 	}
 </style>

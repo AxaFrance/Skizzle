@@ -11,6 +11,9 @@ $max-color-active: #22aa36;
 	-webkit-app-region: no-drag;
 	justify-content: space-evenly;
 	padding-left: 0.75rem;
+	button {
+		border: none;
+	}
 }
 
 .window-controls .button {
