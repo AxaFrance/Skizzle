@@ -38,10 +38,14 @@ export class OAuthAzureDevOpsService implements IService {
 
 	public async getProfile(userId?: string): Promise<ProfileType> {
 		const profile = await this.requester.getProfile(userId ?? 'me');
+		const descriptor = await this.requester.getDescriptor(profile.id);
 
 		const profileMapper = new ProfileMapper();
 
-		const profileMapped = profileMapper.to(profile);
+		const profileMapped = profileMapper.to(profile, {
+			provider: this.provider,
+			avatar: descriptor,
+		});
 
 		return profileMapped;
 	}

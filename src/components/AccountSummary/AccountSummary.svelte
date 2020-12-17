@@ -1,7 +1,6 @@
 <script>
 	import { Service } from 'services/Service';
-	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
-	import { isFetchingData } from 'shared/stores/default.store';
+	import { isFetchingData, organizations } from 'shared/stores/default.store';
 	import Settings from './settings.svg';
 	import Modale from 'components/Modale';
 	import AccountTitle from 'components/AccountTitle';
@@ -98,7 +97,11 @@
 
 <div class="container">
 	<div class="avatar">
-		<img width="64" height="64" src={profile.avatar} alt={profile.name} />
+		{#if $organizations.length > 0}
+			{#await Service.getAvatar(profile.provider, profile.avatar, $organizations[0].organizationName) then avatar}
+				<img width="64" height="64" src={avatar} alt={profile.name} />
+			{/await}
+		{/if}
 	</div>
 	<div class="user">
 		<span class="name">{profile.name}</span>
@@ -110,12 +113,14 @@
 </div>
 {#if isSettingsDisplayed}
 	<Modale onClose={onModaleClose}>
-		{#await Service.getOrganizations(ProviderEnum.AzureDevOps, { profile })}
+		{#await Service.getOrganizations(profile.provider, { profile })}
 			<p>Chargement...</p>
 		{:then organizations}
 			<div class="container header">
 				<div class="avatar big">
-					<img width="64" height="64" src={profile.avatar} alt={profile.name} />
+					{#await Service.getAvatar(profile.provider, profile.avatar, organizations[0].organizationName) then avatar}
+						<img width="64" height="64" src={avatar} alt={profile.name} />
+					{/await}
 				</div>
 				<div class="user">
 					<span class="name">{profile.name}</span>

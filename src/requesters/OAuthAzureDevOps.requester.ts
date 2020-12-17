@@ -1,4 +1,7 @@
-import type { AzureDevOpsAvatarApiType } from 'models/api/AvatarApiType';
+import type {
+	AzureDevOpsAvatarApiType,
+	AzureDevOpsDescriptorApiType,
+} from 'models/api/AvatarApiType';
 import type {
 	AzureDevOpsCommentApiType,
 	AzureDevOpsCommentsApiType,
@@ -42,8 +45,16 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 
 	public async getProfile(userId: string): Promise<AzureDevOpsProfileApiType> {
 		return super.fetch(
-			`https://app.vssps.visualstudio.com/_apis/profile/profiles/${userId}?details=true&api-version=${this.API_VERSION}`,
+			`https://app.vssps.visualstudio.com/_apis/profile/profiles/${userId}?api-version=${this.API_VERSION}`,
 		);
+	}
+
+	public async getDescriptor(userId: string): Promise<string> {
+		return (
+			await super.fetch<AzureDevOpsDescriptorApiType>(
+				`https://vssps.dev.azure.com/_apis/graph/descriptors/${userId}?api-version=${this.API_VERSION}`,
+			)
+		).value;
 	}
 
 	public async getAvatar(

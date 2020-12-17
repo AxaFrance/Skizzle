@@ -7,7 +7,6 @@ import { terser } from 'rollup-plugin-terser';
 import filesize from 'rollup-plugin-filesize';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
-import replace from '@rollup/plugin-replace';
 import svg from 'rollup-plugin-svelte-svg';
 
 const createPreprocessors = require('./svelte.config').createPreprocessors;
@@ -23,9 +22,6 @@ export default {
 	},
 	plugins: [
 		svg(),
-		replace({
-			'process.env.NODE_ENV': JSON.stringify('production'),
-		}),
 		nodePolyfills(),
 		svelte({
 			compilerOptions: {

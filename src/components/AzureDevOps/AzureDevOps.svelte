@@ -46,7 +46,7 @@
 		<p>Chargement...</p>
 	{:then profile}
 		<AccountSummary {profile} />
-		{#if fetchedProjects.length > 0 || $repositories.filter(x => x.provider === ProviderEnum.AzureDevOps).length > 0}
+		{#if fetchedProjects.length > 0 || $repositories.filter(x => x.provider === profile.provider).length > 0}
 			<h3>Azure Repositories</h3>
 			<input bind:value={search} disabled={$isFetchingData} />
 		{/if}
@@ -84,7 +84,7 @@
 				{/each}
 			</ul>
 		{/if}
-		{#each $repositories.filter(x => x.checked && x.provider === ProviderEnum.AzureDevOps) as repository}
+		{#each $repositories.filter(x => x.checked && x.provider === profile.provider) as repository}
 			<label for={repository.repositoryId}>
 				<strong>Name : {repository.name}</strong>
 				<button

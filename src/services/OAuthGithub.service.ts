@@ -33,7 +33,7 @@ export class OAuthGithubService implements IService {
 
 		const mapper = new ProfileMapper();
 
-		return mapper.to(result);
+		return mapper.to(result, { provider: this.provider });
 	}
 
 	public async getAvatar(avatar: string): Promise<string> {
