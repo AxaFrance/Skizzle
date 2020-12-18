@@ -7,6 +7,7 @@
 		projects,
 		repositories,
 	} from 'shared/stores/default.store';
+	import Icons from 'components/icons';
 	import { authorize } from 'shared/token';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import AccountTitle from 'components/AccountTitle';
@@ -25,14 +26,41 @@
 
 <style>
 	.search {
-		padding: 1rem;
+		position: relative;
+		width: 20rem;
+		margin-bottom: 2rem;
+	}
+
+	.search > :global(svg) {
+		position: absolute;
+		left: 0.5rem;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.search input {
+		width: 100%;
+		padding: 1rem 2.5rem;
+		color: #fff;
+		font-size: 1rem;
 		border: none;
 		border-radius: 8px;
 		background-color: #848484;
 	}
 
-	.details {
-		font-size: 0.8rem;
+	.search input::placeholder {
+		color: #4e4e4e;
+	}
+
+	.delete {
+		position: absolute;
+		right: 0.5rem;
+		top: 50%;
+		width: 1.5rem;
+		height: 1.5rem;
+		border: none;
+		background-color: transparent;
+		transform: translateY(-50%);
 	}
 
 	section {
@@ -78,13 +106,20 @@
 			<section>
 				<AccountTitle>Suivre un nouveau repository</AccountTitle>
 				<p class="intro">Cherchez le nom de son projet associé.</p>
-				<input
-					class="search"
-					bind:value={search}
-					disabled={$isFetchingData}
-					placeholder="Rechercher un projet sur Azure Devops" />
+				<div class="search">
+					<Icons.Search color="#4e4e4e" />
+					<input
+						bind:value={search}
+						disabled={$isFetchingData}
+						placeholder="Rechercher un projet" />
+					{#if search}
+						<button on:click={() => (search = '')} class="delete">
+							<Icons.Delete color="#4e4e4e" />
+						</button>
+					{/if}
+				</div>
 				{#if search}
-					<SearchResults projects={fetchedProjects} />
+					<SearchResults {search} projects={fetchedProjects} />
 				{/if}
 			</section>
 			<section>

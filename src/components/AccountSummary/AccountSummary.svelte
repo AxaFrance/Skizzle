@@ -1,9 +1,16 @@
 <script>
 	import { Service } from 'services/Service';
-	import { isFetchingData, organizations, projects, pullRequests, repositories } from 'shared/stores/default.store';
+	import {
+		isFetchingData,
+		organizations,
+		projects,
+		pullRequests,
+		repositories,
+	} from 'shared/stores/default.store';
 	import Settings from './settings.svg';
 	import Modale from 'components/Modale';
 	import AccountTitle from 'components/AccountTitle';
+	import Icons from 'components/icons';
 	import {
 		checkOrganization,
 		checkProject,
@@ -13,6 +20,7 @@
 	import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import { client } from 'shared/stores/authentication.store';
 	import type { ProfileType } from 'models/skizzle/ProfileType';
+	import Delete from '../icons/Delete.svelte';
 
 	export let profile: ProfileType;
 	let isSettingsDisplayed = false;
@@ -28,7 +36,7 @@
 			...n,
 			[provider]: {},
 		}));
-	}
+	};
 </script>
 
 <style>
@@ -65,9 +73,10 @@
 
 	.email {
 		font-size: 0.8rem;
+		color: #ccc;
 	}
 
-	.settings {
+	button {
 		width: 1.5rem;
 		height: 1.5rem;
 		cursor: pointer;
@@ -76,8 +85,12 @@
 		transition: opacity linear 0.2s;
 	}
 
-	.settings:hover {
+	button:hover {
 		opacity: 0.5;
+	}
+
+	button + button {
+		margin-left: 1rem;
 	}
 
 	.user {
@@ -119,10 +132,8 @@
 		<span class="email">{profile.email}</span>
 	</div>
 	<button
-		class="settings"
 		on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)}><Settings /></button>
-	<button
-		on:click={() => logout(profile.provider)}>Déconnexion</button>	
+	<button on:click={() => logout(profile.provider)}><Icons.Delete /></button>
 </div>
 {#if isSettingsDisplayed}
 	<Modale onClose={onModaleClose}>

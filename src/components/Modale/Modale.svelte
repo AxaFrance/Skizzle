@@ -9,6 +9,7 @@
 		top: 2rem;
 		right: 0;
 		bottom: 0;
+		z-index: 1;
 		backdrop-filter: blur(15px);
 		background-color: rgba(0, 0, 0, 0.5);
 		animation: fadeIn linear 0.3s;
