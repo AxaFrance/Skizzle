@@ -84,6 +84,7 @@
 		top: 50%;
 		width: 8px;
 		height: 4px;
+		border-radius: 0 8px 8px 0;
 		background-color: #ff8a00;
 		transform: translateY(-50%);
 	}

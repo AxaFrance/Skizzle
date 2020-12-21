@@ -5,6 +5,7 @@
 		color: #fff;
 		font-size: 1.3rem;
 		font-weight: bold;
+		font-family: 'roboto slab', sans-serif;
 		border-left: 4px solid #ff8a00;
 	}
 </style>

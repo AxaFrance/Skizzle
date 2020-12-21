@@ -17,6 +17,20 @@
 </script>
 
 <style>
+	@font-face {
+		font-family: 'roboto slab';
+		src: url('fonts/RobotoSlab-SemiBold.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'roboto';
+		src: url('fonts/Roboto-Regular.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+	}
+
 	:global(*) {
 		margin: 0;
 		padding: 0;
@@ -31,9 +45,13 @@
 		display: flex;
 		overflow: hidden;
 		flex-direction: column;
-		font-family: sans-serif;
+		font-family: 'roboto', sans-serif;
 		color: #fff;
 		background-color: #333;
+	}
+
+	:global(button, input) {
+		font-family: 'roboto', sans-serif;
 	}
 
 	main {
