@@ -11,16 +11,10 @@
 	import Modale from 'components/Modale';
 	import AccountTitle from 'components/AccountTitle';
 	import Icons from 'components/icons';
-	import {
-		checkOrganization,
-		checkProject,
-		checkRepository,
-		deleteRepository,
-	} from 'utils';
+	import { checkOrganization } from 'utils';
 	import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import { client } from 'shared/stores/authentication.store';
 	import type { ProfileType } from 'models/skizzle/ProfileType';
-	import Delete from '../icons/Delete.svelte';
 
 	export let profile: ProfileType;
 	let isSettingsDisplayed = false;
@@ -129,7 +123,7 @@
 	</div>
 	<div class="user">
 		<span class="name">{profile.name}</span>
-		<span class="email">{profile.email}</span>
+		{#if profile.email}<span class="email">{profile.email}</span>{/if}
 	</div>
 	<button
 		on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)}><Settings /></button>

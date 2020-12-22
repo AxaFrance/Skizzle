@@ -3,9 +3,14 @@
 	import { isFetchingData, repositories } from 'shared/stores/default.store';
 	import type { ProjectType } from 'models/skizzle/ProjectType';
 	import Icons from 'components/icons';
+	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
+	import type { RepositoryType } from 'models/skizzle/RepositoryType';
 
+	export let provider;
 	export let search: string;
 	export let projects: ProjectType[];
+
+	export let repos: RepositoryType[];
 </script>
 
 <style>
@@ -107,39 +112,86 @@
 	.name {
 		margin-right: auto;
 	}
+
+	.repo-project {
+		display: flex;
+		padding: 1rem;
+		border-radius: 8px;
+		background-color: #6b6b6b;
+	}
+
+	.repo-project input {
+		display: none;
+	}
+
+	.repo-project:not(:last-child) {
+		margin-bottom: 0.5rem;
+	}
+
+	.follow {
+		font-size: 0.8rem;
+		text-decoration: underline;
+		color: #ff8a00;
+		cursor: pointer;
+	}
+
+	.follow:hover {
+		text-decoration: none;
+	}
 </style>
 
 <div class="container">
 	<h2>Résultats pour "<b>{search}</b>"</h2>
-	<ul class="projects">
-		{#each projects as project}
-			<li>
-				<div class="project" class:open={project.checked}>
+	{#if projects}
+		<ul class="projects">
+			{#each projects as project}
+				<li>
+					<div class="project" class:open={project.checked}>
+						<input
+							type="checkbox"
+							id={project.projectId}
+							checked={project.checked}
+							on:change={event => checkProject(event, project)}
+							disabled={$isFetchingData} />
+						<label for={project.projectId}> {project.name} </label>
+						<Icons.ArrowDown />
+					</div>
+					<ul class="repos">
+						{#each $repositories.filter(x => x.projectId === project.projectId) as repository}
+							<li class="repo">
+								<span class="name">{repository.name}</span>
+								<input
+									type="checkbox"
+									id={repository.repositoryId}
+									checked={repository.checked}
+									on:change={event => checkRepository(event, repository)}
+									disabled={$isFetchingData} />
+								<label
+									for={repository.repositoryId}>{repository.checked ? 'Ne plus suivre' : 'Suivre'}</label>
+							</li>
+						{/each}
+					</ul>
+				</li>
+			{/each}
+		</ul>
+	{/if}
+
+	{#if repos}
+		<ul class="repo-projects">
+			{#each repos as repository}
+				<li class="repo-project">
+					<span class="name">{repository.fullName || repository.name}</span>
 					<input
 						type="checkbox"
-						id={project.projectId}
-						checked={project.checked}
-						on:change={event => checkProject(event, project)}
+						id={repository.repositoryId}
+						checked={$repositories.some(x => x.repositoryId === repository.repositoryId && x.checked)}
+						on:change={event => checkRepository(event, repository)}
 						disabled={$isFetchingData} />
-					<label for={project.projectId}> {project.name} </label>
-					<Icons.ArrowDown />
-				</div>
-				<ul class="repos">
-					{#each $repositories.filter(x => x.projectId === project.projectId) as repository}
-						<li class="repo">
-							<span class="name">{repository.name}</span>
-							<input
-								type="checkbox"
-								id={repository.repositoryId}
-								checked={repository.checked}
-								on:change={event => checkRepository(event, repository)}
-								disabled={$isFetchingData} />
-							<label
-								for={repository.repositoryId}>{repository.checked ? 'Ne plus suivre' : 'Suivre'}</label>
-						</li>
-					{/each}
-				</ul>
-			</li>
-		{/each}
-	</ul>
+					<label
+						class="follow"
+						for={repository.repositoryId}>{$repositories.some(x => x.repositoryId === repository.repositoryId && x.checked) ? 'Ne plus suivre' : 'Suivre'}</label>
+				</li>
+			{/each}
+		</ul>
+	{/if}
 </div>

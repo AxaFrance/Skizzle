@@ -2,6 +2,7 @@
 	import { isFetchingData, repositories } from 'shared/stores/default.store';
 	import { deleteRepository } from 'utils';
 	import Icons from 'components/icons';
+	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	export let profile;
 
 	$: followedRepositories = $repositories.filter(
@@ -62,14 +63,20 @@
 </style>
 
 <p class="intro">
-	Vous suivez actuellement <b>{followedRepositories.length}</b> repositories sur Azure
-	DevOps.
+	Vous suivez actuellement <b>{followedRepositories.length}</b> repositories sur {ProviderEnum[profile.provider]}.
 </p>
 <ul>
-	{#each followedRepositories as repository}
+	{#each followedRepositories.map(repository => {
+		console.log({ repository });
+		return repository;
+	}) as repository}
 		<li>
-			<span class="project">{repository.projectName}</span>
-			<span class="repository">{repository.name}</span>
+			{#if repository.projectName}
+				<span class="project">{repository.projectName}</span>
+			{/if}
+			{#if repository.fullName}
+				<span class="repository">{repository.fullName}</span>
+			{:else}<span class="repository">{repository.name}</span>{/if}
 			<button
 				on:click={() => deleteRepository(repository)}
 				disabled={$isFetchingData}>

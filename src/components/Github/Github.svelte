@@ -1,90 +1,106 @@
-<!--<script lang="ts">
+<script lang="ts">
 	import { Service } from 'services/Service';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import {
 		isFetchingData,
 		isLoading,
 		projects,
-		repositories,
-		pullRequests,
 	} from 'shared/stores/default.store';
 	import { authorize } from 'shared/token';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
-	import {
-		checkOrganization,
-		checkProject,
-		checkRepository,
-		deleteRepository,
-	} from 'utils';
-	import AzureDevOps from 'components/AzureDevOps';
-	import Github from 'components/Github';
+	import AccountTitle from 'components/AccountTitle';
+	import AddAccount from 'components/AddAccount';
+	import AccountSummary from 'components/AccountSummary';
+	import SearchResults from 'components/SearchResults';
+	import FollowedRepositories from 'components/FollowedRepositories';
+	import Search from 'components/Search';
 
-	let query: string = '';
 	let search: string = '';
 
-	const searchRepositories = async (provider: ProviderEnum) => {
-		fetchedGithubRepositories = await Service.getRepositories(provider, {
-			query,
-		});
+	$: fetchedGithubRepositories = [];
+
+	const onSearchSubmit = async query => {
+		search = query;
+		fetchedGithubRepositories = await Service.getRepositories(
+			ProviderEnum.Github,
+			{
+				query,
+			},
+		);
 	};
 
-	$: fetchedProjects = $projects.filter(x =>
-		x.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
-	);
-	$: fetchedGithubRepositories = [];
-</script>-->
+	const onSearchCancel = () => {
+		search = '';
+	};
+</script>
 
-<p>Github</p>
-<!-- <button
-	on:click={() => authorize(ProviderEnum.Github)}
-	disabled={$clientAuthenticated.isGithubAuthenticated}>
-	{#if $clientAuthenticated.isGithubAuthenticated}
-		Connected on Github
-	{:else}Login Github{/if}
-</button>
-{#if $clientAuthenticated.isGithubAuthenticated}
-	<h3>Github Profile</h3>
+<style>
+	section {
+		margin-bottom: 2rem;
+	}
+
+	div {
+		display: flex;
+	}
+
+	div section {
+		flex: 0 0 50%;
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+
+	div section:first-child {
+		padding-left: 0;
+	}
+
+	div section:last-child {
+		padding-right: 0;
+	}
+
+	.intro {
+		margin-bottom: 1rem;
+		font-size: 0.8rem;
+		color: #ddd;
+	}
+</style>
+
+{#if $isLoading}
+	<p>Chargement...</p>
+{:else if $clientAuthenticated.isGithubAuthenticated}
 	{#await Service.getProfile(ProviderEnum.Github)}
 		<p>Chargement...</p>
 	{:then profile}
-		<img width="64" height="64" src={profile.avatar} alt={profile.name} />
-		<p>Id: {profile.id}</p>
-		<p>Name: {profile.name}</p>
-		<p>Email: {profile.email}</p>
+		<section>
+			<AccountTitle>Votre compte Github</AccountTitle>
+			<AccountSummary {profile} />
+		</section>
+		<div>
+			<section>
+				<AccountTitle>Suivre un nouveau repository</AccountTitle>
+				<p class="intro">Cherchez le nom d'un repository.</p>
 
-		<h3>Github repositories</h3>
-		<form
-			on:submit|preventDefault={() => searchRepositories(ProviderEnum.Github)}>
-			<input bind:value={query} disabled={$isFetchingData} />
-		</form>
-		<ul>
-			{#each fetchedGithubRepositories as repository}
-				<li>
-					<label for={repository.repositoryId}>
-						Name : {repository.name} FullName : {repository.fullName}
-						<input
-							type="checkbox"
-							id={repository.repositoryId}
-							checked={$repositories.some(x => x.repositoryId === repository.repositoryId && x.checked)}
-							on:change={event => checkRepository(event, repository)}
-							disabled={$isFetchingData} />
-					</label>
-				</li>
-			{/each}
-			{#each $repositories.filter(x => x.provider === ProviderEnum.Github) as repository}
-				<li>
-					<label for={repository.repositoryId}>
-						<strong>Name : {repository.name}</strong> FullName : {repository.fullName}
-						<button
-							on:click={() => deleteRepository(repository)}
-							disabled={$isFetchingData}>
-							Delete
-						</button>
-					</label>
-				</li>
-			{/each}
-		</ul>
+				<Search
+					onSubmit={onSearchSubmit}
+					onCancel={onSearchCancel}
+					disabled={$isFetchingData} />
+
+				{#if search}
+					<SearchResults
+						provider={ProviderEnum.Github}
+						{search}
+						repos={fetchedGithubRepositories} />
+				{/if}
+			</section>
+			<section>
+				<AccountTitle>Vos repositories suivis</AccountTitle>
+				<FollowedRepositories {profile} />
+			</section>
+		</div>
 	{:catch}
 		<p>Fetching profile failed.</p>
 	{/await}
-{/if} -->
+{:else}
+	<AddAccount
+		text="Ajouter un compte Github"
+		onClick={() => authorize(ProviderEnum.Github)} />
+{/if}

@@ -4,7 +4,7 @@
 	import AzureDevOps from 'components/AzureDevOps';
 	import Github from 'components/Github';
 
-	let currentProvider = ProviderEnum.AzureDevOps;
+	let currentProvider = ProviderEnum.Github;
 
 	const views = {
 		[ProviderEnum.AzureDevOps]: AzureDevOps,
