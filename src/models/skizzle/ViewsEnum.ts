@@ -1,5 +1,5 @@
 export enum Views {
-	List = 'list',
+	Main = 'Main',
 	Accounts = 'accounts',
 	Settings = 'settings',
 }

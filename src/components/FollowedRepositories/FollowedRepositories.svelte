@@ -66,10 +66,7 @@
 	Vous suivez actuellement <b>{followedRepositories.length}</b> repositories sur {ProviderEnum[profile.provider]}.
 </p>
 <ul>
-	{#each followedRepositories.map(repository => {
-		console.log({ repository });
-		return repository;
-	}) as repository}
+	{#each followedRepositories as repository}
 		<li>
 			{#if repository.projectName}
 				<span class="project">{repository.projectName}</span>

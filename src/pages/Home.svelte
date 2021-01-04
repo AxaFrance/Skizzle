@@ -2,13 +2,15 @@
 	import { pullRequests } from '../shared/stores/default.store';
 	import PullRequest from '../components/PullRequest';
 	import type { CommentType } from 'models/skizzle/CommentType';
-import { Service } from 'services/Service';
+	import { Service } from 'services/Service';
 
-	$: fetchedComments = Promise.resolve<CommentType[]>([])
+	$: fetchedComments = Promise.resolve<CommentType[]>([]);
 </script>
 
 {#each $pullRequests.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)) as pullRequest}
-    <PullRequest {pullRequest} on:comments={(event) => fetchedComments = event.detail.fetchedComment}/>
+	<PullRequest
+		{pullRequest}
+		on:comments={event => (fetchedComments = event.detail.fetchedComment)} />
 {/each}
 
 <div style="color: white;">

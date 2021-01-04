@@ -1,18 +1,18 @@
 <script lang="ts">
 	import Accounts from 'components/Accounts';
-	import List from 'components/List';
+	import Main from 'components/Main';
 	import Settings from 'components/Settings';
 	import Header from 'components/Header';
 	import Navigation from 'components/Navigation';
 	import { Views } from 'models/skizzle/ViewsEnum';
 
 	const views = {
-		[Views.List]: List,
+		[Views.Main]: Main,
 		[Views.Accounts]: Accounts,
 		[Views.Settings]: Settings,
 	};
 
-	let currentView: Views = Views.Accounts;
+	let currentView: Views = Views.Main;
 	const onViewChange = (view: Views) => (currentView = view);
 </script>
 

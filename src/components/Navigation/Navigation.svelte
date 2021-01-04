@@ -1,12 +1,13 @@
 <script lang="ts">
 	import Icons from '../icons';
 	import { Views } from 'models/skizzle/ViewsEnum';
-	
+
 	export let currentView: Views;
 	export let onViewChange: Function;
 
 	const setView = (view: Views) => () => onViewChange(view);
-	$: getClass = (view: Views) => `${view} ${currentView === view ? 'selected' : ''}`;
+	$: getClass = (view: Views) =>
+		`${view} ${currentView === view ? 'selected' : ''}`;
 	$: getColor = (view: Views) => (currentView === view ? `#fff` : '#d3d3d3');
 </script>
 
@@ -48,8 +49,8 @@
 </style>
 
 <nav>
-	<button on:click={setView(Views.List)} class={getClass(Views.List)}>
-		<Icons.List color={getColor(Views.List)} />
+	<button on:click={setView(Views.Main)} class={getClass(Views.Main)}>
+		<Icons.List color={getColor(Views.Main)} />
 		Liste
 	</button>
 	<button on:click={setView(Views.Accounts)} class={getClass(Views.Accounts)}>

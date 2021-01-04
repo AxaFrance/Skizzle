@@ -1,53 +1,109 @@
 <script lang="ts">
-  import { ProviderEnum } from "../../models/skizzle/ProviderEnum";
-  import type { PullRequestType } from "models/skizzle/PullRequestType";
-  import { Service } from "services/Service";
-  import Labels from '../Labels';
-  import { createEventDispatcher } from "svelte";
-  import { isFetchingData } from '../../shared/stores/default.store';
+	import type { PullRequestType } from 'models/skizzle/PullRequestType';
+	import { Service } from 'services/Service';
+	import Labels from '../Labels';
+	import { createEventDispatcher } from 'svelte';
+	import { isFetchingData } from '../../shared/stores/default.store';
+	import Avatar from 'components/Avatar';
+	import Icons from 'components/icons';
+	export let pullRequest: PullRequestType;
 
-  export let pullRequest: PullRequestType;
-
-  const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher();
 
 	const getComments = (pullRequest: PullRequestType) => {
 		dispatch('comments', {
-			fetchedComment: Service.getComments(pullRequest.provider, { pullRequest })
+			fetchedComment: Service.getComments(pullRequest.provider, { pullRequest }),
 		});
-	}
+	};
+
+	console.log({ pullRequest });
 </script>
 
-<style src="./PullRequest.scss"></style>
+<style>
+	.pr {
+		display: flex;
+		flex-wrap: wrap;
+		padding: 1rem;
+		color: #fff;
+		border-radius: 8px;
+		background-color: #444;
+	}
 
-<div class="skz-pullrequest">
-  <div class="skz-pullrequest-avatar">
-    {#await Service.getAvatar(pullRequest.provider, pullRequest.user.avatar, pullRequest.organizationName)}
-      <p>Chargement...</p>
-    {:then avatar}
-      {#if pullRequest.provider === ProviderEnum.AzureDevOps}
-        <img class="skz-pullrequest-avatar__provider" src="../assets/azure-logo.svg" alt={pullRequest.provider}>
-      {:else if pullRequest.provider === ProviderEnum.Github}
-        <img class="skz-pullrequest-avatar__provider" src="../assets/github-logo.svg" alt={pullRequest.provider}>
-      {/if}
-      <img class="skz-pullrequest-avatar__profile" width="64" height="64" src={avatar} alt={pullRequest.user.name} />
-    {:catch}
-      <p>Chargement...</p>
-    {/await}
-  </div>
-  <div class="skz-pullrequest__details">
-		<h2 class="skz-pullrequest__author">
-      {pullRequest.user.name} - {pullRequest.dateStr}
-      {#if pullRequest.projectName}
-        <span>{pullRequest.projectName}</span>
-      {/if}
-		</h2>
-		<h3 class="skz-pullrequest__title">
-			{pullRequest.title}
-		</h3>
-    <p class="skz-pullrequest__repo">{pullRequest.repositoryName}</p>
-    <div class="skz-pullrequest-infos">
-      <Labels labels={pullRequest.labels} />
-      <button on:click={() => getComments(pullRequest)} disabled={$isFetchingData}>Comments</button>
-    </div>
+	:global(.pr__avatar) {
+		margin-right: 1rem;
+	}
+
+	.details {
+		flex: 1 0 auto;
+	}
+
+	header {
+		display: flex;
+		align-items: center;
+		margin-bottom: 0.5rem;
+		font-size: 0.8rem;
+		color: #aaa;
+	}
+
+	.author {
+		margin-right: auto;
+		font-size: 0.8rem;
+		line-height: 1;
+	}
+
+	.title {
+		margin-bottom: 0.5rem;
+		font-size: 1rem;
+		line-height: 1;
+		font-weight: normal;
+	}
+
+	.repo {
+		font-size: 0.8rem;
+		color: #aaa;
+		line-height: 1;
+	}
+
+	footer {
+		display: flex;
+		width: calc(100% + 2rem);
+		margin: 1rem -1rem -1rem;
+		padding: 0.5rem 1rem;
+		border-radius: 0 0 8px 8px;
+		background-color: #3e3e3e;
+	}
+
+	button {
+		display: block;
+		width: 1.5rem;
+		height: 1.5rem;
+		margin-left: auto;
+		cursor: pointer;
+		border: none;
+		background-color: transparent;
+	}
+
+	button:hover {
+		background-color: #333;
+	}
+</style>
+
+<div class="pr">
+	<Avatar className="pr__avatar" {pullRequest} />
+	<div class="details">
+		<header>
+			<h2 class="author">{pullRequest.user.name} - {pullRequest.dateStr}</h2>
+			{#if pullRequest.projectName}
+				<span class="project">{pullRequest.projectName}</span>
+			{/if}
+		</header>
+		<h3 class="title">{pullRequest.title}</h3>
+		<p class="repo">{pullRequest.repositoryName}</p>
 	</div>
+	<footer>
+		<Labels labels={pullRequest.labels} />
+		<button on:click={() => getComments(pullRequest)} disabled={$isFetchingData}>
+			<Icons.Ellipsis />
+		</button>
+	</footer>
 </div>

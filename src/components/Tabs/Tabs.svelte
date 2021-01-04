@@ -1,7 +1,11 @@
-<script>
+<script lang="ts">
+	import Icons from 'components/icons';
 	export let data;
 	export let onChange;
 	export let current;
+	export let onCreation: () => void;
+
+	console.log({ data });
 </script>
 
 <style>
@@ -10,29 +14,55 @@
 		padding: 1rem 1rem 0;
 	}
 
-	button {
+	.tab {
 		padding: 1rem;
 		font-size: 1rem;
 		line-height: 1;
 		color: #fff;
+		cursor: pointer;
 		border: none;
 		border-radius: 8px 8px 0 0;
 		background-color: #3d3d3d;
 	}
 
-	button:not(:first-child) {
+	.tab:not(:first-child) {
 		margin-left: 4px;
 	}
 
 	.current {
 		background-color: #4e4e4e;
 	}
+
+	.add {
+		align-self: center;
+		width: 2rem;
+		height: 2rem;
+		margin-left: 0.5rem;
+		cursor: pointer;
+		border-radius: 50%;
+		border: none;
+		background-color: #4e4e4e;
+		transition: background-color linear 0.2s;
+	}
+
+	.add:hover {
+		background-color: #3d3d3d;
+	}
 </style>
 
 <nav>
 	{#each Object.keys(data) as tab}
-		<button class:current={current === tab} on:click={() => onChange(tab)}>
+		<button
+			class="tab"
+			class:current={current === tab || Object.keys(data).length === 1}
+			on:click={() => onChange(tab)}>
 			{data[tab]}
 		</button>
 	{/each}
+	{#if onCreation}
+		<button
+			on:click={onCreation}
+			title="Créer une nouvelle liste"
+			class="add"><Icons.Plus /></button>
+	{/if}
 </nav>
