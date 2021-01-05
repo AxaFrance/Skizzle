@@ -15,11 +15,11 @@
 <style>
 	.container {
 		position: relative;
-		width: 4rem;
-		height: 4rem;
 	}
 
 	.avatar {
+		width: 4rem;
+		height: 4rem;
 		overflow: hidden;
 		border-radius: 50%;
 		border: 2px solid #fff;
@@ -28,7 +28,7 @@
 	img {
 		display: block;
 		width: 100%;
-		height: auto;
+		height: 100%;
 	}
 
 	.badge {
@@ -54,7 +54,9 @@
 
 <div class={`container ${className || ''}`}>
 	{#await Service.getAvatar(pullRequest.provider, pullRequest.user.avatar, pullRequest.organizationName)}
-		<p>Chargement...</p>
+		<div class="avatar">
+			<p>Chargement...</p>
+		</div>
 	{:then avatar}
 		<div class="avatar"><img src={avatar} alt={pullRequest.user.name} /></div>
 		{#if pullRequest.provider}

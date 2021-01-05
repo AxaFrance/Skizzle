@@ -6,6 +6,7 @@
 	import { isFetchingData } from '../../shared/stores/default.store';
 	import Avatar from 'components/Avatar';
 	import Icons from 'components/icons';
+	const { shell } = require('electron');
 	export let pullRequest: PullRequestType;
 
 	const dispatch = createEventDispatcher();
@@ -19,12 +20,18 @@
 
 <style>
 	.pr {
+		position: relative;
 		display: flex;
 		flex-wrap: wrap;
 		padding: 1rem;
 		color: #fff;
 		border-radius: 8px;
 		background-color: #444;
+		transition: opacity linear 0.2s;
+	}
+
+	.pr:hover {
+		opacity: 0.8;
 	}
 
 	:global(.pr__avatar) {
@@ -71,7 +78,9 @@
 		background-color: #3e3e3e;
 	}
 
-	button {
+	.more {
+		position: relative;
+		z-index: 2;
 		display: block;
 		width: 1.5rem;
 		height: 1.5rem;
@@ -81,12 +90,30 @@
 		background-color: transparent;
 	}
 
-	button:hover {
+	.more:hover {
 		background-color: #333;
+	}
+
+	.link {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		cursor: pointer;
+		border: none;
+		background-color: transparent;
 	}
 </style>
 
 <div class="pr">
+	<button
+		class="link"
+		on:click={() => {
+			console.log('yo.');
+			shell.openExternal(pullRequest.url);
+		}} />
 	<Avatar className="pr__avatar" {pullRequest} />
 	<div class="details">
 		<header>
@@ -100,7 +127,10 @@
 	</div>
 	<footer>
 		<Labels labels={pullRequest.labels} />
-		<button on:click={() => getComments(pullRequest)} disabled={$isFetchingData}>
+		<button
+			class="more"
+			on:click={() => getComments(pullRequest)}
+			disabled={$isFetchingData}>
 			<Icons.Ellipsis />
 		</button>
 	</footer>

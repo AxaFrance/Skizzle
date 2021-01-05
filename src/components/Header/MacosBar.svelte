@@ -5,7 +5,6 @@
 </script>
 
 <style src="./MacosBar.scss">
-
 </style>
 
 <div class="window-controls">
