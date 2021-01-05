@@ -3,6 +3,7 @@
 	export let data;
 	export let onChange;
 	export let current;
+	export let icons;
 	export let onCreation: () => void;
 
 	console.log({ data });
@@ -15,6 +16,8 @@
 	}
 
 	.tab {
+		display: flex;
+		align-items: center;
 		padding: 1rem;
 		font-size: 1rem;
 		line-height: 1;
@@ -48,6 +51,12 @@
 	.add:hover {
 		background-color: #3d3d3d;
 	}
+
+	.tab :global(svg) {
+		width: 1rem;
+		height: auto;
+		margin-right: 0.5rem;
+	}
 </style>
 
 <nav>
@@ -56,6 +65,9 @@
 			class="tab"
 			class:current={current === tab || Object.keys(data).length === 1}
 			on:click={() => onChange(tab)}>
+			{#if icons}
+				<svelte:component this={icons[tab]} />
+			{/if}
 			{data[tab]}
 		</button>
 	{/each}

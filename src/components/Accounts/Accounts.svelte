@@ -3,6 +3,7 @@
 	import Tabs from 'components/Tabs';
 	import AzureDevOps from 'components/AzureDevOps';
 	import Github from 'components/Github';
+	import Icons from 'components/icons';
 
 	let currentProvider = ProviderEnum.Github;
 
@@ -25,7 +26,8 @@
 <Tabs
 	current={currentProvider}
 	onChange={provider => (currentProvider = provider)}
-	data={{ [ProviderEnum.AzureDevOps]: 'Azure DevOps', [ProviderEnum.Github]: 'Github' }} />
+	data={{ [ProviderEnum.AzureDevOps]: 'Azure DevOps', [ProviderEnum.Github]: 'Github' }}
+	icons={{ [ProviderEnum.AzureDevOps]: Icons.AzureDevOps, [ProviderEnum.Github]: Icons.Github }} />
 <div class="content">
 	<svelte:component this={views[currentProvider]} />
 </div>

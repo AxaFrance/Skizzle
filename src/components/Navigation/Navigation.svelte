@@ -13,22 +13,32 @@
 
 <style>
 	nav {
+		flex: 0 0 8rem;
 		display: flex;
 		flex-direction: column;
-		width: 2.5rem;
+		width: 8rem;
 		height: 100%;
 		background-color: #444;
 	}
 
 	button {
+		display: flex;
+		justify-content: start;
+		align-items: center;
 		width: 100%;
 		height: 2.5rem;
-		font-size: 0;
+		padding: 1rem;
 		cursor: pointer;
 		outline: none;
+		font-weight: bold;
+		color: #fff;
 		border: 0;
 		background-color: transparent;
 		transition: background-color linear 0.1s;
+	}
+
+	button :global(svg) {
+		margin-right: 0.5rem;
 	}
 
 	button:hover:not(.selected) {
@@ -49,15 +59,15 @@
 </style>
 
 <nav>
-	<button on:click={setView(Views.Main)} class={getClass(Views.Main)} title="Liste">
+	<button on:click={setView(Views.Main)} class={getClass(Views.Main)}>
 		<Icons.List color={getColor(Views.Main)} />
-		Liste
+		Listes
 	</button>
-	<button on:click={setView(Views.Accounts)} class={getClass(Views.Accounts)} title="Comptes">
+	<button on:click={setView(Views.Accounts)} class={getClass(Views.Accounts)}>
 		<Icons.Accounts color={getColor(Views.Accounts)} />
 		Comptes
 	</button>
-	<button on:click={setView(Views.Settings)} class={getClass(Views.Settings)} title="Réglages">
+	<button on:click={setView(Views.Settings)} class={getClass(Views.Settings)}>
 		<Icons.Settings color={getColor(Views.Settings)} />
 		Réglages
 	</button>
