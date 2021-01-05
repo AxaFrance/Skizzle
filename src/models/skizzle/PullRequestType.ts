@@ -17,6 +17,7 @@ type PullRequestType = {
 	user: UserType;
 	owner?: string;
 	labels: LabelType[];
+	url: string;
 } & CommonType;
 
 export type { UserType, LabelType, PullRequestType };

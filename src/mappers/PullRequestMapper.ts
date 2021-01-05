@@ -24,6 +24,13 @@ export class PullRequestMapper {
 					};
 				});
 
+			if (
+				value.base?.repo?.owner?.type === 'Organization' &&
+				value.base?.repo?.owner?.login
+			) {
+				params.projectName = value.base?.repo?.owner?.login;
+			}
+
 			return {
 				pullRequestId: value.pullRequestId || value.number,
 				title: value.title,
@@ -35,6 +42,9 @@ export class PullRequestMapper {
 					name: value.createdBy?.displayName || value.user?.login,
 					avatar: value.createdBy?.descriptor || value.user?.avatar_url,
 				},
+				url:
+					value.html_url ||
+					`https://dev.azure.com/${params.organizationName}/${params.projectName}/_git/${params.repositoryName}/pullrequest/${value.pullRequestId}`,
 				...params,
 			};
 		});

@@ -15,8 +15,6 @@
 			fetchedComment: Service.getComments(pullRequest.provider, { pullRequest }),
 		});
 	};
-
-	console.log({ pullRequest });
 </script>
 
 <style>

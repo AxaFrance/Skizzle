@@ -7,8 +7,7 @@
 	import Modale from 'components/Modale';
 	import CustomListSettings from 'components/CustomListSettings';
 
-	// let creatingList: boolean = false;
-	let creatingList: boolean = true;
+	let creatingList: boolean = false;
 
 	const customLists: CustomListType[] = [
 		{
@@ -62,7 +61,7 @@
 <div class="content">
 	{#if currentTab === 'all'}
 		<ul class="list">
-			{#each $pullRequests.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)) as pullRequest}
+			{#each $pullRequests as pullRequest}
 				<li>
 					<PullRequest
 						{pullRequest}
@@ -78,8 +77,7 @@
 				})
 				.filter(pullRequest => {
 					return customLists[currentTab].repositoriesIds ? customLists[currentTab].repositoriesIds.includes(pullRequest.repositoryId) : true;
-				})
-				.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)) as pullRequest}
+				}) as pullRequest}
 				<li>
 					<PullRequest
 						{pullRequest}

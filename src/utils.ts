@@ -91,7 +91,9 @@ export const checkRepository = async (
 			repository,
 		});
 
-		pullRequests.update(x => [...x, ...values]);
+		pullRequests.update(x =>
+			[...x, ...values].sort((a, b) => Date.parse(b.date) - Date.parse(a.date)),
+		);
 	} else {
 		if (repository.provider === ProviderEnum.Github) {
 			repositories.update(x =>

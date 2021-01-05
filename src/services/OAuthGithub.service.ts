@@ -9,6 +9,8 @@ import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import type { PullRequestType } from 'models/skizzle/PullRequestType';
 import type { RepositoryType } from 'models/skizzle/RepositoryType';
 import { OAuthGithubRequester } from 'requesters/OAuthGithub.requester';
+import { clientAuthenticated } from 'shared/stores/authentication.store';
+import { get } from 'svelte/store';
 import type { IService, ServiceParams } from './Service';
 
 export class OAuthGithubService implements IService {
@@ -26,6 +28,10 @@ export class OAuthGithubService implements IService {
 		}
 
 		return OAuthGithubService.instance;
+	}
+
+	public isLogged(): boolean {
+		return get(clientAuthenticated).isGithubAuthenticated;
 	}
 
 	public async getProfile(): Promise<ProfileType> {

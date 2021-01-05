@@ -36,6 +36,19 @@ type GithubLabelsApiType = {
 	name: string;
 };
 
+type GithubOwnerBaseApiType = {
+	login: string;
+	type: string;
+};
+
+type GithubRepoBaseApiType = {
+	owner: GithubOwnerBaseApiType;
+};
+
+type GithubBaseApiType = {
+	repo: GithubRepoBaseApiType;
+};
+
 type GithubPullRequestApiType = {
 	title: string;
 	body: string;
@@ -43,6 +56,8 @@ type GithubPullRequestApiType = {
 	updated_at: string;
 	number: number;
 	labels: GithubLabelsApiType[];
+	base: GithubBaseApiType;
+	html_url: string;
 };
 
 type AzureDevOpsPullRequestsApiType = {

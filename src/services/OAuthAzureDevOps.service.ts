@@ -17,6 +17,8 @@ import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import type { PullRequestType } from 'models/skizzle/PullRequestType';
 import type { RepositoryType } from 'models/skizzle/RepositoryType';
 import { OAuthAzureDevOpsRequester } from 'requesters/OAuthAzureDevOps.requester';
+import { clientAuthenticated } from 'shared/stores/authentication.store';
+import { get } from 'svelte/store';
 import type { IService, ServiceParams } from './Service';
 
 export class OAuthAzureDevOpsService implements IService {
@@ -34,6 +36,10 @@ export class OAuthAzureDevOpsService implements IService {
 		}
 
 		return OAuthAzureDevOpsService.instance;
+	}
+
+	public isLogged(): boolean {
+		return get(clientAuthenticated).isAzureDevOpsAuthenticated;
 	}
 
 	public async getProfile(userId?: string): Promise<ProfileType> {

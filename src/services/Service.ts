@@ -19,6 +19,7 @@ export type ServiceParams = {
 	pullRequest?: PullRequestType;
 };
 export interface IService {
+	isLogged(): boolean;
 	getProfile(userId?: string): Promise<ProfileType>;
 	getAvatar(params: string, organizationName?: string): Promise<string>;
 	getOrganizations?(params: ServiceParams): Promise<OrganizationType[]>;

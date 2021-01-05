@@ -19,14 +19,14 @@
 <style>
 	@font-face {
 		font-family: 'roboto slab';
-		src: url('fonts/RobotoSlab-SemiBold.ttf') format('truetype');
+		src: url('../assets/fonts/RobotoSlab-SemiBold.ttf') format('truetype');
 		font-weight: normal;
 		font-style: normal;
 	}
 
 	@font-face {
 		font-family: 'roboto';
-		src: url('fonts/Roboto-Regular.ttf') format('truetype');
+		src: url('../assets/fonts/Roboto-Regular.ttf') format('truetype');
 		font-weight: normal;
 		font-style: normal;
 	}

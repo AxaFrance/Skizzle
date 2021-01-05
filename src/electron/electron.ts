@@ -30,7 +30,7 @@ let github: OAuthWindow;
 let azure: OAuthWindow;
 let tray: Tray;
 
-const hangOrCrash = async (windows: BrowserWindow) => {
+const hangOrCrash = async (window: BrowserWindow) => {
 	const options = {
 		type: 'info',
 		title: 'Renderer Process Hanging',

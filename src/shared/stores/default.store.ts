@@ -91,7 +91,9 @@ export const refreshPullRequests = async () => {
 		0;
 
 		pullRequests.reset();
-		pullRequests.set(result);
+		pullRequests.set(
+			result.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)),
+		);
 	}
 };
 
