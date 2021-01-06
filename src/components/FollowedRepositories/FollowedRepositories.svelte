@@ -18,7 +18,7 @@
 	}
 
 	b {
-		color: #ff8a00;
+		color: var(--color);
 	}
 
 	ul {

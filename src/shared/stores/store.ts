@@ -2,17 +2,24 @@ import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import { addItem, getItem } from 'shared/utils';
 import { get, writable } from 'svelte/store';
 
+type StoreOptionsType<T> = {
+	key?: string;
+	predicate?: (value?: T, provider?: ProviderEnum) => T;
+	subscriber?: (value: T) => void;
+};
+
 export const createStore = <T>(
 	initialValue: T,
-	{
-		key,
-		predicate,
-	}: { key?: string; predicate?: (value?: T, provider?: ProviderEnum) => T },
+	{ key, predicate, subscriber }: StoreOptionsType<T>,
 ) => {
 	const storage = getItem<T>(key);
 
 	const store = writable(storage ? storage : initialValue);
 	const { subscribe, set, update } = store;
+
+	if (subscriber) {
+		subscribe(subscriber);
+	}
 
 	if (key) {
 		subscribe((value: T) => addItem<T>(key, value));

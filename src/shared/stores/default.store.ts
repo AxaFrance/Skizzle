@@ -5,7 +5,8 @@ import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import type { PullRequestType } from 'models/skizzle/PullRequestType';
 import type { RepositoryType } from 'models/skizzle/RepositoryType';
 import type { SettingsType } from 'models/skizzle/SettingsType';
-import { Service, ServiceParams } from 'services/Service';
+import { ThemeEnum } from 'models/skizzle/ThemeEnum';
+import { Service } from 'services/Service';
 import { get } from 'svelte/store';
 import { createStore } from './store';
 const app = require('electron').ipcRenderer;
@@ -15,9 +16,17 @@ export const isFetchingData = createStore<boolean>(false, {});
 export const settings = createStore<SettingsType>(
 	{
 		refresh_delay: 1,
+		launch_at_startup: false,
 		proxy: '',
+		theme: ThemeEnum.Orange,
+		language: 'en',
 	},
-	{ key: 'settings' },
+	{
+		key: 'settings',
+		subscriber: ({ launch_at_startup }) => {
+			app.send('launch-startup', launch_at_startup);
+		},
+	},
 );
 
 const predicate = <T extends CommonType>(

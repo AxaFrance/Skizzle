@@ -5,6 +5,7 @@
 	import Header from 'components/Header';
 	import Navigation from 'components/Navigation';
 	import { Views } from 'models/skizzle/ViewsEnum';
+	import { settings } from 'shared/stores/default.store';
 
 	const views = {
 		[Views.Main]: Main,
@@ -69,7 +70,7 @@
 </style>
 
 <Header />
-<main>
+<main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
 	<Navigation {currentView} {onViewChange} />
 	<div>
 		<svelte:component this={views[currentView]} />

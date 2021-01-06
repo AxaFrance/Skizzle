@@ -1,6 +1,7 @@
 import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import type { OAuthConfigType } from 'providers/OAuthConfig.provider';
 import { client, clientHasProvider } from 'shared/stores/authentication.store';
+import { isLoading } from 'shared/stores/default.store';
 import { authorize } from 'shared/token';
 import { get } from 'svelte/store';
 
@@ -16,9 +17,10 @@ export abstract class Requester<T extends OAuthConfigType> {
 	}
 
 	protected async fetch<S>(url: string, retry: number = 3): Promise<S> {
+		const isFetchingToken = get(isLoading);
 		const config = get(client)[this.provider] as T;
 
-		if (this.clientHasProvider(config)) {
+		if (this.clientHasProvider(config) && !isFetchingToken) {
 			const params = this.getHeader(config);
 
 			const result = await fetch(url, params);

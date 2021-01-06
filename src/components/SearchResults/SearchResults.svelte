@@ -25,7 +25,7 @@
 
 	h2 b {
 		font-style: italic;
-		color: #ff8a00;
+		color: var(--color);
 	}
 
 	.container {
@@ -79,7 +79,7 @@
 		position: relative;
 		display: flex;
 		padding: 0.5rem 0.5rem 0.5rem 1rem;
-		border-left: 4px solid #ff8a00;
+		border-left: 4px solid var(--color);
 	}
 
 	.repo:before {
@@ -90,7 +90,7 @@
 		width: 8px;
 		height: 4px;
 		border-radius: 0 8px 8px 0;
-		background-color: #ff8a00;
+		background-color: var(--color);
 		transform: translateY(-50%);
 	}
 
@@ -101,7 +101,7 @@
 	.repo label {
 		font-size: 0.8rem;
 		text-decoration: underline;
-		color: #ff8a00;
+		color: var(--color);
 		cursor: pointer;
 	}
 
@@ -131,7 +131,7 @@
 	.follow {
 		font-size: 0.8rem;
 		text-decoration: underline;
-		color: #ff8a00;
+		color: var(--color);
 		cursor: pointer;
 	}
 

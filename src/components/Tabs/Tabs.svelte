@@ -57,7 +57,7 @@
 
 	small {
 		margin-left: 0.2rem;
-		color: #ff8a00;
+		color: var(--color);
 	}
 </style>
 

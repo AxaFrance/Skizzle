@@ -46,11 +46,11 @@
 	}
 
 	button:focus:not(.selected) {
-		background-color: rgba(255, 138, 0, 0.5);
+		background-color: var(--color-focus);
 	}
 
 	.selected {
-		background-color: #ff8a00;
+		background-color: var(--color);
 	}
 
 	.settings {
