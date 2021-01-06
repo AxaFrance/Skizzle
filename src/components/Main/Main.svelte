@@ -9,27 +9,60 @@
 
 	let creatingList: boolean = false;
 
+	const filterList = list =>
+		$pullRequests
+			.filter(pullRequest => {
+				return list.projectsIds
+					? list.projectsIds.includes(pullRequest.projectId)
+					: true;
+			})
+			.filter(pullRequest => {
+				return list.repositoriesIds
+					? list.repositoriesIds.includes(pullRequest.repositoryId)
+					: true;
+			});
+
 	const customLists: CustomListType[] = [
 		{
+			id: '123',
+			order: 0,
 			name: 'Agenda partagé',
 			projectsIds: ['51f756a1-4881-4ff4-ad15-91f43256bb86'],
 			withoutOwnedByUserPR: true,
 		},
 		{
+			id: '456',
+			order: 1,
 			name: 'Skizzle',
 			repositoriesIds: [218745280],
 		},
 	];
 
 	$: fetchedComments = Promise.resolve<CommentType[]>([]);
+
 	const tabs = {
-		all: 'Toutes',
+		all: {
+			label: 'Toutes',
+			order: 0,
+		},
 	};
 
-	customLists.forEach(({ name }, index) => {
-		tabs[index] = name;
+	customLists.forEach(list => {
+		tabs[list.id] = {
+			label: list.name,
+			order: list.order + 1,
+			counter: filterList(list).length,
+		};
 	});
+
 	let currentTab: string = 'all';
+
+	$: console.log(currentTab);
+
+	$: displayedList =
+		currentTab === 'all'
+			? $pullRequests
+			: filterList(customLists.find(({ id }) => id === currentTab));
 </script>
 
 <style>
@@ -59,33 +92,15 @@
 	}} />
 
 <div class="content">
-	{#if currentTab === 'all'}
-		<ul class="list">
-			{#each $pullRequests as pullRequest}
-				<li>
-					<PullRequest
-						{pullRequest}
-						on:comments={event => (fetchedComments = event.detail.fetchedComment)} />
-				</li>
-			{/each}
-		</ul>
-	{:else}
-		<ul class="list">
-			{#each $pullRequests
-				.filter(pullRequest => {
-					return customLists[currentTab].projectsIds ? customLists[currentTab].projectsIds.includes(pullRequest.projectId) : true;
-				})
-				.filter(pullRequest => {
-					return customLists[currentTab].repositoriesIds ? customLists[currentTab].repositoriesIds.includes(pullRequest.repositoryId) : true;
-				}) as pullRequest}
-				<li>
-					<PullRequest
-						{pullRequest}
-						on:comments={event => (fetchedComments = event.detail.fetchedComment)} />
-				</li>
-			{/each}
-		</ul>
-	{/if}
+	<ul class="list">
+		{#each displayedList as pullRequest}
+			<li>
+				<PullRequest
+					{pullRequest}
+					on:comments={event => (fetchedComments = event.detail.fetchedComment)} />
+			</li>
+		{/each}
+	</ul>
 </div>
 {#if creatingList}
 	<Modale

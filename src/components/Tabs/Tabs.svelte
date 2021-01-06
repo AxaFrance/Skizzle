@@ -3,10 +3,7 @@
 	export let data;
 	export let onChange;
 	export let current;
-	export let icons;
 	export let onCreation: () => void;
-
-	console.log({ data });
 </script>
 
 <style>
@@ -57,18 +54,26 @@
 		height: auto;
 		margin-right: 0.5rem;
 	}
+
+	small {
+		margin-left: 0.2rem;
+		color: #ff8a00;
+	}
 </style>
 
 <nav>
-	{#each Object.keys(data) as tab}
+	{#each Object.keys(data).sort((a, b) =>
+		data[a].order < data[b].order ? -1 : 1,
+	) as tab}
 		<button
 			class="tab"
 			class:current={current === tab || Object.keys(data).length === 1}
 			on:click={() => onChange(tab)}>
-			{#if icons}
-				<svelte:component this={icons[tab]} />
+			{#if data[tab].icon}
+				<svelte:component this={data[tab].icon} />
 			{/if}
-			{data[tab]}
+			{data[tab].label}
+			{#if data[tab].counter}<small>({data[tab].counter})</small>{/if}
 		</button>
 	{/each}
 	{#if onCreation}
