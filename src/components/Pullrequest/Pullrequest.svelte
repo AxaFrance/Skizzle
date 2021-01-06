@@ -80,7 +80,7 @@
 
 	.more {
 		position: relative;
-		z-index: 2;
+		z-index: 1;
 		display: block;
 		width: 1.5rem;
 		height: 1.5rem;

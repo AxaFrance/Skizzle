@@ -9,7 +9,7 @@
 		top: 2rem;
 		right: 0;
 		bottom: 0;
-		z-index: 1;
+		z-index: 2;
 		backdrop-filter: blur(15px);
 		background-color: rgba(0, 0, 0, 0.5);
 		animation: fadeIn linear 0.3s;
@@ -18,7 +18,7 @@
 		position: fixed;
 		top: 50%;
 		left: 50%;
-		z-index: 1;
+		z-index: 2;
 		width: calc(100vw - 10rem);
 		height: calc(100vh - 10rem);
 		padding: 2rem;
