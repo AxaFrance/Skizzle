@@ -5,10 +5,17 @@
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import Icons from 'components/icons';
 
-	let listName: string;
+	export let onDone: () => void;
+	export let id: string;
+
+	let listName: string = $customLists.find(list => list.id === id)
+		? $customLists.find(list => list.id === id).name
+		: null;
 
 	let selectedRepoId: string;
-	let repositoriesIds: string[] = [];
+	let repositoriesIds: string[] = $customLists.find(list => list.id === id)
+		? $customLists.find(list => list.id === id).repositoriesIds
+		: [];
 
 	const onSubmit = event => {
 		event.preventDefault();
@@ -22,13 +29,32 @@
 			);
 		}
 
-		const list: CustomListType = {
-			id: uuidv4(),
-			name: listName,
-			repositoriesIds,
-		};
+		if (id) {
+			const list: CustomListType = {
+				id,
+				name: listName,
+				repositoriesIds,
+			};
 
-		customLists.update(_list => [..._list, list]);
+			customLists.update(_list =>
+				_list.map(__list => {
+					if (__list.id === id) {
+						return list;
+					}
+
+					return __list;
+				}),
+			);
+		} else {
+			const list: CustomListType = {
+				id: uuidv4(),
+				name: listName,
+				repositoriesIds,
+			};
+
+			customLists.update(_list => [..._list, list]);
+		}
+		onDone();
 	};
 
 	const deleteRepository = id => {
@@ -62,8 +88,11 @@
 	}
 
 	.intro {
-		margin-bottom: 1rem;
 		font-size: 0.8rem;
+	}
+
+	.intro:not(:last-child) {
+		margin-bottom: 1rem;
 	}
 
 	.items-list {
@@ -157,7 +186,7 @@
 </style>
 
 <form on:submit={onSubmit}>
-	<AccountTitle>Nouvelle liste</AccountTitle>
+	<AccountTitle>{id ? 'Modifier la liste' : 'Nouvelle liste'}</AccountTitle>
 	<fieldset>
 		<legend>Nom de la liste</legend>
 		<p class="intro">
@@ -236,7 +265,10 @@
 							{$repositories.find(({ repositoryId }) => repo == repositoryId).name}
 							<button
 								class="remove"
-								on:click={() => deleteRepository(repo)}><Icons.Delete /></button>
+								on:click={e => {
+									e.preventDefault();
+									deleteRepository(repo);
+								}}><Icons.Delete /></button>
 						</li>
 					{/each}
 				</ul>
@@ -246,6 +278,9 @@
 		</fieldset>
 	{/if}
 	<div class="bar">
-		<input disabled={!listName} type="submit" value="Créer la liste" />
+		<input
+			disabled={!listName}
+			type="submit"
+			value={id ? 'Modifier la liste' : 'Créer la liste'} />
 	</div>
 </form>

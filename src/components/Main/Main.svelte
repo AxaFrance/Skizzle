@@ -7,6 +7,18 @@
 	import CustomListSettings from 'components/CustomListSettings';
 
 	let creatingList: boolean = false;
+	let modifyingListId: string = null;
+	let currentTab: string = 'all';
+
+	const closeModale = () => {
+		creatingList = false;
+		modifyingListId = null;
+	};
+
+	const deleteList = () => {
+		customLists.update(list => list.filter(_list => _list.id !== currentTab));
+		currentTab = 'all';
+	};
 
 	const filterList = list =>
 		$pullRequests.filter(pullRequest =>
@@ -36,8 +48,6 @@
 
 	$: tabs = getTabs($customLists);
 
-	let currentTab: string = 'all';
-
 	$: displayedList =
 		currentTab === 'all'
 			? $pullRequests
@@ -46,6 +56,7 @@
 
 <style>
 	.content {
+		position: relative;
 		height: calc(100vh - 6rem);
 		flex: 1 0 auto;
 		padding: 1rem;
@@ -60,6 +71,27 @@
 	.list li:not(:last-child) {
 		margin-bottom: 1rem;
 	}
+
+	.bar {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 1rem;
+	}
+
+	.bar button {
+		margin-left: 0.5rem;
+		padding: 0.5rem;
+		color: var(--color);
+		border: none;
+		background-color: transparent;
+	}
+
+	.no-pr {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translateX(-50%) translateY(-50%);
+	}
 </style>
 
 <Tabs
@@ -71,21 +103,31 @@
 	}} />
 
 <div class="content">
-	<ul class="list">
-		{#each displayedList as pullRequest}
-			<li>
-				<PullRequest
-					{pullRequest}
-					on:comments={event => (fetchedComments = event.detail.fetchedComment)} />
-			</li>
-		{/each}
-	</ul>
+	{#if currentTab !== 'all'}
+		<div class="bar">
+			<button
+				on:click={() => {
+					modifyingListId = currentTab;
+				}}>Modifier</button>
+			<button on:click={deleteList}>Supprimer</button>
+		</div>
+	{/if}
+	{#if displayedList.length}
+		<ul class="list">
+			{#each displayedList as pullRequest}
+				<li>
+					<PullRequest
+						{pullRequest}
+						on:comments={event => (fetchedComments = event.detail.fetchedComment)} />
+				</li>
+			{/each}
+		</ul>
+	{:else}
+		<p class="no-pr">Il n'y a aucune pull request à afficher dans cette liste.</p>
+	{/if}
 </div>
-{#if creatingList}
-	<Modale
-		onClose={() => {
-			creatingList = false;
-		}}>
-		<CustomListSettings />
+{#if creatingList || modifyingListId}
+	<Modale onClose={closeModale}>
+		<CustomListSettings id={modifyingListId} onDone={closeModale} />
 	</Modale>
 {/if}

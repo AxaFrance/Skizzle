@@ -34,6 +34,7 @@
 	}
 
 	.add {
+		position: relative;
 		align-self: center;
 		width: 2rem;
 		height: 2rem;
@@ -43,6 +44,13 @@
 		border: none;
 		background-color: #4e4e4e;
 		transition: background-color linear 0.2s;
+	}
+
+	.add :global(svg) {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translateX(-50%) translateY(-50%);
 	}
 
 	.add:hover {
