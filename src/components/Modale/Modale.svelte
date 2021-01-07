@@ -21,7 +21,6 @@
 		z-index: 2;
 		width: calc(100vw - 10rem);
 		height: calc(100vh - 10rem);
-		padding: 2rem;
 		transform: translateX(-50%) translateY(-50%);
 		border-radius: 8px;
 		background-color: #5c5c5c;
@@ -34,9 +33,19 @@
 		padding: 0.5rem;
 		font-weight: bold;
 		color: #fff;
+		cursor: pointer;
 		font-size: 1rem;
 		border: none;
 		background-color: transparent;
+		transition: opacity linear 0.2s;
+	}
+	button:hover {
+		opacity: 0.8;
+	}
+	.content {
+		height: 100%;
+		padding: 2rem;
+		overflow: auto;
 	}
 
 	@keyframes fadeIn {
@@ -52,6 +61,8 @@
 <div class="overlay">
 	<div class="modale">
 		<button on:click={onClose}>Fermer</button>
-		<slot />
+		<div class="content">
+			<slot />
+		</div>
 	</div>
 </div>

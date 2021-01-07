@@ -1,39 +1,43 @@
 <script lang="ts">
 	import type { CustomListType } from 'models/skizzle/CustomListType';
 	import AccountTitle from 'components/AccountTitle';
-	import { projects, repositories } from 'shared/stores/default.store';
+	import { repositories, customLists } from 'shared/stores/default.store';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import Icons from 'components/icons';
 
-	let numberOfProjectsFields: number = 1;
-	let numberOfRepositoriesFields: number = 1;
-
 	let listName: string;
-	let projectsIds: string[] = [];
 
 	let selectedRepoId: string;
 	let repositoriesIds: string[] = [];
 
 	const onSubmit = event => {
 		event.preventDefault();
-		console.log({ listName, projectsIds, repositoriesIds });
-	};
 
-	console.log({ $repositories });
+		function uuidv4() {
+			return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+				(
+					c ^
+					(crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+				).toString(16),
+			);
+		}
+
+		const list: CustomListType = {
+			id: uuidv4(),
+			name: listName,
+			repositoriesIds,
+		};
+
+		customLists.update(_list => [..._list, list]);
+	};
 
 	const deleteRepository = id => {
 		const newRepositoriesIds = repositoriesIds.filter(repo => repo !== id);
 		repositoriesIds = [...newRepositoriesIds];
-		console.log({ repositoriesIds });
 	};
 </script>
 
 <style>
-	form {
-		height: 100%;
-		overflow: auto;
-	}
-
 	legend {
 		font-family: 'roboto slab', serif;
 	}
@@ -41,10 +45,15 @@
 	fieldset {
 		padding: 1rem;
 		border: none;
+		border-radius: 8px;
 		background-color: #555;
 	}
 
 	fieldset:not(:last-child) {
+		margin-bottom: 2rem;
+	}
+
+	form :global(h1) {
 		margin-bottom: 2rem;
 	}
 
@@ -118,40 +127,50 @@
 		border: none;
 		border-radius: 4px;
 	}
+
+	[type='text'] {
+		padding: 0.5rem;
+		font-size: 1rem;
+		border-radius: 4px;
+		border: none;
+		background-color: #fff;
+	}
+
+	[type='submit'] {
+		padding: 0.5rem 1rem;
+		color: #fff;
+		font-size: 1rem;
+		border-radius: 4px;
+		border: none;
+		background-color: var(--color);
+		transition: opacity linear 0.2s;
+	}
+
+	[type='submit']:disabled {
+		opacity: 0.5;
+	}
+
+	.bar {
+		display: flex;
+		justify-content: flex-end;
+	}
 </style>
 
 <form on:submit={onSubmit}>
 	<AccountTitle>Nouvelle liste</AccountTitle>
 	<fieldset>
-		<div class="field">
-			<label for="list-name">Nom de la liste</label>
-			<input bind:value={listName} id="list-name" type="text" />
-		</div>
+		<legend>Nom de la liste</legend>
+		<p class="intro">
+			Choisissez un nom pour votre liste, il apparaitra dans l'onglet.
+		</p>
+		<input autofocus bind:value={listName} id="list-name" type="text" />
 	</fieldset>
-
-	{#if $projects.length}
-		<fieldset>
-			<legend>Projets</legend>
-			<div>
-				<label for="project">Afficher uniquement les pull requests de ces projets</label>
-				<select
-					id="project"
-					on:blur={e => {
-						projectsIds.push(e.target.value);
-					}}>
-					{#each $projects as project}
-						<option value={project.projectId}>{project.name}</option>
-					{/each}
-				</select>
-			</div>
-		</fieldset>
-	{/if}
 
 	{#if $repositories.length}
 		<fieldset>
 			<legend>Repositories</legend>
 			<p class="intro">
-				Choisissez parmi les repositories auxquels voue êtes abonnés. Skizzle
+				Choisissez parmi les repositories auxquels vous êtes abonnés. Skizzle
 				n'affichera que des pull requests de ces repositories dans votre liste{listName ? ` "${listName}"` : ''}.
 			</p>
 			<div class="field">
@@ -210,6 +229,10 @@
 				<ul class="items-list">
 					{#each repositoriesIds as repo}
 						<li class="item">
+							{#if $repositories.find(({ repositoryId }) => repo == repositoryId).projectName}
+								{$repositories.find(({ repositoryId }) => repo == repositoryId).projectName}
+								/
+							{/if}
 							{$repositories.find(({ repositoryId }) => repo == repositoryId).name}
 							<button
 								class="remove"
@@ -222,6 +245,7 @@
 			{/if}
 		</fieldset>
 	{/if}
-
-	<input disabled={!listName} type="submit" value="Créer la liste" />
+	<div class="bar">
+		<input disabled={!listName} type="submit" value="Créer la liste" />
+	</div>
 </form>

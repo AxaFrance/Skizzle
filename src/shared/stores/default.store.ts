@@ -1,4 +1,5 @@
 import type { CommonType } from 'models/skizzle/CommonType';
+import type { CustomListType } from 'models/skizzle/CustomListType';
 import type { OrganizationType } from 'models/skizzle/OrganizationType';
 import type { ProjectType } from 'models/skizzle/ProjectType';
 import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
@@ -28,6 +29,10 @@ export const settings = createStore<SettingsType>(
 		},
 	},
 );
+
+export const customLists = createStore<CustomListType[]>([], {
+	key: 'customLists',
+});
 
 const predicate = <T extends CommonType>(
 	value: T[],
