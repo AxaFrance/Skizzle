@@ -16,6 +16,7 @@ import type { ProjectType } from 'models/skizzle/ProjectType';
 import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import type { PullRequestType } from 'models/skizzle/PullRequestType';
 import type { RepositoryType } from 'models/skizzle/RepositoryType';
+import type { ReviewType } from 'models/skizzle/ReviewType';
 import { OAuthAzureDevOpsRequester } from 'requesters/OAuthAzureDevOps.requester';
 import { clientAuthenticated } from 'shared/stores/authentication.store';
 import { get } from 'svelte/store';
@@ -177,5 +178,27 @@ export class OAuthAzureDevOpsService implements IService {
 		const mapper = new CommentMapper();
 
 		return mapper.to(comments, { provider: this.provider, organizationName });
+	}
+
+	public async getReviews({
+		pullRequest,
+	}: ServiceParams): Promise<ReviewType[]> {
+		const {
+			repositoryId,
+			pullRequestId,
+			projectId,
+			organizationName,
+		} = pullRequest;
+
+		const result = await this.requester.getReviews(
+			organizationName,
+			projectId,
+			repositoryId,
+			pullRequestId,
+		);
+
+		console.log(pullRequest.provider, { result });
+
+		return [];
 	}
 }

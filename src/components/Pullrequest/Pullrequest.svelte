@@ -126,6 +126,9 @@
 		<p class="repo">{pullRequest.repositoryName}</p>
 	</div>
 	<footer>
+		{#await Service.getReviews(pullRequest.provider, { pullRequest }) then reviews}
+			<div />
+		{/await}
 		<Labels labels={pullRequest.labels} />
 		<button
 			class="more"

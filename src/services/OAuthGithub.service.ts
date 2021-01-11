@@ -8,6 +8,7 @@ import type { ProfileType } from 'models/skizzle/ProfileType';
 import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import type { PullRequestType } from 'models/skizzle/PullRequestType';
 import type { RepositoryType } from 'models/skizzle/RepositoryType';
+import type { ReviewType } from 'models/skizzle/ReviewType';
 import { OAuthGithubRequester } from 'requesters/OAuthGithub.requester';
 import { clientAuthenticated } from 'shared/stores/authentication.store';
 import { get } from 'svelte/store';
@@ -96,5 +97,21 @@ export class OAuthGithubService implements IService {
 		const mapper = new CommentMapper();
 
 		return mapper.to(comments, { provider: this.provider });
+	}
+
+	public async getReviews({
+		pullRequest,
+	}: ServiceParams): Promise<ReviewType[]> {
+		const { repositoryName, pullRequestId, owner } = pullRequest;
+
+		const result = await this.requester.getReviews(
+			owner,
+			repositoryName,
+			pullRequestId,
+		);
+
+		console.log(pullRequest.provider, pullRequest.title, { result });
+
+		return [];
 	}
 }

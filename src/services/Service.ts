@@ -5,6 +5,7 @@ import type { ProjectType } from 'models/skizzle/ProjectType';
 import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 import type { PullRequestType } from 'models/skizzle/PullRequestType';
 import type { RepositoryType } from 'models/skizzle/RepositoryType';
+import type { ReviewType } from 'models/skizzle/ReviewType';
 import { isFetchingData } from 'shared/stores/default.store';
 import type { Dictionary } from 'shared/utils';
 import { OAuthAzureDevOpsService } from './OAuthAzureDevOps.service';
@@ -27,6 +28,7 @@ export interface IService {
 	getRepositories(params: ServiceParams): Promise<RepositoryType[]>;
 	getPullRequests(params: ServiceParams): Promise<PullRequestType[]>;
 	getComments(params: ServiceParams): Promise<CommentType[]>;
+	getReviews(params: ServiceParams): Promise<ReviewType[]>;
 }
 
 export class Service {
@@ -105,6 +107,16 @@ export class Service {
 	): Promise<CommentType[]> {
 		isFetchingData.set(true);
 		const result = await Service.INSTANCES[provider].getComments(params);
+		isFetchingData.set(false);
+		return result;
+	}
+
+	public static async getReviews(
+		provider: ProviderEnum,
+		params: ServiceParams,
+	): Promise<ReviewType[]> {
+		isFetchingData.set(true);
+		const result = await Service.INSTANCES[provider].getReviews(params);
 		isFetchingData.set(false);
 		return result;
 	}

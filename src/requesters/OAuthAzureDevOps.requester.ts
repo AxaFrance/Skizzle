@@ -23,6 +23,10 @@ import type {
 	AzureDevOpsRepositoriesApiType,
 	AzureDevOpsRepositoryApiType,
 } from 'models/api/RepositoriesApiType';
+import type {
+	AzureDevOpsReviewApiType,
+	AzureDevOpsReviewsApiType,
+} from 'models/api/ReviewsApiType';
 import type { OAuthAzureDevOpsConfigType } from 'providers/OAuthAzureDevOpsConfig.provider';
 import { Requester } from './Requester';
 
@@ -124,6 +128,19 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		return (
 			await super.fetch<AzureDevOpsCommentsApiType>(
 				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repository}/pullRequests/${pullRequest}/threads?api-version=${this.API_VERSION}`,
+			)
+		).value;
+	}
+
+	public async getReviews(
+		organization?: string,
+		project?: string,
+		repository?: string,
+		pullRequest?: string,
+	): Promise<AzureDevOpsReviewApiType[]> {
+		return (
+			await super.fetch<AzureDevOpsReviewsApiType>(
+				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repository}/pullRequests/${pullRequest}/reviewers?api-version=${this.API_VERSION}`,
 			)
 		).value;
 	}

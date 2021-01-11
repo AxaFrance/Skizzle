@@ -14,6 +14,10 @@ import type {
 	GithubRepositoryApiType,
 	GithubSeachRepositoriesApiType,
 } from 'models/api/RepositoriesApiType';
+import type {
+	GithubReviewApiType,
+	GithubReviewsApiType,
+} from 'models/api/ReviewsApiType';
 import type { OAuthGithubConfigType } from 'providers/OAuthGithubConfig.provider';
 import { Requester } from './Requester';
 
@@ -92,6 +96,16 @@ export class OAuthGithubRequester extends Requester<OAuthGithubConfigType> {
 	): Promise<GithubCommentApiType[]> {
 		return super.fetch<GithubCommentsApiType>(
 			`https://api.github.com/repos/${owner}/${repository}/issues/${pullRequest}/comments?sort=updated`,
+		);
+	}
+
+	public async getReviews(
+		owner?: string,
+		repository?: string,
+		pullRequest?: string,
+	): Promise<GithubReviewApiType[]> {
+		return super.fetch<GithubReviewsApiType>(
+			`https://api.github.com/repos/${owner}/${repository}/pulls/${pullRequest}/reviews`,
 		);
 	}
 }
