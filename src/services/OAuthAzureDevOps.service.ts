@@ -1,22 +1,26 @@
-import { CommentMapper } from 'mappers/CommentMapper';
-import { OrganizationMapper } from 'mappers/OrganizationMapper';
-import { ProfileMapper } from 'mappers/ProfileMapper';
-import { ProjectMapper } from 'mappers/ProjectMapper';
-import { PullRequestMapper } from 'mappers/PullRequestMapper';
-import { RepositoryMapper } from 'mappers/RepositoryMapper';
+import {
+	CommentMapper,
+	OrganizationMapper,
+	ProfileMapper,
+	ProjectMapper,
+	PullRequestMapper,
+	RepositoryMapper,
+} from 'mappers';
 import {
 	AzureDevOpsCommentApiEnum,
 	AzureDevOpsCommentStatusApiEnum,
 	AzureDevOpsCommentType,
-} from 'models/api/CommentsApiType';
-import type { CommentType } from 'models/skizzle/CommentType';
-import type { OrganizationType } from 'models/skizzle/OrganizationType';
-import type { ProfileType } from 'models/skizzle/ProfileType';
-import type { ProjectType } from 'models/skizzle/ProjectType';
-import { ProviderEnum } from 'models/skizzle/ProviderEnum';
-import type { PullRequestType } from 'models/skizzle/PullRequestType';
-import type { RepositoryType } from 'models/skizzle/RepositoryType';
-import type { ReviewType } from 'models/skizzle/ReviewType';
+} from 'models/api';
+import type {
+	CommentType,
+	OrganizationType,
+	ProfileType,
+	ProjectType,
+	PullRequestType,
+	RepositoryType,
+	ReviewType,
+} from 'models/skizzle';
+import { ProviderEnum } from 'models/skizzle';
 import { OAuthAzureDevOpsRequester } from 'requesters/OAuthAzureDevOps.requester';
 import { clientAuthenticated } from 'shared/stores/authentication.store';
 import { get } from 'svelte/store';
@@ -155,6 +159,7 @@ export class OAuthAzureDevOpsService implements IService {
 			repositoryId,
 			pullRequestId,
 		);
+
 		result.forEach(
 			comment =>
 				(comment.comments = comment.comments.filter(

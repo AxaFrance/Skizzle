@@ -1,3 +1,5 @@
+import type { IdentityType } from './IdentityType';
+
 type ProfileApiType = {};
 
 type ValueType = {
@@ -13,17 +15,17 @@ type CoreAttributesType = {
 };
 
 type AzureDevOpsProfileApiType = {
-	displayName: string;
-	emailAddress: string;
-	id: string;
-	coreAttributes: CoreAttributesType;
+	displayName?: string;
+	emailAddress?: string;
+	id?: IdentityType;
+	coreAttributes?: CoreAttributesType;
 } & ProfileApiType;
 
 type GithubProfileApiType = {
-	name: string;
-	email: string;
-	id: number;
-	avatar_url: string;
+	name?: string;
+	email?: string;
+	id?: IdentityType;
+	avatar_url?: string;
 } & ProfileApiType;
 
 export type { ProfileApiType, AzureDevOpsProfileApiType, GithubProfileApiType };

@@ -1,13 +1,15 @@
+import type { IdentityType } from './IdentityType';
+
 type ProjectsApiType = {};
 
 type AzureDevOpsProjectApiType = {
-	id: string;
-	name: string;
+	id?: IdentityType;
+	name?: string;
 };
 
 type GithubProjectApiType = {
-	name: string;
-	id: number;
+	name?: string;
+	id?: IdentityType;
 };
 
 type AzureDevOpsProjectsApiType = {

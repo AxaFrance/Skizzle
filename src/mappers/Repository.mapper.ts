@@ -1,16 +1,23 @@
 import type {
 	AzureDevOpsRepositoryApiType,
 	GithubRepositoryApiType,
-} from 'models/api/RepositoriesApiType';
-import type { RepositoryType } from 'models/skizzle/RepositoryType';
+} from 'models/api';
+import type { RepositoryType } from 'models/skizzle';
 import { repositories } from 'shared/stores/default.store';
 import { get } from 'svelte/store';
+import { From, Mapper } from './Mapper';
 
-export class RepositoryMapper {
-	public to(o: AzureDevOpsRepositoryApiType[], params: any): RepositoryType[];
-	public to(o: GithubRepositoryApiType[], params: any): RepositoryType[];
-	public to(o: any[], params: any): RepositoryType[] {
-		return o.map(value => {
+export type RepositoryMapperType = From<
+	AzureDevOpsRepositoryApiType,
+	GithubRepositoryApiType
+>;
+
+export class RepositoryMapper extends Mapper<
+	RepositoryMapperType,
+	RepositoryType
+> {
+	public to(data: RepositoryMapperType[], params: any): RepositoryType[] {
+		return data.map(value => {
 			const store = get(repositories);
 
 			const data = {

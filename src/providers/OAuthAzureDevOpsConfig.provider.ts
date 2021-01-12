@@ -1,5 +1,5 @@
 import { OAuthConfig, OAuthConfigType } from './OAuthConfig.provider';
-import { ProviderEnum } from '../models/skizzle/ProviderEnum';
+import { ProviderEnum } from '../models/skizzle';
 
 export type OAuthAzureDevOpsConfigType = {
 	redirect_uri?: string;

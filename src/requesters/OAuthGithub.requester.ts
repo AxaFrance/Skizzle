@@ -1,51 +1,30 @@
 import type {
 	GithubCommentApiType,
 	GithubCommentsApiType,
-} from 'models/api/CommentsApiType';
-import type { GithubOrganizationsApiType } from 'models/api/OrganizationsApiType';
-import type { GithubProfileApiType } from 'models/api/ProfileApiType';
-import type { GithubProjectsApiType } from 'models/api/ProjectsApiType';
-import type {
+	GithubProfileApiType,
 	GithubPullRequestApiType,
 	GithubPullRequestsApiType,
-} from 'models/api/PullRequestsApiType';
-import type {
 	GithubRepositoriesApiType,
 	GithubRepositoryApiType,
 	GithubSeachRepositoriesApiType,
-} from 'models/api/RepositoriesApiType';
-import type {
 	GithubReviewApiType,
 	GithubReviewsApiType,
-} from 'models/api/ReviewsApiType';
+} from 'models/api';
 import type { OAuthGithubConfigType } from 'providers/OAuthGithubConfig.provider';
 import { Requester } from './Requester';
 
 export class OAuthGithubRequester extends Requester<OAuthGithubConfigType> {
-	protected getHeader(config: OAuthGithubConfigType): RequestInit {
+	protected getHeader(config: OAuthGithubConfigType): HeadersInit {
 		const headers = new window.Headers();
 
 		headers.append('Accept', 'application/vnd.github.v3+json');
 		headers.append('Authorization', `bearer ${config.access_token}`);
 
-		const params: RequestInit = {
-			method: 'GET',
-			headers,
-		};
-
-		return params;
+		return headers;
 	}
 
 	public async getProfile(): Promise<GithubProfileApiType> {
 		return super.fetch('https://api.github.com/user');
-	}
-
-	public getOrganizations(): Promise<GithubOrganizationsApiType> {
-		return Promise.resolve([]);
-	}
-
-	public getProjects(): Promise<GithubProjectsApiType[]> {
-		return Promise.resolve([]);
 	}
 
 	public async getRepositories(

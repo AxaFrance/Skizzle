@@ -1,4 +1,4 @@
-import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
+import type { ProviderEnum } from 'models/skizzle';
 import { addItem, getItem } from 'shared/utils';
 import { get, writable } from 'svelte/store';
 

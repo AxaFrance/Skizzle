@@ -1,7 +1,9 @@
-import type { OrganizationType } from 'models/skizzle/OrganizationType';
-import type { ProjectType } from 'models/skizzle/ProjectType';
-import { ProviderEnum } from 'models/skizzle/ProviderEnum';
-import type { RepositoryType } from 'models/skizzle/RepositoryType';
+import type {
+	OrganizationType,
+	ProjectType,
+	RepositoryType,
+} from 'models/skizzle';
+import { ProviderEnum } from 'models/skizzle';
 import { Service } from 'services/Service';
 import {
 	organizations,

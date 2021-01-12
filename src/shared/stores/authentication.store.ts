@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
-import type { OAuthConfigType } from '../../providers/OAuthConfig.provider';
-import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
+import type { OAuthConfigType } from 'providers';
+import { ProviderEnum } from 'models/skizzle';
 import {
 	OAuthAzureDevOpsConfig,
 	OAuthAzureDevOpsConfigType,

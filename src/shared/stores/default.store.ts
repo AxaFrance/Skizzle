@@ -1,12 +1,14 @@
-import type { CommonType } from 'models/skizzle/CommonType';
-import type { CustomListType } from 'models/skizzle/CustomListType';
-import type { OrganizationType } from 'models/skizzle/OrganizationType';
-import type { ProjectType } from 'models/skizzle/ProjectType';
-import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
-import type { PullRequestType } from 'models/skizzle/PullRequestType';
-import type { RepositoryType } from 'models/skizzle/RepositoryType';
-import type { SettingsType } from 'models/skizzle/SettingsType';
-import { ThemeEnum } from 'models/skizzle/ThemeEnum';
+import type {
+	CommonType,
+	CustomListType,
+	OrganizationType,
+	ProjectType,
+	PullRequestType,
+	RepositoryType,
+	SettingsType,
+	ProviderEnum,
+} from 'models/skizzle';
+import { ThemeEnum } from 'models/skizzle';
 import { Service } from 'services/Service';
 import { get } from 'svelte/store';
 import { createStore } from './store';

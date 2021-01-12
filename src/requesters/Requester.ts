@@ -1,9 +1,10 @@
-import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
-import type { OAuthConfigType } from 'providers/OAuthConfig.provider';
+import type { ProviderEnum } from 'models/skizzle';
+import type { OAuthConfigType } from 'providers';
 import { client, clientHasProvider } from 'shared/stores/authentication.store';
 import { isLoading } from 'shared/stores/default.store';
 import { authorize } from 'shared/token';
 import { get } from 'svelte/store';
+import ky from 'ky';
 
 export abstract class Requester<T extends OAuthConfigType> {
 	private readonly provider: ProviderEnum;
@@ -16,38 +17,42 @@ export abstract class Requester<T extends OAuthConfigType> {
 		return clientHasProvider(this.provider) && !!config?.access_token;
 	}
 
-	protected async fetch<S>(url: string, retry: number = 3): Promise<S> {
+	protected async fetch<S>(
+		url: string,
+		options?: { cache: boolean },
+	): Promise<S> {
 		const isFetchingToken = get(isLoading);
 		const config = get(client)[this.provider] as T;
 
 		if (this.clientHasProvider(config) && !isFetchingToken) {
-			const params = this.getHeader(config);
+			const headers = this.getHeader(config);
 
-			const result = await fetch(url, params);
+			const result = ky.get(url, {
+				retry: {
+					methods: ['get'],
+					limit: 3,
+				},
+				hooks: {
+					afterResponse: [
+						(input, options, response) => {
+							if (response.status === 403 || response.status === 203) {
+								client.update(n => ({
+									...n,
+									[this.provider]: {},
+								}));
 
-			if (params.method === 'GET' && !result.ok && result.status !== 401) {
-				if (retry === 0) {
-					throw new Error('Fetching error');
-				}
+								authorize(this.provider);
+							}
+						},
+					],
+				},
+				cache: options && options.cache ? 'force-cache' : 'default',
+				headers,
+			});
 
-				this.fetch(url, retry - 1);
-			}
-
-			if (
-				result.status === 203 ||
-				result.status === 401 ||
-				result.status === 302
-			) {
-				client.update(n => ({
-					...n,
-					[this.provider]: {},
-				}));
-				authorize(this.provider);
-			}
-
-			return (await result.json()) as S;
+			return result.json<S>();
 		}
 	}
 
-	protected abstract getHeader(config: T): RequestInit;
+	protected abstract getHeader(config: T): HeadersInit;
 }

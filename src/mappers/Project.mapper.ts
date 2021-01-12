@@ -1,16 +1,20 @@
 import type {
 	AzureDevOpsProjectApiType,
 	GithubProjectApiType,
-} from 'models/api/ProjectsApiType';
-import type { ProjectType } from 'models/skizzle/ProjectType';
+} from 'models/api';
+import type { ProjectType } from 'models/skizzle';
 import { projects } from 'shared/stores/default.store';
 import { get } from 'svelte/store';
+import { From, Mapper } from './Mapper';
 
-export class ProjectMapper {
-	public to(o: AzureDevOpsProjectApiType[], params: any): ProjectType[];
-	public to(o: GithubProjectApiType[], params: any): ProjectType[];
-	public to(o: any[], params: any): ProjectType[] {
-		return o.map(value => {
+export type ProjectMapperType = From<
+	AzureDevOpsProjectApiType,
+	GithubProjectApiType
+>;
+
+export class ProjectMapper extends Mapper<ProjectMapperType, ProjectType> {
+	public to(data: ProjectMapperType[], params: any): ProjectType[] {
+		return data.map(value => {
 			const store = get(projects);
 
 			const data = {

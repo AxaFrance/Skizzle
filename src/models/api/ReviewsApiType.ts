@@ -1,3 +1,5 @@
+import type { IdentityType } from './IdentityType';
+
 type ReviewsApiType = {};
 
 enum AzureDevOpsVoteEnum {
@@ -16,13 +18,13 @@ enum GithubVoteEnum {
 }
 
 type AzureDevOpsReviewApiType = {
-	vote: AzureDevOpsVoteEnum;
-	id: string;
+	vote?: AzureDevOpsVoteEnum;
+	id?: IdentityType;
 };
 
 type GithubReviewApiType = {
-	id: string;
-	state: GithubVoteEnum;
+	id?: IdentityType;
+	state?: GithubVoteEnum;
 };
 
 type AzureDevOpsReviewsApiType = {

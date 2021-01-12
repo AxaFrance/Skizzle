@@ -1,3 +1,5 @@
+import type { IdentityType } from './IdentityType';
+
 type CommentsApiType = {};
 
 enum AzureDevOpsCommentApiEnum {
@@ -19,24 +21,25 @@ enum AzureDevOpsCommentStatusApiEnum {
 
 type AzureDevOpsCommentAuthorApiType = {
 	displayName: string;
-	id: string;
+	id: IdentityType;
 	uniqueName: string;
 	descriptor: string;
 };
 
 type AzureDevOpsCommentType = {
-	id: string;
-	content: string;
-	commentType: AzureDevOpsCommentApiEnum;
-	author: AzureDevOpsCommentAuthorApiType;
+	id?: IdentityType;
+	content?: string;
+	lastUpdatedDate?: string;
+	commentType?: AzureDevOpsCommentApiEnum;
+	author?: AzureDevOpsCommentAuthorApiType;
 };
 
 type AzureDevOpsCommentApiType = {
-	id: string;
-	lastUpdatedDate: string;
-	isDeleted: boolean;
-	status: AzureDevOpsCommentStatusApiEnum;
-	comments: AzureDevOpsCommentType[];
+	id?: IdentityType;
+	lastUpdatedDate?: string;
+	isDeleted?: boolean;
+	status?: AzureDevOpsCommentStatusApiEnum;
+	comments?: AzureDevOpsCommentType[];
 };
 
 enum GithubUserEnum {
@@ -51,10 +54,10 @@ type GithubCommentUserApiType = {
 };
 
 type GithubCommentApiType = {
-	body: string;
-	id: string;
-	user: GithubCommentUserApiType;
-	updated_at: string;
+	body?: string;
+	id?: IdentityType;
+	user?: GithubCommentUserApiType;
+	updated_at?: string;
 };
 
 type AzureDevOpsCommentsApiType = {

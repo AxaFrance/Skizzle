@@ -1,15 +1,15 @@
-import type { OrganizationType } from 'models/skizzle/OrganizationType';
+import type { IdentityType } from './IdentityType';
 
 type OrganizationsApiType = {};
 
 type AzureDevOpsOrganizationApiType = {
-	accountId: string;
-	accountName: string;
+	accountId?: string;
+	accountName?: string;
 };
 
 type GithubOrganizationApiType = {
-	login: string;
-	id: number;
+	login?: string;
+	id?: IdentityType;
 };
 
 type AzureDevOpsOrganizationsApiType = {

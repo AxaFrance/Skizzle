@@ -1,3 +1,4 @@
+import type { IdentityType } from './IdentityType';
 import type { AzureDevOpsProjectApiType } from './ProjectsApiType';
 
 type RepositoriesApiType = {};
@@ -7,16 +8,16 @@ type OwnerApiType = {
 };
 
 type AzureDevOpsRepositoryApiType = {
-	id: string;
-	name: string;
-	projects: AzureDevOpsProjectApiType;
+	id?: IdentityType;
+	name?: string;
+	projects?: AzureDevOpsProjectApiType;
 };
 
 type GithubRepositoryApiType = {
-	name: string;
-	full_name: string;
-	id: number;
-	owner: OwnerApiType;
+	name?: string;
+	full_name?: string;
+	id?: IdentityType;
+	owner?: OwnerApiType;
 };
 
 type AzureDevOpsRepositoriesApiType = {

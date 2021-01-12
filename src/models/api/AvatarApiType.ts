@@ -1,9 +1,9 @@
 type AzureDevOpsDescriptorApiType = {
-	value: string;
+	value?: string;
 };
 
 type AzureDevOpsAvatarApiType = {
-	value: string;
+	value?: string;
 };
 
 export type { AzureDevOpsDescriptorApiType, AzureDevOpsAvatarApiType };

@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
 import { client } from '../shared/stores/authentication.store';
-import type { ProviderEnum } from '../models/skizzle/ProviderEnum';
+import type { ProviderEnum } from '../models/skizzle';
 
 export type OAuthConfigType = {
 	current_date?: Date;

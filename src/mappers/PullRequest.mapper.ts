@@ -1,15 +1,22 @@
 import type {
 	AzureDevOpsPullRequestApiType,
 	GithubPullRequestApiType,
-} from 'models/api/PullRequestsApiType';
-import type { PullRequestType } from 'models/skizzle/PullRequestType';
+} from 'models/api';
+import type { PullRequestType } from 'models/skizzle';
 import { getDateStr } from 'shared/utils';
+import { From, Mapper } from './Mapper';
 
-export class PullRequestMapper {
-	public to(o: AzureDevOpsPullRequestApiType[], params: any): PullRequestType[];
-	public to(o: GithubPullRequestApiType[], params: any): PullRequestType[];
-	public to(o: any[], params: any): PullRequestType[] {
-		return o.map(value => {
+export type PullRequestMapperType = From<
+	AzureDevOpsPullRequestApiType,
+	GithubPullRequestApiType
+>;
+
+export class PullRequestMapper extends Mapper<
+	PullRequestMapperType,
+	PullRequestType
+> {
+	public to(data: PullRequestMapperType[], params: any): PullRequestType[] {
+		return data.map(value => {
 			const date = new Date(value.creationDate || value.updated_at);
 
 			const labels =

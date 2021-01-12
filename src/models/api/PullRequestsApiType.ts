@@ -3,61 +3,61 @@ import type { AzureDevOpsRepositoryApiType } from './RepositoriesApiType';
 type PullRequestsApiType = {};
 
 type CreatedByApiType = {
-	displayName: string;
-	descriptor: string;
+	displayName?: string;
+	descriptor?: string;
 };
 
 type ReviewerApiType = {
-	vote: number;
+	vote?: number;
 };
 
 type AzureDevOpsLabelsApiType = {
-	name: string;
-	active: boolean;
+	name?: string;
+	active?: boolean;
 };
 
 type AzureDevOpsPullRequestApiType = {
-	pullRequestId: string;
-	title: string;
-	description: string;
-	creationDate: string;
-	reviewers: Array<ReviewerApiType>;
-	createdBy: CreatedByApiType;
-	repository: AzureDevOpsRepositoryApiType;
-	labels: AzureDevOpsLabelsApiType[];
+	pullRequestId?: string;
+	title?: string;
+	description?: string;
+	creationDate?: string;
+	reviewers?: Array<ReviewerApiType>;
+	createdBy?: CreatedByApiType;
+	repository?: AzureDevOpsRepositoryApiType;
+	labels?: AzureDevOpsLabelsApiType[];
 };
 
 type UserApiType = {
-	login: string;
-	avatar_url: string;
+	login?: string;
+	avatar_url?: string;
 };
 
 type GithubLabelsApiType = {
-	name: string;
+	name?: string;
 };
 
 type GithubOwnerBaseApiType = {
-	login: string;
-	type: string;
+	login?: string;
+	type?: string;
 };
 
 type GithubRepoBaseApiType = {
-	owner: GithubOwnerBaseApiType;
+	owner?: GithubOwnerBaseApiType;
 };
 
 type GithubBaseApiType = {
-	repo: GithubRepoBaseApiType;
+	repo?: GithubRepoBaseApiType;
 };
 
 type GithubPullRequestApiType = {
-	title: string;
-	body: string;
-	user: UserApiType;
-	updated_at: string;
-	number: number;
-	labels: GithubLabelsApiType[];
-	base: GithubBaseApiType;
-	html_url: string;
+	title?: string;
+	body?: string;
+	user?: UserApiType;
+	updated_at?: string;
+	number?: number;
+	labels?: GithubLabelsApiType[];
+	base?: GithubBaseApiType;
+	html_url?: string;
 };
 
 type AzureDevOpsPullRequestsApiType = {

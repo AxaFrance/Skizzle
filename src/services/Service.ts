@@ -1,11 +1,13 @@
-import type { CommentType } from 'models/skizzle/CommentType';
-import type { OrganizationType } from 'models/skizzle/OrganizationType';
-import type { ProfileType } from 'models/skizzle/ProfileType';
-import type { ProjectType } from 'models/skizzle/ProjectType';
-import { ProviderEnum } from 'models/skizzle/ProviderEnum';
-import type { PullRequestType } from 'models/skizzle/PullRequestType';
-import type { RepositoryType } from 'models/skizzle/RepositoryType';
-import type { ReviewType } from 'models/skizzle/ReviewType';
+import type {
+	CommentType,
+	OrganizationType,
+	ProfileType,
+	ProjectType,
+	PullRequestType,
+	RepositoryType,
+	ReviewType,
+} from 'models/skizzle';
+import { ProviderEnum } from 'models/skizzle';
 import { isFetchingData } from 'shared/stores/default.store';
 import type { Dictionary } from 'shared/utils';
 import { OAuthAzureDevOpsService } from './OAuthAzureDevOps.service';
@@ -19,6 +21,7 @@ export type ServiceParams = {
 	repository?: RepositoryType;
 	pullRequest?: PullRequestType;
 };
+
 export interface IService {
 	isLogged(): boolean;
 	getProfile(userId?: string): Promise<ProfileType>;

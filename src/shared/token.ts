@@ -1,9 +1,6 @@
-import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
+import type { ProviderEnum } from 'models/skizzle';
 import { get } from 'svelte/store';
-import type {
-	OAuthConfig,
-	OAuthConfigType,
-} from '../providers/OAuthConfig.provider';
+import type { OAuthConfig, OAuthConfigType } from '../providers';
 import { client } from './stores/authentication.store';
 import { isLoading, settings } from './stores/default.store';
 const app = require('electron').ipcRenderer;
