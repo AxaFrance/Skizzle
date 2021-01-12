@@ -7,6 +7,7 @@ import { ProfileMapper, ProfileMapperType } from './Profile.mapper';
 import { ProjectMapper, ProjectMapperType } from './Project.mapper';
 import { PullRequestMapper, PullRequestMapperType } from './PullRequest.mapper';
 import { RepositoryMapper, RepositoryMapperType } from './Repository.mapper';
+import { ReviewMapper } from './Review.mapper';
 import { Mapper } from './Mapper';
 
 export {
@@ -16,6 +17,7 @@ export {
 	ProjectMapper,
 	PullRequestMapper,
 	RepositoryMapper,
+	ReviewMapper,
 	Mapper,
 };
 

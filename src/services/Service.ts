@@ -31,7 +31,7 @@ export interface IService {
 	getRepositories(params: ServiceParams): Promise<RepositoryType[]>;
 	getPullRequests(params: ServiceParams): Promise<PullRequestType[]>;
 	getComments(params: ServiceParams): Promise<CommentType[]>;
-	getReviews(params: ServiceParams): Promise<ReviewType[]>;
+	getReviews(params: ServiceParams): Promise<ReviewType>;
 }
 
 export class Service {
@@ -117,7 +117,7 @@ export class Service {
 	public static async getReviews(
 		provider: ProviderEnum,
 		params: ServiceParams,
-	): Promise<ReviewType[]> {
+	): Promise<ReviewType> {
 		isFetchingData.set(true);
 		const result = await Service.INSTANCES[provider].getReviews(params);
 		isFetchingData.set(false);

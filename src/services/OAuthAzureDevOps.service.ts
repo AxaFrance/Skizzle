@@ -5,6 +5,7 @@ import {
 	ProjectMapper,
 	PullRequestMapper,
 	RepositoryMapper,
+	ReviewMapper,
 } from 'mappers';
 import {
 	AzureDevOpsCommentApiEnum,
@@ -185,9 +186,7 @@ export class OAuthAzureDevOpsService implements IService {
 		return mapper.to(comments, { provider: this.provider, organizationName });
 	}
 
-	public async getReviews({
-		pullRequest,
-	}: ServiceParams): Promise<ReviewType[]> {
+	public async getReviews({ pullRequest }: ServiceParams): Promise<ReviewType> {
 		const {
 			repositoryId,
 			pullRequestId,
@@ -202,8 +201,6 @@ export class OAuthAzureDevOpsService implements IService {
 			pullRequestId,
 		);
 
-		console.log(pullRequest.provider, { result });
-
-		return [];
+		return new ReviewMapper().to(result);
 	}
 }

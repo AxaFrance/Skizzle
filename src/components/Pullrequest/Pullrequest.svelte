@@ -105,7 +105,22 @@
 		border: none;
 		background-color: transparent;
 	}
+
+	.counter {
+		display: inline-block;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 50%;
+		text-align: center;
+		line-height: 1.5rem;
+		color: #fff;
+		font-size: 0.75rem;
+		vertical-align: middle;
+		font-weight: bold;
+		background-color: #20aa20;
+	}
 </style>
+
 
 <div class="pr">
 	<button
@@ -127,7 +142,9 @@
 	</div>
 	<footer>
 		{#await Service.getReviews(pullRequest.provider, { pullRequest }) then reviews}
-			<div />
+			{#each Object.entries(reviews) as [key, value]}
+				<p>{key}: <span class="counter">{value}</span></p>
+			{/each}
 		{/await}
 		<Labels labels={pullRequest.labels} />
 		<button

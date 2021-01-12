@@ -57,6 +57,7 @@ import {
 	AzureDevOpsCommentApiEnum,
 	GithubUserEnum,
 } from './CommentsApiType';
+import { AzureDevOpsVoteEnum, GithubVoteEnum } from './ReviewsApiType';
 
 export type {
 	IdentityType,
@@ -102,4 +103,6 @@ export {
 	AzureDevOpsCommentStatusApiEnum,
 	AzureDevOpsCommentApiEnum,
 	GithubUserEnum,
+	AzureDevOpsVoteEnum,
+	GithubVoteEnum,
 };

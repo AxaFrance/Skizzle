@@ -3,6 +3,7 @@ import {
 	ProfileMapper,
 	PullRequestMapper,
 	RepositoryMapper,
+	ReviewMapper,
 } from 'mappers';
 import { GithubUserEnum } from 'models/api';
 import type {
@@ -103,9 +104,7 @@ export class OAuthGithubService implements IService {
 		return mapper.to(comments, { provider: this.provider });
 	}
 
-	public async getReviews({
-		pullRequest,
-	}: ServiceParams): Promise<ReviewType[]> {
+	public async getReviews({ pullRequest }: ServiceParams): Promise<ReviewType> {
 		const { repositoryName, pullRequestId, owner } = pullRequest;
 
 		const result = await this.requester.getReviews(
@@ -114,8 +113,6 @@ export class OAuthGithubService implements IService {
 			pullRequestId,
 		);
 
-		console.log(pullRequest.provider, pullRequest.title, { result });
-
-		return [];
+		return new ReviewMapper().to(result);
 	}
 }
