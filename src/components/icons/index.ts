@@ -9,6 +9,7 @@ import Github from './Github.svelte';
 import Ellipsis from './Ellipsis.svelte';
 import Plus from './Plus.svelte';
 import User from './User.svelte';
+import UI from './UI.svelte';
 
 export default {
 	List,
@@ -22,4 +23,5 @@ export default {
 	Ellipsis,
 	Plus,
 	User,
+	UI,
 };
