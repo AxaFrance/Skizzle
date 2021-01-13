@@ -3,6 +3,7 @@
 	import Icons from 'components/icons';
 	import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
 	import { Service } from 'services/Service';
+	import { settings } from 'shared/stores/default.store';
 	export let pullRequest: PullRequestType;
 	export let className: string;
 
@@ -55,7 +56,7 @@
 <div class={`container ${className || ''}`}>
 	{#await Service.getAvatar(pullRequest.provider, pullRequest.user.avatar, pullRequest.organizationName)}
 		<div class="avatar">
-			<p>Chargement...</p>
+			<svelte:component this={Icons.User} color={$settings.theme}/>
 		</div>
 	{:then avatar}
 		<div class="avatar"><img src={avatar} alt={pullRequest.user.name} /></div>
@@ -65,6 +66,8 @@
 			</div>
 		{/if}
 	{:catch}
-		<p>Erreur</p>
+		<div class="avatar">
+			<svelte:component this={Icons.User} color={$settings.theme}/>
+		</div>
 	{/await}
 </div>

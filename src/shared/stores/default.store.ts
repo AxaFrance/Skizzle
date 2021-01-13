@@ -18,7 +18,7 @@ export const isLoading = createStore<boolean>(false, {});
 export const isFetchingData = createStore<boolean>(false, {});
 export const settings = createStore<SettingsType>(
 	{
-		refresh_delay: 1,
+		refresh_delay: 5,
 		launch_at_startup: false,
 		proxy: '',
 		theme: ThemeEnum.Orange,
@@ -26,8 +26,16 @@ export const settings = createStore<SettingsType>(
 	},
 	{
 		key: 'settings',
-		subscriber: ({ launch_at_startup }) => {
-			app.send('launch-startup', launch_at_startup);
+		subscriber: initialValue => settings => {
+			Object.keys(initialValue).forEach(element => {
+				let property = settings[element];
+
+				if (!property) {
+					settings[element] = initialValue[element];
+				}
+			});
+
+			app.send('launch-startup', settings.launch_at_startup);
 		},
 	},
 );
