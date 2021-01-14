@@ -41,12 +41,12 @@ export abstract class Requester<T extends OAuthConfigType> {
 									[this.provider]: {},
 								}));
 
-								authorize(this.provider);
+								authorize(this.provider, response.status === 203);
 							}
 						},
 					],
 				},
-				cache: options && options.cache ? 'force-cache' : 'default',
+				cache: options && options.cache ? 'force-cache' : 'no-store',
 				headers,
 			});
 

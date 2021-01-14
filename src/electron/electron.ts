@@ -205,16 +205,21 @@ if (!gotTheLock) {
 		});
 	});
 
-	ipcMain.on('oauth', async (event, key: ProviderEnum) => {
+	ipcMain.on('oauth', async (event, key: ProviderEnum, isSilent = false) => {
 		switch (key) {
 			case ProviderEnum.AzureDevOps:
 				azure.startRequest(
 					'https://app.vssps.visualstudio.com/oauth2/authorize',
 					event,
+					isSilent,
 				);
 				break;
 			case ProviderEnum.Github:
-				github.startRequest('https://github.com/login/oauth/authorize', event);
+				github.startRequest(
+					'https://github.com/login/oauth/authorize',
+					event,
+					isSilent,
+				);
 				break;
 		}
 	});

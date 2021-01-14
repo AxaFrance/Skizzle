@@ -45,9 +45,9 @@ export const getToken = async <T extends OAuthConfigType>(
 	}
 };
 
-export const authorize = (provider: ProviderEnum) => {
+export const authorize = (provider: ProviderEnum, isSilent = false) => {
 	isLoading.set(true);
-	app.send('oauth', provider);
+	app.send('oauth', provider, isSilent);
 	app.once('getToken', (_, args) =>
 		client.update(n => ({
 			...n,

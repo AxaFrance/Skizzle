@@ -27,6 +27,7 @@ export default class OAuthWindow {
 	public startRequest(
 		authorizationUrl: string,
 		event: Electron.IpcMainEvent,
+		isSilent = false,
 	): void {
 		const values = Object.entries(this.params)
 			.filter(([key, _]) => !this.authorizeFilter.some(x => x === key))
@@ -35,7 +36,11 @@ export default class OAuthWindow {
 		const authURL = `${authorizationUrl}?${values}`;
 
 		this.window.loadURL(authURL);
-		this.window.show();
+
+		if (!isSilent) {
+			this.window.show();
+		}
+
 		this.window.webContents.on('will-navigate', (e, url) =>
 			this.login(event, url),
 		);
