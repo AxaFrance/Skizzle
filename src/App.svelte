@@ -66,6 +66,7 @@
 		flex-direction: column;
 		height: 100%;
 		flex: 1 1 auto;
+		overflow: auto;
 	}
 </style>
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { CustomListType } from 'models/skizzle/CustomListType';
 	import AccountTitle from 'components/AccountTitle';
+	import Fieldset from 'components/Fieldset';
 	import { repositories, customLists } from 'shared/stores/default.store';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import Icons from 'components/icons';
@@ -187,21 +188,17 @@
 
 <form on:submit={onSubmit}>
 	<AccountTitle>{id ? 'Modifier la liste' : 'Nouvelle liste'}</AccountTitle>
-	<fieldset>
-		<legend>Nom de la liste</legend>
-		<p class="intro">
-			Choisissez un nom pour votre liste, il apparaitra dans l'onglet.
-		</p>
+	<Fieldset
+		title="Nom de la liste"
+		intro="Choisissez un nom pour votre liste, il apparaitra dans l'onglet.">
 		<input autofocus bind:value={listName} id="list-name" type="text" />
-	</fieldset>
+	</Fieldset>
 
 	{#if $repositories.length}
-		<fieldset>
-			<legend>Repositories</legend>
-			<p class="intro">
-				Choisissez parmi les repositories auxquels vous êtes abonnés. Skizzle
-				n'affichera que des pull requests de ces repositories dans votre liste{listName ? ` "${listName}"` : ''}.
-			</p>
+		<Fieldset
+			title="Repositories"
+			intro={`Choisissez parmi les repositories auxquels vous êtes abonnés. Skizzle
+				n'affichera que des pull requests de ces repositories dans votre liste${listName ? ` "${listName}"` : ''}.`}>
 			<div class="field">
 				<select
 					value={selectedRepoId}
@@ -275,7 +272,7 @@
 			{:else}
 				<p class="intro">Il n'y a aucun repository selectionné</p>
 			{/if}
-		</fieldset>
+		</Fieldset>
 	{/if}
 	<div class="bar">
 		<input
