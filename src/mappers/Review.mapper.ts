@@ -21,26 +21,26 @@ export class ReviewMapper extends Mapper<ReviewMapperType, ReviewType> {
 			switch (key) {
 				case AzureDevOpsVoteEnum.Approved:
 				case GithubVoteEnum.Approved:
-					result = 'Validée';
+					result = 'approved';
 					break;
 				case AzureDevOpsVoteEnum.ApproveWithSuggestions:
-					result = 'Validée avec suggestion(s)';
+					result = 'approvedWithSuggestions';
 					break;
 				case GithubVoteEnum.Comment:
-					result = 'Commentaire(s)';
+					result = 'comment';
 					break;
 				case AzureDevOpsVoteEnum.WaitingForAuthor:
 				case GithubVoteEnum.Pending:
-					result = 'En attente';
+					result = 'pending';
 					break;
 				case AzureDevOpsVoteEnum.Rejected:
-					result = 'Refusée';
+					result = 'rejected';
 					break;
 				case GithubVoteEnum.RequestChange:
-					result = 'Demande de changement';
+					result = 'requestChange';
 					break;
 				default:
-					result = "Pas d'avis";
+					result = 'other';
 					break;
 			}
 

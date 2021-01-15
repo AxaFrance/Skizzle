@@ -5,6 +5,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { isFetchingData } from '../../shared/stores/default.store';
 	import Avatar from 'components/Avatar';
+	import Reviews from 'components/Reviews';
 	import Icons from 'components/icons';
 	const { shell } = require('electron');
 	export let pullRequest: PullRequestType;
@@ -71,6 +72,7 @@
 
 	footer {
 		display: flex;
+		align-items: center;
 		width: calc(100% + 2rem);
 		margin: 1rem -1rem -1rem;
 		padding: 0.5rem 1rem;
@@ -121,7 +123,6 @@
 	}
 </style>
 
-
 <div class="pr">
 	<button
 		class="link"
@@ -141,11 +142,7 @@
 		<p class="repo">{pullRequest.repositoryName}</p>
 	</div>
 	<footer>
-		{#await Service.getReviews(pullRequest.provider, { pullRequest }) then reviews}
-			{#each Object.entries(reviews) as [key, value]}
-				<p>{key}: <span class="counter">{value}</span></p>
-			{/each}
-		{/await}
+		<Reviews {pullRequest} />
 		<Labels labels={pullRequest.labels} />
 		<button
 			class="more"
