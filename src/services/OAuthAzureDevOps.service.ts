@@ -71,7 +71,7 @@ export class OAuthAzureDevOpsService implements IService {
 
 		const mapper = new OrganizationMapper();
 
-		return mapper.to(result, this.provider);
+		return mapper.to(result, { provider: this.provider });
 	}
 
 	public async getAvatar(
@@ -126,15 +126,53 @@ export class OAuthAzureDevOpsService implements IService {
 			name,
 		} = repository;
 
-		const result = await this.requester.getPullRequests(
+		let result = await this.requester.getPullRequests(
 			organizationName,
 			projectId,
 			repositoryId,
 		);
 
-		const mapper = new PullRequestMapper();
+		result = await Promise.all(
+			result.map(async pullRequest => {
+				let comments = await this.requester.getComments(
+					organizationName,
+					projectId,
+					repositoryId,
+					pullRequest.pullRequestId,
+				);
 
-		return mapper.to(result, {
+				comments = comments.sort(
+					(a, b) => Date.parse(b.lastUpdatedDate) - Date.parse(a.lastUpdatedDate),
+				);
+				pullRequest.creationDate = comments[0].lastUpdatedDate;
+
+				comments.forEach(
+					comment =>
+						(comment.comments = comment.comments.filter(
+							x => x.commentType === AzureDevOpsCommentApiEnum.Text,
+						)),
+				);
+
+				comments = comments
+					.filter(
+						comment =>
+							comment.comments.length > 0 &&
+							!comment.isDeleted &&
+							comment.status === AzureDevOpsCommentStatusApiEnum.Active,
+					)
+					.reduce((acc, curr) => {
+						acc.push(...curr.comments);
+
+						return acc;
+					}, []);
+
+				pullRequest.comments = comments;
+
+				return pullRequest;
+			}),
+		);
+
+		return new PullRequestMapper().to(result, {
 			organizationName,
 			projectId,
 			projectName,
@@ -142,65 +180,5 @@ export class OAuthAzureDevOpsService implements IService {
 			repositoryName: name,
 			provider: this.provider,
 		});
-	}
-
-	public async getComments({
-		pullRequest,
-	}: ServiceParams): Promise<CommentType[]> {
-		const {
-			repositoryId,
-			pullRequestId,
-			projectId,
-			organizationName,
-		} = pullRequest;
-
-		const result = await this.requester.getComments(
-			organizationName,
-			projectId,
-			repositoryId,
-			pullRequestId,
-		);
-
-		result.forEach(
-			comment =>
-				(comment.comments = comment.comments.filter(
-					x => x.commentType === AzureDevOpsCommentApiEnum.Text,
-				)),
-		);
-
-		const comments: AzureDevOpsCommentType[] = result
-			.filter(
-				comment =>
-					comment.comments.length > 0 &&
-					!comment.isDeleted &&
-					comment.status === AzureDevOpsCommentStatusApiEnum.Active,
-			)
-			.reduce((acc, curr) => {
-				acc.push(...curr.comments);
-
-				return acc;
-			}, []);
-
-		const mapper = new CommentMapper();
-
-		return mapper.to(comments, { provider: this.provider, organizationName });
-	}
-
-	public async getReviews({ pullRequest }: ServiceParams): Promise<ReviewType> {
-		const {
-			repositoryId,
-			pullRequestId,
-			projectId,
-			organizationName,
-		} = pullRequest;
-
-		const result = await this.requester.getReviews(
-			organizationName,
-			projectId,
-			repositoryId,
-			pullRequestId,
-		);
-
-		return new ReviewMapper().to(result);
 	}
 }

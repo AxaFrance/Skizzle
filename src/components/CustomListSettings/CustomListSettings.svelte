@@ -18,7 +18,7 @@
 		? $customLists.find(list => list.id === id).repositoriesIds
 		: [];
 
-	const onSubmit = event => {
+	const onSubmit = (event): void => {
 		event.preventDefault();
 
 		function uuidv4() {
@@ -58,36 +58,13 @@
 		onDone();
 	};
 
-	const deleteRepository = id => {
+	const deleteRepository = (id: string): void => {
 		const newRepositoriesIds = repositoriesIds.filter(repo => repo !== id);
 		repositoriesIds = [...newRepositoriesIds];
 	};
 </script>
 
 <style>
-	legend {
-		font-family: 'roboto slab', serif;
-	}
-
-	fieldset {
-		padding: 1rem;
-		border: none;
-		border-radius: 8px;
-		background-color: #555;
-	}
-
-	fieldset:not(:last-child) {
-		margin-bottom: 2rem;
-	}
-
-	form :global(h1) {
-		margin-bottom: 2rem;
-	}
-
-	label {
-		display: block;
-	}
-
 	.intro {
 		font-size: 0.8rem;
 	}
@@ -186,6 +163,7 @@
 	}
 </style>
 
+<!-- svelte-ignore a11y-no-onchange a11y-autofocus -->
 <form on:submit={onSubmit}>
 	<AccountTitle>{id ? 'Modifier la liste' : 'Nouvelle liste'}</AccountTitle>
 	<Fieldset

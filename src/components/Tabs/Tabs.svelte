@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Icons from 'components/icons';
-	export let data;
-	export let onChange;
-	export let current;
+	export let data: any;
+	export let onChange: (value: any) => void;
+	export let current: any;
 	export let onCreation: () => void;
 </script>
 

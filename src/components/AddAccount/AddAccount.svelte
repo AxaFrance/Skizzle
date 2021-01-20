@@ -1,7 +1,7 @@
 <script>
-	import Plus from './plus.svg';
-	export let onClick;
-	export let text;
+	import Icons from 'components/icons';
+	export let onClick: () => void;
+	export let text: string;
 </script>
 
 <style>
@@ -31,6 +31,5 @@
 </style>
 
 <div>
-	<button on:click={onClick}><Plus class="icon" />
-		{text}</button>
+	<button on:click={onClick}><Icons.AddAccount />{text}</button>
 </div>

@@ -4,10 +4,8 @@
 	import {
 		isFetchingData,
 		isLoading,
-		projects,
-		repositories,
+		projects
 	} from 'shared/stores/default.store';
-
 	import { authorize } from 'shared/token';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import AccountTitle from 'components/AccountTitle';
@@ -23,11 +21,11 @@
 		x.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
 	);
 
-	const onSearchSubmit = query => {
+	const onSearchSubmit = (query: string): void => {
 		search = query;
 	};
 
-	const onSearchCancel = () => {
+	const onSearchCancel = (): void => {
 		search = '';
 	};
 </script>

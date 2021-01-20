@@ -3,10 +3,10 @@
 	import { isFetchingData, repositories } from 'shared/stores/default.store';
 	import type { ProjectType } from 'models/skizzle/ProjectType';
 	import Icons from 'components/icons';
-	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
+	import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import type { RepositoryType } from 'models/skizzle/RepositoryType';
 
-	export let provider;
+	export let provider: ProviderEnum;
 	export let search: string;
 	export let projects: ProjectType[];
 

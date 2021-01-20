@@ -1,8 +1,8 @@
 <script lang="ts">
-	export let min;
-	export let max;
-	export let step;
-	export let value;
+	export let min: number;
+	export let max: number;
+	export let step: number;
+	export let value: number;
 </script>
 
 <style>

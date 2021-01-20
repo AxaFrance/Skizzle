@@ -41,7 +41,10 @@ export abstract class Requester<T extends OAuthConfigType> {
 									[this.provider]: {},
 								}));
 
-								authorize(this.provider, response.status === 203);
+								authorize(
+									this.provider,
+									response.status === 403 || response.status === 203,
+								);
 							}
 						},
 					],

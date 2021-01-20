@@ -73,46 +73,38 @@ export class OAuthGithubService implements IService {
 	}: ServiceParams): Promise<PullRequestType[]> {
 		const { name, repositoryId, owner } = repository;
 
-		const result = await this.requester.getPullRequests(owner, name);
+		let result = await this.requester.getPullRequests(owner, name);
 
-		const mapper = new PullRequestMapper();
+		result = await Promise.all(
+			result.map(async pullRequest => {
+				let comments = await this.requester.getComments(
+					owner,
+					name,
+					pullRequest.number.toString(),
+				);
 
-		return mapper.to(result, {
+				comments = comments.filter(
+					comment => comment.user.type === GithubUserEnum.User,
+				);
+
+				let reviewers = await this.requester.getReviews(
+					owner,
+					name,
+					pullRequest.number.toString(),
+				);
+
+				pullRequest.comments = comments;
+				pullRequest.reviewers = reviewers;
+
+				return pullRequest;
+			}),
+		);
+
+		return new PullRequestMapper().to(result, {
 			owner,
 			repositoryId,
 			repositoryName: name,
 			provider: this.provider,
 		});
-	}
-
-	public async getComments({
-		pullRequest,
-	}: ServiceParams): Promise<CommentType[]> {
-		const { repositoryName, pullRequestId, owner } = pullRequest;
-
-		const result = await this.requester.getComments(
-			owner,
-			repositoryName,
-			pullRequestId,
-		);
-		const comments = result.filter(
-			comment => comment.user.type === GithubUserEnum.User,
-		);
-
-		const mapper = new CommentMapper();
-
-		return mapper.to(comments, { provider: this.provider });
-	}
-
-	public async getReviews({ pullRequest }: ServiceParams): Promise<ReviewType> {
-		const { repositoryName, pullRequestId, owner } = pullRequest;
-
-		const result = await this.requester.getReviews(
-			owner,
-			repositoryName,
-			pullRequestId,
-		);
-
-		return new ReviewMapper().to(result);
 	}
 }

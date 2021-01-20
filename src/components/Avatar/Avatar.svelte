@@ -4,6 +4,7 @@
 	import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
 	import { Service } from 'services/Service';
 	import { settings } from 'shared/stores/default.store';
+	
 	export let pullRequest: PullRequestType;
 	export let className: string;
 

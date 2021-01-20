@@ -1,7 +1,9 @@
 <script lang="ts">
-	export let pullRequest;
-	import { Service } from 'services/Service';
 	import Icons from 'components/icons';
+	import type { PullRequestType } from 'models/skizzle';
+
+	export let pullRequest: PullRequestType;
+
 	const icons = {
 		approved: Icons.DoubleCheck,
 		approvedWithSuggestions: Icons.Check,
@@ -37,13 +39,11 @@
 	}
 </style>
 
-{#await Service.getReviews(pullRequest.provider, { pullRequest }) then reviews}
-	{#each Object.entries(reviews) as [key, value]}
-		{#if key !== 'other'}
-			<div>
-				<svelte:component this={icons[key]} color="#fff" />
-				<span>{value}</span>
-			</div>
-		{/if}
-	{/each}
-{/await}
+{#each Object.entries(pullRequest.reviewers) as [key, value]}
+	{#if key !== 'other'}
+		<div>
+			<svelte:component this={icons[key]} color="#fff" />
+			<span>{value}</span>
+		</div>
+	{/if}
+{/each}

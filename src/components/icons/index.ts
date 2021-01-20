@@ -1,5 +1,7 @@
 import List from './List.svelte';
 import Accounts from './Accounts.svelte';
+import AccountSettings from './AccountSettings.svelte';
+import AddAccount from './AddAccount.svelte';
 import Settings from './Settings.svelte';
 import Delete from './Delete.svelte';
 import Search from './Search.svelte';
@@ -24,6 +26,8 @@ import Rejected from './Rejected.svelte';
 export default {
 	List,
 	Accounts,
+	AccountSettings,
+	AddAccount,
 	Settings,
 	Delete,
 	Search,

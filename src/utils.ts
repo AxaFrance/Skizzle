@@ -21,12 +21,11 @@ export const checkOrganization = async (
 	organization.checked = checked;
 
 	if (checked) {
-		const values = (x: OrganizationType[]) =>
-			[...x, organization].sort((a, b) =>
+		organizations.update((x: OrganizationType[]) => {
+			return [...x, organization].sort((a, b) =>
 				a.organizationName.localeCompare(b.organizationName),
 			);
-
-		organizations.update(values);
+		});
 	} else {
 		organizations.update(x =>
 			x.filter(y => y.organizationName !== organization.organizationName),

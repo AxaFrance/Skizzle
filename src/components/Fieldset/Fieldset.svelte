@@ -1,7 +1,7 @@
 <script lang="ts">
-	export let title;
-	export let intro;
-	export let outro;
+	export let title: string;
+	export let intro: string;
+	export let outro: string;
 </script>
 
 <style>

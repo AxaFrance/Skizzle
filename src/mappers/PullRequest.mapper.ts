@@ -1,3 +1,5 @@
+import { CommentMapper } from './Comment.mapper';
+import { ReviewMapper } from './Review.mapper';
 import type {
 	AzureDevOpsPullRequestApiType,
 	GithubPullRequestApiType,
@@ -38,7 +40,7 @@ export class PullRequestMapper extends Mapper<
 				params.projectName = value.base?.repo?.owner?.login;
 			}
 
-			return {
+			const result: PullRequestType = {
 				pullRequestId: value.pullRequestId || value.number,
 				title: value.title,
 				description: value.description || value.body,
@@ -54,6 +56,16 @@ export class PullRequestMapper extends Mapper<
 					`https://dev.azure.com/${params.organizationName}/${params.projectName}/_git/${params.repositoryName}/pullrequest/${value.pullRequestId}`,
 				...params,
 			};
+
+			if (value.comments) {
+				result.comments = new CommentMapper().to(value.comments, params);
+			}
+
+			if (value.reviewers) {
+				result.reviewers = new ReviewMapper().to(value.reviewers);
+			}
+
+			return result;
 		});
 	}
 }

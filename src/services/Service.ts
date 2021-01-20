@@ -30,8 +30,6 @@ export interface IService {
 	getProjects?(params: ServiceParams): Promise<ProjectType[]>;
 	getRepositories(params: ServiceParams): Promise<RepositoryType[]>;
 	getPullRequests(params: ServiceParams): Promise<PullRequestType[]>;
-	getComments(params: ServiceParams): Promise<CommentType[]>;
-	getReviews(params: ServiceParams): Promise<ReviewType>;
 }
 
 export class Service {
@@ -100,26 +98,6 @@ export class Service {
 	): Promise<PullRequestType[]> {
 		isFetchingData.set(true);
 		const result = await Service.INSTANCES[provider].getPullRequests(params);
-		isFetchingData.set(false);
-		return result;
-	}
-
-	public static async getComments(
-		provider: ProviderEnum,
-		params: ServiceParams,
-	): Promise<CommentType[]> {
-		isFetchingData.set(true);
-		const result = await Service.INSTANCES[provider].getComments(params);
-		isFetchingData.set(false);
-		return result;
-	}
-
-	public static async getReviews(
-		provider: ProviderEnum,
-		params: ServiceParams,
-	): Promise<ReviewType> {
-		isFetchingData.set(true);
-		const result = await Service.INSTANCES[provider].getReviews(params);
 		isFetchingData.set(false);
 		return result;
 	}

@@ -108,7 +108,7 @@
 			intro="Réglez ici le délai qu'utilisera Skizzle pour rafraichir les données."
 			outro={`Skizzle rafraichira les données toutes les ${$settings.refresh_delay !== 1 ? `${$settings.refresh_delay} minutes` : '60 secondes'}`}>
 			<div class="field">
-				<Range bind:value={$settings.refresh_delay} min="1" step="1" max="15" />
+				<Range bind:value={$settings.refresh_delay} min={1} step={1} max={15} />
 			</div>
 		</Fieldset>
 

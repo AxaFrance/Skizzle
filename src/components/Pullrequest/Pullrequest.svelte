@@ -2,21 +2,15 @@
 	import type { PullRequestType } from 'models/skizzle/PullRequestType';
 	import { Service } from 'services/Service';
 	import Labels from '../Labels';
-	import { createEventDispatcher } from 'svelte';
+	import Modale from 'components/Modale';
 	import { isFetchingData } from '../../shared/stores/default.store';
 	import Avatar from 'components/Avatar';
 	import Reviews from 'components/Reviews';
 	import Icons from 'components/icons';
 	const { shell } = require('electron');
+	
 	export let pullRequest: PullRequestType;
-
-	const dispatch = createEventDispatcher();
-
-	const getComments = (pullRequest: PullRequestType) => {
-		dispatch('comments', {
-			fetchedComment: Service.getComments(pullRequest.provider, { pullRequest }),
-		});
-	};
+	let detailsModal = false;
 </script>
 
 <style>
@@ -107,20 +101,6 @@
 		border: none;
 		background-color: transparent;
 	}
-
-	.counter {
-		display: inline-block;
-		width: 1.5rem;
-		height: 1.5rem;
-		border-radius: 50%;
-		text-align: center;
-		line-height: 1.5rem;
-		color: #fff;
-		font-size: 0.75rem;
-		vertical-align: middle;
-		font-weight: bold;
-		background-color: #20aa20;
-	}
 </style>
 
 <div class="pr">
@@ -146,9 +126,27 @@
 		<Labels labels={pullRequest.labels} />
 		<button
 			class="more"
-			on:click={() => getComments(pullRequest)}
+			on:click={() => detailsModal = true}
 			disabled={$isFetchingData}>
 			<Icons.Ellipsis />
 		</button>
 	</footer>
 </div>
+{#if detailsModal}
+	<Modale
+		onClose={() => {
+			detailsModal = false;
+		}}>
+			{#each pullRequest.comments as comment}
+				{#await Service.getAvatar(comment.provider, comment.author.avatar, comment.organizationName) then avatar}
+					<img width="64" height="64" src={avatar} alt={comment.author.displayName} />
+				{/await}
+				<p>Name: {comment.author.displayName}</p>
+				<p>Date: {comment.date}</p>
+				<p>Text: {comment.text}</p>
+				<p>Provider: {comment.provider}</p>
+			{:else}
+				<p>Aucun commentaire</p>
+			{/each}
+	</Modale>
+{/if}

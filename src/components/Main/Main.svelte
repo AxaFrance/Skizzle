@@ -1,14 +1,11 @@
 <script lang="ts">
-	import type { CommentType } from 'models/skizzle/CommentType';
 	import { pullRequests, customLists } from 'shared/stores/default.store';
 	import PullRequest from 'components/PullRequest';
 	import Tabs from 'components/Tabs';
 	import Modale from 'components/Modale';
 	import CustomListSettings from 'components/CustomListSettings';
-	import { Service } from 'services/Service';
 
 	let creatingList: boolean = false;
-	let commentsModal: boolean = false;
 	let modifyingListId: string = null;
 	let currentTab: string = 'all';
 
@@ -54,8 +51,6 @@
 		currentTab === 'all'
 			? $pullRequests
 			: filterList($customLists.find(({ id }) => id === currentTab));
-
-	$: fetchedComments = Promise.resolve<CommentType[]>([]);
 </script>
 
 <style>
@@ -120,12 +115,7 @@
 		<ul class="list">
 			{#each displayedList as pullRequest}
 				<li>
-					<PullRequest
-						{pullRequest}
-						on:comments={event => {
-							fetchedComments = event.detail.fetchedComment;
-							commentsModal = true;
-						}} />
+					<PullRequest {pullRequest} />
 				</li>
 			{/each}
 		</ul>
@@ -136,26 +126,6 @@
 {#if creatingList || modifyingListId}
 	<Modale onClose={closeModale}>
 		<CustomListSettings id={modifyingListId} onDone={closeModale} />
-	</Modale>
-{/if}
-{#if commentsModal}
-	<Modale
-		onClose={() => {
-			commentsModal = false;
-		}}>
-			{#await fetchedComments then comments}
-				{#each comments as comment}
-					{#await Service.getAvatar(comment.provider, comment.author.avatar, comment.organizationName) then avatar}
-						<img width="64" height="64" src={avatar} alt={comment.author.displayName} />
-					{/await}
-					<p>Name: {comment.author.displayName}</p>
-					<p>Date: {comment.date}</p>
-					<p>Text: {comment.text}</p>
-					<p>Provider: {comment.provider}</p>
-				{:else}
-					<p>Aucun commentaire</p>
-				{/each}
-			{/await}
 	</Modale>
 {/if}
 

@@ -1,14 +1,18 @@
+import type {
+	AzureDevOpsCommentApiType,
+	GithubCommentApiType,
+} from './CommentsApiType';
 import type { AzureDevOpsRepositoryApiType } from './RepositoriesApiType';
+import type {
+	AzureDevOpsReviewApiType,
+	GithubReviewApiType,
+} from './ReviewsApiType';
 
 type PullRequestsApiType = {};
 
 type CreatedByApiType = {
 	displayName?: string;
 	descriptor?: string;
-};
-
-type ReviewerApiType = {
-	vote?: number;
 };
 
 type AzureDevOpsLabelsApiType = {
@@ -21,10 +25,11 @@ type AzureDevOpsPullRequestApiType = {
 	title?: string;
 	description?: string;
 	creationDate?: string;
-	reviewers?: Array<ReviewerApiType>;
+	reviewers?: AzureDevOpsReviewApiType[];
 	createdBy?: CreatedByApiType;
 	repository?: AzureDevOpsRepositoryApiType;
 	labels?: AzureDevOpsLabelsApiType[];
+	comments?: AzureDevOpsCommentApiType[];
 };
 
 type UserApiType = {
@@ -58,6 +63,8 @@ type GithubPullRequestApiType = {
 	labels?: GithubLabelsApiType[];
 	base?: GithubBaseApiType;
 	html_url?: string;
+	reviewers?: GithubReviewApiType[];
+	comments?: GithubCommentApiType[];
 };
 
 type AzureDevOpsPullRequestsApiType = {

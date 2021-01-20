@@ -7,7 +7,6 @@
 		pullRequests,
 		repositories,
 	} from 'shared/stores/default.store';
-	import Settings from './settings.svg';
 	import Modale from 'components/Modale';
 	import AccountTitle from 'components/AccountTitle';
 	import Icons from 'components/icons';
@@ -126,7 +125,7 @@
 		{#if profile.email}<span class="email">{profile.email}</span>{/if}
 	</div>
 	<button
-		on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)}><Settings /></button>
+		on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)}><Icons.AccountSettings /></button>
 	<button on:click={() => logout(profile.provider)}><Icons.Delete /></button>
 </div>
 {#if isSettingsDisplayed}
