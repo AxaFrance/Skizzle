@@ -1,16 +1,18 @@
 <script lang="ts">
 	import type { PullRequestType } from 'models/skizzle/PullRequestType';
-	import { Service } from 'services/Service';
 	import Labels from '../Labels';
 	import Modale from 'components/Modale';
 	import { isFetchingData } from '../../shared/stores/default.store';
 	import Avatar from 'components/Avatar';
 	import Reviews from 'components/Reviews';
 	import Icons from 'components/icons';
+	import Comment from 'components/Comment';
 	const { shell } = require('electron');
-	
+
 	export let pullRequest: PullRequestType;
 	let detailsModal = false;
+
+	console.log({ pullRequest });
 </script>
 
 <style>
@@ -101,15 +103,19 @@
 		border: none;
 		background-color: transparent;
 	}
+
+	.no-comment {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50%;
+		text-align: center;
+		transform: translateY(-50%);
+	}
 </style>
 
 <div class="pr">
-	<button
-		class="link"
-		on:click={() => {
-			console.log('yo.');
-			shell.openExternal(pullRequest.url);
-		}} />
+	<button class="link" on:click={() => shell.openExternal(pullRequest.url)} />
 	<Avatar className="pr__avatar" {pullRequest} />
 	<div class="details">
 		<header>
@@ -126,7 +132,7 @@
 		<Labels labels={pullRequest.labels} />
 		<button
 			class="more"
-			on:click={() => detailsModal = true}
+			on:click={() => (detailsModal = true)}
 			disabled={$isFetchingData}>
 			<Icons.Ellipsis />
 		</button>
@@ -137,16 +143,10 @@
 		onClose={() => {
 			detailsModal = false;
 		}}>
-			{#each pullRequest.comments as comment}
-				{#await Service.getAvatar(comment.provider, comment.author.avatar, comment.organizationName) then avatar}
-					<img width="64" height="64" src={avatar} alt={comment.author.displayName} />
-				{/await}
-				<p>Name: {comment.author.displayName}</p>
-				<p>Date: {comment.date}</p>
-				<p>Text: {comment.text}</p>
-				<p>Provider: {comment.provider}</p>
-			{:else}
-				<p>Aucun commentaire</p>
-			{/each}
+		{#each pullRequest.comments as comment}
+			<Comment {comment} />
+		{:else}
+			<p class="no-comment">Il n'y a aucun commentaire sur cette pull request.</p>
+		{/each}
 	</Modale>
 {/if}

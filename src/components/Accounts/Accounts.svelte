@@ -16,10 +16,12 @@
 		[ProviderEnum.AzureDevOps]: {
 			label: 'Azure DevOps',
 			icon: Icons.AzureDevOps,
+			order: 0,
 		},
 		[ProviderEnum.Github]: {
 			label: 'Github',
 			icon: Icons.Github,
+			order: 1,
 		},
 	};
 </script>
