@@ -5,7 +5,7 @@
 	import Github from 'components/Github';
 	import Icons from 'components/icons';
 
-	let currentProvider = ProviderEnum.Github;
+	let currentProvider = ProviderEnum.AzureDevOps;
 
 	const views = {
 		[ProviderEnum.AzureDevOps]: AzureDevOps,

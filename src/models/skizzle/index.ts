@@ -12,6 +12,7 @@ import type { SettingsType } from './SettingsType';
 import { ProviderEnum } from './ProviderEnum';
 import { ThemeEnum } from './ThemeEnum';
 import { Views } from './ViewsEnum';
+import { SkizzleUpdaterEnum } from './SkizzleUpdaterEnum';
 
 export type {
 	CommentType,
@@ -28,4 +29,4 @@ export type {
 	UserType,
 };
 
-export { ProviderEnum, ThemeEnum, Views };
+export { ProviderEnum, ThemeEnum, Views, SkizzleUpdaterEnum };

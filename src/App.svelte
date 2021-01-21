@@ -6,6 +6,11 @@
 	import Navigation from 'components/Navigation';
 	import { Views } from 'models/skizzle/ViewsEnum';
 	import { settings } from 'shared/stores/default.store';
+	import { onMount } from 'svelte';
+	import { SkizzleUpdaterEnum } from 'models/skizzle';
+	const app = require('electron').ipcRenderer;
+
+	let update: SkizzleUpdaterEnum;
 
 	const views = {
 		[Views.Main]: Main,
@@ -15,6 +20,16 @@
 
 	let currentView: Views = Views.Main;
 	const onViewChange = (view: Views) => (currentView = view);
+
+	onMount(() => {
+		setInterval(() => {
+			app.send('check-for-update-request');
+		}, 5000);
+
+		app.on('check-for-update-response', (event: any, arg: SkizzleUpdaterEnum) => {
+			update = arg;
+		});
+	});
 </script>
 
 <style>
@@ -71,6 +86,21 @@
 </style>
 
 <Header />
+{#if update}
+	{#if update === SkizzleUpdaterEnum.Available}
+		<p>Une mise à jour est disponible, veux-tu la télécharger ?</p>
+		<button>Oui</button>
+		<button>Plus tard</button>
+	{/if}
+	{#if update === SkizzleUpdaterEnum.Progress}
+		<p>Téléchargement en cours...</p>
+	{/if}
+	{#if update === SkizzleUpdaterEnum.Downloaded}
+		<p>Mise à jour téléchargé, redemarrer ?</p>
+		<button>Redemarrer</button>
+		<button>Plus tard</button>
+	{/if}
+{/if}
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
 	<Navigation {currentView} {onViewChange} />
 	<div>

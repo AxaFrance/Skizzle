@@ -10,8 +10,9 @@ import {
 import OAuthWindow from './OAuthWindow';
 import { ProviderEnum } from '../models/skizzle/ProviderEnum';
 import * as path from 'path';
-import { Updater } from './Updater';
+import { autoUpdater } from 'electron-updater';
 import type { SettingsType } from '../models/skizzle/SettingsType';
+import { SkizzleUpdaterEnum } from '../models/skizzle/SkizzleUpdaterEnum';
 
 try {
 	require('electron-reloader')(module);
@@ -24,6 +25,7 @@ const setAppUserModelId = () => {
 };
 
 setAppUserModelId();
+autoUpdater.autoDownload = false;
 
 let window: BrowserWindow;
 let github: OAuthWindow;
@@ -165,6 +167,31 @@ const createWindow = () => {
 	);
 };
 
+autoUpdater.on('update-available', () => {
+	window.webContents.send(
+		'check-for-update-response',
+		SkizzleUpdaterEnum.Available,
+	);
+});
+
+autoUpdater.on('download-progress', progressObj => {
+	window.webContents.send(
+		'check-for-update-response',
+		SkizzleUpdaterEnum.Progress,
+	);
+});
+
+autoUpdater.on('update-downloaded', () => {
+	window.webContents.send(
+		'check-for-update-response',
+		SkizzleUpdaterEnum.Downloaded,
+	);
+});
+
+ipcMain.on('check-for-update-request', async event => {
+	autoUpdater.checkForUpdates();
+});
+
 if (app.isPackaged) {
 	const settings = app.getLoginItemSettings();
 
@@ -195,9 +222,11 @@ if (!gotTheLock) {
 	app.commandLine.appendSwitch('disable-site-isolation-trials');
 
 	app.whenReady().then(() => {
-		let updater = new Updater(createWindow);
+		/*let updater = new Updater(createWindow);
 
-		updater.checkForUpdates();
+		updater.checkForUpdates();*/
+
+		createWindow();
 
 		app.on('window-all-closed', () => {
 			if (process.platform !== 'darwin') app.quit();
