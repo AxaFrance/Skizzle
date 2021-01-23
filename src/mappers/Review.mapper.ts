@@ -16,7 +16,8 @@ export class ReviewMapper extends Mapper<ReviewMapperType, ReviewType> {
 	public to(data: ReviewMapperType[]): ReviewType {
 		return data.reduce((acc, curr) => {
 			let key = curr.vote || curr.state;
-			let result = key.toString();
+
+			let result = `${key}`;
 
 			switch (key) {
 				case AzureDevOpsVoteEnum.Approved:

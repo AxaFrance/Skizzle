@@ -141,32 +141,34 @@ export class OAuthAzureDevOpsService implements IService {
 					pullRequest.pullRequestId,
 				);
 
-				comments = comments.sort(
-					(a, b) => Date.parse(b.lastUpdatedDate) - Date.parse(a.lastUpdatedDate),
-				);
-				pullRequest.creationDate = comments[0].lastUpdatedDate;
+				if (comments.length > 0) {
+					comments = comments.sort(
+						(a, b) => Date.parse(b.lastUpdatedDate) - Date.parse(a.lastUpdatedDate),
+					);
+					pullRequest.creationDate = comments[0].lastUpdatedDate;
 
-				comments.forEach(
-					comment =>
-						(comment.comments = comment.comments.filter(
-							x => x.commentType === AzureDevOpsCommentApiEnum.Text,
-						)),
-				);
-
-				comments = comments
-					.filter(
+					comments.forEach(
 						comment =>
-							comment.comments.length > 0 &&
-							!comment.isDeleted &&
-							comment.status === AzureDevOpsCommentStatusApiEnum.Active,
-					)
-					.reduce((acc, curr) => {
-						acc.push(...curr.comments);
+							(comment.comments = comment.comments.filter(
+								x => x.commentType === AzureDevOpsCommentApiEnum.Text,
+							)),
+					);
 
-						return acc;
-					}, []);
+					comments = comments
+						.filter(
+							comment =>
+								comment.comments.length > 0 &&
+								!comment.isDeleted &&
+								comment.status === AzureDevOpsCommentStatusApiEnum.Active,
+						)
+						.reduce((acc, curr) => {
+							acc.push(...curr.comments);
 
-				pullRequest.comments = comments;
+							return acc;
+						}, []);
+
+					pullRequest.comments = comments;
+				}
 
 				return pullRequest;
 			}),

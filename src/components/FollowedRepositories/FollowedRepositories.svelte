@@ -3,7 +3,18 @@
 	import { deleteRepository } from 'utils';
 	import Icons from 'components/icons';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
-	export let profile;
+	import type { ProfileType } from 'models/skizzle';
+	const app = require('electron').ipcRenderer;
+
+	export let profile: ProfileType;
+
+	const copyToClipboard = async (url: string) => {
+		const result: boolean = await app.invoke('copy-to-clipboard', url);
+
+		if (result) {
+			alert(`${url} copied to clipboard!`);
+		}
+	}
 
 	$: followedRepositories = $repositories.filter(
 		({ checked, provider }) => checked && provider === profile.provider,
@@ -74,6 +85,9 @@
 			{#if repository.fullName}
 				<span class="repository">{repository.fullName}</span>
 			{:else}<span class="repository">{repository.name}</span>{/if}
+			<button on:click={() => copyToClipboard(repository.gitUrl)} disabled={$isFetchingData} title="Copy .git to clipboard">
+				Copy
+			</button>
 			<button
 				on:click={() => deleteRepository(repository)}
 				disabled={$isFetchingData}>

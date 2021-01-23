@@ -16,6 +16,7 @@ type AzureDevOpsRepositoryApiType = {
 type GithubRepositoryApiType = {
 	name?: string;
 	full_name?: string;
+	clone_url?: string;
 	id?: IdentityType;
 	owner?: OwnerApiType;
 };

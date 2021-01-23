@@ -6,6 +6,7 @@ import {
 	ipcMain,
 	Tray,
 	dialog,
+	clipboard,
 } from 'electron';
 import OAuthWindow from './OAuthWindow';
 import { ProviderEnum } from '../models/skizzle/ProviderEnum';
@@ -190,6 +191,12 @@ autoUpdater.on('update-downloaded', () => {
 
 ipcMain.on('check-for-update-request', async event => {
 	autoUpdater.checkForUpdates();
+});
+
+ipcMain.handle('copy-to-clipboard', async (event, url: string) => {
+	clipboard.writeText(url, 'clipboard');
+
+	return true;
 });
 
 if (app.isPackaged) {

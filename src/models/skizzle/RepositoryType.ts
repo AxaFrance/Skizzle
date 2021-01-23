@@ -5,4 +5,5 @@ export type RepositoryType = {
 	fullName?: string;
 	owner?: string;
 	checked: boolean;
+	gitUrl?: string;
 } & CommonType;

@@ -25,6 +25,9 @@ export class RepositoryMapper extends Mapper<
 				name: value.name,
 				fullName: value.full_name,
 				owner: value.owner?.login,
+				gitUrl:
+					value.clone_url ||
+					`https://dev.azure.com/${params.organizationName}/${params.projectName}/_git/${value.name}.git`,
 				...params,
 			};
 
