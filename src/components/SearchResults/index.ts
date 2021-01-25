@@ -1,3 +1,1 @@
-import SearchResults from './SearchResults.svelte';
-
-export default SearchResults;
+export { default } from './SearchResults.svelte';

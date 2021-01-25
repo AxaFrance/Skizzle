@@ -4,7 +4,6 @@
 	import {
 		isFetchingData,
 		isLoading,
-		projects,
 	} from 'shared/stores/default.store';
 	import { authorize } from 'shared/token';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';

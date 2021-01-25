@@ -2,7 +2,7 @@
 	import AccountTitle from 'components/AccountTitle';
 	import Fieldset from 'components/Fieldset';
 	import Range from 'components/Range';
-	import { ThemeEnum } from 'models/skizzle/ThemeEnum';
+	import { ThemeEnum } from 'models/skizzle';
 	import { settings } from 'shared/stores/default.store';
 	import Icons from 'components/icons';
 

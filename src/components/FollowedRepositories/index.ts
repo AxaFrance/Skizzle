@@ -1,3 +1,1 @@
-import FollowedRepositories from './FollowedRepositories.svelte';
-
-export default FollowedRepositories;
+export { default } from './FollowedRepositories.svelte';

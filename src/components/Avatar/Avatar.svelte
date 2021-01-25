@@ -1,17 +1,11 @@
 <script lang="ts">
 	import type { PullRequestType } from 'models/skizzle/PullRequestType';
 	import Icons from 'components/icons';
-	import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
 	import { Service } from 'services/Service';
 	import { settings } from 'shared/stores/default.store';
 	
 	export let pullRequest: PullRequestType;
 	export let className: string;
-
-	const images = {
-		[ProviderEnum.Github]: Icons.Github,
-		[ProviderEnum.AzureDevOps]: Icons.AzureDevOps,
-	};
 </script>
 
 <style>

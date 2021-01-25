@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { v4 as uuidv4 } from 'uuid';
 	import type { CustomListType } from 'models/skizzle/CustomListType';
 	import AccountTitle from 'components/AccountTitle';
 	import Fieldset from 'components/Fieldset';
@@ -20,15 +21,6 @@
 
 	const onSubmit = (event): void => {
 		event.preventDefault();
-
-		function uuidv4() {
-			return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-				(
-					c ^
-					(crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-				).toString(16),
-			);
-		}
 
 		if (id) {
 			const list: CustomListType = {
@@ -179,11 +171,8 @@
 				n'affichera que des pull requests de ces repositories dans votre liste${listName ? ` "${listName}"` : ''}.`}>
 			<div class="field">
 				<select
-					value={selectedRepoId}
-					id="repos"
-					on:change={e => {
-						selectedRepoId = e.target.value;
-					}}>
+					bind:value={selectedRepoId}
+					id="repos">
 					{#if !selectedRepoId}
 						<option>Selectionnez</option>
 					{/if}

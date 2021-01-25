@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { PullRequestType } from 'models/skizzle/PullRequestType';
-	import Labels from '../Labels';
+	import type { PullRequestType } from 'models/skizzle';
+	import Labels from 'components/Labels';
 	import Modale from 'components/Modale';
 	import { isFetchingData } from '../../shared/stores/default.store';
 	import Avatar from 'components/Avatar';

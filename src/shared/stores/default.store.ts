@@ -14,60 +14,12 @@ import { get } from 'svelte/store';
 import { createStore } from './store';
 const app = require('electron').ipcRenderer;
 
-export const isLoading = createStore<boolean>(false, {});
-export const isFetchingData = createStore<boolean>(false, {});
-export const settings = createStore<SettingsType>(
-	{
-		refresh_delay: 5,
-		launch_at_startup: false,
-		proxy: '',
-		theme: ThemeEnum.Orange,
-		language: 'en',
-	},
-	{
-		key: 'settings',
-		subscriber: initialValue => settings => {
-			Object.keys(initialValue).forEach(element => {
-				let property = settings[element];
-
-				if (!property) {
-					settings[element] = initialValue[element];
-				}
-			});
-
-			app.send('launch-startup', settings.launch_at_startup);
-		},
-	},
-);
-
-export const customLists = createStore<CustomListType[]>([], {
-	key: 'customLists',
-});
-
 const predicate = <T extends CommonType>(
 	value: T[],
 	provider: ProviderEnum,
 ): T[] => {
 	return value.filter(x => x.provider !== provider);
 };
-
-export const organizations = createStore<OrganizationType[]>([], {
-	key: 'organizations',
-	predicate,
-});
-
-export const projects = createStore<ProjectType[]>([], {
-	key: 'projects',
-	predicate,
-});
-export const repositories = createStore<RepositoryType[]>([], {
-	key: 'repositories',
-	predicate,
-});
-export const pullRequests = createStore<PullRequestType[]>([], {
-	key: 'pullRequests',
-	predicate,
-});
 
 let timer: NodeJS.Timeout;
 
@@ -121,50 +73,91 @@ export const refreshPullRequests = async () => {
 	}
 };
 
-settings.subscribe(settings => {
-	if (settings.refresh_delay > 0) {
-		timer = setInterval(refreshPullRequests, settings.refresh_delay * 60000);
-	} else {
-		clearInterval(timer);
-	}
+export const pullRequests = createStore<PullRequestType[]>([], {
+	key: 'pullRequests',
+	predicate,
 });
+export const repositories = createStore<RepositoryType[]>([], {
+	key: 'repositories',
+	predicate,
+});
+export const projects = createStore<ProjectType[]>([], {
+	key: 'projects',
+	predicate,
+	subscriber: () => async projects => {
+		for (const project of projects) {
+			if (project.checked) {
+				const values = get(repositories);
+				const exist = values.some(
+					x =>
+						x.organizationName === project.organizationName &&
+						x.projectId === project.projectId,
+				);
 
-organizations.subscribe(async organizations => {
-	for (const organization of organizations) {
-		const values = get(projects);
-		const exist = values.some(
-			x => x.organizationName === organization.organizationName,
-		);
+				if (!exist) {
+					const values = await Service.getRepositories(project.provider, {
+						project,
+					});
 
-		if (!exist) {
-			const values = await Service.getProjects(organization.provider, {
-				organization,
-			});
-
-			projects.update(x =>
-				[...x, ...values].sort((a, b) => a.name.localeCompare(b.name)),
-			);
+					repositories.update(x =>
+						[...x, ...values].sort((a, b) => a.name.localeCompare(b.name)),
+					);
+				}
+			}
 		}
-	}
+	},
 });
-
-projects.subscribe(async projects => {
-	for (const project of projects) {
-		if (project.checked) {
-			const values = get(repositories);
+export const organizations = createStore<OrganizationType[]>([], {
+	key: 'organizations',
+	predicate,
+	subscriber: () => async organizations => {
+		for (const organization of organizations) {
+			const values = get(projects);
 			const exist = values.some(
-				x =>
-					x.organizationName === project.organizationName &&
-					x.projectId === project.projectId,
+				x => x.organizationName === organization.organizationName,
 			);
 
 			if (!exist) {
-				const values = await Service.getRepositories(project.provider, { project });
+				const values = await Service.getProjects(organization.provider, {
+					organization,
+				});
 
-				repositories.update(x =>
+				projects.update(x =>
 					[...x, ...values].sort((a, b) => a.name.localeCompare(b.name)),
 				);
 			}
 		}
-	}
+	},
+});
+export const isLoading = createStore<boolean>(false, {});
+export const isFetchingData = createStore<boolean>(false, {});
+export const settings = createStore<SettingsType>(
+	{
+		refresh_delay: 5,
+		launch_at_startup: false,
+		proxy: '',
+		theme: ThemeEnum.Orange,
+		language: 'en',
+	},
+	{
+		key: 'settings',
+		subscriber: initialValue => settings => {
+			if (settings.refresh_delay > 0) {
+				timer = setInterval(refreshPullRequests, settings.refresh_delay * 60000);
+			}
+
+			Object.keys(initialValue).forEach(element => {
+				let property = settings[element];
+
+				if (!property) {
+					settings[element] = initialValue[element];
+				}
+			});
+
+			app.send('launch-startup', settings.launch_at_startup);
+		},
+	},
+);
+export const customLists = createStore<CustomListType[]>([], {
+	key: 'customLists',
 });
