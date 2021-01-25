@@ -1,6 +1,11 @@
 <script>
-	import { isFetchingData, repositories } from 'shared/stores/default.store';
+	import {
+		isFetchingData,
+		repositories,
+		notifications,
+	} from 'shared/stores/default.store';
 	import { deleteRepository } from 'utils';
+	import { uuidv4 } from 'shared/utils';
 	import Icons from 'components/icons';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import type { ProfileType } from 'models/skizzle';
@@ -12,7 +17,13 @@
 		const result: boolean = await app.invoke('copy-to-clipboard', url);
 
 		if (result) {
-			alert(`${url} copied to clipboard!`);
+			notifications.update(notifications => [
+				...notifications,
+				{
+					text: "L'url du repository est copiée dans le presse-papiers.",
+					id: uuidv4(),
+				},
+			]);
 		}
 	};
 
@@ -34,6 +45,7 @@
 			{#if repository.fullName}
 				<span class="repository">{repository.fullName}</span>
 			{:else}<span class="repository">{repository.name}</span>{/if}
+			{#if repository.gitUrl}
 			<button
 				on:click={() => copyToClipboard(repository.gitUrl)}
 				disabled={$isFetchingData}
@@ -41,6 +53,7 @@
 			>
 				<Icons.Copy />
 			</button>
+			{/if}
 			<button
 				title="Se désabonner de ce repository"
 				on:click={() => deleteRepository(repository)}

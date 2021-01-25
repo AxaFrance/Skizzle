@@ -8,6 +8,7 @@ import type { UserType, LabelType, PullRequestType } from './PullRequestType';
 import type { RepositoryType } from './RepositoryType';
 import type { ReviewType } from './ReviewType';
 import type { SettingsType } from './SettingsType';
+import type { NotificationType } from './NotificationType';
 
 import { ProviderEnum } from './ProviderEnum';
 import { ThemeEnum } from './ThemeEnum';
@@ -27,6 +28,7 @@ export type {
 	ReviewType,
 	SettingsType,
 	UserType,
+	NotificationType,
 };
 
 export { ProviderEnum, ThemeEnum, Views, SkizzleUpdaterEnum };

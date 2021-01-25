@@ -7,6 +7,7 @@ import type {
 	RepositoryType,
 	SettingsType,
 	ProviderEnum,
+	NotificationType,
 } from 'models/skizzle';
 import { ThemeEnum } from 'models/skizzle';
 import { Service } from 'services/Service';
@@ -14,6 +15,7 @@ import { get } from 'svelte/store';
 import { createStore } from './store';
 const app = require('electron').ipcRenderer;
 
+export const notifications = createStore<NotificationType[]>([], {});
 export const isLoading = createStore<boolean>(false, {});
 export const isFetchingData = createStore<boolean>(false, {});
 export const settings = createStore<SettingsType>(

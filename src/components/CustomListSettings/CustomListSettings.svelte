@@ -2,8 +2,9 @@
 	import type { CustomListType } from 'models/skizzle/CustomListType';
 	import AccountTitle from 'components/AccountTitle';
 	import Fieldset from 'components/Fieldset';
-	import { repositories, customLists } from 'shared/stores/default.store';
+	import { repositories, customLists, notifications } from 'shared/stores/default.store';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
+	import { uuidv4 } from 'shared/utils';
 	import Icons from 'components/icons';
 
 	export let onDone: () => void;
@@ -20,15 +21,6 @@
 
 	const onSubmit = (event): void => {
 		event.preventDefault();
-
-		function uuidv4() {
-			return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-				(
-					c ^
-					(crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-				).toString(16),
-			);
-		}
 
 		if (id) {
 			const list: CustomListType = {
@@ -54,6 +46,13 @@
 			};
 
 			customLists.update(_list => [..._list, list]);
+			notifications.update(notifications => [
+				...notifications,
+				{
+					text: "Liste crée.",
+					id: uuidv4(),
+				},
+			]);
 		}
 		onDone();
 	};
@@ -63,6 +62,116 @@
 		repositoriesIds = [...newRepositoriesIds];
 	};
 </script>
+
+<!-- svelte-ignore a11y-no-onchange a11y-autofocus -->
+<form on:submit={onSubmit}>
+	<AccountTitle>{id ? 'Modifier la liste' : 'Nouvelle liste'}</AccountTitle>
+	<Fieldset
+		title="Nom de la liste"
+		intro="Choisissez un nom pour votre liste, il apparaitra dans l'onglet."
+	>
+		<input autofocus bind:value={listName} id="list-name" type="text" />
+	</Fieldset>
+
+	{#if $repositories.length}
+		<Fieldset
+			title="Repositories"
+			intro={`Choisissez parmi les repositories auxquels vous êtes abonnés. Skizzle
+				n'affichera que des pull requests de ces repositories dans votre liste${
+					listName ? ` "${listName}"` : ''
+				}.`}
+		>
+			<div class="field">
+				<select
+					value={selectedRepoId}
+					id="repos"
+					on:change={e => {
+						selectedRepoId = e.target.value;
+					}}
+				>
+					{#if !selectedRepoId}
+						<option>Selectionnez</option>
+					{/if}
+					{#if $repositories.filter(repo => repo.provider === ProviderEnum.AzureDevOps).length}
+						<optgroup label="Azure Devops">
+							{#each $repositories
+								.filter(({ checked }) => checked)
+								.filter(
+									repo => repo.provider === ProviderEnum.AzureDevOps,
+								) as repository}
+								<option
+									disabled={repositoriesIds.includes(repository.repositoryId)}
+									value={repository.repositoryId}
+								>
+									{repository.projectName}
+									/
+									{repository.name}
+								</option>
+							{/each}
+						</optgroup>
+					{/if}
+					{#if $repositories.filter(repo => repo.provider === ProviderEnum.Github).length}
+						<optgroup label="Github">
+							{#each $repositories
+								.filter(({ checked }) => checked)
+								.filter(repo => repo.provider === ProviderEnum.Github) as repository}
+								<option
+									disabled={repositoriesIds.includes(repository.repositoryId)}
+									value={repository.repositoryId}
+								>
+									{repository.name}
+								</option>
+							{/each}
+						</optgroup>
+					{/if}
+				</select>
+				<button
+					class="add"
+					disabled={!selectedRepoId || repositoriesIds.includes(selectedRepoId)}
+					on:click={() => {
+						repositoriesIds = [...repositoriesIds, selectedRepoId];
+					}}
+				>Ajouter</button>
+			</div>
+			{#if repositoriesIds.length}
+				<p class="intro">
+					{repositoriesIds.length}
+					{repositoriesIds.length > 1
+						? 'repositories sélectionnés'
+						: 'repository sélectionné'}
+				</p>
+				<ul class="items-list">
+					{#each repositoriesIds as repo}
+						<li class="item">
+							{#if $repositories.find(({ repositoryId }) => repo == repositoryId).projectName}
+								{$repositories.find(({ repositoryId }) => repo == repositoryId)
+									.projectName}
+								/
+							{/if}
+							{$repositories.find(({ repositoryId }) => repo == repositoryId).name}
+							<button
+								class="remove"
+								on:click={e => {
+									e.preventDefault();
+									deleteRepository(repo);
+								}}
+							><Icons.Delete /></button>
+						</li>
+					{/each}
+				</ul>
+			{:else}
+				<p class="intro">Il n'y a aucun repository selectionné</p>
+			{/if}
+		</Fieldset>
+	{/if}
+	<div class="bar">
+		<input
+			disabled={!listName}
+			type="submit"
+			value={id ? 'Modifier la liste' : 'Créer la liste'}
+		/>
+	</div>
+</form>
 
 <style>
 	.intro {
@@ -162,100 +271,3 @@
 		justify-content: flex-end;
 	}
 </style>
-
-<!-- svelte-ignore a11y-no-onchange a11y-autofocus -->
-<form on:submit={onSubmit}>
-	<AccountTitle>{id ? 'Modifier la liste' : 'Nouvelle liste'}</AccountTitle>
-	<Fieldset
-		title="Nom de la liste"
-		intro="Choisissez un nom pour votre liste, il apparaitra dans l'onglet.">
-		<input autofocus bind:value={listName} id="list-name" type="text" />
-	</Fieldset>
-
-	{#if $repositories.length}
-		<Fieldset
-			title="Repositories"
-			intro={`Choisissez parmi les repositories auxquels vous êtes abonnés. Skizzle
-				n'affichera que des pull requests de ces repositories dans votre liste${listName ? ` "${listName}"` : ''}.`}>
-			<div class="field">
-				<select
-					value={selectedRepoId}
-					id="repos"
-					on:change={e => {
-						selectedRepoId = e.target.value;
-					}}>
-					{#if !selectedRepoId}
-						<option>Selectionnez</option>
-					{/if}
-					{#if $repositories.filter(repo => repo.provider === ProviderEnum.AzureDevOps).length}
-						<optgroup label="Azure Devops">
-							{#each $repositories
-								.filter(({ checked }) => checked)
-								.filter(
-									repo => repo.provider === ProviderEnum.AzureDevOps,
-								) as repository}
-								<option
-									disabled={repositoriesIds.includes(repository.repositoryId)}
-									value={repository.repositoryId}>
-									{repository.projectName}
-									/
-									{repository.name}
-								</option>
-							{/each}
-						</optgroup>
-					{/if}
-					{#if $repositories.filter(repo => repo.provider === ProviderEnum.Github).length}
-						<optgroup label="Github">
-							{#each $repositories
-								.filter(({ checked }) => checked)
-								.filter(repo => repo.provider === ProviderEnum.Github) as repository}
-								<option
-									disabled={repositoriesIds.includes(repository.repositoryId)}
-									value={repository.repositoryId}>
-									{repository.name}
-								</option>
-							{/each}
-						</optgroup>
-					{/if}
-				</select>
-				<button
-					class="add"
-					disabled={!selectedRepoId || repositoriesIds.includes(selectedRepoId)}
-					on:click={() => {
-						repositoriesIds = [...repositoriesIds, selectedRepoId];
-					}}>Ajouter</button>
-			</div>
-			{#if repositoriesIds.length}
-				<p class="intro">
-					{repositoriesIds.length}
-					{repositoriesIds.length > 1 ? 'repositories sélectionnés' : 'repository sélectionné'}
-				</p>
-				<ul class="items-list">
-					{#each repositoriesIds as repo}
-						<li class="item">
-							{#if $repositories.find(({ repositoryId }) => repo == repositoryId).projectName}
-								{$repositories.find(({ repositoryId }) => repo == repositoryId).projectName}
-								/
-							{/if}
-							{$repositories.find(({ repositoryId }) => repo == repositoryId).name}
-							<button
-								class="remove"
-								on:click={e => {
-									e.preventDefault();
-									deleteRepository(repo);
-								}}><Icons.Delete /></button>
-						</li>
-					{/each}
-				</ul>
-			{:else}
-				<p class="intro">Il n'y a aucun repository selectionné</p>
-			{/if}
-		</Fieldset>
-	{/if}
-	<div class="bar">
-		<input
-			disabled={!listName}
-			type="submit"
-			value={id ? 'Modifier la liste' : 'Créer la liste'} />
-	</div>
-</form>
