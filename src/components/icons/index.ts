@@ -10,6 +10,7 @@ import Ellipsis from './Ellipsis.svelte';
 import Plus from './Plus.svelte';
 import User from './User.svelte';
 import UI from './UI.svelte';
+import Copy from './Copy.svelte';
 
 // Providers
 import AzureDevOps from './AzureDevOps.svelte';
@@ -44,4 +45,5 @@ export default {
 	Bubble,
 	Change,
 	Rejected,
+	Copy,
 };
