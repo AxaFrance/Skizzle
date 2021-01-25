@@ -1,5 +1,10 @@
 <script>
-	import { isFetchingData, repositories } from 'shared/stores/default.store';
+	import { v4 as uuidv4 } from 'uuid';
+	import {
+		isFetchingData,
+		repositories,
+		notifications,
+	} from 'shared/stores/default.store';
 	import { deleteRepository } from 'utils';
 	import Icons from 'components/icons';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
@@ -12,14 +17,53 @@
 		const result: boolean = await app.invoke('copy-to-clipboard', url);
 
 		if (result) {
-			alert(`${url} copied to clipboard!`);
+			notifications.update(notifications => [
+				...notifications,
+				{
+					text: "L'url du repository est copiée dans le presse-papiers.",
+					id: uuidv4(),
+				},
+			]);
 		}
-	}
+	};
 
 	$: followedRepositories = $repositories.filter(
 		({ checked, provider }) => checked && provider === profile.provider,
 	);
 </script>
+
+<p class="intro">
+	Vous suivez actuellement <b>{followedRepositories.length}</b>
+	repositories sur {ProviderEnum[profile.provider]}.
+</p>
+<ul>
+	{#each followedRepositories as repository}
+		<li>
+			{#if repository.projectName}
+				<span class="project">{repository.projectName}</span>
+			{/if}
+			{#if repository.fullName}
+				<span class="repository">{repository.fullName}</span>
+			{:else}<span class="repository">{repository.name}</span>{/if}
+			{#if repository.gitUrl}
+			<button
+				on:click={() => copyToClipboard(repository.gitUrl)}
+				disabled={$isFetchingData}
+				title="Copier l'url de ce repository"
+			>
+				<Icons.Copy />
+			</button>
+			{/if}
+			<button
+				title="Se désabonner de ce repository"
+				on:click={() => deleteRepository(repository)}
+				disabled={$isFetchingData}
+			>
+				<Icons.Delete />
+			</button>
+		</li>
+	{/each}
+</ul>
 
 <style>
 	.intro {
@@ -71,28 +115,8 @@
 	button:hover {
 		opacity: 0.5;
 	}
-</style>
 
-<p class="intro">
-	Vous suivez actuellement <b>{followedRepositories.length}</b> repositories sur {ProviderEnum[profile.provider]}.
-</p>
-<ul>
-	{#each followedRepositories as repository}
-		<li>
-			{#if repository.projectName}
-				<span class="project">{repository.projectName}</span>
-			{/if}
-			{#if repository.fullName}
-				<span class="repository">{repository.fullName}</span>
-			{:else}<span class="repository">{repository.name}</span>{/if}
-			<button on:click={() => copyToClipboard(repository.gitUrl)} disabled={$isFetchingData} title="Copy .git to clipboard">
-				Copy
-			</button>
-			<button
-				on:click={() => deleteRepository(repository)}
-				disabled={$isFetchingData}>
-				<Icons.Delete />
-			</button>
-		</li>
-	{/each}
-</ul>
+	button:last-child {
+		margin-left: 1rem;
+	}
+</style>

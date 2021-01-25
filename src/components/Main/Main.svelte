@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { pullRequests, customLists } from 'shared/stores/default.store';
+	import { v4 as uuidv4 } from 'uuid';
+	import { pullRequests, customLists, notifications } from 'shared/stores/default.store';
 	import PullRequest from 'components/PullRequest';
 	import Tabs from 'components/Tabs';
 	import Modale from 'components/Modale';
 	import CustomListSettings from 'components/CustomListSettings';
-
+	
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;
 	let currentTab: string = 'all';
@@ -16,6 +17,13 @@
 
 	const deleteList = () => {
 		customLists.update(list => list.filter(_list => _list.id !== currentTab));
+		notifications.update(notifications => [
+				...notifications,
+				{
+					text: "Liste supprimée.",
+					id: uuidv4(),
+				},
+			]);
 		currentTab = 'all';
 	};
 

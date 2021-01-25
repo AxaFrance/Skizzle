@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Icons from 'components/icons';
-	import type { PullRequestType } from 'models/skizzle';
+	import type { ReviewType } from 'models/skizzle/ReviewType';
 
-	export let pullRequest: PullRequestType;
+	export let reviews: ReviewType;
 
 	const icons = {
 		approved: Icons.DoubleCheck,
@@ -39,7 +39,7 @@
 	}
 </style>
 
-{#each Object.entries(pullRequest.reviewers) as [key, value]}
+{#each Object.entries(reviews) as [key, value]}
 	{#if key !== 'other'}
 		<div>
 			<svelte:component this={icons[key]} color="#fff" />

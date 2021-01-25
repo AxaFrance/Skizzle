@@ -2,17 +2,20 @@
 	import type { PullRequestType } from 'models/skizzle';
 	import Labels from 'components/Labels';
 	import Modale from 'components/Modale';
-	import { isFetchingData } from '../../shared/stores/default.store';
+	const { shell } = require('electron');
+	import { isFetchingData } from 'shared/stores/default.store';
 	import Avatar from 'components/Avatar';
 	import Reviews from 'components/Reviews';
 	import Icons from 'components/icons';
 	import Comment from 'components/Comment';
-	const { shell } = require('electron');
-
+	
 	export let pullRequest: PullRequestType;
+
 	let detailsModal = false;
 
-	console.log({ pullRequest });
+	const openLink = () => shell.openExternal(pullRequest.url);
+	const openModale = () => detailsModal = true;
+	const closeModale = () => detailsModal = false;
 </script>
 
 <style>
@@ -115,7 +118,7 @@
 </style>
 
 <div class="pr">
-	<button class="link" on:click={() => shell.openExternal(pullRequest.url)} />
+	<button class="link" on:click={openLink} />
 	<Avatar className="pr__avatar" {pullRequest} />
 	<div class="details">
 		<header>
@@ -128,21 +131,20 @@
 		<p class="repo">{pullRequest.repositoryName}</p>
 	</div>
 	<footer>
-		<Reviews {pullRequest} />
+		{#if pullRequest.reviewers}
+			<Reviews reviews={pullRequest.reviewers} />
+		{/if}
 		<Labels labels={pullRequest.labels} />
 		<button
 			class="more"
-			on:click={() => (detailsModal = true)}
+			on:click={openModale}
 			disabled={$isFetchingData}>
 			<Icons.Ellipsis />
 		</button>
 	</footer>
 </div>
 {#if detailsModal}
-	<Modale
-		onClose={() => {
-			detailsModal = false;
-		}}>
+	<Modale onClose={closeModale}>
 		{#each pullRequest.comments as comment}
 			<Comment {comment} />
 		{:else}

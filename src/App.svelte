@@ -4,6 +4,7 @@
 	import Settings from 'components/Settings';
 	import Header from 'components/Header';
 	import Navigation from 'components/Navigation';
+	import Notification from 'components/Notification';
 	import { Views } from 'models/skizzle/ViewsEnum';
 	import { settings } from 'shared/stores/default.store';
 	import { onMount } from 'svelte';
@@ -31,6 +32,30 @@
 		});
 	});
 </script>
+
+<Header />
+{#if update}
+	{#if update === SkizzleUpdaterEnum.Available}
+		<p>Une mise à jour est disponible, veux-tu la télécharger ?</p>
+		<button>Oui</button>
+		<button>Plus tard</button>
+	{/if}
+	{#if update === SkizzleUpdaterEnum.Progress}
+		<p>Téléchargement en cours...</p>
+	{/if}
+	{#if update === SkizzleUpdaterEnum.Downloaded}
+		<p>Mise à jour téléchargé, redemarrer ?</p>
+		<button>Redemarrer</button>
+		<button>Plus tard</button>
+	{/if}
+{/if}
+<main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
+	<Navigation {currentView} {onViewChange} />
+	<div>
+		<svelte:component this={views[currentView]} />
+	</div>
+	<Notification />
+</main>
 
 <style>
 	@font-face {
@@ -84,26 +109,3 @@
 		overflow: auto;
 	}
 </style>
-
-<Header />
-{#if update}
-	{#if update === SkizzleUpdaterEnum.Available}
-		<p>Une mise à jour est disponible, veux-tu la télécharger ?</p>
-		<button>Oui</button>
-		<button>Plus tard</button>
-	{/if}
-	{#if update === SkizzleUpdaterEnum.Progress}
-		<p>Téléchargement en cours...</p>
-	{/if}
-	{#if update === SkizzleUpdaterEnum.Downloaded}
-		<p>Mise à jour téléchargé, redemarrer ?</p>
-		<button>Redemarrer</button>
-		<button>Plus tard</button>
-	{/if}
-{/if}
-<main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
-	<Navigation {currentView} {onViewChange} />
-	<div>
-		<svelte:component this={views[currentView]} />
-	</div>
-</main>

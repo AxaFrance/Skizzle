@@ -7,6 +7,7 @@ import type {
 	RepositoryType,
 	SettingsType,
 	ProviderEnum,
+	NotificationType,
 } from 'models/skizzle';
 import { ThemeEnum } from 'models/skizzle';
 import { Service } from 'services/Service';
@@ -131,6 +132,7 @@ export const organizations = createStore<OrganizationType[]>([], {
 });
 export const isLoading = createStore<boolean>(false, {});
 export const isFetchingData = createStore<boolean>(false, {});
+export const notifications = createStore<NotificationType[]>([], {});
 export const settings = createStore<SettingsType>(
 	{
 		refresh_delay: 5,
