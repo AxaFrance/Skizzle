@@ -1,5 +1,7 @@
 <style>
 	h1 {
+		display: flex;
+		justify-content: space-between;
 		margin-bottom: 0.5rem;
 		padding-left: 0.5rem;
 		color: #fff;

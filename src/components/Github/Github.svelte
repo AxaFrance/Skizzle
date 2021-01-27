@@ -42,7 +42,7 @@
 		display: flex;
 	}
 
-	div section {
+	div :global(section) {
 		flex: 0 0 50%;
 		padding-left: 1rem;
 		padding-right: 1rem;
@@ -90,10 +90,7 @@
 						repos={fetchedGithubRepositories} />
 				{/if}
 			</section>
-			<section>
-				<AccountTitle>Vos repositories suivis</AccountTitle>
-				<FollowedRepositories {profile} />
-			</section>
+			<FollowedRepositories {profile} />
 		</div>
 	{:catch}
 		<p>Fetching profile failed.</p>

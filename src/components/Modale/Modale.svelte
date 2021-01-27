@@ -1,5 +1,6 @@
-<script>
-	export let onClose;
+<script lang="ts">
+	export let onClose: () => void;
+	export let fullHeight:boolean = true;
 </script>
 
 <style>
@@ -20,12 +21,18 @@
 		left: 50%;
 		z-index: 2;
 		width: calc(100vw - 10rem);
-		height: calc(100vh - 10rem);
+		height: 100%;
+		max-height: calc(100vh - 10rem);
 		transform: translateX(-50%) translateY(-50%);
 		border-radius: 8px;
-		background-color: #5c5c5c;
+		background-color: #333;
 		animation: fadeIn linear 0.3s;
 	}
+
+	.full-height {
+		height: calc(100vh - 10rem);
+	}
+
 	button {
 		position: absolute;
 		bottom: 100%;
@@ -59,7 +66,7 @@
 </style>
 
 <div class="overlay">
-	<div class="modale">
+	<div class={`modale ${fullHeight ? 'full-height' : ''}`}>
 		<button on:click={onClose}>Fermer</button>
 		<div class="content">
 			<slot />

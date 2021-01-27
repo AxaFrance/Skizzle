@@ -11,6 +11,7 @@ import Plus from './Plus.svelte';
 import User from './User.svelte';
 import UI from './UI.svelte';
 import Copy from './Copy.svelte';
+import Share from './Share.svelte';
 
 // Providers
 import AzureDevOps from './AzureDevOps.svelte';
@@ -46,4 +47,5 @@ export default {
 	Change,
 	Rejected,
 	Copy,
+	Share,
 };

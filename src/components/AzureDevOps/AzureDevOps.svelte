@@ -68,7 +68,7 @@
 	{:then profile}
 		<section>
 			<AccountTitle>Votre compte Azure DevOps</AccountTitle>
-			<AccountSummary {profile} />
+			<AccountSummary {profile} withSettings={true} />
 		</section>
 		<div>
 			<section>

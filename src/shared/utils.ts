@@ -1,3 +1,7 @@
+import { notifications } from 'shared/stores/default.store';
+import { v4 as uuidv4 } from 'uuid';
+const app = require('electron').ipcRenderer;
+
 export const addItem = <T>(key: string, value: T): void =>
 	localStorage.setItem(key, JSON.stringify(value));
 
@@ -30,5 +34,19 @@ export const getDateStr = (date: Date): string => {
 			return 'Hier';
 		default:
 			return `il y a ${diffDays} jours`;
+	}
+};
+
+export const copyToClipboard = async (data: string, message: string) => {
+	const result: boolean = await app.invoke('copy-to-clipboard', data);
+
+	if (result) {
+		notifications.update(notifications => [
+			...notifications,
+			{
+				text: message,
+				id: uuidv4(),
+			},
+		]);
 	}
 };

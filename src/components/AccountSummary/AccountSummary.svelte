@@ -16,6 +16,7 @@
 	import type { ProfileType } from 'models/skizzle/ProfileType';
 
 	export let profile: ProfileType;
+	export let withSettings:boolean = false;
 	let isSettingsDisplayed = false;
 
 	const onModaleClose = () => (isSettingsDisplayed = false);
@@ -124,8 +125,9 @@
 		<span class="name">{profile.name}</span>
 		{#if profile.email}<span class="email">{profile.email}</span>{/if}
 	</div>
-	<button
-		on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)}><Icons.AccountSettings /></button>
+	{#if withSettings}
+		<button on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)}><Icons.AccountSettings /></button>
+	{/if}
 	<button on:click={() => logout(profile.provider)}><Icons.Delete /></button>
 </div>
 {#if isSettingsDisplayed}
