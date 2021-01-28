@@ -75,7 +75,7 @@
 		"babel-core": "6.26.3",
 		"babel-jest": "26.6.1",
 		"babel-polyfill": "6.26.0",
-		"electron": "10.1.5",
+		"electron": "10.2.0",
 		"electron-builder": "^22.9.1",
 		"electron-builder-notarize": "^1.2.0",
 		"electron-reloader": "^1.0.1",
