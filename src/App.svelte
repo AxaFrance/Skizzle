@@ -6,7 +6,7 @@
 	import Navigation from 'components/Navigation';
 	import Notification from 'components/Notification';
 	import { Views } from 'models/skizzle/ViewsEnum';
-	import { settings } from 'shared/stores/default.store';
+	import { offline, settings } from 'shared/stores/default.store';
 	import { onMount } from 'svelte';
 	import { SkizzleUpdaterEnum } from 'models/skizzle';
 	const app = require('electron').ipcRenderer;
@@ -21,6 +21,9 @@
 
 	let currentView: Views = Views.Main;
 	const onViewChange = (view: Views) => (currentView = view);
+
+	window.addEventListener('online', () => offline.set(false));
+	window.addEventListener('offline', () => offline.set(true));
 
 	onMount(() => {
 		setInterval(() => {

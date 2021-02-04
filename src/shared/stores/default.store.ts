@@ -133,6 +133,7 @@ export const organizations = createStore<OrganizationType[]>([], {
 export const isLoading = createStore<boolean>(false, {});
 export const isFetchingData = createStore<boolean>(false, {});
 export const notifications = createStore<NotificationType[]>([], {});
+export const offline = createStore<boolean>(false, {});
 export const settings = createStore<SettingsType>(
 	{
 		refresh_delay: 5,

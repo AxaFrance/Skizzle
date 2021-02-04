@@ -7,16 +7,20 @@
   import AccountTitle from 'components/AccountTitle';
   import { copyToClipboard, isJson } from 'shared/utils';
   import Icons from 'components/icons';
+import type { RepositoryType } from 'models/skizzle';
 
-  export let followedRepositories;
+  export let followedRepositories: RepositoryType[];
 
-  let currentTab:string = 'import';
-	let code:string = '';
+  let currentTab: string = 'import';
+	let code: string = '';
 
   const changeTab = (tab:string) => currentTab = tab;
 
   const importCode = () => {
-		repositories.set(JSON.parse(code));
+    let repositoriesImported = JSON.parse(code) as RepositoryType[];
+    let filteredRepositories = repositoriesImported.filter(y => !$repositories.some(z => z.repositoryId === y.repositoryId));
+
+		repositories.update(x => [...x, ...filteredRepositories]);
 	}
 </script>
 

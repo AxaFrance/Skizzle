@@ -86,7 +86,6 @@
 				{/if}
 			</section>
 			<section>
-				<AccountTitle>Vos repositories suivis</AccountTitle>
 				<FollowedRepositories {profile} />
 			</section>
 		</div>

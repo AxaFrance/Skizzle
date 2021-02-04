@@ -1,6 +1,7 @@
 {
 	"extends": "@tsconfig/svelte/tsconfig.json",
 	"compilerOptions": {
+		"types": ["node", "jest", "superagent", "superagent-proxy", "uuid"],
 		"baseUrl": "src",
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true
