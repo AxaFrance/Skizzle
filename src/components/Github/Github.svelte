@@ -13,12 +13,13 @@
 	import SearchResults from 'components/SearchResults';
 	import FollowedRepositories from 'components/FollowedRepositories';
 	import Search from 'components/Search';
+	import type { RepositoryType } from 'models/skizzle';
 
 	let search: string = '';
 
-	$: fetchedGithubRepositories = [];
+	$: fetchedGithubRepositories = [] as RepositoryType[];
 
-	const onSearchSubmit = async query => {
+	const onSearchSubmit = async (query: string) => {
 		search = query;
 		fetchedGithubRepositories = await Service.getRepositories(
 			ProviderEnum.Github,
@@ -81,11 +82,11 @@
 				<Search
 					onSubmit={onSearchSubmit}
 					onCancel={onSearchCancel}
-					disabled={$isFetchingData} />
+					disabled={$isFetchingData}
+					placeholder="Rechercher un repository" />
 
 				{#if search}
 					<SearchResults
-						provider={ProviderEnum.Github}
 						{search}
 						repos={fetchedGithubRepositories} />
 				{/if}

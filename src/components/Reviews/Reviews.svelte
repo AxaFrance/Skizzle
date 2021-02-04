@@ -22,6 +22,7 @@
 		font-size: 0.8rem;
 		border-radius: 4px;
 		background-color: #555;
+		z-index: 1;
 	}
 
 	div:not(:last-child) {
@@ -40,8 +41,8 @@
 </style>
 
 {#each Object.entries(reviews) as [key, value]}
-	{#if key !== 'other'}
-		<div>
+	{#if key !== 'others'}
+		<div title={key}>
 			<svelte:component this={icons[key]} color="#fff" />
 			<span>{value}</span>
 		</div>

@@ -21,7 +21,7 @@
 <section>
 	<AccountTitle>
 		Vos repositories suivis
-		<button title="Partager votre liste" on:click={() => shareDisplayed = true}><Icons.Share /></button>
+		<button title="Partager votre liste" disabled={$isFetchingData} on:click={() => shareDisplayed = true}><Icons.Share /></button>
 	</AccountTitle>
 	<p class="intro">
 		Vous suivez actuellement <b>{followedRepositories.length}</b>
@@ -57,7 +57,7 @@
 	</ul>
 	{#if shareDisplayed}
 		<Modale onClose={() => shareDisplayed = false} fullHeight={false}>
-			<ImportExport {followedRepositories} />
+			<ImportExport {followedRepositories} bind:shareDisplayed={shareDisplayed} provider={profile.provider} />
 		</Modale>
 	{/if}
 </section>

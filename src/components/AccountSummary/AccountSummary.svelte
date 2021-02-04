@@ -126,9 +126,9 @@
 		{#if profile.email}<span class="email">{profile.email}</span>{/if}
 	</div>
 	{#if withSettings}
-		<button on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)}><Icons.AccountSettings /></button>
+		<button on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)} title="Configuration"><Icons.AccountSettings /></button>
 	{/if}
-	<button on:click={() => logout(profile.provider)}><Icons.Delete /></button>
+	<button on:click={() => logout(profile.provider)} title="Déconnexion"><Icons.Delete /></button>
 </div>
 {#if isSettingsDisplayed}
 	<Modale onClose={onModaleClose}>

@@ -3,6 +3,7 @@
 	export let onSubmit: (string) => void;
 	export let onCancel: () => void;
 	export let disabled: boolean;
+	export let placeholder: string = '';
 
 	let query: string = '';
 
@@ -69,7 +70,7 @@
 <div class="search">
 	<Icons.Search color="#4e4e4e" />
 	<form on:submit={search}>
-		<input bind:value={query} {disabled} placeholder="Rechercher un projet" />
+		<input bind:value={query} {disabled} {placeholder} />
 		<input type="submit" />
 		{#if query}
 			<button on:click={cancel} class="delete">

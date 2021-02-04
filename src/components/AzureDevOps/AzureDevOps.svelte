@@ -77,10 +77,11 @@
 				<Search
 					onSubmit={onSearchSubmit}
 					onCancel={onSearchCancel}
-					disabled={$isFetchingData} />
+					disabled={$isFetchingData}
+					placeholder="Rechercher un projet" />
+
 				{#if search}
 					<SearchResults
-						provider={ProviderEnum.AzureDevOps}
 						{search}
 						projects={fetchedProjects} />
 				{/if}

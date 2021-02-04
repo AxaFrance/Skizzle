@@ -39,7 +39,6 @@ export const getToken = async <T extends OAuthConfigType>(
 		}
 		isLoading.set(false);
 	} catch (err) {
-		console.log(err);
 		isLoading.set(false);
 		return;
 	}

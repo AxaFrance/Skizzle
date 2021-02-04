@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isFetchingData, repositories } from 'shared/stores/default.store';
+  import { isFetchingData, repositories, organizations, projects } from 'shared/stores/default.store';
 	import { HighlightSvelte } from "svelte-highlight";
 	import { a11yDark } from "svelte-highlight/styles";
   import { json } from "svelte-highlight/languages";
@@ -7,9 +7,12 @@
   import AccountTitle from 'components/AccountTitle';
   import { copyToClipboard, isJson } from 'shared/utils';
   import Icons from 'components/icons';
-import type { RepositoryType } from 'models/skizzle';
+  import type { RepositoryType } from 'models/skizzle';
+  import { ProviderEnum } from 'models/skizzle';
 
   export let followedRepositories: RepositoryType[];
+  export let provider: ProviderEnum;
+  export let shareDisplayed: boolean;
 
   let currentTab: string = 'import';
 	let code: string = '';
@@ -18,10 +21,46 @@ import type { RepositoryType } from 'models/skizzle';
 
   const importCode = () => {
     let repositoriesImported = JSON.parse(code) as RepositoryType[];
-    let filteredRepositories = repositoriesImported.filter(y => !$repositories.some(z => z.repositoryId === y.repositoryId));
+    repositoriesImported = repositoriesImported
+      .map(x => ({ ...x, checked: true }))
+      .filter((repository) => {
+        let result = repository.repositoryId && 
+          repository.gitUrl && 
+          repository.name &&
+          !!repository.provider;
 
-		repositories.update(x => [...x, ...filteredRepositories]);
+        if (provider === ProviderEnum.AzureDevOps) {
+          result = result && repository.organizationName && 
+            repository.projectId && 
+            repository.projectName && 
+            $projects.some(project => project.projectId === repository.projectId) &&
+            $organizations.some(organization => organization.organizationName === repository.organizationName);
+        }
+
+        if (provider === ProviderEnum.Github) {
+          result = result && repository.fullName && !!repository.owner
+        }
+
+        return result;
+      });
+
+		repositories.update(x => {
+      const values = x.map(repository => ({
+        ...repository,
+        checked: repository.checked || repositoriesImported.some(z => z.repositoryId === repository.repositoryId)
+      }));
+
+      return ([...values, ...repositoriesImported.filter(y => !x.some(z => z.repositoryId === y.repositoryId))])
+    });
+    shareDisplayed = false;
 	}
+
+  const getExportCode = (): RepositoryType[] => {
+    return followedRepositories.map(repository => ({
+      ...repository,
+      checked: undefined
+    }));
+  }
 </script>
 
 <svelte:head>
@@ -39,10 +78,10 @@ import type { RepositoryType } from 'models/skizzle';
     <p class="intro">Copiez le code JSON et importez-le dans une autre instance de Skizzle.</p>
     <div class="code">
 
-      <HighlightSvelte language={json} code={JSON.stringify(followedRepositories, undefined, 2)} />
+      <HighlightSvelte language={json} code={JSON.stringify(getExportCode(), undefined, 2)} />
       <button
       class="copy"
-          on:click={() => copyToClipboard(JSON.stringify(followedRepositories, undefined, 2), 'Code copié dans le presse-papier.')}
+          on:click={() => copyToClipboard(JSON.stringify(getExportCode(), undefined, 2), 'Code copié dans le presse-papier.')}
           disabled={$isFetchingData}
           title="Copier l'url de ce repository"
         >
@@ -50,7 +89,7 @@ import type { RepositoryType } from 'models/skizzle';
       </button>
     </div>
     {:else}
-      <form on:submit={importCode}>
+      <form on:submit|preventDefault={importCode}>
         <p class="intro">Collez le code JSON provenant d'une autre instance de Skizzle. <b>Attention</b> Skizzle remplacera les repositories que vous suivez actuellement.</p>
         <textarea bind:value={code} placeholder="Collez ici votre code JSON"></textarea>
         <div class="bar">

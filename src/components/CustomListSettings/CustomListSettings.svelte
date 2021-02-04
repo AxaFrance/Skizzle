@@ -89,8 +89,6 @@
 		const newRepositoriesIds = repositoriesIds.filter(repo => repo !== id);
 		repositoriesIds = [...newRepositoriesIds];
 	};
-
-	$: console.log({ selectedRepoId });
 </script>
 
 <!-- svelte-ignore a11y-no-onchange a11y-autofocus -->

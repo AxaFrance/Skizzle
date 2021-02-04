@@ -9,6 +9,7 @@
 	import { offline, settings } from 'shared/stores/default.store';
 	import { onMount } from 'svelte';
 	import { SkizzleUpdaterEnum } from 'models/skizzle';
+	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	const app = require('electron').ipcRenderer;
 
 	let update: SkizzleUpdaterEnum;
@@ -19,7 +20,7 @@
 		[Views.Settings]: Settings,
 	};
 
-	let currentView: Views = Views.Main;
+	let currentView: Views = $clientAuthenticated.isGithubAuthenticated || $clientAuthenticated.isAzureDevOpsAuthenticated ? Views.Main : Views.Accounts;
 	const onViewChange = (view: Views) => (currentView = view);
 
 	window.addEventListener('online', () => offline.set(false));
