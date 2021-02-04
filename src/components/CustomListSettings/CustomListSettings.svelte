@@ -1,4 +1,7 @@
 <script lang="ts">
+	const {dialog} = require('electron').remote;
+	const fs = require('fs')
+
 	import { v4 as uuidv4 } from 'uuid';
 	import type { CustomListType } from 'models/skizzle/CustomListType';
 	import AccountTitle from 'components/AccountTitle';
@@ -19,42 +22,77 @@
 		? $customLists.find(list => list.id === id).repositoriesIds
 		: [];
 
+	const onImport = () => {
+		const options = {
+				properties: ['openFile'],
+				title: "Importer une liste",
+				filters: [
+					{name: 'Skizzle List', extensions: ['json']}
+				]
+			}
+
+		const loadFrom = dialog.showOpenDialog(options);
+
+		loadFrom.then(file => {
+			 const data = JSON.parse(fs.readFileSync(file.filePaths[0],'utf8'))
+
+			 const list: CustomListType = {
+					id: uuidv4(),
+					...data
+				};
+
+			 customLists.update(_list => [..._list, list]);
+
+			 notifications.update(notifications => [
+					...notifications,
+					{
+						text: "Liste importée.",
+						id: uuidv4(),
+					},
+				]);
+			 onDone()
+		})
+
+	}
+
 	const onSubmit = (event): void => {
 		event.preventDefault();
 
-		if (id) {
-			const list: CustomListType = {
-				id,
-				name: listName,
-				repositoriesIds,
-			};
+		if(event.submitter.id !== 'import') {
+			if (id) {
+				const list: CustomListType = {
+					id,
+					name: listName,
+					repositoriesIds,
+				};
 
-			customLists.update(_list =>
-				_list.map(__list => {
-					if (__list.id === id) {
-						return list;
-					}
+				customLists.update(_list =>
+					_list.map(__list => {
+						if (__list.id === id) {
+							return list;
+						}
 
-					return __list;
-				}),
-			);
-		} else {
-			const list: CustomListType = {
-				id: uuidv4(),
-				name: listName,
-				repositoriesIds,
-			};
-
-			customLists.update(_list => [..._list, list]);
-			notifications.update(notifications => [
-				...notifications,
-				{
-					text: "Liste crée.",
+						return __list;
+					}),
+				);
+			} else {
+				const list: CustomListType = {
 					id: uuidv4(),
-				},
-			]);
+					name: listName,
+					repositoriesIds,
+				};
+
+				customLists.update(_list => [..._list, list]);
+				notifications.update(notifications => [
+					...notifications,
+					{
+						text: "Liste crée.",
+						id: uuidv4(),
+					},
+				]);
+			}
+			onDone();
 		}
-		onDone();
 	};
 
 	const deleteRepository = (id: string): void => {
@@ -67,7 +105,10 @@
 
 <!-- svelte-ignore a11y-no-onchange a11y-autofocus -->
 <form on:submit={onSubmit}>
-	<AccountTitle>{id ? 'Modifier la liste' : 'Nouvelle liste'}</AccountTitle>
+	<AccountTitle>
+			{id ? 'Modifier la liste' : 'Nouvelle liste'}
+			<input id="import" on:click={onImport} type="submit" value={'Charger une liste'} />
+</AccountTitle>
 	<Fieldset
 		title="Nom de la liste"
 		intro="Choisissez un nom pour votre liste, il apparaitra dans l'onglet."

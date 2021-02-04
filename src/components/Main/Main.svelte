@@ -1,19 +1,59 @@
 <script lang="ts">
+	const {remote} = require('electron');
+	const fs = require('fs')
+
 	import { v4 as uuidv4 } from 'uuid';
 	import { pullRequests, customLists, notifications } from 'shared/stores/default.store';
 	import PullRequest from 'components/PullRequest';
 	import Tabs from 'components/Tabs';
 	import Modale from 'components/Modale';
 	import CustomListSettings from 'components/CustomListSettings';
-	
+
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;
 	let currentTab: string = 'all';
+	const dialog = remote.dialog;
+	let customListsData;
 
 	const closeModale = () => {
 		creatingList = false;
 		modifyingListId = null;
 	};
+
+	customLists.subscribe(value => {
+		customListsData = value;
+	});
+
+const exportList = () => {
+	const currentTabData = customListsData.filter(customList => customList.id == currentTab)[0]
+
+	const options = {
+    title: "Exporter la liste sous...",
+    defaultPath : `${currentTabData.name}.json`,
+    filters: [
+        {name: 'Skizzle List', extensions: ['json']}
+    ]
+}
+	const saveDialog = dialog.showSaveDialog(remote.getCurrentWindow(), options);
+
+	saveDialog.then(function(saveTo) {
+		fs.writeFileSync(saveTo.filePath, JSON.stringify(
+			{
+				name: currentTabData.name,
+				repositoriesIds: currentTabData.repositoriesIds
+			})
+		)
+
+		notifications.update(notifications => [
+				...notifications,
+				{
+					text: "Liste exportée.",
+					id: uuidv4(),
+				},
+			]);
+	})
+
+}
 
 	const deleteList = () => {
 		customLists.update(list => list.filter(_list => _list.id !== currentTab));
@@ -117,6 +157,7 @@
 					modifyingListId = currentTab;
 				}}>Modifier</button>
 			<button on:click={deleteList}>Supprimer</button>
+			<button on:click={exportList}>Exporter</button>
 		</div>
 	{/if}
 	{#if displayedList.length}
