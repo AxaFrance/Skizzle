@@ -1,5 +1,6 @@
 <script>
-	const app = require('electron').remote;
+	import { WindowEnum } from "models/skizzle";
+	const app = require('electron').ipcRenderer;
 
 	export let isMaximized: boolean;
 </script>
@@ -10,7 +11,7 @@
 
 <div class="window-controls">
 	<button
-		on:click={() => app.getCurrentWindow().minimize()}
+		on:click={() => app.send('state', { state: WindowEnum.Minimize })}
 		class="button min-button">
 		<svg width="11" height="11" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M11 4.399V5.5H0V4.399h11z" fill="#444" />
@@ -18,7 +19,7 @@
 	</button>
 	{#if !isMaximized}
 		<button
-			on:click={() => app.getCurrentWindow().maximize()}
+			on:click={() =>  app.send('state', { state: WindowEnum.Maximize })}
 			class="button max-button">
 			<svg width="11" height="11" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M11 0v11H0V0h11zM9.899 1.101H1.1V9.9h8.8V1.1z" fill="#444" />
@@ -26,7 +27,7 @@
 		</button>
 	{:else}
 		<button
-			on:click={() => app.getCurrentWindow().unmaximize()}
+			on:click={() =>  app.send('state', { state: WindowEnum.Unmaximize })}
 			class="button restore-button">
 			<svg width="11" height="11" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path
@@ -38,7 +39,7 @@
 		</button>
 	{/if}
 	<button
-		on:click={() => app.getCurrentWindow().hide()}
+		on:click={() =>  app.send('state', { state: WindowEnum.Hide })}
 		class="button close-button">
 		<svg
 			class="close"

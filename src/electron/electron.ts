@@ -11,9 +11,12 @@ import {
 import OAuthWindow from './OAuthWindow';
 import { ProviderEnum } from '../models/skizzle/ProviderEnum';
 import * as path from 'path';
+import * as fs from 'fs';
 import { autoUpdater } from 'electron-updater';
 import type { SettingsType } from '../models/skizzle/SettingsType';
 import { SkizzleUpdaterEnum } from '../models/skizzle/SkizzleUpdaterEnum';
+import type { ExportType } from '../models/skizzle/ExportType';
+import { WindowEnum } from '../models/skizzle/WindowEnum';
 
 try {
 	require('electron-reloader')(module);
@@ -32,6 +35,7 @@ let window: BrowserWindow;
 let github: OAuthWindow;
 let azure: OAuthWindow;
 let tray: Tray;
+let isMaximized: boolean;
 
 const hangOrCrash = async (window: BrowserWindow) => {
 	const options = {
@@ -61,9 +65,10 @@ const createWindow = () => {
 		webPreferences: {
 			nodeIntegration: true,
 			experimentalFeatures: true,
-			enableRemoteModule: true,
 		},
 	});
+
+	isMaximized = window.isMaximized();
 
 	const url = app.isPackaged
 		? `file://${path.join(__dirname, '../../index.html')}`
@@ -81,6 +86,17 @@ const createWindow = () => {
 	//@ts-ignore
 	window.on('render-process-gone', () => hangOrCrash(window));
 	window.on('unresponsive', () => hangOrCrash(window));
+
+	window.on('maximize', () => {
+		window.webContents.send('change-maximisze', true);
+		isMaximized = true;
+	});
+
+	window.on('unmaximize', () => {
+		window.webContents.send('change-maximisze', false);
+		isMaximized = false;
+	});
+
 	window.once('focus', () => window.flashFrame(false));
 	window.flashFrame(true);
 
@@ -199,6 +215,77 @@ ipcMain.handle('copy-to-clipboard', async (event, url: string) => {
 	return true;
 });
 
+ipcMain.handle(
+	'file-export',
+	async (
+		event: Electron.IpcMainEvent,
+		{ name, repositoriesIds }: ExportType,
+	) => {
+		try {
+			const { filePath } = await dialog.showSaveDialog(window, {
+				title: 'Exporter la liste sous...',
+				defaultPath: `${name}.json`,
+				filters: [
+					{
+						name: 'Skizzle List',
+						extensions: ['json'],
+					},
+				],
+			});
+
+			fs.writeFileSync(
+				filePath,
+				JSON.stringify(
+					{
+						name,
+						repositoriesIds,
+					},
+					undefined,
+					2,
+				),
+			);
+
+			return true;
+		} catch {
+			return false;
+		}
+	},
+);
+
+ipcMain.handle('file-import', async (event: Electron.IpcMainEvent) => {
+	try {
+		const { filePaths } = await dialog.showOpenDialog(window, {
+			properties: ['openFile'],
+			title: 'Importer une liste',
+			filters: [{ name: 'Skizzle List', extensions: ['json'] }],
+		});
+
+		return fs.readFileSync(filePaths[0], 'utf8');
+	} catch {
+		return undefined;
+	}
+});
+
+ipcMain.on(
+	'state',
+	(event: Electron.IpcMainEvent, { state }: { state: WindowEnum }) => {
+		switch (state) {
+			case WindowEnum.Maximize:
+				window.maximize();
+				break;
+			case WindowEnum.Minimize:
+				window.minimize();
+				break;
+			case WindowEnum.Unmaximize:
+				window.unmaximize();
+				break;
+			case WindowEnum.Hide:
+				window.hide();
+				break;
+		}
+	},
+);
+
 if (app.isPackaged) {
 	const settings = app.getLoginItemSettings();
 
@@ -229,10 +316,6 @@ if (!gotTheLock) {
 	app.commandLine.appendSwitch('disable-site-isolation-trials');
 
 	app.whenReady().then(() => {
-		/*let updater = new Updater(createWindow);
-
-		updater.checkForUpdates();*/
-
 		createWindow();
 
 		app.on('window-all-closed', () => {

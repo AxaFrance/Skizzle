@@ -1,58 +1,38 @@
 <script lang="ts">
-	const {remote} = require('electron');
-	const fs = require('fs')
-
 	import { v4 as uuidv4 } from 'uuid';
 	import { pullRequests, customLists, notifications } from 'shared/stores/default.store';
 	import PullRequest from 'components/PullRequest';
 	import Tabs from 'components/Tabs';
 	import Modale from 'components/Modale';
 	import CustomListSettings from 'components/CustomListSettings';
+	import type { CustomListType, ExportType, RepositoryType } from 'models/skizzle';
+	const app = require('electron').ipcRenderer;
 
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;
 	let currentTab: string = 'all';
-	const dialog = remote.dialog;
-	let customListsData;
 
 	const closeModale = () => {
 		creatingList = false;
 		modifyingListId = null;
 	};
 
-	customLists.subscribe(value => {
-		customListsData = value;
-	});
+const exportList = async () => {
+	const currentTabData = $customLists.find(customList => customList.id == currentTab);
 
-const exportList = () => {
-	const currentTabData = customListsData.filter(customList => customList.id == currentTab)[0]
+	if (currentTabData) {
+		const result: boolean = await app.invoke('file-export', { name: currentTabData.name, repositoriesIds: currentTabData.repositoriesIds } as ExportType);
 
-	const options = {
-    title: "Exporter la liste sous...",
-    defaultPath : `${currentTabData.name}.json`,
-    filters: [
-        {name: 'Skizzle List', extensions: ['json']}
-    ]
-}
-	const saveDialog = dialog.showSaveDialog(remote.getCurrentWindow(), options);
-
-	saveDialog.then(function(saveTo) {
-		fs.writeFileSync(saveTo.filePath, JSON.stringify(
-			{
-				name: currentTabData.name,
-				repositoriesIds: currentTabData.repositoriesIds
-			})
-		)
-
-		notifications.update(notifications => [
+		if (result) {
+			notifications.update(notifications => [
 				...notifications,
 				{
 					text: "Liste exportée.",
 					id: uuidv4(),
 				},
 			]);
-	})
-
+		}
+	}
 }
 
 	const deleteList = () => {
@@ -67,12 +47,10 @@ const exportList = () => {
 		currentTab = 'all';
 	};
 
-	const filterList = list =>
-		$pullRequests.filter(pullRequest =>
-			list.repositoriesIds
-				? list.repositoriesIds.includes(String(pullRequest.repositoryId))
-				: true,
-		);
+	const filterList = (customList: CustomListType) => {
+		return $pullRequests.filter(pullRequest => customList.repositoriesIds.map(String).includes(String(pullRequest.repositoryId)));
+	}
+		
 
 	const getTabs = lists => {
 		const tabs = {
@@ -100,6 +78,43 @@ const exportList = () => {
 			? $pullRequests
 			: filterList($customLists.find(({ id }) => id === currentTab));
 </script>
+
+<Tabs
+	current={currentTab}
+	onChange={tab => (currentTab = tab)}
+	data={tabs}
+	onCreation={() => {
+		creatingList = true;
+	}} />
+
+<div class="content">
+	{#if currentTab !== 'all'}
+		<div class="bar">
+			<button
+				on:click={() => {
+					modifyingListId = currentTab;
+				}}>Modifier</button>
+			<button on:click={deleteList}>Supprimer</button>
+			<button on:click={exportList}>Exporter</button>
+		</div>
+	{/if}
+	{#if displayedList.length}
+		<ul class="list">
+			{#each displayedList as pullRequest}
+				<li>
+					<PullRequest {pullRequest} />
+				</li>
+			{/each}
+		</ul>
+	{:else}
+		<p class="no-pr">Il n'y a aucune pull request à afficher dans cette liste.</p>
+	{/if}
+</div>
+{#if creatingList || modifyingListId}
+	<Modale onClose={closeModale}>
+		<CustomListSettings id={modifyingListId} onDone={closeModale} />
+	</Modale>
+{/if}
 
 <style>
 	.content {
@@ -140,41 +155,4 @@ const exportList = () => {
 		transform: translateX(-50%) translateY(-50%);
 	}
 </style>
-
-<Tabs
-	current={currentTab}
-	onChange={tab => (currentTab = tab)}
-	data={tabs}
-	onCreation={() => {
-		creatingList = true;
-	}} />
-
-<div class="content">
-	{#if currentTab !== 'all'}
-		<div class="bar">
-			<button
-				on:click={() => {
-					modifyingListId = currentTab;
-				}}>Modifier</button>
-			<button on:click={deleteList}>Supprimer</button>
-			<button on:click={exportList}>Exporter</button>
-		</div>
-	{/if}
-	{#if displayedList.length}
-		<ul class="list">
-			{#each displayedList as pullRequest}
-				<li>
-					<PullRequest {pullRequest} />
-				</li>
-			{/each}
-		</ul>
-	{:else}
-		<p class="no-pr">Il n'y a aucune pull request à afficher dans cette liste.</p>
-	{/if}
-</div>
-{#if creatingList || modifyingListId}
-	<Modale onClose={closeModale}>
-		<CustomListSettings id={modifyingListId} onDone={closeModale} />
-	</Modale>
-{/if}
 

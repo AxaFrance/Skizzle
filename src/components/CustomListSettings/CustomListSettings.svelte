@@ -1,7 +1,4 @@
 <script lang="ts">
-	const {dialog} = require('electron').remote;
-	const fs = require('fs')
-
 	import { v4 as uuidv4 } from 'uuid';
 	import type { CustomListType } from 'models/skizzle/CustomListType';
 	import AccountTitle from 'components/AccountTitle';
@@ -9,6 +6,7 @@
 	import { repositories, customLists, notifications } from 'shared/stores/default.store';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import Icons from 'components/icons';
+	const app = require('electron').ipcRenderer;
 
 	export let onDone: () => void;
 	export let id: string;
@@ -22,37 +20,29 @@
 		? $customLists.find(list => list.id === id).repositoriesIds
 		: [];
 
-	const onImport = () => {
-		const options = {
-				properties: ['openFile'],
-				title: "Importer une liste",
-				filters: [
-					{name: 'Skizzle List', extensions: ['json']}
-				]
-			}
+	const onImport = async () => {
+		const result: any = await app.invoke('file-import');
 
-		const loadFrom = dialog.showOpenDialog(options);
+		if (result) {
+			const data = JSON.parse(result) as CustomListType;
 
-		loadFrom.then(file => {
-			 const data = JSON.parse(fs.readFileSync(file.filePaths[0],'utf8'))
+			const list: CustomListType = {
+				id: uuidv4(),
+				...data
+			};
 
-			 const list: CustomListType = {
+			customLists.update(_list => [..._list, list]);
+
+			notifications.update(notifications => [
+				...notifications,
+				{
+					text: "Liste importée.",
 					id: uuidv4(),
-					...data
-				};
-
-			 customLists.update(_list => [..._list, list]);
-
-			 notifications.update(notifications => [
-					...notifications,
-					{
-						text: "Liste importée.",
-						id: uuidv4(),
-					},
-				]);
-			 onDone()
-		})
-
+				},
+			]);
+			
+			onDone();
+		}	 
 	}
 
 	const onSubmit = (event): void => {
@@ -108,7 +98,7 @@
 	<AccountTitle>
 			{id ? 'Modifier la liste' : 'Nouvelle liste'}
 			<input id="import" on:click={onImport} type="submit" value={'Charger une liste'} />
-</AccountTitle>
+	</AccountTitle>
 	<Fieldset
 		title="Nom de la liste"
 		intro="Choisissez un nom pour votre liste, il apparaitra dans l'onglet."

@@ -9,11 +9,13 @@ import type { RepositoryType } from './RepositoryType';
 import type { ReviewType } from './ReviewType';
 import type { SettingsType } from './SettingsType';
 import type { NotificationType } from './NotificationType';
+import type { ExportType } from './ExportType';
 
 import { ProviderEnum } from './ProviderEnum';
 import { ThemeEnum } from './ThemeEnum';
 import { Views } from './ViewsEnum';
 import { SkizzleUpdaterEnum } from './SkizzleUpdaterEnum';
+import { WindowEnum } from './WindowEnum';
 
 export type {
 	CommentType,
@@ -29,6 +31,7 @@ export type {
 	SettingsType,
 	UserType,
 	NotificationType,
+	ExportType,
 };
 
-export { ProviderEnum, ThemeEnum, Views, SkizzleUpdaterEnum };
+export { ProviderEnum, ThemeEnum, Views, SkizzleUpdaterEnum, WindowEnum };
