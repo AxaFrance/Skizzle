@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
-	import { pullRequests, customLists, notifications } from 'shared/stores/default.store';
+	import {
+		pullRequests,
+		customLists,
+		notifications,
+	} from 'shared/stores/default.store';
 	import PullRequest from 'components/PullRequest';
 	import Tabs from 'components/Tabs';
 	import Modale from 'components/Modale';
@@ -17,40 +21,48 @@
 		modifyingListId = null;
 	};
 
-const exportList = async () => {
-	const currentTabData = $customLists.find(customList => customList.id == currentTab);
+	const exportList = async () => {
+		const currentTabData = $customLists.find(
+			customList => customList.id == currentTab,
+		);
 
-	if (currentTabData) {
-		const result: boolean = await app.invoke('file-export', { name: currentTabData.name, repositoriesIds: currentTabData.repositoriesIds } as ExportType);
+		if (currentTabData) {
+			const result: boolean = await app.invoke('file-export', {
+				name: currentTabData.name,
+				repositoriesIds: currentTabData.repositoriesIds,
+			} as ExportType);
 
-		if (result) {
-			notifications.update(notifications => [
-				...notifications,
-				{
-					text: "Liste exportée.",
-					id: uuidv4(),
-				},
-			]);
+			if (result) {
+				notifications.update(notifications => [
+					...notifications,
+					{
+						text: 'Liste exportée.',
+						id: uuidv4(),
+					},
+				]);
+			}
 		}
-	}
-}
+	};
 
 	const deleteList = () => {
 		customLists.update(list => list.filter(_list => _list.id !== currentTab));
 		notifications.update(notifications => [
-				...notifications,
-				{
-					text: "Liste supprimée.",
-					id: uuidv4(),
-				},
-			]);
+			...notifications,
+			{
+				text: 'Liste supprimée.',
+				id: uuidv4(),
+			},
+		]);
 		currentTab = 'all';
 	};
 
 	const filterList = (customList: CustomListType) => {
-		return $pullRequests.filter(pullRequest => customList.repositoriesIds.map(String).includes(String(pullRequest.repositoryId)));
-	}
-		
+		return $pullRequests.filter(pullRequest =>
+			customList.repositoriesIds
+				.map(String)
+				.includes(String(pullRequest.repositoryId)),
+		);
+	};
 
 	const getTabs = lists => {
 		const tabs = {
@@ -85,7 +97,8 @@ const exportList = async () => {
 	data={tabs}
 	onCreation={() => {
 		creatingList = true;
-	}} />
+	}}
+/>
 
 <div class="content">
 	{#if currentTab !== 'all'}
@@ -93,7 +106,8 @@ const exportList = async () => {
 			<button
 				on:click={() => {
 					modifyingListId = currentTab;
-				}}>Modifier</button>
+				}}
+			>Modifier</button>
 			<button on:click={deleteList}>Supprimer</button>
 			<button on:click={exportList}>Exporter</button>
 		</div>
@@ -155,4 +169,3 @@ const exportList = async () => {
 		transform: translateX(-50%) translateY(-50%);
 	}
 </style>
-

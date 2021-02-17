@@ -8,14 +8,14 @@
 	import Reviews from 'components/Reviews';
 	import Icons from 'components/icons';
 	import Comment from 'components/Comment';
-	
+
 	export let pullRequest: PullRequestType;
 
 	let detailsModal = false;
 
 	const openLink = () => shell.openExternal(pullRequest.url);
-	const openModale = () => detailsModal = true;
-	const closeModale = () => detailsModal = false;
+	const openModale = () => (detailsModal = true);
+	const closeModale = () => (detailsModal = false);
 </script>
 
 <div class="pr">
@@ -93,7 +93,7 @@
 	}
 
 	.details {
-		flex: 1 0 auto;
+		flex: 1 1 calc(100% - 5rem);
 	}
 
 	header {
@@ -113,7 +113,7 @@
 	.title {
 		margin-bottom: 0.5rem;
 		font-size: 1rem;
-		line-height: 1;
+		line-height: 1.3;
 		font-weight: normal;
     display: flex;
     align-items: center;
@@ -191,10 +191,10 @@
 	}
 	.skz-pullrequest__status--conflicts {
 		border-color: red;
-			color: red;
+		color: red;
 	}
 	.skz-pullrequest__status--auto-complete {
 		border-color: green;
-			color: green;
+		color: green;
 	}
 </style>
