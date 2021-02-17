@@ -26,20 +26,29 @@
 	};
 </script>
 
+<Tabs
+	current={currentProvider}
+	onChange={provider => (currentProvider = provider)}
+	data={tabs}
+/>
+<div class="content">
+	<svelte:component this={views[currentProvider]} />
+</div>
+
 <style>
 	.content {
+		position: relative;
 		height: calc(100vh - 6rem);
 		flex: 1 0 auto;
 		padding: 1rem;
 		overflow: auto;
 		background-color: #4e4e4e;
 	}
-</style>
 
-<Tabs
-	current={currentProvider}
-	onChange={provider => (currentProvider = provider)}
-	data={tabs} />
-<div class="content">
-	<svelte:component this={views[currentProvider]} />
-</div>
+	.content :global(.loader, .error) {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translateX(-50%) translateY(-50%);
+	}
+</style>

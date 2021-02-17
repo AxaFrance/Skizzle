@@ -1,5 +1,5 @@
 <script lang="ts">
-  import marked from 'marked'
+	import marked from 'marked';
 	import { Service } from 'services/Service';
 	import type { CommentType } from 'models/skizzle';
 
@@ -13,7 +13,10 @@
 		</div>
 	{/await}
 	<div class="content">
-		<h2>{comment.author.displayName} <small>{comment.date}</small></h2>
+		<h2>
+			{comment.author.displayName}
+			<small>{comment.date}</small>
+		</h2>
 		<div>{@html marked(comment.text)}</div>
 	</div>
 </div>
@@ -43,6 +46,42 @@
 		background-color: #4c4c4c;
 	}
 
+	.content :global(a) {
+		color: #ddd;
+	}
+
+	.content :global(a:hover) {
+		text-decoration: none;
+	}
+
+	.content :global(blockquote) {
+		font-style: italic;
+		padding-left: 1rem;
+		margin-bottom: 1rem;
+		border-left: 1px solid #ccc;
+	}
+
+	.content :global(ul, ol) {
+		padding-left: 1rem;
+	}
+
+	.content :global(img) {
+		margin: 0.2rem;
+	}
+
+	.content :global(p:not(:last-child)) {
+		margin-bottom: 0.5rem;
+	}
+
+	.content :global(code) {
+		display: inline-block;
+		margin: 0.1rem;
+		padding: 0.1rem 0.2rem;
+		color: #333;
+		font-size: 1rem;
+		background-color: #aaa;
+	}
+
 	.content:before {
 		content: '';
 		position: absolute;
@@ -57,13 +96,14 @@
 	}
 
 	h2 {
-		margin-bottom: 0.5rem;
+		margin-bottom: 1rem;
 		font-size: 1rem;
 	}
 
 	h2 small {
-		font-size: 0.8rem;
+		font-size: 0.7rem;
 		font-weight: normal;
+		color: #ccc;
 	}
 
 	h2 + div {

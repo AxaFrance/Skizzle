@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { Service } from 'services/Service';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
-	import {
-		isFetchingData,
-		isLoading,
-	} from 'shared/stores/default.store';
+	import { isFetchingData, isLoading } from 'shared/stores/default.store';
 	import { authorize } from 'shared/token';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import AccountTitle from 'components/AccountTitle';
@@ -33,6 +30,44 @@
 		search = '';
 	};
 </script>
+
+{#if $isLoading}
+	<p class="loader">Chargement...</p>
+{:else if $clientAuthenticated.isGithubAuthenticated}
+	{#await Service.getProfile(ProviderEnum.Github)}
+		<p class="loader">Chargement...</p>
+	{:then profile}
+		<section>
+			<AccountTitle>Votre compte Github</AccountTitle>
+			<AccountSummary {profile} />
+		</section>
+		<div>
+			<section>
+				<AccountTitle>Suivre un nouveau repository</AccountTitle>
+				<p class="intro">Cherchez le nom d'un repository.</p>
+
+				<Search
+					onSubmit={onSearchSubmit}
+					onCancel={onSearchCancel}
+					disabled={$isFetchingData}
+					placeholder="Rechercher un repository"
+				/>
+
+				{#if search}
+					<SearchResults {search} repos={fetchedGithubRepositories} />
+				{/if}
+			</section>
+			<FollowedRepositories {profile} />
+		</div>
+	{:catch}
+		<p class="error">Fetching profile failed.</p>
+	{/await}
+{:else}
+	<AddAccount
+		text="Ajouter un compte Github"
+		onClick={() => authorize(ProviderEnum.Github)}
+	/>
+{/if}
 
 <style>
 	section {
@@ -63,41 +98,3 @@
 		color: #ddd;
 	}
 </style>
-
-{#if $isLoading}
-	<p>Chargement...</p>
-{:else if $clientAuthenticated.isGithubAuthenticated}
-	{#await Service.getProfile(ProviderEnum.Github)}
-		<p>Chargement...</p>
-	{:then profile}
-		<section>
-			<AccountTitle>Votre compte Github</AccountTitle>
-			<AccountSummary {profile} />
-		</section>
-		<div>
-			<section>
-				<AccountTitle>Suivre un nouveau repository</AccountTitle>
-				<p class="intro">Cherchez le nom d'un repository.</p>
-
-				<Search
-					onSubmit={onSearchSubmit}
-					onCancel={onSearchCancel}
-					disabled={$isFetchingData}
-					placeholder="Rechercher un repository" />
-
-				{#if search}
-					<SearchResults
-						{search}
-						repos={fetchedGithubRepositories} />
-				{/if}
-			</section>
-			<FollowedRepositories {profile} />
-		</div>
-	{:catch}
-		<p>Fetching profile failed.</p>
-	{/await}
-{:else}
-	<AddAccount
-		text="Ajouter un compte Github"
-		onClick={() => authorize(ProviderEnum.Github)} />
-{/if}
