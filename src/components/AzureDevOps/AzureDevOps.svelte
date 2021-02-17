@@ -3,8 +3,7 @@
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import {
 		isFetchingData,
-		isLoading,
-		projects
+		isLoading
 	} from 'shared/stores/default.store';
 	import { authorize } from 'shared/token';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
@@ -14,20 +13,24 @@
 	import SearchResults from 'components/SearchResults';
 	import FollowedRepositories from 'components/FollowedRepositories';
 	import Search from 'components/Search';
+	import type { RepositoryType } from 'models/skizzle';
 
 	let search: string = '';
 
-	$: fetchedProjects = $projects.filter(x =>
-		x.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
-	);
-
-	const onSearchSubmit = (query: string): void => {
+	const onSearchSubmit = (repositories: RepositoryType[]) => (query: string): void => {
 		search = query;
+
+		fetchedAzureDevOpsRepositories = repositories.filter(({projectName, name}) =>
+			name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+			projectName.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+		)
 	};
 
 	const onSearchCancel = (): void => {
 		search = '';
 	};
+	
+	$: fetchedAzureDevOpsRepositories = [] as RepositoryType[];
 </script>
 
 <style>
@@ -61,35 +64,41 @@
 </style>
 
 {#if $isLoading}
-	<p>Chargement...</p>
+	<p>Chargement de l'application...</p>
 {:else if $clientAuthenticated.isAzureDevOpsAuthenticated}
 	{#await Service.getProfile(ProviderEnum.AzureDevOps)}
-		<p>Chargement...</p>
+		<p>Chargement du profile</p>
 	{:then profile}
-		<section>
-			<AccountTitle>Votre compte Azure DevOps</AccountTitle>
-			<AccountSummary {profile} withSettings={true} />
-		</section>
-		<div>
+		{#await Service.getRepositories(ProviderEnum.AzureDevOps, { profile })}
+			<p>Chargement de la liste des repositories</p>
+		{:then repositories}
 			<section>
-				<AccountTitle>Suivre un nouveau repository</AccountTitle>
-				<p class="intro">Cherchez le nom de son projet associé.</p>
-				<Search
-					onSubmit={onSearchSubmit}
-					onCancel={onSearchCancel}
-					disabled={$isFetchingData}
-					placeholder="Rechercher un projet" />
+				<AccountTitle>Votre compte Azure DevOps</AccountTitle>
+				<AccountSummary {profile} />
+			</section>
+			<div>
+				<section>
+					<AccountTitle>Suivre un nouveau repository</AccountTitle>
+					<p class="intro">Cherchez le nom de son projet et/ou repository associé.</p>
+					<Search
+						onSubmit={onSearchSubmit(repositories)}
+						onCancel={onSearchCancel}
+						disabled={$isFetchingData}
+						placeholder="Rechercher un projet ou un repos" />
 
-				{#if search}
-					<SearchResults
-						{search}
-						projects={fetchedProjects} />
-				{/if}
-			</section>
-			<section>
-				<FollowedRepositories {profile} />
-			</section>
-		</div>
+					{#if search}
+						<SearchResults
+							{search}
+							repos={fetchedAzureDevOpsRepositories} />
+					{/if}
+				</section>
+				<section>
+					<FollowedRepositories {profile} />
+				</section>
+			</div>
+		{:catch}
+			<p>Fetching profile failed.</p>
+		{/await}
 	{:catch}
 		<p>Fetching profile failed.</p>
 	{/await}

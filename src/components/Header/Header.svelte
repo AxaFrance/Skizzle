@@ -4,9 +4,11 @@
 	import MacosBar from './MacosBar.svelte';
 
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'windows' : 'others';
-	let isMaximized: boolean;
+	let isMaximized: boolean = app.invoke('isMaximized') as boolean;
 
-	app.on('change-maximisze', (event: any, args: boolean) => isMaximized = args);
+	app.on('change-maximisze', (event: any, args: boolean) => {
+		isMaximized = args
+	});
 </script>
 
 <style src="./Header.scss"></style>

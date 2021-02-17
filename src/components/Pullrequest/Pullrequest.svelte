@@ -18,6 +18,60 @@
 	const closeModale = () => detailsModal = false;
 </script>
 
+<div class="pr">
+	<button class="link" on:click={openLink} />
+	<Avatar className="pr__avatar" {pullRequest} />
+	<div class="details">
+		<header>
+			<h2 class="author">{pullRequest.user.name} - {pullRequest.dateStr}</h2>
+			{#if pullRequest.projectName}
+				<span class="project">{pullRequest.projectName}</span>
+			{/if}
+		</header>
+		<h3 class="title">
+			{#if pullRequest.isAutoComplete}
+				<span
+					class="skz-pullrequest__status skz-pullrequest__status--auto-complete">
+					Auto-complete
+				</span>
+			{/if}
+			{#if pullRequest.isDraft}
+				<span class="skz-pullrequest__status skz-pullrequest__status--draft">
+					Draft
+				</span>
+			{/if}
+			{#if pullRequest.isConflict}
+				<span class="skz-pullrequest__status skz-pullrequest__status--conflicts">
+					Conflits
+				</span>
+			{/if}
+			{pullRequest.title}
+		</h3>
+		<p class="repo">{pullRequest.repositoryName}</p>
+	</div>
+	<footer>
+		{#if pullRequest.reviewers}
+			<Reviews reviews={pullRequest.reviewers} />
+		{/if}
+		<Labels labels={pullRequest.labels} />
+		<button
+			class="more"
+			on:click={openModale}
+			disabled={$isFetchingData}>
+			<Icons.Ellipsis />
+		</button>
+	</footer>
+</div>
+{#if detailsModal}
+	<Modale onClose={closeModale}>
+		{#each pullRequest.comments as comment}
+			<Comment {comment} />
+		{:else}
+			<p class="no-comment">Il n'y a aucun commentaire sur cette pull request.</p>
+		{/each}
+	</Modale>
+{/if}
+
 <style>
 	.pr {
 		position: relative;
@@ -61,6 +115,8 @@
 		font-size: 1rem;
 		line-height: 1;
 		font-weight: normal;
+    display: flex;
+    align-items: center;
 	}
 
 	.repo {
@@ -115,40 +171,30 @@
 		text-align: center;
 		transform: translateY(-50%);
 	}
-</style>
 
-<div class="pr">
-	<button class="link" on:click={openLink} />
-	<Avatar className="pr__avatar" {pullRequest} />
-	<div class="details">
-		<header>
-			<h2 class="author">{pullRequest.user.name} - {pullRequest.dateStr}</h2>
-			{#if pullRequest.projectName}
-				<span class="project">{pullRequest.projectName}</span>
-			{/if}
-		</header>
-		<h3 class="title">{pullRequest.title}</h3>
-		<p class="repo">{pullRequest.repositoryName}</p>
-	</div>
-	<footer>
-		{#if pullRequest.reviewers}
-			<Reviews reviews={pullRequest.reviewers} />
-		{/if}
-		<Labels labels={pullRequest.labels} />
-		<button
-			class="more"
-			on:click={openModale}
-			disabled={$isFetchingData}>
-			<Icons.Ellipsis />
-		</button>
-	</footer>
-</div>
-{#if detailsModal}
-	<Modale onClose={closeModale}>
-		{#each pullRequest.comments as comment}
-			<Comment {comment} />
-		{:else}
-			<p class="no-comment">Il n'y a aucun commentaire sur cette pull request.</p>
-		{/each}
-	</Modale>
-{/if}
+	.skz-pullrequest__status {
+		display: inline-block;
+		margin-right: 0.2rem;
+		padding: 0 0.2rem;
+		font-size: 0.8rem;
+		font-weight: normal;
+		border-width: 1px;
+		border-style: solid;
+		border-radius: 4px;
+		vertical-align: bottom;
+		line-height: 1.5;
+	}
+
+	.skz-pullrequest__status--draft {
+		border-color: #777;
+		color: #777;
+	}
+	.skz-pullrequest__status--conflicts {
+		border-color: red;
+			color: red;
+	}
+	.skz-pullrequest__status--auto-complete {
+		border-color: green;
+			color: green;
+	}
+</style>

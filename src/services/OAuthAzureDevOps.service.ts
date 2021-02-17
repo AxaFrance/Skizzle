@@ -1,25 +1,18 @@
 import {
-	CommentMapper,
 	OrganizationMapper,
 	ProfileMapper,
 	ProjectMapper,
 	PullRequestMapper,
 	RepositoryMapper,
-	ReviewMapper,
 } from 'mappers';
 import {
 	AzureDevOpsCommentApiEnum,
 	AzureDevOpsCommentStatusApiEnum,
-	AzureDevOpsCommentType,
 } from 'models/api';
 import type {
-	CommentType,
-	OrganizationType,
 	ProfileType,
-	ProjectType,
 	PullRequestType,
 	RepositoryType,
-	ReviewType,
 } from 'models/skizzle';
 import { ProviderEnum } from 'models/skizzle';
 import { OAuthAzureDevOpsRequester } from 'requesters/OAuthAzureDevOps.requester';
@@ -61,19 +54,6 @@ export class OAuthAzureDevOpsService implements IService {
 
 		return profileMapped;
 	}
-
-	public async getOrganizations({
-		profile,
-	}: ServiceParams): Promise<OrganizationType[]> {
-		const { id } = profile;
-
-		const result = await this.requester.getOrganizations(id);
-
-		const mapper = new OrganizationMapper();
-
-		return mapper.to(result, { provider: this.provider });
-	}
-
 	public async getAvatar(
 		descriptor: string,
 		organizationName?: string,
@@ -83,36 +63,44 @@ export class OAuthAzureDevOpsService implements IService {
 		return `data:image/png;base64,${avatar}`;
 	}
 
-	public async getProjects({
-		organization,
-	}: ServiceParams): Promise<ProjectType[]> {
-		const { organizationName } = organization;
-
-		const result = await this.requester.getProjects(organizationName);
-
-		const mapper = new ProjectMapper();
-
-		return mapper.to(result, { organizationName, provider: this.provider });
-	}
-
 	public async getRepositories({
-		project,
+		profile,
 	}: ServiceParams): Promise<RepositoryType[]> {
-		const { organizationName, projectId, name } = project;
+		const { id } = profile;
 
-		const result = await this.requester.getRepositories(
-			organizationName,
-			projectId,
+		const organizations = new OrganizationMapper().to(
+			await this.requester.getOrganizations(id),
+			{ provider: this.provider },
 		);
 
-		const mapper = new RepositoryMapper();
+		const projects = (
+			await Promise.all(
+				organizations.map(async ({ organizationName }) => {
+					return new ProjectMapper().to(
+						await this.requester.getProjects(organizationName),
+						{ organizationName, provider: this.provider },
+					);
+				}),
+			)
+		).reduce((prev, curr) => prev.concat(curr), []);
 
-		return mapper.to(result, {
-			organizationName,
-			projectId,
-			projectName: name,
-			provider: this.provider,
-		});
+		const repositories = (
+			await Promise.all(
+				projects.map(async ({ organizationName, projectId, name }) => {
+					return new RepositoryMapper().to(
+						await this.requester.getRepositories(organizationName, projectId),
+						{
+							organizationName,
+							projectId,
+							projectName: name,
+							provider: this.provider,
+						},
+					);
+				}),
+			)
+		).reduce((prev, curr) => prev.concat(curr), []);
+
+		return repositories;
 	}
 
 	public async getPullRequests({

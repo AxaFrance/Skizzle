@@ -122,7 +122,6 @@
 					{#if $repositories.filter(repo => repo.provider === ProviderEnum.AzureDevOps).length}
 						<optgroup label="Azure Devops">
 							{#each $repositories
-								.filter(({ checked }) => checked)
 								.filter(
 									repo => repo.provider === ProviderEnum.AzureDevOps,
 								) as repository}
@@ -140,7 +139,6 @@
 					{#if $repositories.filter(repo => repo.provider === ProviderEnum.Github).length}
 						<optgroup label="Github">
 							{#each $repositories
-								.filter(({ checked }) => checked)
 								.filter(repo => repo.provider === ProviderEnum.Github) as repository}
 								<option
 									disabled={repositoriesIds.includes(repository.repositoryId)}

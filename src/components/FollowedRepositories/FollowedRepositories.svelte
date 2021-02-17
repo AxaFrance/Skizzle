@@ -14,7 +14,7 @@
 	let shareDisplayed:boolean = false;
 	
 	$: followedRepositories = $repositories.filter(
-		({ checked, provider }) => checked && provider === profile.provider,
+		({ provider }) => provider === profile.provider,
 	);
 </script>
 

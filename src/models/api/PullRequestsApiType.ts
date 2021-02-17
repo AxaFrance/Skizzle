@@ -25,6 +25,9 @@ type AzureDevOpsPullRequestApiType = {
 	title?: string;
 	description?: string;
 	creationDate?: string;
+	isDraft?: boolean;
+	mergeStatus?: string;
+	autoCompleteSetBy?: any;
 	reviewers?: AzureDevOpsReviewApiType[];
 	createdBy?: CreatedByApiType;
 	repository?: AzureDevOpsRepositoryApiType;
@@ -60,6 +63,7 @@ type GithubPullRequestApiType = {
 	user?: UserApiType;
 	updated_at?: string;
 	number?: number;
+	draft?: boolean;
 	labels?: GithubLabelsApiType[];
 	base?: GithubBaseApiType;
 	html_url?: string;

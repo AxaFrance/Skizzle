@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { isFetchingData, repositories, organizations, projects } from 'shared/stores/default.store';
+  import { isFetchingData, repositories } from 'shared/stores/default.store';
 	import { HighlightSvelte } from "svelte-highlight";
-	import { a11yDark } from "svelte-highlight/styles";
   import { json } from "svelte-highlight/languages";
 	import Tabs from 'components/Tabs';
   import AccountTitle from 'components/AccountTitle';
@@ -9,6 +8,8 @@
   import Icons from 'components/icons';
   import type { RepositoryType } from 'models/skizzle';
   import { ProviderEnum } from 'models/skizzle';
+  
+  import 'svelte-highlight/styles/github.css';
 
   export let followedRepositories: RepositoryType[];
   export let provider: ProviderEnum;
@@ -22,7 +23,6 @@
   const importCode = () => {
     let repositoriesImported = JSON.parse(code) as RepositoryType[];
     repositoriesImported = repositoriesImported
-      .map(x => ({ ...x, checked: true }))
       .filter((repository) => {
         let result = repository.repositoryId && 
           repository.gitUrl && 
@@ -32,9 +32,7 @@
         if (provider === ProviderEnum.AzureDevOps) {
           result = result && repository.organizationName && 
             repository.projectId && 
-            repository.projectName && 
-            $projects.some(project => project.projectId === repository.projectId) &&
-            $organizations.some(organization => organization.organizationName === repository.organizationName);
+            !!repository.projectName
         }
 
         if (provider === ProviderEnum.Github) {
@@ -46,8 +44,7 @@
 
 		repositories.update(x => {
       const values = x.map(repository => ({
-        ...repository,
-        checked: repository.checked || repositoriesImported.some(z => z.repositoryId === repository.repositoryId)
+        ...repository
       }));
 
       return ([...values, ...repositoriesImported.filter(y => !x.some(z => z.repositoryId === y.repositoryId))])
@@ -57,47 +54,43 @@
 
   const getExportCode = (): RepositoryType[] => {
     return followedRepositories.map(repository => ({
-      ...repository,
-      checked: undefined
+      ...repository
     }));
   }
 </script>
 
-<svelte:head>
-  {@html a11yDark}
-</svelte:head>
-  <AccountTitle>Importer / Exporter une liste de repositories.</AccountTitle>
-  <p class="intro">Skizzle permet d'importer et d'exporter une liste de repositories suivis. Vous pouvez partager votre liste avec les autres membres de votre équipe.</p>
-  <Tabs
-    onChange={changeTab}
-    current={currentTab}
-    data={{ import: { order: 0, label: 'Importer' }, export : { order: 1, label: 'Exporter' }}}
-  />
-  <div class="container">
-    {#if currentTab === 'export'}
-    <p class="intro">Copiez le code JSON et importez-le dans une autre instance de Skizzle.</p>
-    <div class="code">
+<AccountTitle>Importer / Exporter une liste de repositories.</AccountTitle>
+<p class="intro">Skizzle permet d'importer et d'exporter une liste de repositories suivis. Vous pouvez partager votre liste avec les autres membres de votre équipe.</p>
+<Tabs
+  onChange={changeTab}
+  current={currentTab}
+  data={{ import: { order: 0, label: 'Importer' }, export : { order: 1, label: 'Exporter' }}}
+/>
+<div class="container">
+  {#if currentTab === 'export'}
+  <p class="intro">Copiez le code JSON et importez-le dans une autre instance de Skizzle.</p>
+  <div class="code">
 
-      <HighlightSvelte language={json} code={JSON.stringify(getExportCode(), undefined, 2)} />
-      <button
-      class="copy"
-          on:click={() => copyToClipboard(JSON.stringify(getExportCode(), undefined, 2), 'Code copié dans le presse-papier.')}
-          disabled={$isFetchingData}
-          title="Copier l'url de ce repository"
-        >
-        <Icons.Copy />
-      </button>
-    </div>
-    {:else}
-      <form on:submit|preventDefault={importCode}>
-        <p class="intro">Collez le code JSON provenant d'une autre instance de Skizzle. <b>Attention</b> Skizzle remplacera les repositories que vous suivez actuellement.</p>
-        <textarea bind:value={code} placeholder="Collez ici votre code JSON"></textarea>
-        <div class="bar">
-          <input disabled={!isJson(code)} type="submit" class="import-button" value="Importer les repositories" />
-        </div>
-      </form>
-    {/if}
+    <HighlightSvelte language={json} code={JSON.stringify(getExportCode(), undefined, 2)} />
+    <button
+    class="copy"
+        on:click={() => copyToClipboard(JSON.stringify(getExportCode(), undefined, 2), 'Code copié dans le presse-papier.')}
+        disabled={$isFetchingData}
+        title="Copier l'url de ce repository"
+      >
+      <Icons.Copy />
+    </button>
   </div>
+  {:else}
+    <form on:submit|preventDefault={importCode}>
+      <p class="intro">Collez le code JSON provenant d'une autre instance de Skizzle. <b>Attention</b> Skizzle remplacera les repositories que vous suivez actuellement.</p>
+      <textarea bind:value={code} placeholder="Collez ici votre code JSON"></textarea>
+      <div class="bar">
+        <input disabled={!isJson(code)} type="submit" class="import-button" value="Importer les repositories" />
+      </div>
+    </form>
+  {/if}
+</div>
 
   <style>
     textarea {

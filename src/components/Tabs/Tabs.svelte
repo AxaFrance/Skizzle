@@ -1,10 +1,35 @@
 <script lang="ts">
 	import Icons from 'components/icons';
+	import { isFetchingData } from 'shared/stores/default.store';
 	export let data: any;
 	export let onChange: (value: any) => void;
 	export let current: any;
 	export let onCreation: () => void;
 </script>
+
+<nav>
+	{#each Object.keys(data).sort((a, b) =>
+		data[a].order < data[b].order ? -1 : 1,
+	) as tab}
+		<button
+			class="tab"
+			class:current={current === tab || Object.keys(data).length === 1}
+			on:click={() => onChange(tab)}
+			disabled={$isFetchingData}>
+			{#if data[tab].icon}
+				<svelte:component this={data[tab].icon} />
+			{/if}
+			{data[tab].label}
+			{#if data[tab].counter}<small>({data[tab].counter})</small>{/if}
+		</button>
+	{/each}
+	{#if onCreation}
+		<button
+			on:click={onCreation}
+			title="Créer une nouvelle liste"
+			class="add"><Icons.Plus /></button>
+	{/if}
+</nav>
 
 <style>
 	nav {
@@ -68,26 +93,3 @@
 		color: var(--color);
 	}
 </style>
-
-<nav>
-	{#each Object.keys(data).sort((a, b) =>
-		data[a].order < data[b].order ? -1 : 1,
-	) as tab}
-		<button
-			class="tab"
-			class:current={current === tab || Object.keys(data).length === 1}
-			on:click={() => onChange(tab)}>
-			{#if data[tab].icon}
-				<svelte:component this={data[tab].icon} />
-			{/if}
-			{data[tab].label}
-			{#if data[tab].counter}<small>({data[tab].counter})</small>{/if}
-		</button>
-	{/each}
-	{#if onCreation}
-		<button
-			on:click={onCreation}
-			title="Créer une nouvelle liste"
-			class="add"><Icons.Plus /></button>
-	{/if}
-</nav>

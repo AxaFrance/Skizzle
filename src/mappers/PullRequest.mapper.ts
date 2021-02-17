@@ -54,6 +54,9 @@ export class PullRequestMapper extends Mapper<
 				url:
 					value.html_url ||
 					`https://dev.azure.com/${params.organizationName}/${params.projectName}/_git/${params.repositoryName}/pullrequest/${value.pullRequestId}`,
+				isDraft: value.isDraft || value.draft,
+				isConflict: value.mergeStatus && value.mergeStatus === 'conflicts',
+				isAutoComplete: !!value.autoCompleteSetBy,
 				...params,
 			};
 

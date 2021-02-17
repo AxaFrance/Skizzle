@@ -1,7 +1,22 @@
 <script lang="ts">
+  import marked from 'marked'
 	import { Service } from 'services/Service';
-	export let comment;
+	import type { CommentType } from 'models/skizzle';
+
+	export let comment: CommentType;
 </script>
+
+<div class="comment">
+	{#await Service.getAvatar(comment.provider, comment.author.avatar, comment.organizationName) then avatar}
+		<div class="avatar">
+			<img width="64" height="64" src={avatar} alt={comment.author.displayName} />
+		</div>
+	{/await}
+	<div class="content">
+		<h2>{comment.author.displayName} <small>{comment.date}</small></h2>
+		<div>{@html marked(comment.text)}</div>
+	</div>
+</div>
 
 <style>
 	.avatar {
@@ -51,21 +66,9 @@
 		font-weight: normal;
 	}
 
-	p {
+	h2 + div {
 		font-size: 0.9rem;
 		line-height: 1.3;
 		color: #ddd;
 	}
 </style>
-
-<div class="comment">
-	{#await Service.getAvatar(comment.provider, comment.author.avatar, comment.organizationName) then avatar}
-		<div class="avatar">
-			<img width="64" height="64" src={avatar} alt={comment.author.displayName} />
-		</div>
-	{/await}
-	<div class="content">
-		<h2>{comment.author.displayName} <small>{comment.date}</small></h2>
-		<p>{comment.text}</p>
-	</div>
-</div>

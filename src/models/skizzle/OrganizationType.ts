@@ -1,5 +1,3 @@
 import type { CommonType } from './CommonType';
 
-export type OrganizationType = {
-	checked?: boolean;
-} & CommonType;
+export type OrganizationType = {} & CommonType;

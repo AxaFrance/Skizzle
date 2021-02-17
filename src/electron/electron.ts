@@ -215,6 +215,8 @@ ipcMain.handle('copy-to-clipboard', async (event, url: string) => {
 	return true;
 });
 
+ipcMain.handle('isMaximized', async event => window.isMaximized());
+
 ipcMain.handle(
 	'file-export',
 	async (

@@ -1,8 +1,6 @@
 import type {
 	CommonType,
 	CustomListType,
-	OrganizationType,
-	ProjectType,
 	PullRequestType,
 	RepositoryType,
 	SettingsType,
@@ -13,6 +11,7 @@ import { ThemeEnum } from 'models/skizzle';
 import { Service } from 'services/Service';
 import { get } from 'svelte/store';
 import { createStore } from './store';
+import { v4 as uuidv4 } from 'uuid';
 const app = require('electron').ipcRenderer;
 
 const predicate = <T extends CommonType>(
@@ -25,52 +24,56 @@ const predicate = <T extends CommonType>(
 let timer: NodeJS.Timeout;
 
 export const refreshPullRequests = async () => {
-	const values = get(repositories).filter(x => x.checked);
+	const isOffline = get(offline);
 
-	if (values.length > 0) {
-		let oldValues = get(pullRequests);
+	if (!isOffline) {
+		const values = get(repositories);
 
-		let result: PullRequestType[] = [];
+		if (values.length > 0) {
+			let oldValues = get(pullRequests);
 
-		try {
-			for (const repository of values) {
-				result = result.concat(
-					await Service.getPullRequests(repository.provider, { repository }),
-				);
+			let result: PullRequestType[] = [];
+
+			try {
+				for (const repository of values) {
+					result = result.concat(
+						await Service.getPullRequests(repository.provider, { repository }),
+					);
+				}
+			} catch {
+				return;
 			}
-		} catch {
-			return;
+
+			const newValues = result.filter(
+				pullRequest =>
+					!oldValues.some(
+						({ pullRequestId }) => pullRequest.pullRequestId === pullRequestId,
+					),
+			);
+
+			if (newValues.length > 0) {
+				let title =
+					newValues.length > 1
+						? 'De nouvelles pull requests sont disponibles'
+						: 'Une nouvelle pull request est disponible';
+
+				let body =
+					newValues.length > 1
+						? 'Plusieurs repositories ont étés mis à jour'
+						: `Le repo ${newValues[0].repositoryName} a une nouvelle pull request`;
+
+				app.send('notifier', {
+					title,
+					body,
+				});
+			}
+			0;
+
+			pullRequests.reset();
+			pullRequests.set(
+				result.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)),
+			);
 		}
-
-		const newValues = result.filter(
-			pullRequest =>
-				!oldValues.some(
-					({ pullRequestId }) => pullRequest.pullRequestId === pullRequestId,
-				),
-		);
-
-		if (newValues.length > 0) {
-			let title =
-				newValues.length > 1
-					? 'De nouvelles pull requests sont disponibles'
-					: 'Une nouvelle pull request est disponible';
-
-			let body =
-				newValues.length > 1
-					? 'Plusieurs repositories ont étés mis à jour'
-					: `Le repo ${newValues[0].repositoryName} a une nouvelle pull request`;
-
-			app.send('notifier', {
-				title,
-				body,
-			});
-		}
-		0;
-
-		pullRequests.reset();
-		pullRequests.set(
-			result.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)),
-		);
 	}
 };
 
@@ -82,58 +85,23 @@ export const repositories = createStore<RepositoryType[]>([], {
 	key: 'repositories',
 	predicate,
 });
-export const projects = createStore<ProjectType[]>([], {
-	key: 'projects',
-	predicate,
-	subscriber: () => async projects => {
-		for (const project of projects) {
-			if (project.checked) {
-				const values = get(repositories);
-				const exist = values.some(
-					x =>
-						x.organizationName === project.organizationName &&
-						x.projectId === project.projectId,
-				);
-
-				if (!exist) {
-					const values = await Service.getRepositories(project.provider, {
-						project,
-					});
-
-					repositories.update(x =>
-						[...x, ...values].sort((a, b) => a.name.localeCompare(b.name)),
-					);
-				}
-			}
-		}
-	},
-});
-export const organizations = createStore<OrganizationType[]>([], {
-	key: 'organizations',
-	predicate,
-	subscriber: () => async organizations => {
-		for (const organization of organizations) {
-			const values = get(projects);
-			const exist = values.some(
-				x => x.organizationName === organization.organizationName,
-			);
-
-			if (!exist) {
-				const values = await Service.getProjects(organization.provider, {
-					organization,
-				});
-
-				projects.update(x =>
-					[...x, ...values].sort((a, b) => a.name.localeCompare(b.name)),
-				);
-			}
-		}
-	},
-});
 export const isLoading = createStore<boolean>(false, {});
 export const isFetchingData = createStore<boolean>(false, {});
 export const notifications = createStore<NotificationType[]>([], {});
-export const offline = createStore<boolean>(false, {});
+export const offline = createStore<boolean>(false, {
+	key: 'offline',
+	subscriber: () => (offline: boolean) => {
+		if (offline) {
+			notifications.update(notifications => [
+				...notifications,
+				{
+					text: 'Vous êtes actuellement deconnecté',
+					id: uuidv4(),
+				},
+			]);
+		}
+	},
+});
 export const settings = createStore<SettingsType>(
 	{
 		refresh_delay: 5,

@@ -16,6 +16,9 @@ type PullRequestType = {
 	description: string;
 	date: string;
 	dateStr: string;
+	isDraft: boolean;
+	isConflict: boolean;
+	isAutoComplete: boolean;
 	user: UserType;
 	owner?: string;
 	labels: LabelType[];

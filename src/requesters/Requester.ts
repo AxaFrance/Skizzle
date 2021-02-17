@@ -1,13 +1,15 @@
 import type { ProviderEnum } from 'models/skizzle';
 import type { OAuthConfigType } from 'providers';
 import { client, clientHasProvider } from 'shared/stores/authentication.store';
-import { isLoading } from 'shared/stores/default.store';
+import { isLoading, offline } from 'shared/stores/default.store';
 import { authorize } from 'shared/token';
 import { get } from 'svelte/store';
 import ky from 'ky';
+import type { Dictionary } from 'shared/utils';
 
 export abstract class Requester<T extends OAuthConfigType> {
 	private readonly provider: ProviderEnum;
+	private caches: Dictionary<any> = {};
 
 	constructor(provider: ProviderEnum) {
 		this.provider = provider;
@@ -21,10 +23,11 @@ export abstract class Requester<T extends OAuthConfigType> {
 		url: string,
 		options?: { cache: boolean },
 	): Promise<S> {
+		const isOffline = get(offline);
 		const isFetchingToken = get(isLoading);
 		const config = get(client)[this.provider] as T;
 
-		if (this.clientHasProvider(config) && !isFetchingToken) {
+		if (!isOffline && this.clientHasProvider(config) && !isFetchingToken) {
 			const headers = this.getHeader(config);
 
 			const result = ky.get(url, {
@@ -53,7 +56,13 @@ export abstract class Requester<T extends OAuthConfigType> {
 				headers,
 			});
 
-			return result.json<S>();
+			const data = await result.json<S>();
+
+			this.caches[url] = data;
+
+			return data;
+		} else {
+			return this.caches[url];
 		}
 	}
 

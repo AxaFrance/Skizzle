@@ -54,14 +54,15 @@ input:disabled {
 
 ::-webkit-scrollbar {
 	width: 10px;
+	background-color: #333;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: #ccc;
+	background: #666;
 }
 
 ::-webkit-scrollbar-corner {
-	background-color: #fff;
+	background-color: #444;
 }
 
 .btn {
@@ -104,17 +105,5 @@ button.link:hover {
 
 	.skz-splashscreen__label {
 		color: #fff;
-	}
-
-	::-webkit-scrollbar-thumb {
-		background: #666;
-	}
-
-	::-webkit-scrollbar-corner {
-		background-color: #444;
-	}
-
-	::-webkit-scrollbar {
-		background-color: #333;
 	}
 }

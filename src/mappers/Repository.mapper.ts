@@ -3,8 +3,6 @@ import type {
 	GithubRepositoryApiType,
 } from 'models/api';
 import type { RepositoryType } from 'models/skizzle';
-import { repositories } from 'shared/stores/default.store';
-import { get } from 'svelte/store';
 import { From, Mapper } from './Mapper';
 
 export type RepositoryMapperType = From<
@@ -18,9 +16,7 @@ export class RepositoryMapper extends Mapper<
 > {
 	public to(data: RepositoryMapperType[], params: any): RepositoryType[] {
 		return data.map(value => {
-			const store = get(repositories);
-
-			const data = {
+			return {
 				repositoryId: value.id,
 				name: value.name,
 				fullName: value.full_name,
@@ -29,11 +25,6 @@ export class RepositoryMapper extends Mapper<
 					value.clone_url ||
 					`https://dev.azure.com/${params.organizationName}/${params.projectName}/_git/${value.name}.git`,
 				...params,
-			};
-
-			return {
-				...data,
-				checked: store.some(x => x.repositoryId === data.repositoryId && x.checked),
 			};
 		});
 	}

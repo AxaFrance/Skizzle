@@ -2,7 +2,7 @@
 	import { WindowEnum } from "models/skizzle";
 	const app = require('electron').ipcRenderer;
 
-	export let isMaximized: boolean;
+	export let isMaximized: boolean = false;
 </script>
 
 <style src="./WindowsBar.scss">

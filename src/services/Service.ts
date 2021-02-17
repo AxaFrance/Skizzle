@@ -1,11 +1,9 @@
 import type {
-	CommentType,
 	OrganizationType,
 	ProfileType,
 	ProjectType,
 	PullRequestType,
 	RepositoryType,
-	ReviewType,
 } from 'models/skizzle';
 import { ProviderEnum } from 'models/skizzle';
 import { isFetchingData } from 'shared/stores/default.store';
@@ -26,8 +24,6 @@ export interface IService {
 	isLogged(): boolean;
 	getProfile(userId?: string): Promise<ProfileType>;
 	getAvatar(params: string, organizationName?: string): Promise<string>;
-	getOrganizations?(params: ServiceParams): Promise<OrganizationType[]>;
-	getProjects?(params: ServiceParams): Promise<ProjectType[]>;
 	getRepositories(params: ServiceParams): Promise<RepositoryType[]>;
 	getPullRequests(params: ServiceParams): Promise<PullRequestType[]>;
 }
@@ -58,26 +54,6 @@ export class Service {
 			params,
 			organizationName,
 		);
-		isFetchingData.set(false);
-		return result;
-	}
-
-	public static async getOrganizations(
-		provider: ProviderEnum,
-		params: ServiceParams,
-	): Promise<OrganizationType[]> {
-		isFetchingData.set(true);
-		const result = await Service.INSTANCES[provider].getOrganizations(params);
-		isFetchingData.set(false);
-		return result;
-	}
-
-	public static async getProjects(
-		provider: ProviderEnum,
-		params: ServiceParams,
-	): Promise<ProjectType[]> {
-		isFetchingData.set(true);
-		const result = await Service.INSTANCES[provider].getProjects(params);
 		isFetchingData.set(false);
 		return result;
 	}

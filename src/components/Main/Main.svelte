@@ -5,7 +5,7 @@
 	import Tabs from 'components/Tabs';
 	import Modale from 'components/Modale';
 	import CustomListSettings from 'components/CustomListSettings';
-	import type { CustomListType, ExportType, RepositoryType } from 'models/skizzle';
+	import type { CustomListType, ExportType } from 'models/skizzle';
 	const app = require('electron').ipcRenderer;
 
 	let creatingList: boolean = false;
