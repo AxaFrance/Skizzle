@@ -29,35 +29,25 @@
 			{/if}
 		</header>
 		<h3 class="title">
-			{#if pullRequest.isAutoComplete}
-				<span
-					class="skz-pullrequest__status skz-pullrequest__status--auto-complete">
-					Auto-complete
-				</span>
-			{/if}
-			{#if pullRequest.isDraft}
-				<span class="skz-pullrequest__status skz-pullrequest__status--draft">
-					Draft
-				</span>
-			{/if}
-			{#if pullRequest.isConflict}
-				<span class="skz-pullrequest__status skz-pullrequest__status--conflicts">
-					Conflits
-				</span>
-			{/if}
 			{pullRequest.title}
 		</h3>
 		<p class="repo">{pullRequest.repositoryName}</p>
 	</div>
 	<footer>
+		{#if pullRequest.isAutoComplete}
+			<span class="status status--auto-complete">Auto-complete</span>
+		{/if}
+		{#if pullRequest.isDraft}
+			<span class="status status--draft">Draft</span>
+		{/if}
+		{#if pullRequest.isConflict}
+			<span class="status status--conflicts">Conflits</span>
+		{/if}
 		{#if pullRequest.reviewers}
 			<Reviews reviews={pullRequest.reviewers} />
 		{/if}
 		<Labels labels={pullRequest.labels} />
-		<button
-			class="more"
-			on:click={openModale}
-			disabled={$isFetchingData}>
+		<button class="more" on:click={openModale} disabled={$isFetchingData}>
 			<Icons.Ellipsis />
 		</button>
 	</footer>
@@ -115,8 +105,8 @@
 		font-size: 1rem;
 		line-height: 1.3;
 		font-weight: normal;
-    display: flex;
-    align-items: center;
+		display: flex;
+		align-items: center;
 	}
 
 	.repo {
@@ -172,9 +162,9 @@
 		transform: translateY(-50%);
 	}
 
-	.skz-pullrequest__status {
+	.status {
 		display: inline-block;
-		margin-right: 0.2rem;
+		margin-right: 0.5rem;
 		padding: 0 0.2rem;
 		font-size: 0.8rem;
 		font-weight: normal;
@@ -185,16 +175,16 @@
 		line-height: 1.5;
 	}
 
-	.skz-pullrequest__status--draft {
-		border-color: #777;
-		color: #777;
+	.status--draft {
+		border-color: #43fff6;
+		color: #43fff6;
 	}
-	.skz-pullrequest__status--conflicts {
-		border-color: red;
-		color: red;
+	.status--conflicts {
+		border-color: #ff5b5b;
+		color: #ff5b5b;
 	}
-	.skz-pullrequest__status--auto-complete {
-		border-color: green;
-		color: green;
+	.status--auto-complete {
+		border-color: #82ff82;
+		color: #82ff82;
 	}
 </style>

@@ -4,6 +4,12 @@
 	export let labels: LabelType[] = [];
 </script>
 
+{#if labels && labels.length > 0}
+	<div>
+		{#each labels as label}<span>{label.name}</span>{/each}
+	</div>
+{/if}
+
 <style>
 	div {
 		flex: 1 1 auto;
@@ -28,9 +34,3 @@
 		margin-right: 0.2rem;
 	}
 </style>
-
-{#if labels && labels.length > 0}
-	<div>
-		{#each labels as label}<span>{label.name}</span>{/each}
-	</div>
-{/if}
