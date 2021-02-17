@@ -16,7 +16,7 @@
 	import type { ProfileType } from 'models/skizzle/ProfileType';
 
 	export let profile: ProfileType;
-	export let withSettings:boolean = false;
+	export let withSettings: boolean = false;
 	let isSettingsDisplayed = false;
 
 	const onModaleClose = () => (isSettingsDisplayed = false);
@@ -32,6 +32,61 @@
 		}));
 	};
 </script>
+
+<div class="container">
+	<div class="avatar">
+		<img width="64" height="64" src={profile.avatar} alt={profile.name} />
+	</div>
+	<div class="user">
+		<span class="name">{profile.name}</span>
+		{#if profile.email}<span class="email">{profile.email}</span>{/if}
+	</div>
+	{#if withSettings}
+		<button
+			on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)}
+			title="Configuration"
+		><Icons.AccountSettings /></button>
+	{/if}
+	<button on:click={() => logout(profile.provider)} title="Déconnexion">
+		<Icons.Delete />
+	</button>
+</div>
+{#if isSettingsDisplayed}
+	<Modale onClose={onModaleClose}>
+		{#await Service.getOrganizations(profile.provider, { profile })}
+			<p>Chargement...</p>
+		{:then organizations}
+			<div class="container header">
+				<div class="avatar big">
+					{#await Service.getAvatar(profile.provider, profile.descriptor, organizations[0].organizationName) then avatar}
+						<img width="64" height="64" src={avatar} alt={profile.name} />
+					{/await}
+				</div>
+				<div class="user">
+					<span class="name">{profile.name}</span>
+					<span class="email">{profile.email}</span>
+				</div>
+			</div>
+			<AccountTitle>Organisations</AccountTitle>
+			<ul class="organizations">
+				{#each organizations as organization}
+					<li>
+						<input
+							type="checkbox"
+							id={organization.organizationName}
+							checked={organization.checked}
+							on:change={event => checkOrganization(event, organization)}
+							disabled={$isFetchingData}
+						/>
+						<label for={organization.organizationName}>
+							{organization.organizationName}
+						</label>
+					</li>
+				{/each}
+			</ul>
+		{/await}
+	</Modale>
+{/if}
 
 <style>
 	.container {
@@ -98,14 +153,10 @@
 
 	.header {
 		margin: -2rem -2rem 2rem;
-		padding: 2rem 2rem 1rem;
+		padding: 1rem 2rem;
 		border-bottom-right-radius: 0;
 		border-bottom-left-radius: 0;
 		background-color: #444;
-	}
-
-	.header .avatar {
-		margin-top: -2.5rem;
 	}
 
 	.organizations {
@@ -116,52 +167,3 @@
 		margin-bottom: 0.5rem;
 	}
 </style>
-
-<div class="container">
-	<div class="avatar">
-		<img width="64" height="64" src={profile.avatar} alt={profile.name} />
-	</div>
-	<div class="user">
-		<span class="name">{profile.name}</span>
-		{#if profile.email}<span class="email">{profile.email}</span>{/if}
-	</div>
-	{#if withSettings}
-		<button on:click={() => (isSettingsDisplayed = !isSettingsDisplayed)} title="Configuration"><Icons.AccountSettings /></button>
-	{/if}
-	<button on:click={() => logout(profile.provider)} title="Déconnexion"><Icons.Delete /></button>
-</div>
-{#if isSettingsDisplayed}
-	<Modale onClose={onModaleClose}>
-		{#await Service.getOrganizations(profile.provider, { profile })}
-			<p>Chargement...</p>
-		{:then organizations}
-			<div class="container header">
-				<div class="avatar big">
-					{#await Service.getAvatar(profile.provider, profile.descriptor, organizations[0].organizationName) then avatar}
-						<img width="64" height="64" src={avatar} alt={profile.name} />
-					{/await}
-				</div>
-				<div class="user">
-					<span class="name">{profile.name}</span>
-					<span class="email">{profile.email}</span>
-				</div>
-			</div>
-			<AccountTitle>Organisations</AccountTitle>
-			<ul class="organizations">
-				{#each organizations as organization}
-					<li>
-						<input
-							type="checkbox"
-							id={organization.organizationName}
-							checked={organization.checked}
-							on:change={event => checkOrganization(event, organization)}
-							disabled={$isFetchingData} />
-						<label for={organization.organizationName}>
-							{organization.organizationName}
-						</label>
-					</li>
-				{/each}
-			</ul>
-		{/await}
-	</Modale>
-{/if}

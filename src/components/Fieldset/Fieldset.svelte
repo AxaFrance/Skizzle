@@ -4,6 +4,17 @@
 	export let outro: string;
 </script>
 
+<fieldset>
+	<legend>{title}</legend>
+	{#if intro}
+		<p>{intro}</p>
+	{/if}
+	<slot />
+	{#if outro}
+		<p>{outro}</p>
+	{/if}
+</fieldset>
+
 <style>
 	legend {
 		font-family: 'roboto slab', serif;
@@ -13,7 +24,7 @@
 		padding: 1rem;
 		border: none;
 		border-radius: 8px;
-		background-color: #555;
+		background-color: #444;
 	}
 
 	fieldset:not(:last-child) {
@@ -28,14 +39,3 @@
 		margin-bottom: 1rem;
 	}
 </style>
-
-<fieldset>
-	<legend>{title}</legend>
-	{#if intro}
-		<p>{intro}</p>
-	{/if}
-	<slot />
-	{#if outro}
-		<p>{outro}</p>
-	{/if}
-</fieldset>
