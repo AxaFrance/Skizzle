@@ -3,14 +3,34 @@
 	import Icons from 'components/icons';
 	import { Service } from 'services/Service';
 	import { settings } from 'shared/stores/default.store';
-	
+
 	export let pullRequest: PullRequestType;
 	export let className: string;
 </script>
 
+<div class={`container ${className || ''}`}>
+	{#await Service.getAvatar(pullRequest.provider, pullRequest.user.avatar, pullRequest.organizationName)}
+		<div class="avatar">
+			<svelte:component this={Icons.User} color={$settings.theme} />
+		</div>
+	{:then avatar}
+		<div class="avatar"><img src={avatar} alt={pullRequest.user.name} /></div>
+		{#if pullRequest.provider}
+			<div class="badge">
+				<svelte:component this={Icons[pullRequest.provider]} />
+			</div>
+		{/if}
+	{:catch}
+		<div class="avatar">
+			<svelte:component this={Icons.User} color={$settings.theme} />
+		</div>
+	{/await}
+</div>
+
 <style>
 	.container {
 		position: relative;
+		height: 4rem;
 	}
 
 	.avatar {
@@ -47,22 +67,3 @@
 		transform: translateY(-50%) translateX(-50%);
 	}
 </style>
-
-<div class={`container ${className || ''}`}>
-	{#await Service.getAvatar(pullRequest.provider, pullRequest.user.avatar, pullRequest.organizationName)}
-		<div class="avatar">
-			<svelte:component this={Icons.User} color={$settings.theme}/>
-		</div>
-	{:then avatar}
-		<div class="avatar"><img src={avatar} alt={pullRequest.user.name} /></div>
-		{#if pullRequest.provider}
-			<div class="badge">
-				<svelte:component this={Icons[pullRequest.provider]} />
-			</div>
-		{/if}
-	{:catch}
-		<div class="avatar">
-			<svelte:component this={Icons.User} color={$settings.theme}/>
-		</div>
-	{/await}
-</div>

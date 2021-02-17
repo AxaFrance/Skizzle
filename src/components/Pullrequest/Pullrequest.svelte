@@ -8,15 +8,48 @@
 	import Reviews from 'components/Reviews';
 	import Icons from 'components/icons';
 	import Comment from 'components/Comment';
-	
+
 	export let pullRequest: PullRequestType;
 
 	let detailsModal = false;
 
 	const openLink = () => shell.openExternal(pullRequest.url);
-	const openModale = () => detailsModal = true;
-	const closeModale = () => detailsModal = false;
+	const openModale = () => (detailsModal = true);
+	const closeModale = () => (detailsModal = false);
 </script>
+
+<div class="pr">
+	<button class="link" on:click={openLink} />
+	<Avatar className="pr__avatar" {pullRequest} />
+	<div class="details">
+		<header>
+			<h2 class="author">{pullRequest.user.name} - {pullRequest.dateStr}</h2>
+			{#if pullRequest.projectName}
+				<span class="project">{pullRequest.projectName}</span>
+			{/if}
+		</header>
+		<h3 class="title">{pullRequest.title}</h3>
+		<p class="repo">{pullRequest.repositoryName}</p>
+	</div>
+	<footer>
+		{#if pullRequest.reviewers}
+			<Reviews reviews={pullRequest.reviewers} />
+		{/if}
+		<Labels labels={pullRequest.labels} />
+		<button class="more" on:click={openModale} disabled={$isFetchingData}>
+			<Icons.Ellipsis />
+		</button>
+	</footer>
+</div>
+{#if detailsModal}
+	<Modale onClose={closeModale}>
+		{#each pullRequest.comments as comment}
+			<Comment {comment} />
+		{:else}
+			<p class="no-comment">Il n'y a aucun commentaire sur cette pull request.</p>
+		{/each}
+	</Modale>
+{/if}
 
 <style>
 	.pr {
@@ -39,7 +72,7 @@
 	}
 
 	.details {
-		flex: 1 0 auto;
+		flex: 1 1 calc(100% - 5rem);
 	}
 
 	header {
@@ -59,7 +92,7 @@
 	.title {
 		margin-bottom: 0.5rem;
 		font-size: 1rem;
-		line-height: 1;
+		line-height: 1.3;
 		font-weight: normal;
 	}
 
@@ -116,39 +149,3 @@
 		transform: translateY(-50%);
 	}
 </style>
-
-<div class="pr">
-	<button class="link" on:click={openLink} />
-	<Avatar className="pr__avatar" {pullRequest} />
-	<div class="details">
-		<header>
-			<h2 class="author">{pullRequest.user.name} - {pullRequest.dateStr}</h2>
-			{#if pullRequest.projectName}
-				<span class="project">{pullRequest.projectName}</span>
-			{/if}
-		</header>
-		<h3 class="title">{pullRequest.title}</h3>
-		<p class="repo">{pullRequest.repositoryName}</p>
-	</div>
-	<footer>
-		{#if pullRequest.reviewers}
-			<Reviews reviews={pullRequest.reviewers} />
-		{/if}
-		<Labels labels={pullRequest.labels} />
-		<button
-			class="more"
-			on:click={openModale}
-			disabled={$isFetchingData}>
-			<Icons.Ellipsis />
-		</button>
-	</footer>
-</div>
-{#if detailsModal}
-	<Modale onClose={closeModale}>
-		{#each pullRequest.comments as comment}
-			<Comment {comment} />
-		{:else}
-			<p class="no-comment">Il n'y a aucun commentaire sur cette pull request.</p>
-		{/each}
-	</Modale>
-{/if}
