@@ -10,6 +10,78 @@
 		navigator.platform === 'Win32' ? 'Windows' : 'macOS';
 </script>
 
+<div class="content">
+	<form>
+		<AccountTitle>Réglages</AccountTitle>
+
+		<Fieldset
+			title="Rafraichissement"
+			intro="Réglez ici le délai qu'utilisera Skizzle pour rafraichir les données."
+			outro={`Skizzle rafraichira les données toutes les ${
+				$settings.refresh_delay !== 1
+					? `${$settings.refresh_delay} minutes`
+					: '60 secondes'
+			}`}
+		>
+			<div class="field">
+				<Range bind:value={$settings.refresh_delay} min={1} step={1} max={15} />
+			</div>
+		</Fieldset>
+
+		<Fieldset
+			title="Au démarrage"
+			outro={`${
+				$settings.launch_at_startup
+					? 'Skizzle se lancera automatiquement à chaque démarrage de '
+					: 'Skizzle ne se lancera pas au démarrage de '
+			} ${currentPlatform}.`}
+		>
+			<div class="field checkbox">
+				<input
+					id="startup"
+					type="checkbox"
+					bind:checked={$settings.launch_at_startup}
+				/>
+				<label for="startup">Lancer Skizzle au démarrage</label>
+			</div>
+			<p class="text" />
+		</Fieldset>
+
+		<Fieldset
+			title="Langue"
+			intro="Choisissez ici la langue de l'interface de Skizzle."
+		>
+			<select>
+				<option value={$settings.language}>{$settings.language}</option>
+			</select>
+		</Fieldset>
+
+		<Fieldset
+			title="Theme"
+			intro="Choisissez un theme pour l'interface de Skizzle."
+		>
+			<div class="field">
+				{#each Object.values(ThemeEnum) as value}
+					<input
+						name="color"
+						id={value}
+						type="radio"
+						checked={$settings.theme === value}
+						on:change={() =>
+							settings.update(settings => ({
+								...settings,
+								theme: value,
+							}))}
+					/>
+					<label class="ui" for={value}>
+						<Icons.UI color={value} />
+					</label>
+				{/each}
+			</div>
+		</Fieldset>
+	</form>
+</div>
+
 <style>
 	.content {
 		flex: 1 0 auto;
@@ -29,6 +101,10 @@
 
 	[type='radio'] {
 		display: none;
+	}
+
+	.field :global([type='range']) {
+		max-width: 15rem;
 	}
 
 	.ui {
@@ -98,60 +174,3 @@
 		transform: translateX(calc(100% + 2px));
 	}
 </style>
-
-<div class="content">
-	<form>
-		<AccountTitle>Réglages</AccountTitle>
-
-		<Fieldset
-			title="Rafraichissement"
-			intro="Réglez ici le délai qu'utilisera Skizzle pour rafraichir les données."
-			outro={`Skizzle rafraichira les données toutes les ${$settings.refresh_delay !== 1 ? `${$settings.refresh_delay} minutes` : '60 secondes'}`}>
-			<div class="field">
-				<Range bind:value={$settings.refresh_delay} min={1} step={1} max={15} />
-			</div>
-		</Fieldset>
-
-		<Fieldset
-			title="Au démarrage"
-			outro={`${$settings.launch_at_startup ? 'Skizzle se lancera automatiquement à chaque démarrage de ' : 'Skizzle ne se lancera pas au démarrage de '} ${currentPlatform}.`}>
-			<div class="field checkbox">
-				<input
-					id="startup"
-					type="checkbox"
-					bind:checked={$settings.launch_at_startup} />
-				<label for="startup">Lancer Skizzle au démarrage</label>
-			</div>
-			<p class="text" />
-		</Fieldset>
-
-		<Fieldset
-			title="Langue"
-			intro="Choisissez ici la langue de l'interface de Skizzle.">
-			<select>
-				<option value={$settings.language}>{$settings.language}</option>
-			</select>
-		</Fieldset>
-
-		<Fieldset
-			title="Theme"
-			intro="Choisissez un theme pour l'interface de Skizzle.">
-			<div class="field">
-				{#each Object.values(ThemeEnum) as value}
-					<input
-						name="color"
-						id={value}
-						type="radio"
-						checked={$settings.theme === value}
-						on:change={() => settings.update(settings => ({
-								...settings,
-								theme: value,
-							}))} />
-					<label class="ui" for={value}>
-						<Icons.UI color={value} />
-					</label>
-				{/each}
-			</div>
-		</Fieldset>
-	</form>
-</div>
