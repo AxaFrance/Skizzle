@@ -39,9 +39,13 @@ export class Service {
 		userId?: string,
 	): Promise<ProfileType> {
 		isFetchingData.set(true);
-		const result = await Service.INSTANCES[provider].getProfile(userId);
-		isFetchingData.set(false);
-		return result;
+		try {
+			const result = await Service.INSTANCES[provider].getProfile(userId);
+			isFetchingData.set(false);
+			return result;
+		} catch {
+			isFetchingData.set(false);
+		}
 	}
 
 	public static async getAvatar(
@@ -50,12 +54,16 @@ export class Service {
 		organizationName?: string,
 	): Promise<string> {
 		isFetchingData.set(true);
-		const result = await Service.INSTANCES[provider].getAvatar(
-			params,
-			organizationName,
-		);
-		isFetchingData.set(false);
-		return result;
+		try {
+			const result = await Service.INSTANCES[provider].getAvatar(
+				params,
+				organizationName,
+			);
+			isFetchingData.set(false);
+			return result;
+		} catch {
+			isFetchingData.set(false);
+		}
 	}
 
 	public static async getRepositories(
@@ -63,9 +71,13 @@ export class Service {
 		params: ServiceParams,
 	): Promise<RepositoryType[]> {
 		isFetchingData.set(true);
-		const result = await Service.INSTANCES[provider].getRepositories(params);
-		isFetchingData.set(false);
-		return result;
+		try {
+			const result = await Service.INSTANCES[provider].getRepositories(params);
+			isFetchingData.set(false);
+			return result;
+		} catch {
+			isFetchingData.set(false);
+		}
 	}
 
 	public static async getPullRequests(
@@ -73,8 +85,12 @@ export class Service {
 		params: ServiceParams,
 	): Promise<PullRequestType[]> {
 		isFetchingData.set(true);
-		const result = await Service.INSTANCES[provider].getPullRequests(params);
-		isFetchingData.set(false);
-		return result;
+		try {
+			const result = await Service.INSTANCES[provider].getPullRequests(params);
+			isFetchingData.set(false);
+			return result;
+		} catch {
+			isFetchingData.set(false);
+		}
 	}
 }
