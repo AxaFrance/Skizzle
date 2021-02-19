@@ -7,7 +7,6 @@ import {
 } from '../../providers/OAuthAzureDevOpsConfig.provider';
 import { getToken } from '../token';
 import type { Dictionary } from '../utils';
-import { isLoading } from './default.store';
 import {
 	OAuthGithubConfig,
 	OAuthGithubConfigType,
@@ -100,8 +99,6 @@ const authentication = async (client: Dictionary<OAuthConfigType>) => {
 			}
 		}
 	}
-
-	isLoading.set(false);
 };
 
 client.subscribe(authentication);

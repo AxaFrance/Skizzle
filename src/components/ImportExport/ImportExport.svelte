@@ -1,15 +1,16 @@
 <script lang="ts">
-  import { isFetchingData, repositories } from 'shared/stores/default.store';
+	import { v4 as uuidv4 } from 'uuid';
+  import { isFetchingData, notifications, pullRequests, repositories } from 'shared/stores/default.store';
 	import { HighlightSvelte } from "svelte-highlight";
   import { json } from "svelte-highlight/languages";
 	import Tabs from 'components/Tabs';
   import AccountTitle from 'components/AccountTitle';
   import { copyToClipboard, isJson } from 'shared/utils';
   import Icons from 'components/icons';
-  import type { RepositoryType } from 'models/skizzle';
-  import { ProviderEnum } from 'models/skizzle';
+  import type { RepositoryType, ProviderEnum } from 'models/skizzle';
   
-  import 'svelte-highlight/styles/github.css';
+  import 'svelte-highlight/styles/dark.css';
+import { Service } from 'services';
 
   export let followedRepositories: RepositoryType[];
   export let provider: ProviderEnum;
@@ -20,35 +21,36 @@
 
   const changeTab = (tab:string) => currentTab = tab;
 
-  const importCode = () => {
+  const importCode = async () => {
     let repositoriesImported = JSON.parse(code) as RepositoryType[];
     repositoriesImported = repositoriesImported
       .filter((repository) => {
-        let result = repository.repositoryId && 
+        return repository.repositoryId && 
           repository.gitUrl && 
           repository.name &&
-          !!repository.provider;
+          repository.provider && (repository.organizationName && repository.projectId && repository.projectName) || (repository.fullName && repository.owner);
+      }).filter(y => !$repositories.some(z => z.repositoryId === y.repositoryId));
 
-        if (provider === ProviderEnum.AzureDevOps) {
-          result = result && repository.organizationName && 
-            repository.projectId && 
-            !!repository.projectName
-        }
+		repositories.update(x => ([...x, ...repositoriesImported]));
 
-        if (provider === ProviderEnum.Github) {
-          result = result && repository.fullName && !!repository.owner
-        }
-
-        return result;
+    const values = (await Promise.all(repositoriesImported.map(repository => {
+      return Service.getPullRequests(repository.provider, {
+        repository,
       });
+    }))).reduce((prev, curr) => prev.concat(curr), []);
 
-		repositories.update(x => {
-      const values = x.map(repository => ({
-        ...repository
-      }));
+    pullRequests.update(x =>
+			[...x, ...values].sort((a, b) => Date.parse(b.date) - Date.parse(a.date)),
+		);
+    
+    notifications.update(notifications => [
+      ...notifications,
+      {
+        text: "Repositories importés",
+        id: uuidv4(),
+      },
+    ]);
 
-      return ([...values, ...repositoriesImported.filter(y => !x.some(z => z.repositoryId === y.repositoryId))])
-    });
     shareDisplayed = false;
 	}
 

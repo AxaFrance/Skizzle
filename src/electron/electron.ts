@@ -35,7 +35,6 @@ let window: BrowserWindow;
 let github: OAuthWindow;
 let azure: OAuthWindow;
 let tray: Tray;
-let isMaximized: boolean;
 
 const hangOrCrash = async (window: BrowserWindow) => {
 	const options = {
@@ -68,8 +67,6 @@ const createWindow = () => {
 		},
 	});
 
-	isMaximized = window.isMaximized();
-
 	const url = app.isPackaged
 		? `file://${path.join(__dirname, '../../index.html')}`
 		: 'http://localhost:3000';
@@ -89,12 +86,10 @@ const createWindow = () => {
 
 	window.on('maximize', () => {
 		window.webContents.send('change-maximisze', true);
-		isMaximized = true;
 	});
 
 	window.on('unmaximize', () => {
 		window.webContents.send('change-maximisze', false);
-		isMaximized = false;
 	});
 
 	window.once('focus', () => window.flashFrame(false));
@@ -215,7 +210,7 @@ ipcMain.handle('copy-to-clipboard', async (event, url: string) => {
 	return true;
 });
 
-ipcMain.handle('isMaximized', async event => window.isMaximized());
+ipcMain.handle('isMaximized', event => window.isMaximized());
 
 ipcMain.handle(
 	'file-export',
