@@ -10,6 +10,8 @@
 	import { onMount } from 'svelte';
 	import { SkizzleUpdaterEnum } from 'models/skizzle';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
+	import Loader from 'components/Loader';
+
 	const app = require('electron').ipcRenderer;
 
 	let update: SkizzleUpdaterEnum;
@@ -20,7 +22,11 @@
 		[Views.Settings]: Settings,
 	};
 
-	let currentView: Views = $clientAuthenticated.isGithubAuthenticated || $clientAuthenticated.isAzureDevOpsAuthenticated ? Views.Main : Views.Accounts;
+	let currentView: Views =
+		$clientAuthenticated.isGithubAuthenticated ||
+		$clientAuthenticated.isAzureDevOpsAuthenticated
+			? Views.Main
+			: Views.Accounts;
 	const onViewChange = (view: Views) => (currentView = view);
 
 	window.addEventListener('online', () => offline.set(false));
@@ -54,6 +60,7 @@
 	{/if}
 {/if}
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
+	<Loader />
 	<Navigation {currentView} {onViewChange} />
 	<div>
 		<svelte:component this={views[currentView]} />
