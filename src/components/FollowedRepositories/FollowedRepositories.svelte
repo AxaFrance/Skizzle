@@ -98,19 +98,21 @@
 	li {
 		display: flex;
 		align-items: center;
-		margin-bottom: 0.5rem;
-		padding: 1rem;
-		border-radius: 8px;
+		padding: 0.5rem 0.5rem 0.5rem 1rem;
 		background-color: #5c5c5c;
 	}
 
+	li:not(:last-child) {
+		border-bottom: 1px solid #777;
+	}
+
 	.project {
-		margin-right: 0.5rem;
+		margin-right: 0.2rem;
 	}
 
 	.project:after {
 		content: '/';
-		margin-left: 0.5rem;
+		margin-left: 0.2rem;
 		color: #ccc;
 	}
 
@@ -132,7 +134,7 @@
 	}
 
 	button:last-child {
-		margin-left: 1rem;
+		margin-left: 0.5rem;
 	}
 
 	section :global(nav) {
