@@ -3,7 +3,11 @@
 	import type { CustomListType } from 'models/skizzle/CustomListType';
 	import AccountTitle from 'components/AccountTitle';
 	import Fieldset from 'components/Fieldset';
-	import { repositories, customLists, notifications } from 'shared/stores/default.store';
+	import {
+		repositories,
+		customLists,
+		notifications,
+	} from 'shared/stores/default.store';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import Icons from 'components/icons';
 	const app = require('electron').ipcRenderer;
@@ -28,7 +32,7 @@
 
 			const list: CustomListType = {
 				id: uuidv4(),
-				...data
+				...data,
 			};
 
 			customLists.update(_list => [..._list, list]);
@@ -36,19 +40,19 @@
 			notifications.update(notifications => [
 				...notifications,
 				{
-					text: "Liste importée.",
+					text: 'Liste importée.',
 					id: uuidv4(),
 				},
 			]);
-			
+
 			onDone();
-		}	 
-	}
+		}
+	};
 
 	const onSubmit = (event): void => {
 		event.preventDefault();
 
-		if(event.submitter.id !== 'import') {
+		if (event.submitter.id !== 'import') {
 			if (id) {
 				const list: CustomListType = {
 					id,
@@ -76,7 +80,7 @@
 				notifications.update(notifications => [
 					...notifications,
 					{
-						text: "Liste crée.",
+						text: 'Liste crée.',
 						id: uuidv4(),
 					},
 				]);
@@ -94,8 +98,13 @@
 <!-- svelte-ignore a11y-no-onchange a11y-autofocus -->
 <form on:submit={onSubmit}>
 	<AccountTitle>
-			{id ? 'Modifier la liste' : 'Nouvelle liste'}
-			<input id="import" on:click={onImport} type="submit" value={'Charger une liste'} />
+		{id ? 'Modifier la liste' : 'Nouvelle liste'}
+		<input
+			id="import"
+			on:click={onImport}
+			type="submit"
+			value={'Charger une liste'}
+		/>
 	</AccountTitle>
 	<Fieldset
 		title="Nom de la liste"
@@ -113,18 +122,15 @@
 				}.`}
 		>
 			<div class="field">
-				<select
-					bind:value={selectedRepoId}
-					id="repos">
+				<select bind:value={selectedRepoId} id="repos">
 					{#if !selectedRepoId}
 						<option default value="">Selectionnez un repository</option>
 					{/if}
 					{#if $repositories.filter(repo => repo.provider === ProviderEnum.AzureDevOps).length}
 						<optgroup label="Azure Devops">
 							{#each $repositories
-								.filter(
-									repo => repo.provider === ProviderEnum.AzureDevOps,
-								) as repository}
+								.filter(repo => repo.provider === ProviderEnum.AzureDevOps)
+								.sort((a, b) => (a.projectName > b.projectName ? 1 : -1)) as repository}
 								<option
 									disabled={repositoriesIds.includes(repository.repositoryId)}
 									value={repository.repositoryId}
@@ -139,7 +145,8 @@
 					{#if $repositories.filter(repo => repo.provider === ProviderEnum.Github).length}
 						<optgroup label="Github">
 							{#each $repositories
-								.filter(repo => repo.provider === ProviderEnum.Github) as repository}
+								.filter(repo => repo.provider === ProviderEnum.Github)
+								.sort((a, b) => (a.name > b.name ? 1 : -1)) as repository}
 								<option
 									disabled={repositoriesIds.includes(repository.repositoryId)}
 									value={repository.repositoryId}

@@ -11,17 +11,27 @@
 
 	export let profile: ProfileType;
 
-	let shareDisplayed:boolean = false;
-	
-	$: followedRepositories = $repositories.filter(
-		({ provider }) => provider === profile.provider,
-	);
+	let shareDisplayed: boolean = false;
+
+	$: followedRepositories = $repositories
+		.filter(({ provider }) => provider === profile.provider)
+		.sort((a, b) => {
+			if (a.fullName) {
+				return a.fullName > b.fullName ? 1 : -1;
+			} else {
+				return a.projectName > b.projectName ? 1 : -1;
+			}
+		});
 </script>
 
 <section>
 	<AccountTitle>
 		Vos repositories suivis
-		<button title="Partager votre liste" disabled={$isFetchingData} on:click={() => shareDisplayed = true}><Icons.Share /></button>
+		<button
+			title="Partager votre liste"
+			disabled={$isFetchingData}
+			on:click={() => (shareDisplayed = true)}
+		><Icons.Share /></button>
 	</AccountTitle>
 	<p class="intro">
 		Vous suivez actuellement <b>{followedRepositories.length}</b>
@@ -37,13 +47,17 @@
 					<span class="repository">{repository.fullName}</span>
 				{:else}<span class="repository">{repository.name}</span>{/if}
 				{#if repository.gitUrl}
-				<button
-					on:click={() => copyToClipboard(repository.gitUrl, `L'url du repository est copiée dans le presse-papiers.`)}
-					disabled={$isFetchingData}
-					title="Copier l'url de ce repository"
-				>
-					<Icons.Copy />
-				</button>
+					<button
+						on:click={() =>
+							copyToClipboard(
+								repository.gitUrl,
+								`L'url du repository est copiée dans le presse-papiers.`,
+							)}
+						disabled={$isFetchingData}
+						title="Copier l'url de ce repository"
+					>
+						<Icons.Copy />
+					</button>
 				{/if}
 				<button
 					title="Se désabonner de ce repository"
@@ -56,8 +70,12 @@
 		{/each}
 	</ul>
 	{#if shareDisplayed}
-		<Modale onClose={() => shareDisplayed = false} fullHeight={false}>
-			<ImportExport {followedRepositories} bind:shareDisplayed={shareDisplayed} provider={profile.provider} />
+		<Modale onClose={() => (shareDisplayed = false)} fullHeight={false}>
+			<ImportExport
+				{followedRepositories}
+				bind:shareDisplayed
+				provider={profile.provider}
+			/>
 		</Modale>
 	{/if}
 </section>
