@@ -25,12 +25,14 @@ export default {
 		nodePolyfills(),
 		svelte({
 			compilerOptions: {
-				// enable run-time checks when not in production
 				dev: !production,
 			},
 			preprocess: createPreprocessors(!production),
 		}),
-		css({ output: 'bundle.css' }),
+		css({
+			output: 'bundle.css',
+			sourceMap: !production,
+		}),
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
