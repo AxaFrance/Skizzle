@@ -83,10 +83,6 @@ export class OAuthGithubService implements IService {
 					pullRequest.number.toString(),
 				);
 
-				comments = comments.filter(
-					comment => comment.user.type === GithubUserEnum.User,
-				);
-
 				let reviewers = await this.requester.getReviews(
 					owner,
 					name,

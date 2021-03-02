@@ -41,9 +41,6 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		return (
 			await super.fetch<AzureDevOpsDescriptorApiType>(
 				`https://vssps.dev.azure.com/_apis/graph/descriptors/${userId}?api-version=${this.API_VERSION}`,
-				{
-					cache: true,
-				},
 			)
 		).value;
 	}
@@ -55,9 +52,6 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		return (
 			await super.fetch<AzureDevOpsAvatarApiType>(
 				`https://vssps.dev.azure.com/${organizationName}/_apis/graph/Subjects/${descriptor}/avatars?size=large&api-version=${this.API_VERSION}`,
-				{
-					cache: true,
-				},
 			)
 		).value;
 	}

@@ -74,7 +74,7 @@ export class OAuthGithubRequester extends Requester<OAuthGithubConfigType> {
 		pullRequest?: string,
 	): Promise<GithubCommentApiType[]> {
 		return super.fetch<GithubCommentsApiType>(
-			`https://api.github.com/repos/${owner}/${repository}/issues/${pullRequest}/comments?sort=updated`,
+			`https://api.github.com/repos/${owner}/${repository}/pulls/${pullRequest}/comments?sort=updated`,
 		);
 	}
 

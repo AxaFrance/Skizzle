@@ -52,7 +52,7 @@ export abstract class Requester<T extends OAuthConfigType> {
 						},
 					],
 				},
-				cache: options && options.cache ? 'force-cache' : 'no-store',
+				cache: 'force-cache',
 				headers,
 			});
 
