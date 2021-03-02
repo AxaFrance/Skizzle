@@ -5,7 +5,6 @@ import type {
 	GithubPullRequestApiType,
 } from 'models/api';
 import type { PullRequestType } from 'models/skizzle';
-import { getDateStr } from 'shared/utils';
 import { From, Mapper } from './Mapper';
 
 export type PullRequestMapperType = From<
@@ -45,7 +44,6 @@ export class PullRequestMapper extends Mapper<
 				title: value.title,
 				description: value.description || value.body,
 				date: value.creationDate || value.updated_at,
-				dateStr: getDateStr(date),
 				labels,
 				user: {
 					name: value.createdBy?.displayName || value.user?.login,

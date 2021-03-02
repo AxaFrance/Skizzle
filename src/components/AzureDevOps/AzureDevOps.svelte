@@ -37,16 +37,16 @@
 	<p class="loader">Chargement de l'application...</p>
 {:else if $clientAuthenticated.isAzureDevOpsAuthenticated}
 	{#await Service.getProfile(ProviderEnum.AzureDevOps)}
-		<p class="loader">Chargement du profile...</p>
+		<p class="loader">Chargement du profil...</p>
 	{:then profile}
-		{#await Service.getRepositories(ProviderEnum.AzureDevOps, { profile })}
+		<section>
+			<AccountTitle>Votre compte Azure DevOps</AccountTitle>
+			<AccountSummary {profile} />
+		</section>
+		<div class="content">
+			{#await Service.getRepositories(ProviderEnum.AzureDevOps, { profile })}
 			<p class="loader">Chargement de la liste des repositories...</p>
-		{:then repositories}
-			<section>
-				<AccountTitle>Votre compte Azure DevOps</AccountTitle>
-				<AccountSummary {profile} />
-			</section>
-			<div>
+			{:then repositories}
 				<section>
 					<AccountTitle>Suivre un nouveau repository</AccountTitle>
 					<p class="intro">
@@ -66,10 +66,10 @@
 				<section>
 					<FollowedRepositories {profile} />
 				</section>
-			</div>
-		{:catch}
-			<p class="error">Fetching profile failed.</p>
-		{/await}
+			{:catch}
+				<p class="error">Fetching profile failed.</p>
+			{/await}
+		</div>
 	{:catch}
 		<p class="error">Fetching profile failed.</p>
 	{/await}
@@ -107,5 +107,10 @@
 		margin-bottom: 1rem;
 		font-size: 0.8rem;
 		color: #ddd;
+	}
+
+	.content {
+		position: relative;
+		flex: 1 0 auto;
 	}
 </style>

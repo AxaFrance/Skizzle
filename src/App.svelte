@@ -119,4 +119,8 @@
 		flex: 1 1 auto;
 		overflow: auto;
 	}
+
+	:global(button:disabled) {
+		opacity: 0.5;
+	}
 </style>

@@ -29,7 +29,7 @@ export const getDateStr = (date: Date): string => {
 
 	switch (diffDays) {
 		case 0:
-			return "Aujourd'hui";
+			return `Aujourd'hui à ${date.getHours()}:${date.getMinutes()}`;
 		case 1:
 			return 'Hier';
 		default:

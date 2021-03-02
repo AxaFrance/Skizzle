@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getDateStr } from 'shared/utils';
 	import type { PullRequestType } from 'models/skizzle';
 	import Labels from 'components/Labels';
 	import Modale from 'components/Modale';
@@ -23,7 +24,9 @@
 	<Avatar className="pr__avatar" {pullRequest} />
 	<div class="details">
 		<header>
-			<h2 class="author">{pullRequest.user.name} - {pullRequest.dateStr}</h2>
+			<h2 class="author">
+				{pullRequest.user.name} - {getDateStr(new Date(pullRequest.date))}
+			</h2>
 			{#if pullRequest.projectName}
 				<span class="project">{pullRequest.projectName}</span>
 			{/if}

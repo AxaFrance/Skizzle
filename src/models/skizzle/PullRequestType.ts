@@ -15,7 +15,6 @@ type PullRequestType = {
 	title: string;
 	description: string;
 	date: string;
-	dateStr: string;
 	isDraft: boolean;
 	isConflict: boolean;
 	isAutoComplete: boolean;

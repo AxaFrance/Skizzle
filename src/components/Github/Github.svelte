@@ -54,7 +54,11 @@
 				/>
 
 				{#if search}
-					<SearchResults {search} repos={fetchedGithubRepositories} />
+					{#if $isFetchingData}
+						<p>Recherche en cours...</p>
+					{:else}
+						<SearchResults {search} repos={fetchedGithubRepositories} />
+					{/if}
 				{/if}
 			</section>
 			<FollowedRepositories {profile} />

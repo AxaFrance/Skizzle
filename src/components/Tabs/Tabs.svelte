@@ -15,7 +15,8 @@
 			class="tab"
 			class:current={current === tab || Object.keys(data).length === 1}
 			on:click={() => onChange(tab)}
-			disabled={$isFetchingData}>
+			disabled={$isFetchingData}
+		>
 			{#if data[tab].icon}
 				<svelte:component this={data[tab].icon} />
 			{/if}
@@ -24,10 +25,9 @@
 		</button>
 	{/each}
 	{#if onCreation}
-		<button
-			on:click={onCreation}
-			title="Créer une nouvelle liste"
-			class="add"><Icons.Plus /></button>
+		<button on:click={onCreation} title="Créer une nouvelle liste" class="add">
+			<Icons.Plus />
+		</button>
 	{/if}
 </nav>
 

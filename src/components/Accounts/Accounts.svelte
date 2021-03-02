@@ -38,6 +38,8 @@
 <style>
 	.content {
 		position: relative;
+		display: flex;
+		flex-direction: column;
 		height: calc(100vh - 6rem);
 		flex: 1 0 auto;
 		padding: 1rem;
