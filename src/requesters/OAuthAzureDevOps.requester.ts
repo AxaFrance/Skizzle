@@ -16,19 +16,18 @@ import type {
 	AzureDevOpsReviewApiType,
 	AzureDevOpsReviewsApiType,
 } from 'models/api';
+import type { HeaderType } from 'models/skizzle';
 import type { OAuthAzureDevOpsConfigType } from 'providers/OAuthAzureDevOpsConfig.provider';
 import { Requester } from './Requester';
 
 export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigType> {
 	private readonly API_VERSION = '6.1-preview';
 
-	protected getHeader(config: OAuthAzureDevOpsConfigType): HeadersInit {
-		const headers = new window.Headers();
-
-		headers.append('Content-Type', 'application/json');
-		headers.append('Authorization', `bearer ${config.access_token}`);
-
-		return headers;
+	protected getHeader(config: OAuthAzureDevOpsConfigType): HeaderType {
+		return {
+			'content-type': 'application/json',
+			authorization: config.access_token,
+		};
 	}
 
 	public async getProfile(userId: string): Promise<AzureDevOpsProfileApiType> {
@@ -41,9 +40,6 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		return (
 			await super.fetch<AzureDevOpsDescriptorApiType>(
 				`https://vssps.dev.azure.com/_apis/graph/descriptors/${userId}?api-version=${this.API_VERSION}`,
-				{
-					cache: true,
-				},
 			)
 		).value;
 	}
@@ -55,9 +51,6 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		return (
 			await super.fetch<AzureDevOpsAvatarApiType>(
 				`https://vssps.dev.azure.com/${organizationName}/_apis/graph/Subjects/${descriptor}/avatars?size=large&api-version=${this.API_VERSION}`,
-				{
-					cache: true,
-				},
 			)
 		).value;
 	}

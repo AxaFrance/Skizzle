@@ -32,6 +32,7 @@ export const getToken = async <T extends OAuthConfigType>(
 				[provider]: {
 					...n[provider],
 					...result,
+					current_date: new Date(),
 				},
 			}));
 		}

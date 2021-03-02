@@ -29,7 +29,6 @@
 		Vos repositories suivis
 		<button
 			title="Partager votre liste"
-			disabled={$isFetchingData}
 			on:click={() => (shareDisplayed = true)}
 		><Icons.Share /></button>
 	</AccountTitle>
@@ -53,7 +52,6 @@
 								repository.gitUrl,
 								`L'url du repository est copiée dans le presse-papiers.`,
 							)}
-						disabled={$isFetchingData}
 						title="Copier l'url de ce repository"
 					>
 						<Icons.Copy />
@@ -74,7 +72,6 @@
 			<ImportExport
 				{followedRepositories}
 				bind:shareDisplayed
-				provider={profile.provider}
 			/>
 		</Modale>
 	{/if}

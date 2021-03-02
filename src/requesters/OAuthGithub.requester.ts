@@ -10,17 +10,16 @@ import type {
 	GithubReviewApiType,
 	GithubReviewsApiType,
 } from 'models/api';
+import type { HeaderType } from 'models/skizzle';
 import type { OAuthGithubConfigType } from 'providers/OAuthGithubConfig.provider';
 import { Requester } from './Requester';
 
 export class OAuthGithubRequester extends Requester<OAuthGithubConfigType> {
-	protected getHeader(config: OAuthGithubConfigType): HeadersInit {
-		const headers = new window.Headers();
-
-		headers.append('Accept', 'application/vnd.github.v3+json');
-		headers.append('Authorization', `bearer ${config.access_token}`);
-
-		return headers;
+	protected getHeader(config: OAuthGithubConfigType): HeaderType {
+		return {
+			accept: 'application/vnd.github.v3+json',
+			authorization: config.access_token,
+		};
 	}
 
 	public async getProfile(): Promise<GithubProfileApiType> {
@@ -74,7 +73,7 @@ export class OAuthGithubRequester extends Requester<OAuthGithubConfigType> {
 		pullRequest?: string,
 	): Promise<GithubCommentApiType[]> {
 		return super.fetch<GithubCommentsApiType>(
-			`https://api.github.com/repos/${owner}/${repository}/issues/${pullRequest}/comments?sort=updated`,
+			`https://api.github.com/repos/${owner}/${repository}/pulls/${pullRequest}/comments?sort=updated`,
 		);
 	}
 

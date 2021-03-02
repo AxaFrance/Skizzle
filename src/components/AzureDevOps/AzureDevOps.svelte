@@ -10,16 +10,18 @@
 	import SearchResults from 'components/SearchResults';
 	import FollowedRepositories from 'components/FollowedRepositories';
 	import Search from 'components/Search';
-	import type { RepositoryType } from 'models/skizzle';
+	import type { ProfileType, RepositoryType } from 'models/skizzle';
 
 	let search: string = '';
 
-	const onSearchSubmit = (repositories: RepositoryType[]) => (
+	const onSearchSubmit = (profile: ProfileType) => async (
 		query: string,
-	): void => {
+	) => {
 		search = query;
 
-		fetchedAzureDevOpsRepositories = repositories.filter(
+		const result = await Service.getRepositories(ProviderEnum.AzureDevOps, { profile });
+
+		fetchedAzureDevOpsRepositories = result.filter(
 			({ projectName, name }) =>
 				name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
 				projectName.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
@@ -44,31 +46,29 @@
 			<AccountSummary {profile} />
 		</section>
 		<div class="content">
-			{#await Service.getRepositories(ProviderEnum.AzureDevOps, { profile })}
-			<p class="loader">Chargement de la liste des repositories...</p>
-			{:then repositories}
-				<section>
-					<AccountTitle>Suivre un nouveau repository</AccountTitle>
-					<p class="intro">
-						Cherchez le nom de son projet et/ou repository associé.
-					</p>
-					<Search
-						onSubmit={onSearchSubmit(repositories)}
-						onCancel={onSearchCancel}
-						disabled={$isFetchingData}
-						placeholder="Rechercher un projet ou un repos"
-					/>
+			<section>
+				<AccountTitle>Suivre un nouveau repository</AccountTitle>
+				<p class="intro">
+					Cherchez le nom de son projet et/ou repository associé.
+				</p>
+				<Search
+					onSubmit={onSearchSubmit(profile)}
+					onCancel={onSearchCancel}
+					disabled={$isFetchingData}
+					placeholder="Rechercher un projet ou un repos"
+				/>
 
-					{#if search}
+				{#if search}
+					{#if $isFetchingData}
+						<p>Recherche en cours...</p>
+					{:else}
 						<SearchResults {search} repos={fetchedAzureDevOpsRepositories} />
 					{/if}
-				</section>
-				<section>
-					<FollowedRepositories {profile} />
-				</section>
-			{:catch}
-				<p class="error">Fetching profile failed.</p>
-			{/await}
+				{/if}
+			</section>
+			<section>
+				<FollowedRepositories {profile} />
+			</section>
 		</div>
 	{:catch}
 		<p class="error">Fetching profile failed.</p>

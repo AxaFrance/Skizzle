@@ -6,8 +6,6 @@ export const checkRepository = async (
 	{ target },
 	repository: RepositoryType,
 ) => {
-	console.log({ repository });
-
 	const { checked } = target as HTMLInputElement;
 
 	if (checked) {

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
-  import { isFetchingData, notifications, pullRequests, repositories } from 'shared/stores/default.store';
+  import { notifications, pullRequests, repositories } from 'shared/stores/default.store';
 	import { HighlightSvelte } from "svelte-highlight";
   import { json } from "svelte-highlight/languages";
 	import Tabs from 'components/Tabs';
@@ -8,12 +8,10 @@
   import { copyToClipboard, isJson } from 'shared/utils';
   import Icons from 'components/icons';
   import type { RepositoryType, ProviderEnum } from 'models/skizzle';
-  
   import 'svelte-highlight/styles/dark.css';
-import { Service } from 'services';
+  import { Service } from 'services';
 
   export let followedRepositories: RepositoryType[];
-  export let provider: ProviderEnum;
   export let shareDisplayed: boolean;
 
   let currentTab: string = 'import';
@@ -77,7 +75,6 @@ import { Service } from 'services';
     <button
     class="copy"
         on:click={() => copyToClipboard(JSON.stringify(getExportCode(), undefined, 2), 'Code copié dans le presse-papier.')}
-        disabled={$isFetchingData}
         title="Copier l'url de ce repository"
       >
       <Icons.Copy />
