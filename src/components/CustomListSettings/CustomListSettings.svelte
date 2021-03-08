@@ -15,6 +15,8 @@
 	export let onDone: () => void;
 	export let id: string;
 
+	let tags: string[] = $customLists.find(list => list.id === id)?.tags ?? [];
+
 	let listName: string = $customLists.find(list => list.id === id)
 		? $customLists.find(list => list.id === id).name
 		: null;
@@ -23,6 +25,8 @@
 	let repositoriesIds: string[] = $customLists.find(list => list.id === id)
 		? $customLists.find(list => list.id === id).repositoriesIds
 		: [];
+
+	let tag: string;
 
 	const onImport = async () => {
 		const result: any = await app.invoke('file-import');
@@ -58,6 +62,7 @@
 					id,
 					name: listName,
 					repositoriesIds,
+					tags,
 				};
 
 				customLists.update(_list =>
@@ -74,6 +79,7 @@
 					id: uuidv4(),
 					name: listName,
 					repositoriesIds,
+					tags,
 				};
 
 				customLists.update(_list => [..._list, list]);
@@ -86,6 +92,25 @@
 				]);
 			}
 			onDone();
+		}
+	};
+
+	const onAddTag = (event: KeyboardEvent): void => {
+		event.preventDefault();
+
+		if (event.key === ';') {
+			console.log(tag, tags, event.key);
+			const result = tag.substring(0, tag.indexOf(';'));
+
+			if (result) {
+				tags = [...tags, result];
+			}
+
+			tag = '';
+		} else if (event.key === 'Backspace' && !tag) {
+			const result = tags.slice(0, tags.length - 1);
+
+			tags = [...result];
 		}
 	};
 
@@ -163,7 +188,9 @@
 					on:click={() => {
 						repositoriesIds = [...repositoriesIds, selectedRepoId];
 					}}
-				>Ajouter</button>
+				>
+					Ajouter
+				</button>
 			</div>
 			{#if repositoriesIds.length}
 				<p class="intro">
@@ -187,7 +214,9 @@
 									e.preventDefault();
 									deleteRepository(repo);
 								}}
-							><Icons.Delete /></button>
+							>
+								<Icons.Delete />
+							</button>
 						</li>
 					{/each}
 				</ul>
@@ -196,6 +225,11 @@
 			{/if}
 		</Fieldset>
 	{/if}
+
+	<Fieldset title="Tag" intro="Choisissez un tag, il apparaitra dans l'onglet.">
+		<input id="list-name" type="text" bind:value={tag} on:keyup={onAddTag} />
+	</Fieldset>
+
 	<div class="bar">
 		<input
 			disabled={!listName}
