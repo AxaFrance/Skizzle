@@ -17,6 +17,7 @@ import type { SettingsType } from '../models/skizzle/SettingsType';
 import { SkizzleUpdaterEnum } from '../models/skizzle/SkizzleUpdaterEnum';
 import type { ExportType } from '../models/skizzle/ExportType';
 import { WindowEnum } from '../models/skizzle/WindowEnum';
+import { requester } from './requester';
 
 try {
 	require('electron-reloader')(module);
@@ -76,9 +77,7 @@ const createWindow = () => {
 		window = null;
 	});
 
-	if (!app.isPackaged) {
-		window.webContents.openDevTools();
-	}
+	window.webContents.openDevTools({ mode: 'detach' });
 
 	//@ts-ignore
 	window.on('render-process-gone', () => hangOrCrash(window));
@@ -372,6 +371,14 @@ if (!gotTheLock) {
 			}
 		},
 	);
+
+	ipcMain.handle('request', async (event, args) => {
+		const { url, options, settings } = JSON.parse(args);
+
+		options['user-agent'] = window.webContents.session.getUserAgent();
+
+		return requester(url, options, settings);
+	});
 
 	ipcMain.on('notifier', (event, arg) => {
 		if (Notification.isSupported()) {

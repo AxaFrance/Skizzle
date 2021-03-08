@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { checkRepository } from 'utils';
-	import { isFetchingData, repositories } from 'shared/stores/default.store';
+	import { repositories } from 'shared/stores/default.store';
 	import type { RepositoryType } from 'models/skizzle/RepositoryType';
 
 	export let search: string;
@@ -70,11 +70,13 @@
 						type="checkbox"
 						id={repository.repositoryId}
 						checked={$repositories.some(x => x.repositoryId === repository.repositoryId)}
-						on:change={event => checkRepository(event, repository)}
-						disabled={$isFetchingData} />
+						on:change={event => checkRepository(event, repository)} />
 					<label
 						class="follow"
-						for={repository.repositoryId}>{$repositories.some(x => x.repositoryId === repository.repositoryId) ? 'Ne plus suivre' : 'Suivre'}</label>
+						for={repository.repositoryId}
+					>
+						{$repositories.some(x => x.repositoryId === repository.repositoryId) ? 'Ne plus suivre' : 'Suivre'}
+					</label>
 				</li>
 			{/each}
 		</ul>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Icons from 'components/icons';
-	import { isFetchingData } from 'shared/stores/default.store';
 	export let data: any;
 	export let onChange: (value: any) => void;
 	export let current: any;
@@ -15,7 +14,6 @@
 			class="tab"
 			class:current={current === tab || Object.keys(data).length === 1}
 			on:click={() => onChange(tab)}
-			disabled={$isFetchingData}
 		>
 			{#if data[tab].icon}
 				<svelte:component this={data[tab].icon} />

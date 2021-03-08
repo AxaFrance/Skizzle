@@ -57,6 +57,17 @@
 		</Fieldset>
 
 		<Fieldset
+			title="Proxy"
+		>
+			<label for="proxy">Serveur et port (ex: http://localhost:3000) : </label>
+			<input
+				id="proxy"
+				type="url"
+				bind:value={$settings.proxy}
+			/>
+		</Fieldset>
+
+		<Fieldset
 			title="Theme"
 			intro="Choisissez un theme pour l'interface de Skizzle."
 		>

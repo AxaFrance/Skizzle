@@ -1,16 +1,12 @@
-import type { ProviderEnum } from 'models/skizzle';
+import type { HeaderType, ProviderEnum } from 'models/skizzle';
 import type { OAuthConfigType } from 'providers';
 import { client, clientHasProvider } from 'shared/stores/authentication.store';
-import { isLoading, offline } from 'shared/stores/default.store';
-import { authorize } from 'shared/token';
+import { isLoading, offline, settings } from 'shared/stores/default.store';
 import { get } from 'svelte/store';
-import ky from 'ky';
-import type { Dictionary } from 'shared/utils';
+const app = require('electron').ipcRenderer;
 
 export abstract class Requester<T extends OAuthConfigType> {
 	private readonly provider: ProviderEnum;
-	private caches: Dictionary<any> = {};
-
 	constructor(provider: ProviderEnum) {
 		this.provider = provider;
 	}
@@ -19,10 +15,7 @@ export abstract class Requester<T extends OAuthConfigType> {
 		return clientHasProvider(this.provider) && !!config?.access_token;
 	}
 
-	protected async fetch<S>(
-		url: string,
-		options?: { cache: boolean },
-	): Promise<S> {
+	protected async fetch<S>(url: string): Promise<S> {
 		const isOffline = get(offline);
 		const isFetchingToken = get(isLoading);
 		const config = get(client)[this.provider] as T;
@@ -30,41 +23,18 @@ export abstract class Requester<T extends OAuthConfigType> {
 		if (!isOffline && this.clientHasProvider(config) && !isFetchingToken) {
 			const headers = this.getHeader(config);
 
-			const result = ky.get(url, {
-				retry: {
-					methods: ['get'],
-					limit: 3,
-				},
-				hooks: {
-					afterResponse: [
-						(input, options, response) => {
-							if (response.status === 403 || response.status === 203) {
-								client.update(n => ({
-									...n,
-									[this.provider]: {},
-								}));
-
-								authorize(
-									this.provider,
-									response.status === 403 || response.status === 203,
-								);
-							}
-						},
-					],
-				},
-				cache: 'force-cache',
-				headers,
-			});
-
-			const data = await result.json<S>();
-
-			this.caches[url] = data;
+			const data = (await app.invoke(
+				'request',
+				JSON.stringify({
+					url,
+					options: headers,
+					settings: get(settings),
+				}),
+			)) as S;
 
 			return data;
-		} else {
-			return this.caches[url];
 		}
 	}
 
-	protected abstract getHeader(config: T): HeadersInit;
+	protected abstract getHeader(config: T): HeaderType;
 }

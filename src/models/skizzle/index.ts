@@ -10,6 +10,7 @@ import type { ReviewType } from './ReviewType';
 import type { SettingsType } from './SettingsType';
 import type { NotificationType } from './NotificationType';
 import type { ExportType } from './ExportType';
+import type { HeaderType } from './HeaderType';
 
 import { ProviderEnum } from './ProviderEnum';
 import { ThemeEnum } from './ThemeEnum';
@@ -32,6 +33,7 @@ export type {
 	UserType,
 	NotificationType,
 	ExportType,
+	HeaderType,
 };
 
 export { ProviderEnum, ThemeEnum, Views, SkizzleUpdaterEnum, WindowEnum };

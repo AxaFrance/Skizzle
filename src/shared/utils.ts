@@ -27,9 +27,12 @@ export const getDateStr = (date: Date): string => {
 		Math.abs((date.getTime() - today.getTime()) / oneDay),
 	);
 
+	const hours = `${date.getHours()}`.padStart(2, '0');
+	const minutes = `${date.getMinutes()}`.padStart(2, '0');
+
 	switch (diffDays) {
 		case 0:
-			return `Aujourd'hui à ${date.getHours()}:${date.getMinutes()}`;
+			return `Aujourd'hui à ${hours}:${minutes}`;
 		case 1:
 			return 'Hier';
 		default:
