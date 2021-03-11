@@ -27,14 +27,16 @@
 			<h2 class="author">
 				{pullRequest.user.name} - {getDateStr(new Date(pullRequest.date))}
 			</h2>
-			{#if pullRequest.projectName}
-				<span class="project">{pullRequest.projectName}</span>
-			{/if}
 		</header>
 		<h3 class="title">
 			{pullRequest.title}
 		</h3>
-		<p class="repo">{pullRequest.repositoryName}</p>
+		<p class="repo">
+			{#if pullRequest.projectName}
+				{pullRequest.projectName}&nbsp;/
+			{/if}
+			{pullRequest.repositoryName}
+		</p>
 	</div>
 	<footer>
 		{#if pullRequest.isAutoComplete}
@@ -90,8 +92,6 @@
 	}
 
 	header {
-		display: flex;
-		align-items: center;
 		margin-bottom: 0.5rem;
 		font-size: 0.8rem;
 		color: #aaa;
