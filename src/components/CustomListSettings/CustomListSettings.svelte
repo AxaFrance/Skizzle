@@ -123,7 +123,7 @@
 <!-- svelte-ignore a11y-no-onchange a11y-autofocus -->
 <form on:submit={onSubmit}>
 	<AccountTitle>
-		{id ? 'Modifier la liste' : 'Nouvelle liste'}
+		{id ? `Modifier la liste "${listName}"` : 'Nouvelle liste'}
 		<input
 			id="import"
 			on:click={onImport}
@@ -188,9 +188,7 @@
 					on:click={() => {
 						repositoriesIds = [...repositoriesIds, selectedRepoId];
 					}}
-				>
-					Ajouter
-				</button>
+				>Ajouter</button>
 			</div>
 			{#if repositoriesIds.length}
 				<p class="intro">
@@ -226,8 +224,16 @@
 		</Fieldset>
 	{/if}
 
-	<Fieldset title="Tag" intro="Choisissez un tag, il apparaitra dans l'onglet.">
-		<input id="list-name" type="text" bind:value={tag} on:keyup={onAddTag} />
+	<Fieldset
+		title="Tags"
+		intro="Saisissez un ou plusieurs tag, Skizzle affichera uniquement les pull requests comportant les tags sélectionnés."
+		outro={tag
+			? `Skizzle n'affichera que les pull requests contenant le tag "${tag}"`
+			: 'Skizzle affichera toutes les pull requests quelque soit leur tag'}
+	>
+		<div class="field">
+			<input id="list-name" type="text" bind:value={tag} on:keyup={onAddTag} />
+		</div>
 	</Fieldset>
 
 	<div class="bar">
