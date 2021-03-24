@@ -14,6 +14,8 @@
 	export let onDone: () => void;
 	export let id: string;
 
+	let tags: string[] = $customLists.find(list => list.id === id)?.tags ?? [];
+
 	let listName: string = $customLists.find(list => list.id === id)
 		? $customLists.find(list => list.id === id).name
 		: null;
@@ -22,6 +24,8 @@
 	let repositoriesIds: string[] = $customLists.find(list => list.id === id)
 		? $customLists.find(list => list.id === id).repositoriesIds
 		: [];
+
+	let tag: string;
 
 	const onImport = async () => {
 		const result: any = await window.remote.invoke('file-import');
@@ -57,6 +61,7 @@
 					id,
 					name: listName,
 					repositoriesIds,
+					tags,
 				};
 
 				customLists.update(_list =>
@@ -73,6 +78,7 @@
 					id: uuidv4(),
 					name: listName,
 					repositoriesIds,
+					tags,
 				};
 
 				customLists.update(_list => [..._list, list]);
@@ -88,6 +94,25 @@
 		}
 	};
 
+	const onAddTag = (event: KeyboardEvent): void => {
+		event.preventDefault();
+
+		if (event.key === ';') {
+			console.log(tag, tags, event.key);
+			const result = tag.substring(0, tag.indexOf(';'));
+
+			if (result) {
+				tags = [...tags, result];
+			}
+
+			tag = '';
+		} else if (event.key === 'Backspace' && !tag) {
+			const result = tags.slice(0, tags.length - 1);
+
+			tags = [...result];
+		}
+	};
+
 	const deleteRepository = (id: string): void => {
 		const newRepositoriesIds = repositoriesIds.filter(repo => repo !== id);
 		repositoriesIds = [...newRepositoriesIds];
@@ -97,7 +122,7 @@
 <!-- svelte-ignore a11y-no-onchange a11y-autofocus -->
 <form on:submit={onSubmit}>
 	<AccountTitle>
-		{id ? 'Modifier la liste' : 'Nouvelle liste'}
+		{id ? `Modifier la liste "${listName}"` : 'Nouvelle liste'}
 		<input
 			id="import"
 			on:click={onImport}
@@ -186,7 +211,9 @@
 									e.preventDefault();
 									deleteRepository(repo);
 								}}
-							><Icons.Delete /></button>
+							>
+								<Icons.Delete />
+							</button>
 						</li>
 					{/each}
 				</ul>
@@ -195,6 +222,19 @@
 			{/if}
 		</Fieldset>
 	{/if}
+
+	<Fieldset
+		title="Tags"
+		intro="Saisissez un ou plusieurs tag, Skizzle affichera uniquement les pull requests comportant les tags sélectionnés."
+		outro={tag
+			? `Skizzle n'affichera que les pull requests contenant le tag "${tag}"`
+			: 'Skizzle affichera toutes les pull requests quelque soit leur tag'}
+	>
+		<div class="field">
+			<input id="list-name" type="text" bind:value={tag} on:keyup={onAddTag} />
+		</div>
+	</Fieldset>
+
 	<div class="bar">
 		<input
 			disabled={!listName}

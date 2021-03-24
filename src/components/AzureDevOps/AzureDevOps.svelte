@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Service } from 'services/Service';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
-	import { isFetchingData, isLoading } from 'shared/stores/default.store';
+	import { isLoading } from 'shared/stores/default.store';
 	import { authorize } from 'shared/token';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import AccountTitle from 'components/AccountTitle';
@@ -14,18 +14,22 @@
 
 	let search: string = '';
 
-	const onSearchSubmit = (profile: ProfileType) => async (
-		query: string,
-	) => {
+	let isLoadingRepositories = false;
+	const onSearchSubmit = (profile: ProfileType) => async (query: string) => {
 		search = query;
 
-		const result = await Service.getRepositories(ProviderEnum.AzureDevOps, { profile });
+		isLoadingRepositories = true;
+		const result = await Service.getRepositories(ProviderEnum.AzureDevOps, {
+			profile,
+		});
 
 		fetchedAzureDevOpsRepositories = result.filter(
 			({ projectName, name }) =>
 				name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
 				projectName.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
 		);
+
+		isLoadingRepositories = false;
 	};
 
 	const onSearchCancel = (): void => {
@@ -48,18 +52,16 @@
 		<div class="content">
 			<section>
 				<AccountTitle>Suivre un nouveau repository</AccountTitle>
-				<p class="intro">
-					Cherchez le nom de son projet et/ou repository associé.
-				</p>
+				<p class="intro">Cherchez le nom de son projet et/ou repository associé.</p>
 				<Search
 					onSubmit={onSearchSubmit(profile)}
 					onCancel={onSearchCancel}
-					disabled={$isFetchingData}
+					disabled={isLoadingRepositories}
 					placeholder="Rechercher un projet ou un repos"
 				/>
 
 				{#if search}
-					{#if $isFetchingData}
+					{#if isLoadingRepositories}
 						<p>Recherche en cours...</p>
 					{:else}
 						<SearchResults {search} repos={fetchedAzureDevOpsRepositories} />

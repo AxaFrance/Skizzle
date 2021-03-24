@@ -56,11 +56,25 @@
 	};
 
 	const filterList = (customList: CustomListType) => {
-		return $pullRequests.filter(pullRequest =>
-			customList.repositoriesIds
-				.map(String)
-				.includes(String(pullRequest.repositoryId)),
-		);
+		let filteredPullRequests = $pullRequests;
+
+		if (customList.repositoriesIds.length) {
+			filteredPullRequests = filteredPullRequests.filter(pullRequest =>
+				customList.repositoriesIds
+					.map(String)
+					.includes(String(pullRequest.repositoryId)),
+			);
+		}
+
+		if (customList.tags) {
+			// filteredPullRequests = filteredPullRequests.filter(pullRequest =>
+			// 	pullRequest.labels
+			// 		?.map(label => label.name.toLocaleLowerCase())
+			// 		.includes(customList.tags.map(tag => tag.toLocaleLowerCase())),
+			// );
+		}
+
+		return filteredPullRequests;
 	};
 
 	const getTabs = lists => {
@@ -106,7 +120,9 @@
 				on:click={() => {
 					modifyingListId = currentTab;
 				}}
-			>Modifier</button>
+			>
+				Modifier
+			</button>
 			<button on:click={deleteList}>Supprimer</button>
 			<button on:click={exportList}>Exporter</button>
 		</div>

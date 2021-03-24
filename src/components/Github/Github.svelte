@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Service } from 'services/Service';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
-	import { isFetchingData, isLoading } from 'shared/stores/default.store';
+	import { isLoading } from 'shared/stores/default.store';
 	import { authorize } from 'shared/token';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import AccountTitle from 'components/AccountTitle';
@@ -13,10 +13,13 @@
 	import type { RepositoryType } from 'models/skizzle';
 
 	let search: string = '';
+	let isLoadingRepositories = false;
 
 	$: fetchedGithubRepositories = [] as RepositoryType[];
 
 	const onSearchSubmit = async (query: string) => {
+		isLoadingRepositories = true;
+
 		search = query;
 		fetchedGithubRepositories = await Service.getRepositories(
 			ProviderEnum.Github,
@@ -24,6 +27,8 @@
 				query,
 			},
 		);
+
+		isLoadingRepositories = false;
 	};
 
 	const onSearchCancel = () => {
@@ -49,12 +54,12 @@
 				<Search
 					onSubmit={onSearchSubmit}
 					onCancel={onSearchCancel}
-					disabled={$isFetchingData}
+					disabled={isLoadingRepositories}
 					placeholder="Rechercher un repository"
 				/>
 
 				{#if search}
-					{#if $isFetchingData}
+					{#if isLoadingRepositories}
 						<p>Recherche en cours...</p>
 					{:else}
 						<SearchResults {search} repos={fetchedGithubRepositories} />
