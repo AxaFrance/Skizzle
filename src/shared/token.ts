@@ -3,7 +3,6 @@ import { get } from 'svelte/store';
 import type { OAuthConfig, OAuthConfigType } from '../providers';
 import { client } from './stores/authentication.store';
 import { isLoading, settings } from './stores/default.store';
-const app = require('electron').ipcRenderer;
 
 export const getToken = async <T extends OAuthConfigType>(
 	config: OAuthConfig<T>,
@@ -12,7 +11,7 @@ export const getToken = async <T extends OAuthConfigType>(
 
 	const body = config.getBody();
 
-	const result = await app.invoke('token', {
+	const result = await window.remote.invoke('token', {
 		key: provider,
 		body,
 		settings: get(settings),
@@ -41,8 +40,8 @@ export const getToken = async <T extends OAuthConfigType>(
 };
 
 export const authorize = (provider: ProviderEnum, isSilent = false) => {
-	app.send('oauth', provider, isSilent);
-	app.once('getToken', (_, args) =>
+	window.remote.send('oauth', provider, isSilent);
+	window.remote.receive('getToken', args =>
 		client.update(n => ({
 			...n,
 			[provider]: {

@@ -10,7 +10,6 @@
 	} from 'shared/stores/default.store';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import Icons from 'components/icons';
-	const app = require('electron').ipcRenderer;
 
 	export let onDone: () => void;
 	export let id: string;
@@ -25,7 +24,7 @@
 		: [];
 
 	const onImport = async () => {
-		const result: any = await app.invoke('file-import');
+		const result: any = await window.remote.invoke('file-import');
 
 		if (result) {
 			const data = JSON.parse(result) as CustomListType;

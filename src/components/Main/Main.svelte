@@ -10,7 +10,6 @@
 	import Modale from 'components/Modale';
 	import CustomListSettings from 'components/CustomListSettings';
 	import type { CustomListType, ExportType } from 'models/skizzle';
-	const app = require('electron').ipcRenderer;
 
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;
@@ -27,7 +26,7 @@
 		);
 
 		if (currentTabData) {
-			const result: boolean = await app.invoke('file-export', {
+			const result: boolean = await window.remote.invoke('file-export', {
 				name: currentTabData.name,
 				repositoriesIds: currentTabData.repositoriesIds,
 			} as ExportType);

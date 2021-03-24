@@ -14,12 +14,12 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { autoUpdater } from 'electron-updater';
 import type { SettingsType } from '../models/skizzle/SettingsType';
-import { SkizzleUpdaterEnum } from '../models/skizzle/SkizzleUpdaterEnum';
 import type { ExportType } from '../models/skizzle/ExportType';
 import { WindowEnum } from '../models/skizzle/WindowEnum';
 import { requester } from './requester';
 
 try {
+	autoUpdater.logger = require('electron-log');
 	require('electron-reloader')(module);
 } catch (_) {}
 
@@ -30,7 +30,7 @@ const setAppUserModelId = () => {
 };
 
 setAppUserModelId();
-autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
 
 let window: BrowserWindow;
 let github: OAuthWindow;
@@ -63,8 +63,10 @@ const createWindow = () => {
 		resizable: true,
 		frame: false,
 		webPreferences: {
-			nodeIntegration: true,
-			experimentalFeatures: true,
+			preload: path.join(__dirname, "../../preload.js"),
+			contextIsolation: true,
+			nodeIntegration: false,
+			experimentalFeatures: true
 		},
 	});
 
@@ -178,30 +180,10 @@ const createWindow = () => {
 	);
 };
 
-autoUpdater.on('update-available', () => {
-	window.webContents.send(
-		'check-for-update-response',
-		SkizzleUpdaterEnum.Available,
-	);
-});
+autoUpdater.on('update-downloaded', () => window.webContents.send('check-for-update-response'));
 
-autoUpdater.on('download-progress', progressObj => {
-	window.webContents.send(
-		'check-for-update-response',
-		SkizzleUpdaterEnum.Progress,
-	);
-});
-
-autoUpdater.on('update-downloaded', () => {
-	window.webContents.send(
-		'check-for-update-response',
-		SkizzleUpdaterEnum.Downloaded,
-	);
-});
-
-ipcMain.on('check-for-update-request', async event => {
-	autoUpdater.checkForUpdates();
-});
+ipcMain.handle('check-for-update-request', async (event, _) => (await autoUpdater.checkForUpdates()).updateInfo.version);
+ipcMain.handle('check-for-update-restart', async (event, _) => autoUpdater.quitAndInstall(true, true));
 
 ipcMain.handle('copy-to-clipboard', async (event, url: string) => {
 	clipboard.writeText(url, 'clipboard');

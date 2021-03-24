@@ -15,7 +15,6 @@ import type { HeaderType } from './HeaderType';
 import { ProviderEnum } from './ProviderEnum';
 import { ThemeEnum } from './ThemeEnum';
 import { Views } from './ViewsEnum';
-import { SkizzleUpdaterEnum } from './SkizzleUpdaterEnum';
 import { WindowEnum } from './WindowEnum';
 
 export type {
@@ -36,4 +35,4 @@ export type {
 	HeaderType,
 };
 
-export { ProviderEnum, ThemeEnum, Views, SkizzleUpdaterEnum, WindowEnum };
+export { ProviderEnum, ThemeEnum, Views, WindowEnum };

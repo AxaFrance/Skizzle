@@ -3,7 +3,6 @@
 	import type { PullRequestType } from 'models/skizzle';
 	import Labels from 'components/Labels';
 	import Modale from 'components/Modale';
-	const { shell } = require('electron');
 	import { isFetchingData } from 'shared/stores/default.store';
 	import Avatar from 'components/Avatar';
 	import Reviews from 'components/Reviews';
@@ -14,7 +13,7 @@
 
 	let detailsModal = false;
 
-	const openLink = () => shell.openExternal(pullRequest.url);
+	const openLink = () => window.remote.openDefaultBrowser(pullRequest.url);
 	const openModale = () => (detailsModal = true);
 	const closeModale = () => (detailsModal = false);
 </script>

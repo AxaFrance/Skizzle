@@ -1,6 +1,5 @@
 import { notifications } from 'shared/stores/default.store';
 import { v4 as uuidv4 } from 'uuid';
-const app = require('electron').ipcRenderer;
 
 export const addItem = <T>(key: string, value: T): void =>
 	localStorage.setItem(key, JSON.stringify(value));
@@ -41,7 +40,7 @@ export const getDateStr = (date: Date): string => {
 };
 
 export const copyToClipboard = async (data: string, message: string) => {
-	const result: boolean = await app.invoke('copy-to-clipboard', data);
+	const result: boolean = await window.remote.invoke('copy-to-clipboard', data);
 
 	if (result) {
 		notifications.update(notifications => [

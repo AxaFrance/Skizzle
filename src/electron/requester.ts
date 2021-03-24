@@ -12,7 +12,6 @@ export const requester = async (
 	try {
 		const result = await superagent
 			.get(url)
-			.retry(3)
 			.proxy(settings.proxy)
 			.set('User-Agent', headers['user-agent'])
 			.auth(headers?.authorization, { type: 'bearer' });

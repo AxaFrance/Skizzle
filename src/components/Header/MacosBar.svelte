@@ -1,8 +1,9 @@
 <script>
 	import { WindowEnum } from "models/skizzle";
-	const app = require('electron').ipcRenderer;
 
 	export let isMaximized: boolean = false;
+
+	const changeState = (state: WindowEnum) => window.remote.send('state', { state })
 </script>
 
 <style src="./MacosBar.scss">
@@ -10,7 +11,7 @@
 
 <div class="window-controls">
 	<button
-		on:click={() => app.send('state', { state: WindowEnum.Hide })}
+		on:click={() => changeState(WindowEnum.Hide)}
 		class="button close-button">
 		<svg
 			width="16"
@@ -25,7 +26,7 @@
 		</svg>
 	</button>
 	<button
-		on:click={() => app.send('state', { state: WindowEnum.Minimize })}
+		on:click={() => changeState(WindowEnum.Minimize)}
 		class="button min-button">
 		<svg
 			width="16"
@@ -38,7 +39,7 @@
 	</button>
 	{#if !isMaximized}
 		<button
-			on:click={() => app.send('state', { state: WindowEnum.Maximize })}
+			on:click={() => changeState(WindowEnum.Maximize)}
 			class="button max-button">
 			<svg
 				width="16"
@@ -54,7 +55,7 @@
 		</button>
 	{:else}
 		<button
-			on:click={() => app.send('state', { state: WindowEnum.Unmaximize}) }
+			on:click={() => changeState(WindowEnum.Unmaximize) }
 			class="button restore-button">
 			<svg
 				width="16"

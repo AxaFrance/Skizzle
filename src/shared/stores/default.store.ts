@@ -12,7 +12,6 @@ import { Service } from 'services/Service';
 import { get } from 'svelte/store';
 import { createStore } from './store';
 import { v4 as uuidv4 } from 'uuid';
-const app = require('electron').ipcRenderer;
 
 const predicate = <T extends CommonType>(
 	value: T[],
@@ -62,7 +61,7 @@ export const refreshPullRequests = async () => {
 						? 'Plusieurs repositories ont étés mis à jour'
 						: `Le repo ${newValues[0].repositoryName} a une nouvelle pull request`;
 
-				app.send('notifier', {
+				window.remote.send('notifier', {
 					title,
 					body,
 				});
@@ -125,7 +124,7 @@ export const settings = createStore<SettingsType>(
 				}
 			});
 
-			app.send('launch-startup', settings.launch_at_startup);
+			window.remote.send('launch-startup', settings.launch_at_startup);
 		},
 	},
 );

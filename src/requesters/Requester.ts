@@ -3,7 +3,6 @@ import type { OAuthConfigType } from 'providers';
 import { client, clientHasProvider } from 'shared/stores/authentication.store';
 import { isLoading, offline, settings } from 'shared/stores/default.store';
 import { get } from 'svelte/store';
-const app = require('electron').ipcRenderer;
 
 export abstract class Requester<T extends OAuthConfigType> {
 	private readonly provider: ProviderEnum;
@@ -23,7 +22,7 @@ export abstract class Requester<T extends OAuthConfigType> {
 		if (!isOffline && this.clientHasProvider(config) && !isFetchingToken) {
 			const headers = this.getHeader(config);
 
-			const data = (await app.invoke(
+			const data = (await window.remote.invoke(
 				'request',
 				JSON.stringify({
 					url,

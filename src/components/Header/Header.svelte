@@ -1,12 +1,11 @@
 <script>
-	const app = require('electron').ipcRenderer;
 	import WindowsBar from './WindowsBar.svelte';
 	import MacosBar from './MacosBar.svelte';
 
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'windows' : 'others';
-	let isMaximized: boolean = app.invoke('isMaximized') as boolean;
+	let isMaximized: boolean = window.remote.invoke('isMaximized') as boolean;
 
-	app.on('change-maximisze', (event: any, args: boolean) => {
+	window.remote.receive('change-maximisze', (args: boolean) => {
 		isMaximized = args
 	});
 </script>

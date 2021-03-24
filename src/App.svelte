@@ -8,13 +8,11 @@
 	import { Views } from 'models/skizzle/ViewsEnum';
 	import { offline, settings } from 'shared/stores/default.store';
 	import { onMount } from 'svelte';
-	import { SkizzleUpdaterEnum } from 'models/skizzle';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Loader from 'components/Loader';
 
-	const app = require('electron').ipcRenderer;
-
-	let update: SkizzleUpdaterEnum;
+	let update: boolean = false;
+	let version: string;
 
 	const views = {
 		[Views.Main]: Main,
@@ -33,31 +31,23 @@
 	window.addEventListener('offline', () => offline.set(true));
 
 	onMount(() => {
-		setInterval(() => {
-			app.send('check-for-update-request');
-		}, 5000);
+		setInterval(async () => {
+			version = await window.remote.invoke('check-for-update-request');
+		}, 60000);
 
-		app.on('check-for-update-response', (event: any, arg: SkizzleUpdaterEnum) => {
-			update = arg;
-		});
+		window.remote.receive('check-for-update-response', () => update = true);
 	});
+
+	const checkForUpdateRestart = () => window.remote.invoke('check-for-update-restart')
 </script>
 
 <Header />
 {#if update}
-	{#if update === SkizzleUpdaterEnum.Available}
-		<p>Une mise à jour est disponible, veux-tu la télécharger ?</p>
-		<button>Oui</button>
-		<button>Plus tard</button>
-	{/if}
-	{#if update === SkizzleUpdaterEnum.Progress}
-		<p>Téléchargement en cours...</p>
-	{/if}
-	{#if update === SkizzleUpdaterEnum.Downloaded}
-		<p>Mise à jour téléchargé, redemarrer ?</p>
-		<button>Redemarrer</button>
-		<button>Plus tard</button>
-	{/if}
+	<h1>{version}</h1>
+	<p>A new version has been downloaded.</p>
+	<p>Restart the application to apply the updates.</p>
+	<button>Later</button>
+	<button on:click={() => checkForUpdateRestart()}>Restart</button>
 {/if}
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
 	<Loader />

@@ -24,7 +24,7 @@
 			}`}
 		>
 			<div class="field">
-				<Range bind:value={$settings.refresh_delay} min={1} step={1} max={15} />
+				<Range bind:value={$settings.refresh_delay} min={5} step={5} max={30} />
 			</div>
 		</Fieldset>
 
