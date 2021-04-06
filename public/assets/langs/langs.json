@@ -5,6 +5,16 @@
 		"words": "assets/langs/en.json"
 	},
 	{
+		"code": "EN-GB",
+		"label": "English (United Kingdom)",
+		"words": "assets/langs/en.json"
+	},
+	{
+		"code": "EN-US",
+		"label": "English (United States)",
+		"words": "assets/langs/en.json"
+	},
+	{
 		"code": "FR",
 		"label": "Français",
 		"words": "assets/langs/fr.json"
