@@ -59,11 +59,13 @@
 		let filteredPullRequests = $pullRequests;
 
 		if (customList.repositoriesIds.length) {
-			filteredPullRequests = filteredPullRequests.filter(pullRequest =>
-				customList.repositoriesIds
-					.map(String)
-					.includes(String(pullRequest.repositoryId)),
-			);
+			filteredPullRequests = filteredPullRequests
+				.filter(pullRequest => !!pullRequest)
+				.filter(pullRequest =>
+					customList.repositoriesIds
+						.map(String)
+						.includes(String(pullRequest.repositoryId)),
+				);
 		}
 
 		if (customList.tags) {
@@ -130,9 +132,11 @@
 	{#if displayedList.length}
 		<ul class="list">
 			{#each displayedList as pullRequest}
-				<li>
-					<PullRequest {pullRequest} />
-				</li>
+				{#if pullRequest}
+					<li>
+						<PullRequest {pullRequest} />
+					</li>
+				{/if}
 			{/each}
 		</ul>
 	{:else}
