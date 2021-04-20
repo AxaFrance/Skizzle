@@ -21,7 +21,7 @@ import { requester } from './requester';
 try {
 	autoUpdater.logger = require('electron-log');
 	require('electron-reloader')(module);
-} catch (_) {}
+} catch (_) { }
 
 const setAppUserModelId = () => {
 	//@ts-ignore
@@ -243,6 +243,11 @@ ipcMain.handle('file-import', async (event: Electron.IpcMainEvent) => {
 		return undefined;
 	}
 });
+
+ipcMain.on('restart', () => {
+	app.relaunch();
+	app.exit()
+})
 
 ipcMain.on(
 	'state',
