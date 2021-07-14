@@ -3,6 +3,7 @@ import type { CommonType } from './CommonType';
 import type { ReviewType } from './ReviewType';
 
 type UserType = {
+	id: string;
 	name: string;
 	avatar?: string;
 };

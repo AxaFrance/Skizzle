@@ -2,8 +2,8 @@ export type CustomListType = {
 	id: string;
 	name: string;
 	tags: string[];
-	projectsIds?: string[];
-	repositoriesIds?: string[];
+	repositoryId?: string;
+	provider?: string;
 	hiddenPullRequestsIds?: string[];
 	withoutOwnedByUserPR?: boolean;
 	withoutOldPR?: boolean;

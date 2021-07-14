@@ -1,3 +1,4 @@
+import type { PullRequestType } from 'models/skizzle';
 import { notifications } from 'shared/stores/default.store';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -20,12 +21,7 @@ export type Dictionary<T> = {
 };
 
 export const getDateStr = (date: Date): string => {
-	const today = new Date();
-	const oneDay = 24 * 60 * 60 * 1000;
-	const diffDays = Math.round(
-		Math.abs((date.getTime() - today.getTime()) / oneDay),
-	);
-
+	const diffDays = getDiffDays(date);
 	const hours = `${date.getHours()}`.padStart(2, '0');
 	const minutes = `${date.getMinutes()}`.padStart(2, '0');
 
@@ -37,6 +33,12 @@ export const getDateStr = (date: Date): string => {
 		default:
 			return `il y a ${diffDays} jours`;
 	}
+};
+
+export const getDiffDays = (date: Date): number => {
+	const today = new Date();
+	const oneDay = 24 * 60 * 60 * 1000;
+	return Math.round(Math.abs((date.getTime() - today.getTime()) / oneDay));
 };
 
 export const copyToClipboard = async (data: string, message: string) => {
@@ -61,3 +63,15 @@ export const isJson = (str: string): boolean => {
 	}
 	return true;
 };
+
+export const getLabelsFrom = (pullRequests: PullRequestType[]): string[] => {
+	return pullRequests.reduce((acc, curr) => {
+		const result = (curr.labels || []).map(value => {
+			if (value?.name && !acc.includes(value.name)) {
+				return value.name;
+			}
+		}, []).filter(x => x);
+
+		return [...acc, ...result];
+	}, [])
+}

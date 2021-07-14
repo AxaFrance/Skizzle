@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
   import { notifications, pullRequests, repositories } from 'shared/stores/default.store';
-	import { HighlightSvelte } from "svelte-highlight";
-  import { json } from "svelte-highlight/languages";
+	import { HighlightAuto } from "svelte-highlight";
 	import Tabs from 'components/Tabs';
   import AccountTitle from 'components/AccountTitle';
   import { copyToClipboard, isJson } from 'shared/utils';
   import Icons from 'components/icons';
-  import type { RepositoryType, ProviderEnum } from 'models/skizzle';
-  import 'svelte-highlight/styles/dark.css';
+  import type { RepositoryType } from 'models/skizzle';
+  import 'svelte-highlight/src/styles/dark.css';
   import { Service } from 'services';
 
   export let followedRepositories: RepositoryType[];
@@ -71,7 +70,7 @@
   <p class="intro">Copiez le code JSON et importez-le dans une autre instance de Skizzle.</p>
   <div class="code">
 
-    <HighlightSvelte language={json} code={JSON.stringify(getExportCode(), undefined, 2)} />
+    <HighlightAuto code={JSON.stringify(getExportCode(), undefined, 2)} />
     <button
     class="copy"
         on:click={() => copyToClipboard(JSON.stringify(getExportCode(), undefined, 2), 'Code copié dans le presse-papier.')}

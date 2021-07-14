@@ -46,6 +46,7 @@ export class PullRequestMapper extends Mapper<
 				date: value.creationDate || value.updated_at,
 				labels,
 				user: {
+					id: value.createdBy?.id || value.user?.id?.toString(),
 					name: value.createdBy?.displayName || value.user?.login,
 					avatar: value.createdBy?.descriptor || value.user?.avatar_url,
 				},

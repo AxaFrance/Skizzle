@@ -54,6 +54,7 @@ export class OAuthAzureDevOpsService implements IService {
 
 		return profileMapped;
 	}
+	
 	public async getAvatar(
 		descriptor: string,
 		organizationName?: string,

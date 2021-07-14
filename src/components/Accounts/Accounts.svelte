@@ -47,7 +47,7 @@
 		background-color: #4e4e4e;
 	}
 
-	.content :global(.loader, .error) {
+	.content :global(.loader), .content :global(.error) {
 		position: absolute;
 		left: 50%;
 		top: 50%;

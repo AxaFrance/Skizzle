@@ -11,6 +11,7 @@ import type {
 type PullRequestsApiType = {};
 
 type CreatedByApiType = {
+	id?: string;
 	displayName?: string;
 	descriptor?: string;
 };
@@ -36,6 +37,7 @@ type AzureDevOpsPullRequestApiType = {
 };
 
 type UserApiType = {
+	id?: number;
 	login?: string;
 	avatar_url?: string;
 };

@@ -68,22 +68,36 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 	public async getProjects(
 		organization?: string,
 	): Promise<AzureDevOpsProjectApiType[]> {
-		return (
-			await super.fetch<AzureDevOpsProjectsApiType>(
-				`https://dev.azure.com/${organization}/_apis/projects?$top=1000&api-version=${this.API_VERSION}`,
-			)
-		).value;
+		try { 
+			const projects = (
+				await super.fetch<AzureDevOpsProjectsApiType>(
+					`https://dev.azure.com/${organization}/_apis/projects?$top=1000&api-version=${this.API_VERSION}`,
+				)
+			).value;
+
+			return projects;
+		} catch (err) {
+			console.error(err);
+			return [];
+		}
 	}
 
 	public async getRepositories(
 		organization?: string,
 		project?: string,
 	): Promise<AzureDevOpsRepositoryApiType[]> {
-		return (
-			await super.fetch<AzureDevOpsRepositoriesApiType>(
-				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories?includeLinks=true&api-version=${this.API_VERSION}`,
-			)
-		).value;
+		try { 
+			const repositories = (
+				await super.fetch<AzureDevOpsRepositoriesApiType>(
+					`https://dev.azure.com/${organization}/${project}/_apis/git/repositories?includeLinks=true&api-version=${this.API_VERSION}`,
+				)
+			).value;
+	
+			return repositories;
+		} catch (err) {
+			console.error(err);
+			return [];
+		}
 	}
 
 	public async getPullRequests(

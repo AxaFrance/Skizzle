@@ -25,6 +25,10 @@ import Bubble from './Bubble.svelte';
 import Change from './Change.svelte';
 import Rejected from './Rejected.svelte';
 
+//List Settings
+import Visibility from './Visibility.svelte';
+import VisibilityOff from './VisibilityOff.svelte';
+
 export default {
 	List,
 	Accounts,
@@ -48,4 +52,6 @@ export default {
 	Rejected,
 	Copy,
 	Share,
+	Visibility,
+	VisibilityOff
 };
