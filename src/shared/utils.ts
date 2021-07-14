@@ -1,3 +1,4 @@
+import type { PullRequestType } from 'models/skizzle';
 import { notifications } from 'shared/stores/default.store';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -61,3 +62,15 @@ export const isJson = (str: string): boolean => {
 	}
 	return true;
 };
+
+export const getLabelsFrom = (pullRequests: PullRequestType[]): string[] => {
+	return pullRequests.reduce((acc, curr) => {
+		const result = (curr.labels || []).map(value => {
+			if (value?.name && !acc.includes(value.name)) {
+				return value.name;
+			}
+		}, []).filter(x => x);
+
+		return [...acc, ...result];
+	}, [])
+}

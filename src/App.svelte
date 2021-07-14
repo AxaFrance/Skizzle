@@ -65,6 +65,11 @@
 
 <style>
 	@font-face {
+		font-family: 'Icons';
+		src: url('../assets/icons.woff');
+	}
+
+	@font-face {
 		font-family: 'roboto slab';
 		src: url('../assets/fonts/RobotoSlab-SemiBold.ttf') format('truetype');
 		font-weight: normal;
@@ -78,13 +83,29 @@
 		font-style: normal;
 	}
 
+	:global(::-webkit-scrollbar) {
+		width: 10px;
+	}
+
+	:global(::-webkit-scrollbar-track) {
+		background: #444;
+	}
+
+	:global(::-webkit-scrollbar-thumb) {
+		background-color: #666;
+		border-radius: 20px;
+		border: 3px solid #444;
+	}
+
 	:global(*) {
 		margin: 0;
 		padding: 0;
+		border: 0;
+		vertical-align: baseline;
 		box-sizing: border-box;
 	}
 
-	:global(html, body) {
+	:global(html), :global(body) {
 		height: 100%;
 	}
 
@@ -97,7 +118,7 @@
 		background-color: #333;
 	}
 
-	:global(button, input) {
+	:global(button), :global(input) {
 		font-family: 'roboto', sans-serif;
 	}
 

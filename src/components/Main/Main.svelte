@@ -7,8 +7,8 @@
 	} from 'shared/stores/default.store';
 	import PullRequest from 'components/PullRequest';
 	import Tabs from 'components/Tabs';
+	import ListTest from 'components/ListTest';
 	import Modale from 'components/Modale';
-	import CustomListSettings from 'components/CustomListSettings';
 	import type { CustomListType, ExportType } from 'models/skizzle';
 
 	let creatingList: boolean = false;
@@ -79,7 +79,7 @@
 		return filteredPullRequests;
 	};
 
-	const getTabs = lists => {
+	const getTabs = (lists: CustomListType[]) => {
 		const tabs = {
 			all: {
 				label: 'Toutes',
@@ -98,7 +98,7 @@
 		return tabs;
 	};
 
-	$: tabs = getTabs($customLists);
+	$: tabs = getTabs($customLists.filter(x => !x.onDraft));
 
 	$: displayedList =
 		currentTab === 'all'
@@ -114,6 +114,13 @@
 		creatingList = true;
 	}}
 />
+
+{#if creatingList || modifyingListId}
+	<Modale onClose={closeModale}>
+		<!--<CustomListSettings id={modifyingListId} onDone={closeModale} />-->
+		<ListTest customList={$customLists.find(({ id }) => id === modifyingListId)} onDone={closeModale} />
+	</Modale>
+{/if}
 
 <div class="content">
 	{#if currentTab !== 'all'}
@@ -143,11 +150,6 @@
 		<p class="no-pr">Il n'y a aucune pull request à afficher dans cette liste.</p>
 	{/if}
 </div>
-{#if creatingList || modifyingListId}
-	<Modale onClose={closeModale}>
-		<CustomListSettings id={modifyingListId} onDone={closeModale} />
-	</Modale>
-{/if}
 
 <style>
 	.content {
