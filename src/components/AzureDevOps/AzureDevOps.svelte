@@ -23,8 +23,6 @@
 			profile,
 		});
 
-		console.log({ result, profile });
-
 		fetchedAzureDevOpsRepositories = result.filter(
 			({ projectName, name }) =>
 				name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||

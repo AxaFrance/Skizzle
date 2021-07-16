@@ -4,10 +4,10 @@ import type {
 	PullRequestType,
 	RepositoryType,
 	SettingsType,
-	ProviderEnum,
 	NotificationType,
+	ProfileType,
 } from 'models/skizzle';
-import { ThemeEnum } from 'models/skizzle';
+import { ThemeEnum, ProviderEnum } from 'models/skizzle';
 import { Service } from 'services/Service';
 import { get } from 'svelte/store';
 import { createStore } from './store';
@@ -76,6 +76,7 @@ export const refreshPullRequests = async () => {
 	}
 };
 
+export const profiles = createStore<ProfileType[]>([], { key: 'profiles' });
 export const pullRequests = createStore<PullRequestType[]>([], {
 	key: 'pullRequests',
 	predicate,

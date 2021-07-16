@@ -9,7 +9,8 @@
 	import Tabs from 'components/Tabs';
 	import ListTest from 'components/ListTest';
 	import Modale from 'components/Modale';
-	import type { CustomListType, ExportType } from 'models/skizzle';
+	import type { CustomListType } from 'models/skizzle';
+	import { getPullRequestsFromCustomSettings } from 'shared/utils';
 
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;
@@ -26,10 +27,7 @@
 		);
 
 		if (currentTabData) {
-			const result: boolean = await window.remote.invoke('file-export', {
-				name: currentTabData.name,
-				repositoriesIds: currentTabData.repositoriesIds,
-			} as ExportType);
+			const result: boolean = await window.remote.invoke('file-export', currentTabData);
 
 			if (result) {
 				notifications.update(notifications => [
@@ -56,27 +54,8 @@
 	};
 
 	const filterList = (customList: CustomListType) => {
-		let filteredPullRequests = $pullRequests;
-
-		if (customList.repositoriesIds.length) {
-			filteredPullRequests = filteredPullRequests
-				.filter(pullRequest => !!pullRequest)
-				.filter(pullRequest =>
-					customList.repositoriesIds
-						.map(String)
-						.includes(String(pullRequest.repositoryId)),
-				);
-		}
-
-		if (customList.tags) {
-			// filteredPullRequests = filteredPullRequests.filter(pullRequest =>
-			// 	pullRequest.labels
-			// 		?.map(label => label.name.toLocaleLowerCase())
-			// 		.includes(customList.tags.map(tag => tag.toLocaleLowerCase())),
-			// );
-		}
-
-		return filteredPullRequests;
+		return getPullRequestsFromCustomSettings($pullRequests, customList)
+					.filter(x => !customList.hiddenPullRequestsIds.some(y => x.pullRequestId === y));
 	};
 
 	const getTabs = (lists: CustomListType[]) => {
@@ -98,8 +77,7 @@
 		return tabs;
 	};
 
-	$: tabs = getTabs($customLists.filter(x => !x.onDraft));
-
+	$: tabs = getTabs($customLists);
 	$: displayedList =
 		currentTab === 'all'
 			? $pullRequests
@@ -117,8 +95,7 @@
 
 {#if creatingList || modifyingListId}
 	<Modale onClose={closeModale}>
-		<!--<CustomListSettings id={modifyingListId} onDone={closeModale} />-->
-		<ListTest customList={$customLists.find(({ id }) => id === modifyingListId)} onDone={closeModale} />
+		<ListTest customList={$customLists.find(({ id }) => id === modifyingListId)} isInCreationMode={creatingList} onDone={closeModale} />
 	</Modale>
 {/if}
 

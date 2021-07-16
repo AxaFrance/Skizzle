@@ -122,6 +122,10 @@
 		font-family: 'roboto', sans-serif;
 	}
 
+	:global(button) {
+		cursor: pointer;
+	}
+
 	main {
 		display: flex;
 		flex: 1 0 auto;

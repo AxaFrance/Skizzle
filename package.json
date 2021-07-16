@@ -41,7 +41,7 @@
 		"@rollup/plugin-typescript": "^8.2.1",
 		"@tsconfig/svelte": "^2.0.1",
 		"@types/marked": "^2.0.4",
-		"@types/node": "^16.3.1",
+		"@types/node": "^16.3.2",
 		"@types/superagent": "^4.1.12",
 		"@types/superagent-proxy": "^2.0.0",
 		"@types/uuid": "^8.3.1",

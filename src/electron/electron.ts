@@ -14,7 +14,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { autoUpdater } from 'electron-updater';
 import type { SettingsType } from '../models/skizzle/SettingsType';
-import type { ExportType } from '../models/skizzle/ExportType';
+import type { CustomListType } from '../models/skizzle/CustomListType';
 import { WindowEnum } from '../models/skizzle/WindowEnum';
 import { requester } from './requester';
 
@@ -197,12 +197,12 @@ ipcMain.handle(
 	'file-export',
 	async (
 		event: Electron.IpcMainEvent,
-		{ name, repositoriesIds }: ExportType,
+		currentTabData: CustomListType,
 	) => {
 		try {
 			const { filePath } = await dialog.showSaveDialog(window, {
 				title: 'Exporter la liste sous...',
-				defaultPath: `${name}.json`,
+				defaultPath: `${currentTabData.name}.json`,
 				filters: [
 					{
 						name: 'Skizzle List',
@@ -213,14 +213,7 @@ ipcMain.handle(
 
 			fs.writeFileSync(
 				filePath,
-				JSON.stringify(
-					{
-						name,
-						repositoriesIds,
-					},
-					undefined,
-					2,
-				),
+				JSON.stringify(currentTabData, undefined, 2),
 			);
 
 			return true;

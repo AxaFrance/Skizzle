@@ -1,34 +1,56 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
-  import { getDateStr, getLabelsFrom } from 'shared/utils';
+  import { getDateStr, getLabelsFrom, getPullRequestsFromCustomSettings } from 'shared/utils';
   import AccountTitle from "components/AccountTitle";
   import type { CustomListType, PullRequestType } from "models/skizzle";
-  import { customLists, pullRequests, repositories, settings } from 'shared/stores/default.store';
+  import { customLists, notifications, pullRequests, repositories, settings } from 'shared/stores/default.store';
   import Icons from 'components/icons';
   import TagInput from 'components/TagInput';
-  import { onMount,  } from 'svelte';
   import { client } from 'shared/stores/authentication.store';
 
-  let resetSettings = {
+	export let onDone: () => void;
+  export let isInCreationMode: boolean = false;
+  export let customList: CustomListType = {
+    id: uuidv4(),
     name : '',
     tags: []
   } as CustomListType;
 
-	export let onDone: () => void;
-  export let customList: CustomListType = resetSettings;
+  const onImport = async () => {
+		const result: any = await window.remote.invoke('file-import');
 
-  onMount(() => {
-    if (!customList) {
-      updateSettings(customList);
-    }
-  })
+		if (result) {
+			customList = { ...JSON.parse(result), id: uuidv4() } as CustomListType;
+
+			notifications.update(notifications => [
+				...notifications,
+				{
+					text: 'Liste importée.',
+					id: uuidv4(),
+				},
+			]);
+		}
+	};
 
   const saveSettings = () => {
     updateSettings({
       ...customList,
-      id: uuidv4(),
-      hiddenPullRequestsIds: hiddenPullRequestsIds
+      hiddenPullRequestsIds: pullRequestsList.reduce((acc, curr) => {
+        if (!curr.show) {
+          acc.push(curr.pullRequest.pullRequestId);
+        }
+
+        return acc;
+      }, [] as string[])
     });
+
+    notifications.update(notifications => [
+      ...notifications,
+      {
+        text: `Liste ${isInCreationMode ? 'créée' : 'modifiée'}`,
+        id: uuidv4(),
+      },
+    ]);
 
     onDone();
   }
@@ -43,30 +65,18 @@
         x[x.indexOf(x.find(exist))] = list;
       }
 
-      console.log({ x });
-
       return x;
     })
-  }
-
-  const toggle = (pullRequest: PullRequestType) => {
-    if (hiddenPullRequestsIds.includes(pullRequest.pullRequestId)) {
-      hiddenPullRequestsIds = hiddenPullRequestsIds
-        .filter(pullRequestId => pullRequestId !== pullRequest.pullRequestId)
-    } else {
-      hiddenPullRequestsIds = [...hiddenPullRequestsIds, pullRequest.pullRequestId]
-    }
   }
 
   const getTags = (event: CustomEvent<{ tags: string[] }>) => {
     customList.tags = event.detail.tags;
   }
 
-  $: hiddenPullRequestsIds = [] as string[];
-  $: pullRequestsList = $pullRequests
-  .filter(pr => !customList.provider || customList.provider === pr.provider)
-  .filter(pr => !customList.repositoryId || customList.repositoryId === pr.repositoryId)
-  .filter(pr => customList.tags.length === 0 || customList.tags.some(x => (pr.labels ?? []).some(y => y.name === x))) as PullRequestType[];
+  $: pullRequestsList = getPullRequestsFromCustomSettings($pullRequests, customList).map(x => ({
+    pullRequest: x,
+    show: !customList.hiddenPullRequestsIds || !customList.hiddenPullRequestsIds.some(y => y === x.pullRequestId)
+  })) as { pullRequest: PullRequestType, show: boolean }[];
 </script>
 
 <div class="list">
@@ -75,7 +85,14 @@
       <AccountTitle>
         <p class="title">
           {customList?.id ? 'Création d\'une nouvelle liste' : 'Modification de la liste'}
+          <small>ID: {customList?.id}</small>
         </p>
+        <input
+          id="import"
+          on:click={onImport}
+          type="submit"
+          value={'Charger une liste'}
+        />
       </AccountTitle>
       <div class="fields">
         <div class="left">
@@ -86,7 +103,8 @@
           <TagInput 
             id="tags" 
             label="Afficher les pull request contenant les tags :" 
-            suggestions={getLabelsFrom(pullRequestsList)}
+            suggestions={getLabelsFrom($pullRequests)}
+            tags={customList.tags}
             on:tags={event => getTags(event)}
           />
           <label>
@@ -134,26 +152,30 @@
           </label>
         </div>
         <div class="right">
-          <span>Pull Requests masquées manuellement</span>
-          <ul>
-            {#each pullRequestsList as pullRequest}
-              <li>
-                <button on:click={() => toggle(pullRequest)} title="{pullRequest.title} - {getDateStr(new Date(pullRequest.date))}">
-                  {#if pullRequestsList.some(({ pullRequestId }) => pullRequestId === pullRequest.pullRequestId)}
-                    <Icons.Visibility color={$settings.theme}/>
-                  {:else}
-                    <Icons.VisibilityOff color={$settings.theme}/>
-                  {/if}
-                  <span> {pullRequest.title} <small>- {getDateStr(new Date(pullRequest.date))}</small></span>
-                </button>
-              </li>
-            {/each}
-          </ul>
+          {#if pullRequestsList.length > 0}
+            <span>Pull Requests masquées manuellement</span>
+            <ul>
+              {#each pullRequestsList as { pullRequest, show } (pullRequest.pullRequestId)}
+                <li>
+                  <button on:click={() => show = !show} title="{pullRequest.title} - {getDateStr(new Date(pullRequest.date))}">
+                    {#if show}
+                      <Icons.Visibility color={$settings.theme}/>
+                    {:else}
+                      <Icons.VisibilityOff color={$settings.theme}/>
+                    {/if}
+                    <span class={show ? '' : 'hidden'}> {pullRequest.title} <small>- {getDateStr(new Date(pullRequest.date))}</small></span>
+                  </button>
+                </li>
+              {/each}
+            </ul>
+          {:else}
+           <span>Il n'y a aucune pull request pour le moment.</span>
+          {/if}
         </div>
       </div>
     </div>
     <div class="action">
-      <button>Annuler</button>
+      <button on:click={() => onDone()}>Annuler</button>
       <button type="submit" on:click={() => saveSettings()}>Enregistrer</button>
     </div>
   </div>
@@ -197,13 +219,14 @@
       padding-right: 1rem;
       flex-direction: column;
       width: 100%;
+      flex: 1;
     }
 
     .right {
       width: 50%;
       display: flex;
       flex-direction: column;
-      flex: 0 1 auto;
+      flex: 1;
     }
   }
 
@@ -215,7 +238,10 @@
     flex-direction: row !important;
     flex: 0 1 auto;
   }
-  
+
+  .hidden {
+    opacity: 0.5;
+  }
 
   label {
     display: flex;
@@ -264,6 +290,12 @@
     > span {
       margin-left: 0.5rem;
     }
+  }
+
+  small {
+    font-size: x-small;
+    font-weight: normal;
+    color: #ccc;
   }
 
   [type='text'] {

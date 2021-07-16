@@ -1,11 +1,15 @@
 import { CommentMapper } from './Comment.mapper';
-import { ReviewMapper } from './Review.mapper';
-import type {
+import { ReviewMapper, ReviewMapperType } from './Review.mapper';
+import {
 	AzureDevOpsPullRequestApiType,
+	AzureDevOpsVoteEnum,
 	GithubPullRequestApiType,
+	GithubVoteEnum,
 } from 'models/api';
 import type { PullRequestType } from 'models/skizzle';
 import { From, Mapper } from './Mapper';
+import { get } from 'svelte/store';
+import { profiles } from 'shared/stores/default.store';
 
 export type PullRequestMapperType = From<
 	AzureDevOpsPullRequestApiType,
@@ -46,6 +50,7 @@ export class PullRequestMapper extends Mapper<
 				date: value.creationDate || value.updated_at,
 				labels,
 				user: {
+					id: value.createdBy?.id || value.user?.id?.toString(),
 					name: value.createdBy?.displayName || value.user?.login,
 					avatar: value.createdBy?.descriptor || value.user?.avatar_url,
 				},
@@ -63,6 +68,11 @@ export class PullRequestMapper extends Mapper<
 			}
 
 			if (value.reviewers) {
+				result.hasReviewed = value.reviewers.some((x: ReviewMapperType) => {
+					const profile = get(profiles).find(({ provider }) => provider === params.provider);
+					var key = x.vote || x.state || '';
+					return profile.id === x.id.toString() && (`${key}` === AzureDevOpsVoteEnum.Approved.toString() || `${key}` === GithubVoteEnum.Approved)
+				});
 				result.reviewers = new ReviewMapper().to(value.reviewers);
 			}
 

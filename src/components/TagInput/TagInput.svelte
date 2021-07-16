@@ -5,6 +5,7 @@
   export let id: string;
   export let label: string;
   export let suggestions: string[] = [];
+  export let tags: string[] = [];
   export let value: string = '';
   export let disabled: boolean = false;
   export let show: boolean = true;
@@ -42,7 +43,7 @@
     dispatch('tags', { tags: chipTags })
   }
 
-  $: chipTags = [] as string[];
+  $: chipTags = [...tags] as string[];
   $: suggestionsFiltered = suggestions
     .filter(x => !chipTags.includes(x))
     .filter(x => x.toLocaleLowerCase().startsWith(value.toLocaleLowerCase())) as string[];
