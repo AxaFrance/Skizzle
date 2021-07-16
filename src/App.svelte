@@ -8,7 +8,6 @@
 	import Notification from 'components/Notification';
 	import { Views } from 'models/skizzle/ViewsEnum';
 	import { offline, settings } from 'shared/stores/default.store';
-	import { onMount } from 'svelte';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Loader from 'components/Loader';
 
