@@ -56,15 +56,8 @@
 			</select>
 		</Fieldset>
 
-		<Fieldset
-			title="Proxy"
-		>
-			<label for="proxy">Serveur et port (ex: http://localhost:3000) : </label>
-			<input
-				id="proxy"
-				type="url"
-				bind:value={$settings.proxy}
-			/>
+		<Fieldset title="Proxy" intro="URL du serveur de proxy">
+			<input id="proxy" type="url" bind:value={$settings.proxy} />
 		</Fieldset>
 
 		<Fieldset
@@ -146,11 +139,15 @@
 		display: none;
 	}
 
+	label {
+		font-size: 0.8rem;
+	}
+
 	.checkbox label {
 		position: relative;
 		display: flex;
 		align-items: center;
-		font-size: 0.8rem;
+
 		cursor: pointer;
 	}
 
@@ -183,5 +180,20 @@
 
 	.checkbox input:checked + label:after {
 		transform: translateX(calc(100% + 2px));
+	}
+
+	[type='url'] {
+		width: 30rem;
+		padding: 0.5rem;
+		font-size: 0.8rem;
+		border-radius: 4px;
+		border: none;
+		background-color: #fff;
+	}
+
+	select {
+		padding: 0.5rem;
+		border: none;
+		border-radius: 4px;
 	}
 </style>

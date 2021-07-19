@@ -12,6 +12,9 @@
 	import Search from 'components/Search';
 	import type { RepositoryType } from 'models/skizzle';
 
+	export let light = false;
+	export let follow = false;
+
 	let search: string = '';
 	let isLoadingRepositories = false;
 
@@ -42,32 +45,51 @@
 	{#await Service.getProfile(ProviderEnum.Github)}
 		<p class="loader">Chargement...</p>
 	{:then profile}
-		<section>
-			<AccountTitle>Votre compte Github</AccountTitle>
-			<AccountSummary {profile} />
-		</section>
-		<div>
-			<section>
-				<AccountTitle>Suivre un nouveau repository</AccountTitle>
-				<p class="intro">Cherchez le nom d'un repository.</p>
+		{#if follow}
+			<Search
+				onSubmit={onSearchSubmit}
+				onCancel={onSearchCancel}
+				disabled={isLoadingRepositories}
+				placeholder="Rechercher un repository"
+			/>
 
-				<Search
-					onSubmit={onSearchSubmit}
-					onCancel={onSearchCancel}
-					disabled={isLoadingRepositories}
-					placeholder="Rechercher un repository"
-				/>
-
-				{#if search}
-					{#if isLoadingRepositories}
-						<p>Recherche en cours...</p>
-					{:else}
-						<SearchResults {search} repos={fetchedGithubRepositories} />
-					{/if}
+			{#if search}
+				{#if isLoadingRepositories}
+					<p>Recherche en cours...</p>
+				{:else}
+					<SearchResults {search} repos={fetchedGithubRepositories} />
 				{/if}
+			{/if}
+		{:else if light}
+			<AccountSummary {profile} />
+		{:else}
+			<section>
+				<AccountTitle>Votre compte Github</AccountTitle>
+				<AccountSummary {profile} />
 			</section>
-			<FollowedRepositories {profile} />
-		</div>
+			<div>
+				<section>
+					<AccountTitle>Suivre un nouveau repository</AccountTitle>
+					<p class="intro">Cherchez le nom d'un repository.</p>
+
+					<Search
+						onSubmit={onSearchSubmit}
+						onCancel={onSearchCancel}
+						disabled={isLoadingRepositories}
+						placeholder="Rechercher un repository"
+					/>
+
+					{#if search}
+						{#if isLoadingRepositories}
+							<p>Recherche en cours...</p>
+						{:else}
+							<SearchResults {search} repos={fetchedGithubRepositories} />
+						{/if}
+					{/if}
+				</section>
+				<FollowedRepositories {profile} />
+			</div>
+		{/if}
 	{:catch}
 		<p class="error">Fetching profile failed.</p>
 	{/await}

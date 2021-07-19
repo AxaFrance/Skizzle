@@ -4,6 +4,7 @@
 	export let onCancel: () => void;
 	export let disabled: boolean;
 	export let placeholder: string = '';
+	export let className: string = '';
 
 	let query: string = '';
 
@@ -19,6 +20,19 @@
 	};
 </script>
 
+<div class={`search ${className}`}>
+	<Icons.Search color="#4e4e4e" />
+	<form on:submit={search}>
+		<input bind:value={query} {disabled} {placeholder} />
+		<input type="submit" />
+		{#if query}
+			<button on:click={cancel} class="delete">
+				<Icons.Delete color="#4e4e4e" />
+			</button>
+		{/if}
+	</form>
+</div>
+
 <style>
 	form {
 		width: 100%;
@@ -30,8 +44,6 @@
 
 	.search {
 		position: relative;
-		width: 20rem;
-		margin-bottom: 2rem;
 	}
 
 	.search > :global(svg) {
@@ -66,16 +78,3 @@
 		transform: translateY(-50%);
 	}
 </style>
-
-<div class="search">
-	<Icons.Search color="#4e4e4e" />
-	<form on:submit={search}>
-		<input bind:value={query} {disabled} {placeholder} />
-		<input type="submit" />
-		{#if query}
-			<button on:click={cancel} class="delete">
-				<Icons.Delete color="#4e4e4e" />
-			</button>
-		{/if}
-	</form>
-</div>

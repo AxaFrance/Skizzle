@@ -6,6 +6,8 @@ import Settings from './Settings.svelte';
 import Delete from './Delete.svelte';
 import Search from './Search.svelte';
 import ArrowDown from './ArrowDown.svelte';
+import ArrowRight from './ArrowRight.svelte';
+import ArrowLeft from './ArrowLeft.svelte';
 import Ellipsis from './Ellipsis.svelte';
 import Plus from './Plus.svelte';
 import User from './User.svelte';
@@ -34,6 +36,8 @@ export default {
 	Delete,
 	Search,
 	ArrowDown,
+	ArrowLeft,
+	ArrowRight,
 	AzureDevOps,
 	Github,
 	Ellipsis,

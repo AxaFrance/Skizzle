@@ -29,7 +29,13 @@
 		<span class="name">{profile.name}</span>
 		{#if profile.email}<span class="email">{profile.email}</span>{/if}
 	</div>
-	<button on:click={() => logout(profile.provider)} title="Déconnexion" disabled={$offline}><Icons.Delete /></button>
+	<button
+		on:click={() => logout(profile.provider)}
+		title="Déconnexion"
+		disabled={$offline}
+	>
+		<Icons.Delete />
+	</button>
 </div>
 
 <style>

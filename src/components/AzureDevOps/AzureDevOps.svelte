@@ -12,6 +12,9 @@
 	import Search from 'components/Search';
 	import type { ProfileType, RepositoryType } from 'models/skizzle';
 
+	export let light = false;
+	export let follow = false;
+
 	let search: string = '';
 
 	let isLoadingRepositories = false;
@@ -45,33 +48,55 @@
 	{#await Service.getProfile(ProviderEnum.AzureDevOps)}
 		<p class="loader">Chargement du profil...</p>
 	{:then profile}
-		<section>
-			<AccountTitle>Votre compte Azure DevOps</AccountTitle>
-			<AccountSummary {profile} />
-		</section>
-		<div class="content">
-			<section>
-				<AccountTitle>Suivre un nouveau repository</AccountTitle>
-				<p class="intro">Cherchez le nom de son projet et/ou repository associé.</p>
-				<Search
-					onSubmit={onSearchSubmit(profile)}
-					onCancel={onSearchCancel}
-					disabled={isLoadingRepositories}
-					placeholder="Rechercher un projet ou un repos"
-				/>
+		{#if follow}
+			<Search
+				className="search-project"
+				onSubmit={onSearchSubmit(profile)}
+				onCancel={onSearchCancel}
+				disabled={isLoadingRepositories}
+				placeholder="Rechercher un projet ou un repos"
+			/>
 
-				{#if search}
-					{#if isLoadingRepositories}
-						<p>Recherche en cours...</p>
-					{:else}
-						<SearchResults {search} repos={fetchedAzureDevOpsRepositories} />
-					{/if}
+			{#if search}
+				{#if isLoadingRepositories}
+					<p>Recherche en cours...</p>
+				{:else}
+					<SearchResults {search} repos={fetchedAzureDevOpsRepositories} />
 				{/if}
-			</section>
+			{/if}
+		{:else if light}
+			<AccountSummary {profile} />
+		{:else}
 			<section>
-				<FollowedRepositories {profile} />
+				<AccountTitle>Votre compte Azure DevOps</AccountTitle>
+				<AccountSummary {profile} />
 			</section>
-		</div>
+			<div class="content">
+				<section>
+					<AccountTitle>Suivre un nouveau repository</AccountTitle>
+					<p class="intro">
+						Cherchez le nom de son projet et/ou repository associé.
+					</p>
+					<Search
+						onSubmit={onSearchSubmit(profile)}
+						onCancel={onSearchCancel}
+						disabled={isLoadingRepositories}
+						placeholder="Rechercher un projet ou un repos"
+					/>
+
+					{#if search}
+						{#if isLoadingRepositories}
+							<p>Recherche en cours...</p>
+						{:else}
+							<SearchResults {search} repos={fetchedAzureDevOpsRepositories} />
+						{/if}
+					{/if}
+				</section>
+				<section>
+					<FollowedRepositories {profile} />
+				</section>
+			</div>
+		{/if}
 	{:catch}
 		<p class="error">Fetching profile failed.</p>
 	{/await}
@@ -114,5 +139,9 @@
 	.content {
 		position: relative;
 		flex: 1 0 auto;
+	}
+
+	:global(.search-project) {
+		margin-bottom: 1rem;
 	}
 </style>
