@@ -7,7 +7,7 @@
 	"homepage": "./",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/AxaGuilDEv/skizzle.git"
+		"url": "https://github.com/AxaGuilDEv/skizzle"
 	},
 	"scripts": {
 		"postinstall": "electron-builder install-app-deps && npx msw init ./public",
@@ -30,7 +30,10 @@
 		"start:dev": "sirv --port 3000 public --dev",
 		"electron:windows": "npm run build && npx electron-builder build --windows",
 		"electron:mac": "npm run build && npx electron-builder build --mac",
-		"changelog": "auto-changelog"
+		"changelog": "auto-changelog",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+		"resetmodules": "rm -rf node_modules/ && rm package-lock.json && npm i"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^12.1.4",
@@ -48,6 +51,7 @@
 		"cross-env": "^7.0.3",
 		"electron": "^13.1.6",
 		"electron-builder": "^22.11.7",
+		"electron-builder-notarize": "^1.2.0",
 		"electron-reloader": "^1.2.1",
 		"husky": "^7.0.1",
 		"msw": "^0.32.0",
@@ -117,27 +121,81 @@
 	],
 	"license": "MIT",
 	"build": {
-		"appId": "skizzle",
-		"compression": "normal",
-		"productName": "Skizzle",
-		"copyright": "Copyright © 2020 Axa France IARD / Axa France VIE",
-		"win": {
-			"target": "nsis"
-		},
+		"appId": "com.axa.skizzle",
+		"productName": "Skizzle-${version}-${arch}.${ext}",
+		"copyright": "Copyright © 2021 Axa France IARD / Axa France VIE",
+    "asar": true,
+    "generateUpdatesFilesForAllChannels": true,
+    "forceCodeSigning": true,
+    "detectUpdateChannel": true,
+    "npmRebuild": true,
+    "buildDependenciesFromSource": false,
+    "afterSign": "electron-builder-notarize",
 		"files": [
 			"public/**/*",
 			"node_modules/**/*"
 		],
-		"mac": {
-			"type": "distribution",
+		"win": {
 			"target": [
-				"dmg"
-			],
-			"category": "public.app-category.news"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
 		},
-		"directories": {
-			"buildResources": "buildResources/"
-		}
+		"mac": {
+			"artifactName": "Skizzle-macos.${ext}",
+			"category": "public.app-category.developer-tools",
+      "icon": "buildResources/icon.icns",
+			"hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "buildResources/entitlements.mac.plist",
+      "entitlementsInherit": "buildResources/entitlements.mac.plist",
+			"target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+		},
+		"dmg": {
+      "sign": false,
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+		},
+		"nsis": {
+      "installerIcon": "buildResources/icon.png",
+      "uninstallerIcon": "buildResources/icon.png",
+      "artifactName": "Skizzle-setup.${ext}",
+      "shortcutName": "SKZ"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "AxaGuilDEv",
+        "repo": "Skizzle"
+      }
+    ]
 	},
 	"husky": {
 		"hooks": {
