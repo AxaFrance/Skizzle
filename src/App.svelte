@@ -10,6 +10,7 @@
 	import { offline, settings } from 'shared/stores/default.store';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Loader from 'components/Loader';
+	import { onMount } from 'svelte';
 
 	let update: boolean = false;
 	let version: string;
@@ -30,13 +31,13 @@
 	window.addEventListener('online', () => offline.set(false));
 	window.addEventListener('offline', () => offline.set(true));
 
-	// onMount(() => {
-	// 	setInterval(async () => {
-	// 		version = await window.remote.invoke('check-for-update-request');
-	// 	}, 60000);
+	onMount(() => {
+		setInterval(async () => {
+			version = await window.remote.invoke('check-for-update-request');
+		}, 60000);
 
-	// 	window.remote.receive('check-for-update-response', () => (update = true));
-	// });
+		window.remote.receive('check-for-update-response', () => (update = true));
+	});
 
 	const checkForUpdateRestart = () =>
 		window.remote.invoke('check-for-update-restart');
