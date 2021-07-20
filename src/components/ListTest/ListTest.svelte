@@ -1,22 +1,36 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
-  import { getDateStr, getLabelsFrom, getPullRequestsFromCustomSettings } from 'shared/utils';
-  import AccountTitle from "components/AccountTitle";
-  import type { CustomListType, PullRequestType } from "models/skizzle";
-  import { customLists, notifications, pullRequests, repositories, settings } from 'shared/stores/default.store';
-  import Icons from 'components/icons';
-  import TagInput from 'components/TagInput';
-  import { client } from 'shared/stores/authentication.store';
+	import {
+		getDateStr,
+		getLabelsFrom,
+		getPullRequestsFromCustomSettings,
+	} from 'shared/utils';
+	import AccountTitle from 'components/AccountTitle';
+	import type { CustomListType, PullRequestType } from 'models/skizzle';
+	import {
+		customLists,
+		notifications,
+		pullRequests,
+		repositories,
+		settings,
+	} from 'shared/stores/default.store';
+	import Icons from 'components/icons';
+	import TagInput from 'components/TagInput';
+	import { client } from 'shared/stores/authentication.store';
+	import Radio from 'components/Radio';
+	import Switch from 'components/Switch';
 
 	export let onDone: () => void;
-  export let isInCreationMode: boolean = false;
-  export let customList: CustomListType = {
-    id: uuidv4(),
-    name : '',
-    tags: []
-  } as CustomListType;
+	export let isInCreationMode: boolean = false;
+	export let customList: CustomListType = {
+		id: uuidv4(),
+		name: '',
+		tags: [],
+	} as CustomListType;
 
-  const onImport = async () => {
+	let isListDisplayed = false;
+
+	const onImport = async () => {
 		const result: any = await window.remote.invoke('file-import');
 
 		if (result) {
@@ -32,291 +46,236 @@
 		}
 	};
 
-  const saveSettings = () => {
-    updateSettings({
-      ...customList,
-      hiddenPullRequestsIds: pullRequestsList.reduce((acc, curr) => {
-        if (!curr.show) {
-          acc.push(curr.pullRequest.pullRequestId);
-        }
+	const saveSettings = () => {
+		updateSettings({
+			...customList,
+			hiddenPullRequestsIds: pullRequestsList.reduce((acc, curr) => {
+				if (!curr.show) {
+					acc.push(curr.pullRequest.pullRequestId);
+				}
 
-        return acc;
-      }, [] as string[])
-    });
+				return acc;
+			}, [] as string[]),
+		});
 
-    notifications.update(notifications => [
-      ...notifications,
-      {
-        text: `Liste ${isInCreationMode ? 'créée' : 'modifiée'}`,
-        id: uuidv4(),
-      },
-    ]);
+		notifications.update(notifications => [
+			...notifications,
+			{
+				text: `Liste ${isInCreationMode ? 'créée' : 'modifiée'}`,
+				id: uuidv4(),
+			},
+		]);
 
-    onDone();
-  }
+		onDone();
+	};
 
-  const updateSettings = (list: CustomListType) => {
-    customLists.update(x => {
-      const exist = ({ id }: CustomListType) => list.id === id;
+	const updateSettings = (list: CustomListType) => {
+		customLists.update(x => {
+			const exist = ({ id }: CustomListType) => list.id === id;
 
-      if (!x.some(exist)) {
-        x = [...x, list];
-      } else {
-        x[x.indexOf(x.find(exist))] = list;
-      }
+			if (!x.some(exist)) {
+				x = [...x, list];
+			} else {
+				x[x.indexOf(x.find(exist))] = list;
+			}
 
-      return x;
-    })
-  }
+			return x;
+		});
+	};
 
-  const getTags = (event: CustomEvent<{ tags: string[] }>) => {
-    customList.tags = event.detail.tags;
-  }
+	const getTags = (event: CustomEvent<{ tags: string[] }>) => {
+		customList.tags = event.detail.tags;
+	};
 
-  $: pullRequestsList = getPullRequestsFromCustomSettings($pullRequests, customList).map(x => ({
-    pullRequest: x,
-    show: !customList.hiddenPullRequestsIds || !customList.hiddenPullRequestsIds.some(y => y === x.pullRequestId)
-  })) as { pullRequest: PullRequestType, show: boolean }[];
+	$: pullRequestsList = getPullRequestsFromCustomSettings(
+		$pullRequests,
+		customList,
+	)
+		.filter(pr => !!pr)
+		.map(x => ({
+			pullRequest: x,
+			show:
+				!customList.hiddenPullRequestsIds ||
+				!customList.hiddenPullRequestsIds.some(y => y === x.pullRequestId),
+		})) as { pullRequest: PullRequestType; show: boolean }[];
 </script>
 
-<div class="list">
-  <div class="form">
-    <div>
-      <AccountTitle>
-        <p class="title">
-          {customList?.id ? 'Création d\'une nouvelle liste' : 'Modification de la liste'}
-          <small>ID: {customList?.id}</small>
-        </p>
-        <input
-          id="import"
-          on:click={onImport}
-          type="submit"
-          value={'Charger une liste'}
-        />
-      </AccountTitle>
-      <div class="fields">
-        <div class="left">
-          <label>
-            <span>Nom :</span>
-            <input type="text" bind:value={customList.name}/>
-          </label>
-          <TagInput 
-            id="tags" 
-            label="Afficher les pull request contenant les tags :" 
-            suggestions={getLabelsFrom($pullRequests)}
-            tags={customList.tags}
-            on:tags={event => getTags(event)}
-          />
-          <label>
-            <span>Afficher les pull requests de ce provider :</span>
-            <select bind:value={customList.provider} id="providers">
-              <option value="">-- Selectionner un service de provider --</option>
-              {#each Object.keys($client) as key}
-                <option value={key}>
-                  {key}
-                </option>
-              {/each}
-            </select>
-          </label>
-          <label>
-            <span>Afficher les pull requests de ce repository :</span>
-            <select bind:value={customList.repositoryId} id="repositories">
-              <option value="">-- Selectionner un repository --</option>
-              {#each $repositories as repository}
-                <option value={repository.repositoryId}>
-                  {repository.name}
-                </option>
-              {/each}
-            </select>
-          </label>
-          <span>Masquer les pull requests :</span>
-          <label>
-            <input type="checkbox" bind:checked={customList.withoutOwnedByUserPR}/>
-            <span>Que j’ai créé</span>
-          </label>
-          <label>
-            <input type="checkbox" bind:checked={customList.withoutOldPR}/>
-            <span>Datant de plus de 30 jours</span>
-          </label>
-          <label>
-            <input type="checkbox" bind:checked={customList.withoutConflict}/>
-            <span>En conflit</span>
-          </label>
-          <label>
-            <input type="checkbox" bind:checked={customList.withoutDraft}/>
-            <span>En brouillon</span>
-          </label>
-          <label>
-            <input type="checkbox" bind:checked={customList.withoutCheckedByOwner}/>
-            <span>Sur lesquelle je suis déjà intervenu(e)</span>
-          </label>
-        </div>
-        <div class="right">
-          {#if pullRequestsList.length > 0}
-            <span>Pull Requests masquées manuellement</span>
-            <ul>
-              {#each pullRequestsList as { pullRequest, show } (pullRequest.pullRequestId)}
-                <li>
-                  <button on:click={() => show = !show} title="{pullRequest.title} - {getDateStr(new Date(pullRequest.date))}">
-                    {#if show}
-                      <Icons.Visibility color={$settings.theme}/>
-                    {:else}
-                      <Icons.VisibilityOff color={$settings.theme}/>
-                    {/if}
-                    <span class={show ? '' : 'hidden'}> {pullRequest.title} <small>- {getDateStr(new Date(pullRequest.date))}</small></span>
-                  </button>
-                </li>
-              {/each}
-            </ul>
-          {:else}
-           <span>Il n'y a aucune pull request pour le moment.</span>
-          {/if}
-        </div>
-      </div>
-    </div>
-    <div class="action">
-      <button on:click={() => onDone()}>Annuler</button>
-      <button type="submit" on:click={() => saveSettings()}>Enregistrer</button>
-    </div>
-  </div>
+<div>
+	<AccountTitle>
+		{customList.name ? 'Modification de la liste' : "Création d'une liste"}
+		<button class="import" on:click={onImport}>Importer</button>
+	</AccountTitle>
+	<div class="fields">
+		<div class="field">
+			<label for="list-name">Nom de la liste :</label>
+			<input id="list-name" type="text" bind:value={customList.name} />
+		</div>
+		<div class="field">
+			<TagInput
+				id="tags"
+				label="Afficher les pull request contenant les tags :"
+				suggestions={getLabelsFrom($pullRequests)}
+				tags={customList.tags}
+				on:tags={event => getTags(event)}
+			/>
+		</div>
+		<div class="field">
+			<label for="list-provider">Afficher les pull requests de mon compte :</label>
+			<select id="list-provider" bind:value={customList.provider}>
+				<option value="">-- Selectionner un service --</option>
+				{#each Object.keys($client) as key}
+					<option value={key}>
+						{key}
+					</option>
+				{/each}
+			</select>
+		</div>
+		<div class="field">
+			<label for="repo">Afficher les pull requests de ce repository :</label>
+			<select id="repo" bind:value={customList.repositoryId}>
+				<option value="">-- Selectionner un repository --</option>
+				{#each $repositories as repository}
+					<option value={repository.repositoryId}>
+						{repository.name}
+					</option>
+				{/each}
+			</select>
+		</div>
+		<div class="field">
+			<p>Masquer les pull requests</p>
+			<ul>
+				<li>
+					<Radio
+						bind:checked={customList.withoutOwnedByUserPR}
+						label="Que j'ai créé"
+					/>
+				</li>
+				<li>
+					<Radio
+						bind:checked={customList.withoutOldPR}
+						label="Datant de plus de 30 jours"
+					/>
+				</li>
+				<li>
+					<Radio bind:checked={customList.withoutConflict} label="En conflit" />
+				</li>
+				<li>
+					<Radio bind:checked={customList.withoutDraft} label="En brouillon" />
+				</li>
+				<li>
+					<Radio
+						bind:checked={customList.withoutCheckedByOwner}
+						label="Que j'ai déjà approuvé"
+					/>
+				</li>
+			</ul>
+		</div>
+		{#if pullRequestsList.length > 0}
+			<div class="field">
+				<Switch
+					vspace={1}
+					bind:active={isListDisplayed}
+					label="Masquer manuellement certaines pull requests"
+				/>
+				{#if isListDisplayed}
+					<ul>
+						{#each pullRequestsList.filter(pr => pr != null) as { pullRequest, show } (pullRequest.pullRequestId)}
+							<li>
+								<Radio
+									on:change={() => (show = !show)}
+									checked={!show}
+									label={pullRequest.title}
+								/>
+							</li>
+						{/each}
+					</ul>
+				{/if}
+			</div>
+		{/if}
+	</div>
+</div>
+<div class="action">
+	<button class="cancel" on:click={() => onDone()}>Annuler</button>
+	<button class="cta" on:click={() => saveSettings()}>Enregistrer</button>
 </div>
 
 <style>
-  .title {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .list {
-    height: 100%;
-    overflow: auto;
-  }
-
-  .list > .form {
-    background-color: #6B6B6B;
-    box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
-    border-radius: 4px;
-    justify-content: space-between;
-    display: flex;
-    flex-direction: column;
-  }
-
-  span {
-    line-height: 1.5rem;
-  }
-
-  .form > div {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .fields {
-    display: flex;
-
-    .left {
-      display: flex;
-      padding-right: 1rem;
-      flex-direction: column;
-      width: 100%;
-      flex: 1;
-    }
-
-    .right {
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-  }
-
-  .action {
-    display: flex;
-    justify-content: flex-end;
-    background-color: #5C5C5C;
-    padding: 1rem;
-    flex-direction: row !important;
-    flex: 0 1 auto;
-  }
-
-  .hidden {
-    opacity: 0.5;
-  }
-
-  label {
-    display: flex;
-    padding-bottom: 1rem;
-    flex-direction: column;
-  }
-
-  select {
+	.import {
 		padding: 0.5rem;
-		border: none;
-		border-radius: 4px;
-    background: #848484;
-    color: #fff;
-	}
-
-  button {
-		cursor: pointer;
+		color: var(--color);
+		font-size: 1rem;
 		border: none;
 		background-color: transparent;
-		transition: opacity linear 0.2s;
-    color: #fff;
-    margin-right: 0.5rem;
 	}
 
-	button:hover {
-		opacity: 0.5;
+	.field {
+		margin-bottom: 1.5rem;
 	}
 
-  ul {
-    list-style: none;
-    background-color: #848484;
-    border-radius: 4px;
-    padding: 1rem;
-  }
+	label {
+		display: block;
+		margin-bottom: 0.2rem;
+	}
 
-  ul li {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
+	[type='text'] {
+		width: 100%;
+		padding: 0.5rem;
+		color: #fff;
+		font-size: 1rem;
+		border-radius: 4px;
+		background-color: #555;
+	}
 
-  li > button {
-    display: flex;
-    align-items: center;
+	select {
+		width: 100%;
+		padding: 0.5rem;
+		color: #fff;
+		font-size: 1rem;
+		border-radius: 4px;
+		background-color: #555;
+	}
 
-    > span {
-      margin-left: 0.5rem;
-    }
-  }
+	ul {
+		list-style: none;
+		border-radius: 4px;
+		background-color: #555;
+	}
 
-  small {
-    font-size: x-small;
-    font-weight: normal;
-    color: #ccc;
-  }
+	li {
+		padding: 0.5rem;
+	}
 
-  [type='text'] {
-    background: #848484;
-    border-radius: 4px;
-    border: 0;
-    padding: 0.5rem;
-    color: #fff;
-  }
+	li:not(:last-child) {
+		border-bottom: 1px solid #666;
+	}
 
-  [type='submit'] {
+	.action {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.cta {
 		padding: 0.5rem 1rem;
 		color: #fff;
 		font-size: 1rem;
+		cursor: pointer;
 		border-radius: 4px;
 		border: none;
 		background-color: var(--color);
 		transition: opacity linear 0.2s;
 	}
 
-	[type='submit']:disabled {
-		opacity: 0.5;
+	.cancel {
+		padding: 0.5rem 1rem;
+		color: #fff;
+		font-size: 1rem;
+		cursor: pointer;
+		border: none;
+		background-color: transparent;
+		transition: opacity linear 0.2s;
+	}
+
+	:global(.isListDisplayed) {
+		margin-bottom: 0.2rem;
 	}
 </style>
