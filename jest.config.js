@@ -1,17 +1,16 @@
-
-
 module.exports = {
-  transform: {
-    '\\.(ts)$': 'ts-jest',
-    '^.+\\.svelte$': ['svelte-jester', { preprocess: true }],
-    '^.+\\.js$': 'babel-jest',
-  },
-  moduleFileExtensions: ['js', 'ts', 'json', 'svelte'],
-  testPathIgnorePatterns: ['node_modules'],
-  transformIgnorePatterns: ['node_modules'],
-  bail: false,
+	setupFiles: ['jest-localstorage-mock', './src/setupTests.ts'],
   verbose: true,
-  moduleDirectories: ['node_modules', '.'],
-  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect', './src/setupTests.ts'],
-  collectCoverageFrom: ['./src/**/*.svelte', './src/**/*.ts', './src/**/*.js'],
+  roots: ["<rootDir>/src"],
+  testMatch: ["**/__tests__/**/*.+(ts|tsx|js)", "**/?(*.)+(spec).+(ts|tsx|js)"],
+  transform: {
+    "^.+\\.(ts|tsx)$": "ts-jest",
+    "^.+\\.svelte$": "svelte-jester",
+    "^.+\\.js$": "babel-jest",
+  },
+	testPathIgnorePatterns: ['node_modules'],
+	transformIgnorePatterns: ['node_modules'],
+	bail: false,
+  moduleFileExtensions: ["js", "svelte", "ts"],
+  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect']
 };

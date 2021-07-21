@@ -1,4 +1,4 @@
-import './tests/mocks/setup';
+//import './tests/mocks/setup';
 import type { OAuthConfigType } from 'providers/OAuthConfig.provider';
 
 jest.mock('./shared/token', () => ({
