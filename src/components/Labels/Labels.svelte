@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { LabelType } from 'models/skizzle/PullRequestType';
+	import type { LabelType } from '../../models/skizzle/PullRequestType';
 
 	export let labels: LabelType[] = [];
 </script>

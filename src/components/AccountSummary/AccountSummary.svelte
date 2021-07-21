@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
 	import {
 		offline,
 		profiles,
 		pullRequests,
 		repositories,
-	} from 'shared/stores/default.store';
-	import Icons from 'components/icons';
-	import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
-	import { client } from 'shared/stores/authentication.store';
-	import type { ProfileType } from 'models/skizzle/ProfileType';
+	} from '../../shared/stores/default.store';
+	import Icons from '../icons';
+	import type { ProviderEnum } from '../../models/skizzle/ProviderEnum';
+	import { client } from '../../shared/stores/authentication.store';
+	import type { ProfileType } from '../../models/skizzle/ProfileType';
 
 	export let profile: ProfileType;
 

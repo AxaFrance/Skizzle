@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
-	import type { CustomListType } from 'models/skizzle/CustomListType';
-	import AccountTitle from 'components/AccountTitle';
-	import Fieldset from 'components/Fieldset';
+	import type { CustomListType } from '../../models/skizzle/CustomListType';
+	import AccountTitle from '../AccountTitle';
+	import Fieldset from '../Fieldset';
 	import {
 		repositories,
 		customLists,
 		notifications,
-	} from 'shared/stores/default.store';
-	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
-	import Icons from 'components/icons';
+	} from '../../shared/stores/default.store';
+	import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
+	import Icons from '../icons';
+	import { remote } from '../../shared/remote';
 
 	export let onDone: () => void;
 	export let id: string;
@@ -28,7 +29,7 @@
 	let tag: string;
 
 	const onImport = async () => {
-		const result: any = await window.remote.invoke('file-import');
+		const result: any = await remote.invoke('file-import');
 
 		if (result) {
 			const data = JSON.parse(result) as CustomListType;

@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { Service } from 'services/Service';
-	import { clientAuthenticated } from 'shared/stores/authentication.store';
-	import { isLoading } from 'shared/stores/default.store';
-	import { authorize } from 'shared/token';
-	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
-	import AccountTitle from 'components/AccountTitle';
-	import AddAccount from 'components/AddAccount';
-	import AccountSummary from 'components/AccountSummary';
-	import SearchResults from 'components/SearchResults';
-	import FollowedRepositories from 'components/FollowedRepositories';
-	import Search from 'components/Search';
-	import type { ProfileType, RepositoryType } from 'models/skizzle';
+	import { Service } from '../../services/Service';
+	import { clientAuthenticated } from '../../shared/stores/authentication.store';
+	import { isLoading } from '../../shared/stores/default.store';
+	import { authorize } from '../../shared/token';
+	import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
+	import AccountTitle from '../AccountTitle';
+	import AddAccount from '../AddAccount';
+	import AccountSummary from '../AccountSummary';
+	import SearchResults from '../SearchResults';
+	import FollowedRepositories from '../FollowedRepositories';
+	import Search from '../Search';
+	import type { ProfileType, RepositoryType } from '../../models/skizzle';
 
 	let search: string = '';
 

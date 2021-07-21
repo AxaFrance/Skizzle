@@ -1,6 +1,6 @@
-import type { AzureDevOpsCommentType, GithubCommentApiType } from 'models/api';
-import type { CommentType } from 'models/skizzle';
-import { getDateStr } from 'shared/utils';
+import type { AzureDevOpsCommentType, GithubCommentApiType } from '../models/api';
+import type { CommentType } from '../models/skizzle';
+import { getDateStr } from '../shared/utils';
 import { From, Mapper } from './Mapper';
 
 export type CommentMapperType = From<

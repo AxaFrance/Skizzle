@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isFetchingData, isLoading } from 'shared/stores/default.store';
+	import { isFetchingData, isLoading } from '../../shared/stores/default.store';
 </script>
 
 {#if $isLoading || $isFetchingData}

@@ -1,6 +1,8 @@
 import { rest } from 'msw';
 
-const url = '';
+const profileAndOrganizationsUrl = 'https://app.vssps.visualstudio.com';
+const descriptorAndAvatarUrl = 'https://vssps.dev.azure.com';
+const url = 'https://dev.azure.com';
 
 export default [
 	rest.get(`${url}/`, (req, res, ctx) => { 

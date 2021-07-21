@@ -1,13 +1,11 @@
-<script>
-	import { WindowEnum } from "models/skizzle";
+<script lang="ts">
+	import { WindowEnum } from "../../models/skizzle";
+	import { remote } from "../../shared/remote";
 
 	export let isMaximized: boolean = false;
 
-	const changeState = (state: WindowEnum) => window.remote.send('state', { state })
+	const changeState = (state: WindowEnum) => remote.send('state', { state })
 </script>
-
-<style src="./MacosBar.scss">
-</style>
 
 <div class="window-controls">
 	<button
@@ -71,3 +69,71 @@
 		</button>
 	{/if}
 </div>
+
+<style lang="scss">
+	$close-color: #fe6057;
+	$close-color-active: #e9574f;
+	$min-color: #ffbf2b;
+	$min-color-active: #d8a225;
+	$max-color: #28cd41;
+	$max-color-active: #22aa36;
+	
+	.window-controls {
+		align-items: center;
+		display: flex;
+		-webkit-app-region: no-drag;
+		justify-content: space-evenly;
+		padding-left: 0.75rem;
+		button {
+			border: none;
+		}
+	}
+	
+	.window-controls .button {
+		position: relative;
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		margin: 0 0.25rem;
+		transition: 200ms;
+	
+		& svg {
+			transition: 200ms;
+			transition-timing-function: ease-in-out;
+			display: none;
+		}
+	}
+	
+	.window-controls:hover svg {
+		display: flex;
+	}
+	
+	.close-button {
+		background-color: $close-color;
+	
+		&:active {
+			background-color: $close-color-active;
+		}
+	}
+	
+	.min-button {
+		background-color: $min-color;
+	
+		&:active {
+			background-color: $min-color-active;
+		}
+	}
+	
+	.restore-button,
+	.max-button {
+		background-color: $max-color;
+	
+		&:active {
+			background-color: $max-color-active;
+		}
+	
+		& svg {
+			transform: rotate(-45deg);
+		}
+	}
+</style>

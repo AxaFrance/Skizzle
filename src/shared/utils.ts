@@ -1,7 +1,8 @@
-import type { CustomListType, PullRequestType } from 'models/skizzle';
-import { notifications, profiles } from 'shared/stores/default.store';
+import type { CustomListType, PullRequestType } from '../models/skizzle';
+import { notifications, profiles } from '../shared/stores/default.store';
 import { get } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
+import { remote } from './remote';
 
 export const addItem = <T>(key: string, value: T): void =>
 	localStorage.setItem(key, JSON.stringify(value));
@@ -43,8 +44,7 @@ export const getDiffDays = (date: Date): number => {
 };
 
 export const copyToClipboard = async (data: string, message: string) => {
-	const result: boolean = await window.remote.invoke('copy-to-clipboard', data);
-
+	const result: boolean = await remote.invoke('copy-to-clipboard', data);
 	if (result) {
 		notifications.update(notifications => [
 			...notifications,

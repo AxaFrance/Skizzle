@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { checkRepository } from 'utils';
-	import { repositories } from 'shared/stores/default.store';
-	import type { RepositoryType } from 'models/skizzle/RepositoryType';
+	import { checkRepository } from '../../utils';
+	import { repositories } from '../../shared/stores/default.store';
+	import type { RepositoryType } from '../../models/skizzle/RepositoryType';
 
 	export let search: string;
 	export let repos: RepositoryType[];

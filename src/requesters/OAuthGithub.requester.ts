@@ -9,9 +9,9 @@ import type {
 	GithubSeachRepositoriesApiType,
 	GithubReviewApiType,
 	GithubReviewsApiType,
-} from 'models/api';
-import type { HeaderType } from 'models/skizzle';
-import type { OAuthGithubConfigType } from 'providers/OAuthGithubConfig.provider';
+} from '../models/api';
+import type { HeaderType } from '../models/skizzle';
+import type { OAuthGithubConfigType } from '../providers/OAuthGithubConfig.provider';
 import { Requester } from './Requester';
 
 export class OAuthGithubRequester extends Requester<OAuthGithubConfigType> {

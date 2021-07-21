@@ -1,16 +1,17 @@
 <script lang="ts">
-	import Boundary from 'components/ErrorBoundary';
-	import Accounts from 'components/Accounts';
-	import Main from 'components/Main';
-	import Settings from 'components/Settings';
-	import Header from 'components/Header';
-	import Navigation from 'components/Navigation';
-	import Notification from 'components/Notification';
-	import { Views } from 'models/skizzle/ViewsEnum';
-	import { offline, settings } from 'shared/stores/default.store';
-	import { clientAuthenticated } from 'shared/stores/authentication.store';
-	import Loader from 'components/Loader';
+	//import Boundary from './components/ErrorBoundary';
+	import Accounts from './components/Accounts';
+	import Main from './components/Main';
+	import Settings from './components/Settings';
+	import Header from './components/Header';
+	import Navigation from './components/Navigation';
+	import Notification from './components/Notification';
+	import { Views } from './models/skizzle/ViewsEnum';
+	import { offline, settings } from './shared/stores/default.store';
+	import { clientAuthenticated } from './shared/stores/authentication.store';
+	import Loader from './components/Loader';
 	import { onMount } from 'svelte';
+	import { remote } from './shared/remote';
 
 	let update: boolean = false;
 	let version: string;
@@ -33,20 +34,20 @@
 
 	onMount(() => {
 		setInterval(async () => {
-			version = await window.remote.invoke('check-for-update-request');
+			version = await remote.invoke('check-for-update-request');
 		}, 60000);
 
-		window.remote.receive('check-for-update-response', () => (update = true));
+		remote.receive('check-for-update-response', () => (update = true));
 	});
 
 	const checkForUpdateRestart = () =>
-		window.remote.invoke('check-for-update-restart');
+		remote.invoke('check-for-update-restart');
 </script>
 
 <Header />
 
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
-	<Boundary onError={console.error}>
+	<!--<Boundary onError={console.error}>-->
 		{#if update}
 			<h1>{version}</h1>
 			<p>A new version has been downloaded.</p>
@@ -60,7 +61,7 @@
 			<svelte:component this={views[currentView]} />
 		</div>
 		<Notification />
-	</Boundary>
+	<!--</Boundary>-->
 </main>
 
 <style>

@@ -1,8 +1,9 @@
-import type { HeaderType, ProviderEnum } from 'models/skizzle';
-import type { OAuthConfigType } from 'providers';
-import { client, clientHasProvider } from 'shared/stores/authentication.store';
-import { isLoading, offline, settings } from 'shared/stores/default.store';
+import type { HeaderType, ProviderEnum } from '../models/skizzle';
+import type { OAuthConfigType } from '../providers';
+import { client, clientHasProvider } from '../shared/stores/authentication.store';
+import { isLoading, offline, settings } from '../shared/stores/default.store';
 import { get } from 'svelte/store';
+import { remote } from '../shared/remote';
 
 export abstract class Requester<T extends OAuthConfigType> {
 	private readonly provider: ProviderEnum;
@@ -22,7 +23,7 @@ export abstract class Requester<T extends OAuthConfigType> {
 		if (!isOffline && this.clientHasProvider(config) && !isFetchingToken) {
 			const headers = this.getHeader(config);
 
-			const data = (await window.remote.invoke(
+			const data = (await remote.invoke(
 				'request',
 				JSON.stringify({
 					url,

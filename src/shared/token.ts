@@ -1,8 +1,9 @@
-import type { ProviderEnum } from 'models/skizzle';
+import type { ProviderEnum } from '../models/skizzle';
 import { get } from 'svelte/store';
 import type { OAuthConfig, OAuthConfigType } from '../providers';
 import { client } from './stores/authentication.store';
 import { isLoading, settings } from './stores/default.store';
+import { remote } from './remote';
 
 export const getToken = async <T extends OAuthConfigType>(
 	config: OAuthConfig<T>,
@@ -11,7 +12,7 @@ export const getToken = async <T extends OAuthConfigType>(
 
 	const body = config.getBody();
 
-	const result = await window.remote.invoke('token', {
+	const result = await remote.invoke('token', {
 		key: provider,
 		body,
 		settings: get(settings),
@@ -40,8 +41,8 @@ export const getToken = async <T extends OAuthConfigType>(
 };
 
 export const authorize = (provider: ProviderEnum, isSilent = false) => {
-	window.remote.send('oauth', provider, isSilent);
-	window.remote.receive('getToken', args =>
+	remote.send('oauth', provider, isSilent);
+	remote.receive('getToken', args =>
 		client.update(n => ({
 			...n,
 			[provider]: {

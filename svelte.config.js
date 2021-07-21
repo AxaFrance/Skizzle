@@ -2,10 +2,12 @@ const sveltePreprocess = require('svelte-preprocess');
 
 function createPreprocessors(sourceMap) {
 	return sveltePreprocess({
+		tsconfigFile: './tsconfig.json',
 		sourceMap,
-		defaults: {
-			script: 'typescript',
-			style: 'scss',
+		scss: {
+			includePaths: ['src'],
+			implementation: require('sass'),
+			renderSync: true
 		},
 	});
 }

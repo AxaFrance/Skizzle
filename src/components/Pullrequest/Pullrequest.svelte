@@ -1,19 +1,20 @@
 <script lang="ts">
-	import { getDateStr } from 'shared/utils';
-	import type { PullRequestType } from 'models/skizzle';
-	import Labels from 'components/Labels';
-	import Modale from 'components/Modale';
-	import { isFetchingData } from 'shared/stores/default.store';
-	import Avatar from 'components/Avatar';
-	import Reviews from 'components/Reviews';
-	import Icons from 'components/icons';
-	import Comment from 'components/Comment';
+	import { getDateStr } from '../../shared/utils';
+	import type { PullRequestType } from '../../models/skizzle';
+	import Labels from '../Labels';
+	import Modale from '../Modale';
+	import { isFetchingData } from '../../shared/stores/default.store';
+	import Avatar from '../Avatar';
+	import Reviews from '../Reviews';
+	import Icons from '../icons';
+	import Comment from '../Comment';
+	import { remote } from '../../shared/remote';
 
 	export let pullRequest: PullRequestType;
 
 	let detailsModal = false;
 
-	const openLink = () => window.remote.openDefaultBrowser(pullRequest.url);
+	const openLink = () => remote.openDefaultBrowser(pullRequest.url);
 	const openModale = () => (detailsModal = true);
 	const closeModale = () => (detailsModal = false);
 </script>

@@ -1,10 +1,12 @@
-<script>
+<script lang="ts">
+	import { remote } from "../../shared/remote";
+
 	export let error = null;
 	export let onError = null;
 
 	const restart = () => {
-		if (window.remote) {
-			window.remote.send('restart');
+		if (remote) {
+			remote.send('restart');
 		}
 	};
 
@@ -20,10 +22,11 @@
 		<h1>Félicitations, vous avez trouvé un bug de Skizzle 🎉</h1>
 		<p>
 			Bien joué, celui-ci est plutôt rare puisque pas encore découvert par l'équipe
+			<!-- svelte-ignore a11y-invalid-attribute -->
 			de développement de Skizzle. Vous pouvez maintenant <a
 				href="#"
 				on:click={() =>
-					window.remote.openDefaultBrowser(
+					remote.openDefaultBrowser(
 						'https://github.com/AxaGuilDEv/Skizzle/issues/new',
 					)}
 			>

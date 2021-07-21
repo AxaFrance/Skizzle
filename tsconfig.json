@@ -4,20 +4,10 @@
 		"typeRoots": [
 			"node_modules/@types"
 		],
-		"baseUrl": "src",
 		"resolveJsonModule": true,
-		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
-		"allowJs": true,
-		"checkJs": true,
-		"moduleResolution": "node"
+		"importsNotUsedAsValues": "remove"
 	},
-	"include": [
-		"src/**/*"
-	],
-	"exclude": [
-		"node_modules/*",
-		"__sapper__/*",
-		"public/*"
-	]
+	"include": ["src/**/*"],
+	"exclude": ["node_modules/*", "__sapper__/*", "public/*", "tools/*"],
 }
