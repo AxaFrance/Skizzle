@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { slide, blur } from 'svelte/transition';
-	import { notifications } from 'shared/stores/default.store';
-	import Icons from 'components/icons';
+	import { notifications } from '../../shared/stores/default.store';
+	import Icons from '../icons';
 
 	const remove = (id: string) => () => {
 		notifications.update(_notifications => _notifications.filter(notification => notification.id !== id));

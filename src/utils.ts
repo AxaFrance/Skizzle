@@ -1,6 +1,6 @@
-import type { RepositoryType } from 'models/skizzle';
-import { Service } from 'services/Service';
-import { pullRequests, repositories } from 'shared/stores/default.store';
+import type { RepositoryType } from './models/skizzle';
+import { Service } from './services/Service';
+import { pullRequests, repositories } from './shared/stores/default.store';
 
 export const checkRepository = async (
 	{ target },

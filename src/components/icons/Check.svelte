@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	export let color = '#000';
 </script>
 

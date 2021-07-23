@@ -76,6 +76,7 @@
           on:focusout={() => showSuggestion = false}
         >
         {#if (showSuggestion || mouseOverSuggestion) && suggestionsFiltered.length}
+          <!-- svelte-ignore a11y-mouse-events-have-key-events -->
           <div class="suggestions" 
             on:mouseover={() => mouseOverSuggestion = true} 
             on:mouseleave={() => mouseOverSuggestion = false} >

@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
-import type { OAuthConfigType } from 'providers';
-import { ProviderEnum } from 'models/skizzle';
+import type { OAuthConfigType } from '../../providers';
+import { ProviderEnum } from '../../models/skizzle';
 import {
 	OAuthAzureDevOpsConfig,
 	OAuthAzureDevOpsConfigType,
@@ -10,7 +10,7 @@ import type { Dictionary } from '../utils';
 import {
 	OAuthGithubConfig,
 	OAuthGithubConfigType,
-} from 'providers/OAuthGithubConfig.provider';
+} from '../../providers/OAuthGithubConfig.provider';
 import { createStore } from './store';
 
 /**

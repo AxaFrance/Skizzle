@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-const url = '';
+const url = 'https://api.github.com';
 
 export default [
 	rest.get(`${url}/`, (req, res, ctx) => { 

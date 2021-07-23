@@ -1,14 +1,11 @@
-<script>
-	import { WindowEnum } from "models/skizzle";
+<script lang="ts">
+	import { WindowEnum } from "../../models/skizzle";
+	import { remote } from "../../shared/remote";
 
 	export let isMaximized: boolean = false;
 
-	const changeState = (state: WindowEnum) => window.remote.send('state', { state })
+	const changeState = (state: WindowEnum) => remote.send('state', { state })
 </script>
-
-<style src="./WindowsBar.scss">
-
-</style>
 
 <div class="window-controls">
 	<button
@@ -56,3 +53,49 @@
 		</svg>
 	</button>
 </div>
+
+<style lang="scss">
+	$close-color: #b40d1b;
+	$button-hover-light: #ddd;
+	$button-hover-dark: #666;
+	$svg-fill: #fff;
+	
+	.window-controls {
+		align-items: center;
+		display: flex;
+		-webkit-app-region: no-drag;
+		justify-content: space-evenly;
+	}
+	
+	.window-controls .button {
+		position: relative;
+		background-color: transparent;
+		width: 50px;
+		height: 100%;
+		transition: 200ms;
+		border: 0;
+	
+		& path {
+			transition: 200ms;
+			transition-timing-function: ease-in-out;
+		}
+	}
+	
+	.close-button:hover {
+		background-color: $close-color;
+	}
+	
+	.restore-button:hover,
+	.max-button:hover,
+	.min-button:hover {
+		background-color: $button-hover-dark;
+	}
+	
+	.close-button:hover path {
+		fill: $svg-fill;
+	}
+
+	.button path {
+		fill: $svg-fill;
+	}
+</style>

@@ -1,8 +1,8 @@
 import type {
 	AzureDevOpsOrganizationApiType,
 	GithubOrganizationApiType,
-} from 'models/api';
-import type { OrganizationType } from 'models/skizzle';
+} from '../models/api';
+import type { OrganizationType } from '../models/skizzle';
 import { From, Mapper } from './Mapper';
 
 export type OrganizationMapperType = From<

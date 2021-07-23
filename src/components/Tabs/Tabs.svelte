@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Icons from 'components/icons';
+	import Icons from '../icons';
 	export let data: any;
 	export let onChange: (value: any) => void;
 	export let current: any;
-	export let onCreation: () => void;
+	export let onCreation: () => void = undefined;
 </script>
 
 <nav>

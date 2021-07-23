@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { PullRequestType } from 'models/skizzle/PullRequestType';
-	import Icons from 'components/icons';
-	import { Service } from 'services/Service';
-	import { settings } from 'shared/stores/default.store';
+	import type { PullRequestType } from '../../models/skizzle/PullRequestType';
+	import Icons from '../icons';
+	import { Service } from '../../services/Service';
+	import { settings } from '../../shared/stores/default.store';
 
 	export let pullRequest: PullRequestType;
 	export let className: string;

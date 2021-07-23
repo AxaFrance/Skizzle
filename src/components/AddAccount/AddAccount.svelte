@@ -1,6 +1,6 @@
-<script>
-	import Icons from 'components/icons';
-	import { isFetchingData, offline } from 'shared/stores/default.store';
+<script lang="ts">
+	import Icons from '../icons';
+	import { isFetchingData, offline } from '../../shared/stores/default.store';
 	
 	export let onClick: () => void;
 	export let text: string;
@@ -33,5 +33,5 @@
 </style>
 
 <div>
-	<button on:click={onClick} disabled={$isFetchingData || $offline}><Icons.AddAccount />{text}</button>
+	<button role="button" title={text} on:click={onClick} disabled={$isFetchingData || $offline}><Icons.AddAccount />{text}</button>
 </div>

@@ -15,9 +15,9 @@ import type {
 	AzureDevOpsRepositoryApiType,
 	AzureDevOpsReviewApiType,
 	AzureDevOpsReviewsApiType,
-} from 'models/api';
-import type { HeaderType } from 'models/skizzle';
-import type { OAuthAzureDevOpsConfigType } from 'providers/OAuthAzureDevOpsConfig.provider';
+} from '../models/api';
+import type { HeaderType } from '../models/skizzle';
+import type { OAuthAzureDevOpsConfigType } from '../providers/OAuthAzureDevOpsConfig.provider';
 import { Requester } from './Requester';
 
 export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigType> {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icons from 'components/icons';
+	import Icons from '../icons';
 	export let onSubmit: (string) => void;
 	export let onCancel: () => void;
 	export let disabled: boolean;

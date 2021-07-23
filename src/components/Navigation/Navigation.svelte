@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icons from '../icons';
-	import { Views } from 'models/skizzle';
+	import { Views } from '../../models/skizzle';
 
 	export let currentView: Views;
 	export let onViewChange: Function;
@@ -59,15 +59,15 @@
 </style>
 
 <nav>
-	<button on:click={setView(Views.Main)} class={getClass(Views.Main)}>
+	<button title="Listes" role="tab" on:click={setView(Views.Main)} class={getClass(Views.Main)}>
 		<Icons.List color={getColor(Views.Main)} />
 		Listes
 	</button>
-	<button on:click={setView(Views.Accounts)} class={getClass(Views.Accounts)}>
+	<button title="Comptes" role="tab" on:click={setView(Views.Accounts)} class={getClass(Views.Accounts)}>
 		<Icons.Accounts color={getColor(Views.Accounts)} />
 		Comptes
 	</button>
-	<button on:click={setView(Views.Settings)} class={getClass(Views.Settings)}>
+	<button title="Réglages" role="tab" on:click={setView(Views.Settings)} class={getClass(Views.Settings)}>
 		<Icons.Settings color={getColor(Views.Settings)} />
 		Réglages
 	</button>

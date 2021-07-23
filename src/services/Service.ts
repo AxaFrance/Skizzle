@@ -4,10 +4,10 @@ import type {
 	ProjectType,
 	PullRequestType,
 	RepositoryType,
-} from 'models/skizzle';
-import { ProviderEnum } from 'models/skizzle';
-import { isFetchingData, profiles } from 'shared/stores/default.store';
-import type { Dictionary } from 'shared/utils';
+} from '../models/skizzle';
+import { ProviderEnum } from '../models/skizzle';
+import { isFetchingData, profiles } from '../shared/stores/default.store';
+import type { Dictionary } from '../shared/utils';
 import { OAuthAzureDevOpsService } from './OAuthAzureDevOps.service';
 import { OAuthGithubService } from './OAuthGithub.service';
 

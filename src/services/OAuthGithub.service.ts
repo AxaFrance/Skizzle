@@ -1,21 +1,16 @@
 import {
-	CommentMapper,
 	ProfileMapper,
 	PullRequestMapper,
 	RepositoryMapper,
-	ReviewMapper,
-} from 'mappers';
-import { GithubUserEnum } from 'models/api';
+} from '../mappers';
 import type {
-	CommentType,
 	ProfileType,
 	PullRequestType,
-	RepositoryType,
-	ReviewType,
-} from 'models/skizzle';
-import { ProviderEnum } from 'models/skizzle';
-import { OAuthGithubRequester } from 'requesters/OAuthGithub.requester';
-import { clientAuthenticated } from 'shared/stores/authentication.store';
+	RepositoryType
+} from '../models/skizzle';
+import { ProviderEnum } from '../models/skizzle';
+import { OAuthGithubRequester } from '../requesters/OAuthGithub.requester';
+import { clientAuthenticated } from '../shared/stores/authentication.store';
 import { get } from 'svelte/store';
 import type { IService, ServiceParams } from './Service';
 

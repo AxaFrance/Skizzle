@@ -1,5 +1,5 @@
-import type { ProviderEnum } from 'models/skizzle';
-import { addItem, getItem } from 'shared/utils';
+import type { ProviderEnum } from '../../models/skizzle';
+import { addItem, getItem } from '../../shared/utils';
 import { get, writable } from 'svelte/store';
 
 type StoreOptionsType<T> = {

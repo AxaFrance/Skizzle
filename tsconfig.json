@@ -4,8 +4,15 @@
 		"typeRoots": [
 			"node_modules/@types"
 		],
-		"baseUrl": "src"
+		"allowJs": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"isolatedModules": true
 	},
-  "include": ["src/**/*"],
-  "exclude": ["node_modules/*"],
+	"include": ["src/**/*"],
+	"exclude": ["node_modules/*", "__sapper__/*", "public/*", "tools/*"],
 }

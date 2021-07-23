@@ -1,7 +1,7 @@
 import App from './App.svelte';
 /*import { worker } from "./mocks/browser";
 
-if (!window.remote.isProduction) {
+if (!remote.isProduction) {
   worker.start();
 }*/
 

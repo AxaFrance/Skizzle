@@ -1,10 +1,10 @@
 <script lang="ts">
-	import AccountTitle from 'components/AccountTitle';
-	import Fieldset from 'components/Fieldset';
-	import Range from 'components/Range';
-	import { ThemeEnum } from 'models/skizzle';
-	import { settings } from 'shared/stores/default.store';
-	import Icons from 'components/icons';
+	import AccountTitle from '../AccountTitle';
+	import Fieldset from '../Fieldset';
+	import Range from '../Range';
+	import { ThemeEnum } from '../../models/skizzle';
+	import { settings } from '../../shared/stores/default.store';
+	import Icons from '../icons';
 
 	let currentPlatform: string =
 		navigator.platform === 'Win32' ? 'Windows' : 'macOS';
