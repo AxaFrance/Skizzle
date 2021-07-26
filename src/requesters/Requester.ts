@@ -6,16 +6,17 @@ import { get } from 'svelte/store';
 import { remote } from '../shared/remote';
 
 export abstract class Requester<T extends OAuthConfigType> {
-	private readonly provider: ProviderEnum;
+	public readonly provider: ProviderEnum;
+
 	constructor(provider: ProviderEnum) {
 		this.provider = provider;
 	}
 
-	private clientHasProvider(config: T): boolean {
+	public clientHasProvider(config: T): boolean {
 		return clientHasProvider(this.provider) && !!config?.access_token;
 	}
 
-	protected async fetch<S>(url: string): Promise<S> {
+	public async fetch<S>(url: string): Promise<S> {
 		const isOffline = get(offline);
 		const isFetchingToken = get(isLoading);
 		const config = get(client)[this.provider] as T;
@@ -36,5 +37,5 @@ export abstract class Requester<T extends OAuthConfigType> {
 		}
 	}
 
-	protected abstract getHeader(config: T): HeaderType;
+	public abstract getHeader(config: T): HeaderType;
 }

@@ -5,7 +5,7 @@ import { client } from './stores/authentication.store';
 import { isLoading, settings } from './stores/default.store';
 import { remote } from './remote';
 
-export const getToken = async <T extends OAuthConfigType>(
+const getToken = async <T extends OAuthConfigType>(
 	config: OAuthConfig<T>,
 ) => {
 	const provider = config.getProvider();
@@ -40,15 +40,4 @@ export const getToken = async <T extends OAuthConfigType>(
 	isLoading.set(false);
 };
 
-export const authorize = (provider: ProviderEnum, isSilent = false) => {
-	remote.send('oauth', provider, isSilent);
-	remote.receive('getToken', args =>
-		client.update(n => ({
-			...n,
-			[provider]: {
-				...n[provider],
-				...args,
-			},
-		})),
-	);
-};
+export { getToken }

@@ -1,5 +1,5 @@
-import './tests/mocks/setup';
 import type { OAuthConfigType } from './providers/OAuthConfig.provider';
+import { electron } from './tests/mocks/setup';
 
 jest.mock('./shared/token', () => ({
   getToken: jest.fn().mockResolvedValue({
@@ -7,13 +7,4 @@ jest.mock('./shared/token', () => ({
   } as OAuthConfigType)
 }));
 
-jest.mock("./shared/remote", () => ({ 
-  remote: { 
-    send: jest.fn(),
-    receive: jest.fn(),
-    once: jest.fn(),
-    invoke: jest.fn(),
-    openDefaultBrowser: jest.fn(),
-    isProduction: jest.fn()
-  } 
-}));
+jest.mock("./shared/remote", () => electron);

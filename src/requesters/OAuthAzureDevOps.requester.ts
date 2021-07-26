@@ -23,7 +23,7 @@ import { Requester } from './Requester';
 export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigType> {
 	private readonly API_VERSION = '6.1-preview';
 
-	protected getHeader(config: OAuthAzureDevOpsConfigType): HeaderType {
+	public getHeader(config: OAuthAzureDevOpsConfigType): HeaderType {
 		return {
 			'content-type': 'application/json',
 			authorization: config.access_token,

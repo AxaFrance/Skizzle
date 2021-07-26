@@ -2,7 +2,6 @@
 	import { Service } from '../../services/Service';
 	import { clientAuthenticated } from '../../shared/stores/authentication.store';
 	import { isLoading } from '../../shared/stores/default.store';
-	import { authorize } from '../../shared/token';
 	import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
 	import AccountTitle from '../AccountTitle';
 	import AddAccount from '../AddAccount';
@@ -74,7 +73,7 @@
 {:else}
 	<AddAccount
 		text="Ajouter un compte Github"
-		onClick={() => authorize(ProviderEnum.Github)}
+		provider={ProviderEnum.Github}
 	/>
 {/if}
 

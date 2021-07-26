@@ -15,7 +15,7 @@ import type { OAuthGithubConfigType } from '../providers/OAuthGithubConfig.provi
 import { Requester } from './Requester';
 
 export class OAuthGithubRequester extends Requester<OAuthGithubConfigType> {
-	protected getHeader(config: OAuthGithubConfigType): HeaderType {
+	public getHeader(config: OAuthGithubConfigType): HeaderType {
 		return {
 			accept: 'application/vnd.github.v3+json',
 			authorization: config.access_token,

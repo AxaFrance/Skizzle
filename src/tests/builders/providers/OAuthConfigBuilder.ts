@@ -1,6 +1,4 @@
-import type { ProviderEnum } from "../../../models/skizzle/ProviderEnum";
 import type { OAuthConfigType } from "../../../providers/OAuthConfig.provider";
-import { client } from "../../../shared/stores/authentication.store";
 
 export class OAuthConfigBuilder {
   private config = {} as OAuthConfigType;
@@ -13,14 +11,7 @@ export class OAuthConfigBuilder {
     return this;
   }
 
-  build(provider: ProviderEnum): OAuthConfigType {
-    client.update(n => ({
-			...n,
-			[provider]: {
-				...n[provider],
-				...this.config,
-			},
-		}))
+  build(): OAuthConfigType {
     return this.config;
   }
 }

@@ -2,7 +2,6 @@
 	import { Service } from '../../services/Service';
 	import { clientAuthenticated } from '../../shared/stores/authentication.store';
 	import { isLoading } from '../../shared/stores/default.store';
-	import { authorize } from '../../shared/token';
 	import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
 	import AccountTitle from '../AccountTitle';
 	import AddAccount from '../AddAccount';
@@ -45,40 +44,44 @@
 	{#await Service.getProfile(ProviderEnum.AzureDevOps)}
 		<p class="loader">Chargement du profil...</p>
 	{:then profile}
-		<section>
-			<AccountTitle>Votre compte Azure DevOps</AccountTitle>
-			<AccountSummary {profile} />
-		</section>
-		<div class="content">
+		{#if profile}
 			<section>
-				<AccountTitle>Suivre un nouveau repository</AccountTitle>
-				<p class="intro">Cherchez le nom de son projet et/ou repository associé.</p>
-				<Search
-					onSubmit={onSearchSubmit(profile)}
-					onCancel={onSearchCancel}
-					disabled={isLoadingRepositories}
-					placeholder="Rechercher un projet ou un repos"
-				/>
+				<AccountTitle>Votre compte Azure DevOps</AccountTitle>
+				<AccountSummary {profile} />
+			</section>
+			<div class="content">
+				<section>
+					<AccountTitle>Suivre un nouveau repository</AccountTitle>
+					<p class="intro">Cherchez le nom de son projet et/ou repository associé.</p>
+					<Search
+						onSubmit={onSearchSubmit(profile)}
+						onCancel={onSearchCancel}
+						disabled={isLoadingRepositories}
+						placeholder="Rechercher un projet ou un repos"
+					/>
 
-				{#if search}
-					{#if isLoadingRepositories}
-						<p>Recherche en cours...</p>
-					{:else}
-						<SearchResults {search} repos={fetchedAzureDevOpsRepositories} />
+					{#if search}
+						{#if isLoadingRepositories}
+							<p>Recherche en cours...</p>
+						{:else}
+							<SearchResults {search} repos={fetchedAzureDevOpsRepositories} />
+						{/if}
 					{/if}
-				{/if}
-			</section>
-			<section>
-				<FollowedRepositories {profile} />
-			</section>
-		</div>
+				</section>
+				<section>
+					<FollowedRepositories {profile} />
+				</section>
+			</div>
+		{:else}
+			<p class="error">Fetching profile failed.</p>
+		{/if}
 	{:catch}
 		<p class="error">Fetching profile failed.</p>
 	{/await}
 {:else}
 	<AddAccount
 		text="Ajouter un compte Azure DevOps"
-		onClick={() => authorize(ProviderEnum.AzureDevOps)}
+		provider={ProviderEnum.AzureDevOps}
 	/>
 {/if}
 
