@@ -46,21 +46,21 @@
 <Header />
 
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
-	<Boundary onError={console.error}>
-		{#if update}
-			<h1>{version}</h1>
-			<p>A new version has been downloaded.</p>
-			<p>Restart the application to apply the updates.</p>
-			<button>Later</button>
-			<button on:click={() => checkForUpdateRestart()}>Restart</button>
-		{/if}
-		<Loader />
-		<Navigation {currentView} {onViewChange} />
-		<div>
-			<svelte:component this={views[currentView]} />
-		</div>
-		<Notification />
-	</Boundary>
+	<!-- <Boundary onError={console.error}> -->
+	{#if update}
+		<h1>{version}</h1>
+		<p>A new version has been downloaded.</p>
+		<p>Restart the application to apply the updates.</p>
+		<button>Later</button>
+		<button on:click={() => checkForUpdateRestart()}>Restart</button>
+	{/if}
+	<Loader />
+	<Navigation {currentView} {onViewChange} />
+	<div>
+		<svelte:component this={views[currentView]} />
+	</div>
+	<Notification />
+	<!-- </Boundary> -->
 </main>
 
 <style>

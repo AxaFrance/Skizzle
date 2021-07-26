@@ -5,6 +5,7 @@
 	import { ThemeEnum } from 'models/skizzle';
 	import { settings } from 'shared/stores/default.store';
 	import Icons from 'components/icons';
+	import Backup from 'components/Backup';
 
 	let currentPlatform: string =
 		navigator.platform === 'Win32' ? 'Windows' : 'macOS';
@@ -13,6 +14,13 @@
 <div class="content">
 	<form>
 		<AccountTitle>Réglages</AccountTitle>
+
+		<Fieldset
+			title="Import/Export configuration Skizzle"
+			intro="Réglez ici le délai qu'utilisera Skizzle pour rafraichir les données."
+		>
+			<Backup />
+		</Fieldset>
 
 		<Fieldset
 			title="Rafraichissement"
@@ -56,15 +64,9 @@
 			</select>
 		</Fieldset>
 
-		<Fieldset
-			title="Proxy"
-		>
-			<label for="proxy">Serveur et port (ex: http://localhost:3000) : </label>
-			<input
-				id="proxy"
-				type="url"
-				bind:value={$settings.proxy}
-			/>
+		<Fieldset title="Proxy">
+			<label for="proxy">Serveur et port (ex: http://localhost:3000) :</label>
+			<input id="proxy" type="url" bind:value={$settings.proxy} />
 		</Fieldset>
 
 		<Fieldset
