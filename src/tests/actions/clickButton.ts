@@ -6,6 +6,6 @@ export const clickButtonAsync = async (name: string | RegExp): Promise<void> => 
   });
 };
 
-export const clickButton = async (name: string | RegExp): Promise<void> => {
+export const clickButton = (name: string | RegExp): void => {
   fireEvent.click(screen.getByRole('button', { name }));
 };

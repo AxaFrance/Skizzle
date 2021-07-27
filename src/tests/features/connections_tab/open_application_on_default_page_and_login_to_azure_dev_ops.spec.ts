@@ -1,7 +1,9 @@
 import { render, screen } from "@testing-library/svelte";
 import App from '../../../App.svelte';
 import { ProviderEnum } from "../../../models/skizzle/ProviderEnum";
-import actions from "../../actions";
+import { changeTabAsync } from "../../actions/changeTab";
+import { clickButton } from "../../actions/clickButton";
+import { connectWith } from "../../actions/connection";
 import { AzureDevOpsDescriptorBuilder } from "../../builders/api/DescriptorBuilder";
 import { AzureDevOpsProfileBuilder } from "../../builders/api/ProfileBuilder";
 import { OAuthConfigBuilder } from "../../builders/providers/OAuthConfigBuilder";
@@ -20,18 +22,14 @@ test("The application is opened and click on accounts tabs and connect user to a
   const config = new OAuthConfigBuilder().withToken('Bearer token').build();
 
   new RequesterBuilder()
-    .withMockedData('https://app.vssps.visualstudio.com/_apis/profile/profiles/me', profile)
-    .withMockedData(`https://vssps.dev.azure.com/_apis/graph/descriptors/${profile.id}`, descriptor)
-    .build()
+    .get('https://app.vssps.visualstudio.com/_apis/profile/profiles/me', profile)
+    .get(`https://vssps.dev.azure.com/_apis/graph/descriptors/${profile.id}`, descriptor)
 
   render(App, {});
 
-  await actions.changeTabAsync('Comptes');
-  await actions.clickButtonAsync('Ajouter un compte Azure DevOps');
-  actions.connectWith(ProviderEnum.AzureDevOps, config);
+  await changeTabAsync('Comptes');
+  clickButton('Ajouter un compte Azure DevOps');
+  connectWith(ProviderEnum.AzureDevOps, config);
 
-  const azureDevOpsConnectedMessage = await screen.findByText('Votre compte Azure DevOps');
-
-  expect(azureDevOpsConnectedMessage).toBeInTheDocument();
-  expect(config.access_token).not.toBeNull();
+  await screen.findByText('Votre compte Azure DevOps');
 })
