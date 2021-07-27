@@ -1,3 +1,4 @@
+import { configure } from '@testing-library/dom';
 import type { OAuthConfigType } from './providers/OAuthConfig.provider';
 import { electron } from './tests/mocks/setup';
 
@@ -8,3 +9,12 @@ jest.mock('./shared/token', () => ({
 }));
 
 jest.mock("./shared/remote", () => electron);
+
+configure({
+  getElementError: message => {
+    const error = new Error(message ?? "Une erreur s'est produite.");
+    error.name = 'TestingLibraryElementError';
+    error.stack = undefined;
+    return error;
+  }
+});

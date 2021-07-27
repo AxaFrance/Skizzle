@@ -11,10 +11,8 @@ import { RequesterBuilder } from "../../builders/requesters/RequesterBuilder";
 
 test("The application is opened and click on accounts tabs and connect user to azure dev ops", async () => {
   const profile = new AzureDevOpsProfileBuilder()
-    .withId('1')
     .withEmailAddress('john.doe@email.com')
     .withDisplayName('John Doe')
-    .withAvatar()
     .build()
 
   const descriptor = new AzureDevOpsDescriptorBuilder().withDescriptor().build();
@@ -27,7 +25,6 @@ test("The application is opened and click on accounts tabs and connect user to a
 
   render(App, {});
 
-  await changeTabAsync('Comptes');
   clickButton('Ajouter un compte Azure DevOps');
   connectWith(ProviderEnum.AzureDevOps, config);
 
