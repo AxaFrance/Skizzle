@@ -5,6 +5,7 @@
 	import { ThemeEnum } from 'models/skizzle';
 	import { settings } from 'shared/stores/default.store';
 	import Icons from 'components/icons';
+	import Switch from 'components/Switch';
 
 	let currentPlatform: string =
 		navigator.platform === 'Win32' ? 'Windows' : 'macOS';
@@ -36,14 +37,11 @@
 					: 'Skizzle ne se lancera pas au démarrage de '
 			} ${currentPlatform}.`}
 		>
-			<div class="field checkbox">
-				<input
-					id="startup"
-					type="checkbox"
-					bind:checked={$settings.launch_at_startup}
-				/>
-				<label for="startup">Lancer Skizzle au démarrage</label>
-			</div>
+			<Switch
+				vspace={2}
+				bind:active={$settings.launch_at_startup}
+				label="Lancer Skizzle au démarrage"
+			/>
 			<p class="text" />
 		</Fieldset>
 
@@ -56,15 +54,9 @@
 			</select>
 		</Fieldset>
 
-		<Fieldset
-			title="Proxy"
-		>
-			<label for="proxy">Serveur et port (ex: http://localhost:3000) : </label>
-			<input
-				id="proxy"
-				type="url"
-				bind:value={$settings.proxy}
-			/>
+		<Fieldset title="Proxy">
+			<label for="proxy">Serveur et port (ex: http://localhost:3000) :</label>
+			<input id="proxy" type="url" bind:value={$settings.proxy} />
 		</Fieldset>
 
 		<Fieldset
@@ -140,48 +132,5 @@
 
 	.field {
 		margin-bottom: 1rem;
-	}
-
-	.checkbox input {
-		display: none;
-	}
-
-	.checkbox label {
-		position: relative;
-		display: flex;
-		align-items: center;
-		font-size: 0.8rem;
-		cursor: pointer;
-	}
-
-	.checkbox label:before {
-		content: '';
-		display: inline-block;
-		width: 3rem;
-		height: 1.5rem;
-		margin-right: 0.5rem;
-		background-color: #333;
-		border-radius: 1rem;
-		transition: background-color linear 0.2s;
-	}
-
-	.checkbox label:after {
-		content: '';
-		position: absolute;
-		left: 1px;
-		top: 1px;
-		width: calc(1.5rem - 2px);
-		height: calc(1.5rem - 2px);
-		border-radius: 50%;
-		background-color: #fff;
-		transition: transform ease-in-out 0.2s;
-	}
-
-	.checkbox input:checked + label:before {
-		background-color: var(--color);
-	}
-
-	.checkbox input:checked + label:after {
-		transform: translateX(calc(100% + 2px));
 	}
 </style>

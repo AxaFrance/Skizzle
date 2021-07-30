@@ -8,7 +8,6 @@
   import TagInput from 'components/TagInput';
   import { client } from 'shared/stores/authentication.store';
   import { remote } from 'shared/remote';
-
 	export let onDone: () => void;
   export let isInCreationMode: boolean = false;
   export let customList: CustomListType = {
@@ -16,13 +15,10 @@
     name : '',
     tags: []
   } as CustomListType;
-
   const onImport = async () => {
 		const result: any = await remote.invoke('file-import');
-
 		if (result) {
 			customList = { ...JSON.parse(result), id: uuidv4() } as CustomListType;
-
 			notifications.update(notifications => [
 				...notifications,
 				{
@@ -32,7 +28,6 @@
 			]);
 		}
 	};
-
   const saveSettings = () => {
     updateSettings({
       ...customList,
@@ -40,11 +35,9 @@
         if (!curr.show) {
           acc.push(curr.pullRequest.pullRequestId);
         }
-
         return acc;
       }, [] as string[])
     });
-
     notifications.update(notifications => [
       ...notifications,
       {
@@ -52,28 +45,22 @@
         id: uuidv4(),
       },
     ]);
-
     onDone();
   }
-
   const updateSettings = (list: CustomListType) => {
     customLists.update(x => {
       const exist = ({ id }: CustomListType) => list.id === id;
-
       if (!x.some(exist)) {
         x = [...x, list];
       } else {
         x[x.indexOf(x.find(exist))] = list;
       }
-
       return x;
     })
   }
-
   const getTags = (event: CustomEvent<{ tags: string[] }>) => {
     customList.tags = event.detail.tags;
   }
-
   $: pullRequestsList = getPullRequestsFromCustomSettings($pullRequests, customList).map(x => ({
     pullRequest: x,
     show: !customList.hiddenPullRequestsIds || !customList.hiddenPullRequestsIds.some(y => y === x.pullRequestId)
@@ -187,12 +174,10 @@
     display: flex;
     flex-direction: column;
   }
-
   .list {
     height: 100%;
     overflow: auto;
   }
-
   .list > .form {
     background-color: #6B6B6B;
     box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
@@ -201,20 +186,16 @@
     display: flex;
     flex-direction: column;
   }
-
   span {
     line-height: 1.5rem;
   }
-
   .form > div {
     padding: 1rem;
     display: flex;
     flex-direction: column;
   }
-
   .fields {
     display: flex;
-
     .left {
       display: flex;
       padding-right: 1rem;
@@ -222,7 +203,6 @@
       width: 100%;
       flex: 1;
     }
-
     .right {
       width: 50%;
       display: flex;
@@ -230,7 +210,6 @@
       flex: 1;
     }
   }
-
   .action {
     display: flex;
     justify-content: flex-end;
@@ -239,17 +218,14 @@
     flex-direction: row !important;
     flex: 0 1 auto;
   }
-
   .hidden {
     opacity: 0.5;
   }
-
   label {
     display: flex;
     padding-bottom: 1rem;
     flex-direction: column;
   }
-
   select {
 		padding: 0.5rem;
 		border: none;
@@ -257,7 +233,6 @@
     background: #848484;
     color: #fff;
 	}
-
   button {
 		cursor: pointer;
 		border: none;
@@ -266,39 +241,32 @@
     color: #fff;
     margin-right: 0.5rem;
 	}
-
 	button:hover {
 		opacity: 0.5;
 	}
-
   ul {
     list-style: none;
     background-color: #848484;
     border-radius: 4px;
     padding: 1rem;
   }
-
   ul li {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
   }
-
   li > button {
     display: flex;
     align-items: center;
-
     > span {
       margin-left: 0.5rem;
     }
   }
-
   small {
     font-size: x-small;
     font-weight: normal;
     color: #ccc;
   }
-
   [type='text'] {
     background: #848484;
     border-radius: 4px;
@@ -306,7 +274,6 @@
     padding: 0.5rem;
     color: #fff;
   }
-
   [type='submit'] {
 		padding: 0.5rem 1rem;
 		color: #fff;
@@ -316,7 +283,6 @@
 		background-color: var(--color);
 		transition: opacity linear 0.2s;
 	}
-
 	[type='submit']:disabled {
 		opacity: 0.5;
 	}
