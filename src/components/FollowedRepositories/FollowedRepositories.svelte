@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
 	import { isFetchingData, repositories } from 'shared/stores/default.store';
 	import { deleteRepository } from 'utils';
 	import Icons from 'components/icons';
 	import AccountTitle from 'components/AccountTitle';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
-	import type { ProfileType } from 'models/skizzle';
+	import type { ProfileType, RepositoryType } from 'models/skizzle';
 	import Modale from 'components/Modale';
 	import { copyToClipboard } from 'shared/utils';
 	import ImportExport from 'components/ImportExport';
@@ -21,7 +21,7 @@
 			} else {
 				return a.projectName > b.projectName ? 1 : -1;
 			}
-		});
+		}) as RepositoryType[];
 </script>
 
 <section>

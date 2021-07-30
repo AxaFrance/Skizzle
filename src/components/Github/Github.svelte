@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Service } from 'services/Service';
-	import { clientAuthenticated } from 'shared/stores/authentication.store';
+	import { client, clientAuthenticated } from 'shared/stores/authentication.store';
 	import { isLoading } from 'shared/stores/default.store';
-	import { authorize } from 'shared/token';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import AccountTitle from 'components/AccountTitle';
 	import AddAccount from 'components/AddAccount';
@@ -42,6 +41,7 @@
 	{#await Service.getProfile(ProviderEnum.Github)}
 		<p class="loader">Chargement...</p>
 	{:then profile}
+		{#if profile?.provider}
 		<section>
 			<AccountTitle>Votre compte Github</AccountTitle>
 			<AccountSummary {profile} />
@@ -68,13 +68,16 @@
 			</section>
 			<FollowedRepositories {profile} />
 		</div>
+		{:else}
+			<p class="error">Fetching profile failed.</p>
+		{/if}
 	{:catch}
 		<p class="error">Fetching profile failed.</p>
 	{/await}
 {:else}
 	<AddAccount
 		text="Ajouter un compte Github"
-		onClick={() => authorize(ProviderEnum.Github)}
+		provider={ProviderEnum.Github}
 	/>
 {/if}
 

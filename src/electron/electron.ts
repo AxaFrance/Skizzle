@@ -25,8 +25,8 @@ try {
 
 const setAppUserModelId = () => {
 	//@ts-ignore
-	global.appUserModelId = 'skizzle';
-	app.setAppUserModelId('skizzle');
+	global.appUserModelId = 'com.axa.skizzle';
+	app.setAppUserModelId('com.axa.skizzle');
 };
 
 setAppUserModelId();
@@ -79,7 +79,9 @@ const createWindow = () => {
 		window = null;
 	});
 
-	window.webContents.openDevTools({ mode: 'detach' });
+	if (!app.isPackaged) {
+		window.webContents.openDevTools({ mode: 'detach' });
+	}
 
 	//@ts-ignore
 	window.on('render-process-gone', () => hangOrCrash(window));

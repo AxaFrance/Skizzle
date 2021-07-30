@@ -1,11 +1,19 @@
 {
 	"extends": "@tsconfig/svelte/tsconfig.json",
 	"compilerOptions": {
-		"types": ["node", "superagent", "superagent-proxy", "uuid", "marked"],
-		"baseUrl": "src",
+		"typeRoots": [
+			"node_modules/@types"
+		],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "node",
 		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true
+		"isolatedModules": true,
+		"baseUrl": "src"
 	},
 	"include": ["src/**/*"],
-	"exclude": ["node_modules/*", "__sapper__/*", "public/*"]
+	"exclude": ["node_modules/*", "__sapper__/*", "public/*", "tools/*"],
 }

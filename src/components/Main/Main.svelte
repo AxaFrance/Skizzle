@@ -7,10 +7,11 @@
 	} from 'shared/stores/default.store';
 	import PullRequest from 'components/PullRequest';
 	import Tabs from 'components/Tabs';
-	import ListTest from 'components/ListTest';
+	import CustomListSettings from 'components/CustomListSettings';
 	import Modale from 'components/Modale';
 	import type { CustomListType } from 'models/skizzle';
 	import { getPullRequestsFromCustomSettings } from 'shared/utils';
+	import { remote } from 'shared/remote';
 
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;
@@ -27,7 +28,7 @@
 		);
 
 		if (currentTabData) {
-			const result: boolean = await window.remote.invoke('file-export', currentTabData);
+			const result: boolean = await remote.invoke('file-export', currentTabData);
 
 			if (result) {
 				notifications.update(notifications => [
@@ -95,7 +96,7 @@
 
 {#if creatingList || modifyingListId}
 	<Modale onClose={closeModale}>
-		<ListTest customList={$customLists.find(({ id }) => id === modifyingListId)} isInCreationMode={creatingList} onDone={closeModale} />
+		<CustomListSettings customList={$customLists.find(({ id }) => id === modifyingListId)} isInCreationMode={creatingList} onDone={closeModale} />
 	</Modale>
 {/if}
 

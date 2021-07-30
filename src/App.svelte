@@ -8,9 +8,10 @@
 	import Notification from 'components/Notification';
 	import { Views } from 'models/skizzle/ViewsEnum';
 	import { offline, settings } from 'shared/stores/default.store';
-	import { onMount } from 'svelte';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Loader from 'components/Loader';
+	import { onMount } from 'svelte';
+	import { remote } from 'shared/remote';
 
 	let update: boolean = false;
 	let version: string;
@@ -31,16 +32,16 @@
 	window.addEventListener('online', () => offline.set(false));
 	window.addEventListener('offline', () => offline.set(true));
 
-	// onMount(() => {
-	// 	setInterval(async () => {
-	// 		version = await window.remote.invoke('check-for-update-request');
-	// 	}, 60000);
+	onMount(() => {
+		setInterval(async () => {
+			version = await remote.invoke('check-for-update-request');
+		}, 60000);
 
-	// 	window.remote.receive('check-for-update-response', () => (update = true));
-	// });
+		remote.receive('check-for-update-response', () => (update = true));
+	});
 
 	const checkForUpdateRestart = () =>
-		window.remote.invoke('check-for-update-restart');
+		remote.invoke('check-for-update-restart');
 </script>
 
 <Header />

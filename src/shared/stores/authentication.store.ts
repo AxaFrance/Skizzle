@@ -4,14 +4,14 @@ import { ProviderEnum } from 'models/skizzle';
 import {
 	OAuthAzureDevOpsConfig,
 	OAuthAzureDevOpsConfigType,
-} from '../../providers/OAuthAzureDevOpsConfig.provider';
-import { getToken } from '../token';
-import type { Dictionary } from '../utils';
+} from 'providers/OAuthAzureDevOpsConfig.provider';
+import { getToken } from 'shared/token';
 import {
 	OAuthGithubConfig,
 	OAuthGithubConfigType,
 } from 'providers/OAuthGithubConfig.provider';
 import { createStore } from './store';
+import type { Dictionary } from 'shared/utils';
 
 /**
  * Authentication
@@ -60,7 +60,9 @@ const createIntervalRefresh = (key: string, element: OAuthConfigType) => {
 };
 
 const authentication = async (client: Dictionary<OAuthConfigType>) => {
-	Object.entries(client).forEach(([key, value]) => {
+	const configs = Object.entries(client).filter(([key, _]) => !!client[key] && Object.getOwnPropertyNames(client[key]).length >= 1);
+
+	configs.forEach(([key, value]) => {
 		switch (key) {
 			case ProviderEnum.Github:
 				clientAuthenticated.update(x => ({
@@ -77,25 +79,21 @@ const authentication = async (client: Dictionary<OAuthConfigType>) => {
 		}
 	});
 
-	for (const key in client) {
-		if (Object.prototype.hasOwnProperty.call(client, key)) {
-			const element = client[key];
+	for (const [key, value] of configs) {
+		const interval = timer[key];
 
-			const interval = timer[key];
+		if (value && value.current_date && !interval) {
+			createIntervalRefresh(key, value);
+		}
 
-			if (element && element.current_date && !interval) {
-				createIntervalRefresh(key, element);
-			}
-
-			if (element && !element.access_token) {
-				switch (key) {
-					case ProviderEnum.AzureDevOps:
-						await getToken<OAuthAzureDevOpsConfigType>(new OAuthAzureDevOpsConfig());
-						break;
-					case ProviderEnum.Github:
-						await getToken<OAuthGithubConfigType>(new OAuthGithubConfig());
-						break;
-				}
+		if (value && !value.access_token) {
+			switch (key) {
+				case ProviderEnum.AzureDevOps:
+					await getToken<OAuthAzureDevOpsConfigType>(new OAuthAzureDevOpsConfig());
+					break;
+				case ProviderEnum.Github:
+					await getToken<OAuthGithubConfigType>(new OAuthGithubConfig());
+					break;
 			}
 		}
 	}

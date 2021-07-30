@@ -1,17 +1,12 @@
 import {
-	CommentMapper,
 	ProfileMapper,
 	PullRequestMapper,
 	RepositoryMapper,
-	ReviewMapper,
 } from 'mappers';
-import { GithubUserEnum } from 'models/api';
 import type {
-	CommentType,
 	ProfileType,
 	PullRequestType,
-	RepositoryType,
-	ReviewType,
+	RepositoryType
 } from 'models/skizzle';
 import { ProviderEnum } from 'models/skizzle';
 import { OAuthGithubRequester } from 'requesters/OAuthGithub.requester';

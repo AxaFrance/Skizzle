@@ -1,4 +1,5 @@
 const {
+  app,
   contextBridge,
   ipcRenderer,
   shell
@@ -22,6 +23,9 @@ contextBridge.exposeInMainWorld(
       },
       openDefaultBrowser: (url) => {
         shell.openExternal(url); 
+      },
+      isProduction: () => {
+        app.isPackaged;
       }
   }
 );
