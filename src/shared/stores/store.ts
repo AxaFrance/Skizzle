@@ -8,13 +8,21 @@ type StoreOptionsType<T> = {
 	subscriber?: (initialValue: T) => (value: T) => void;
 };
 
+const getStoreValue = (storage, initialValue) => {
+	if (typeof storage === 'boolean') {
+		return storage;
+	}
+
+	return storage ? storage : initialValue;
+}
+
 export const createStore = <T>(
 	initialValue: T,
 	{ key, predicate, subscriber }: StoreOptionsType<T>,
 ) => {
 	const storage = getItem<T>(key);
 
-	const store = writable(storage ? storage : initialValue);
+	const store = writable(getStoreValue(storage, initialValue));
 	const { subscribe, set, update } = store;
 
 	if (subscriber) {

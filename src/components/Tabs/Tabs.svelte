@@ -14,6 +14,7 @@
 			class="tab"
 			class:current={current === tab || Object.keys(data).length === 1}
 			on:click={() => onChange(tab)}
+			disabled={data[tab].disabled}
 		>
 			{#if data[tab].icon}
 				<svelte:component this={data[tab].icon} />

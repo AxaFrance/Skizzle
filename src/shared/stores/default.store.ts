@@ -131,3 +131,5 @@ export const settings = createStore<SettingsType>(
 export const customLists = createStore<CustomListType[]>([], {
 	key: 'customLists',
 });
+
+export const needIntro = createStore<boolean>(true, { key: 'needIntro' });
