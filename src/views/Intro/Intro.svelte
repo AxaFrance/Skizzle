@@ -1,12 +1,11 @@
 <script lang="ts">
 	import AccountTitle from 'components/AccountTitle';
-	import AzureDevOps from 'components/AzureDevOps';
-	import Github from 'components/Github';
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Icons from 'components/icons';
 	import Tabs from 'components/Tabs';
 	import { needIntro } from 'shared/stores/default.store';
+	import ProviderAccount from 'components/ProviderAccount';
 
 	let step = 0;
 
@@ -57,10 +56,10 @@
 		</p>
 		<ul class="block">
 			<li class={$clientAuthenticated.isAzureDevOpsAuthenticated ? 'valid' : ''}>
-				<AzureDevOps light />
+				<ProviderAccount provider={ProviderEnum.AzureDevOps} light />
 			</li>
 			<li class={$clientAuthenticated.isGithubAuthenticated ? 'valid' : ''}>
-				<Github light />
+				<ProviderAccount provider={ProviderEnum.Github} light />
 			</li>
 		</ul>
 		<div class="actions">
@@ -90,12 +89,7 @@
 				data={tabs}
 			/>
 			<div class="repos">
-				{#if currentProvider === ProviderEnum.AzureDevOps}
-					<AzureDevOps follow />
-				{/if}
-				{#if currentProvider === ProviderEnum.Github}
-					<Github follow />
-				{/if}
+				<ProviderAccount provider={currentProvider} follow />
 			</div>
 		</div>
 		<div class="actions">

@@ -1,16 +1,10 @@
 <script lang="ts">
 	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import Tabs from 'components/Tabs';
-	import AzureDevOps from 'components/AzureDevOps';
-	import Github from 'components/Github';
 	import Icons from 'components/icons';
+	import ProviderAccount from 'components/ProviderAccount';
 
-	let currentProvider = ProviderEnum.AzureDevOps;
-
-	const views = {
-		[ProviderEnum.AzureDevOps]: AzureDevOps,
-		[ProviderEnum.Github]: Github,
-	};
+	let provider = ProviderEnum.AzureDevOps;
 
 	const tabs = {
 		[ProviderEnum.AzureDevOps]: {
@@ -27,12 +21,12 @@
 </script>
 
 <Tabs
-	current={currentProvider}
-	onChange={provider => (currentProvider = provider)}
+	current={provider}
+	onChange={currentProvider => (provider = currentProvider)}
 	data={tabs}
 />
 <div class="content">
-	<svelte:component this={views[currentProvider]} />
+	<ProviderAccount {provider} />
 </div>
 
 <style>
