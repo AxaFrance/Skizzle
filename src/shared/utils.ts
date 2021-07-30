@@ -1,5 +1,5 @@
-import type { CustomListType, PullRequestType } from '../models/skizzle';
-import { notifications, profiles } from '../shared/stores/default.store';
+import type { CustomListType, PullRequestType } from 'models/skizzle';
+import { notifications, profiles } from 'shared/stores/default.store';
 import { get } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
 import { remote } from './remote';

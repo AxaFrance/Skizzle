@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
-  import { notifications, pullRequests, repositories } from '../../shared/stores/default.store';
+  import { notifications, pullRequests, repositories } from 'shared/stores/default.store';
 	import { HighlightAuto } from "svelte-highlight";
-	import Tabs from '../Tabs';
-  import AccountTitle from '../AccountTitle';
-  import { copyToClipboard, isJson } from '../../shared/utils';
-  import Icons from '../icons';
-  import type { RepositoryType } from '../../models/skizzle';
+	import Tabs from 'components/Tabs';
+  import AccountTitle from 'components/AccountTitle';
+  import { copyToClipboard, isJson } from 'shared/utils';
+  import Icons from 'components/icons';
+  import type { RepositoryType } from 'models/skizzle';
   import 'svelte-highlight/src/styles/dark.css';
-  import { Service } from '../../services';
+  import { Service } from 'services';
 
   export let followedRepositories: RepositoryType[];
   export let shareDisplayed: boolean;

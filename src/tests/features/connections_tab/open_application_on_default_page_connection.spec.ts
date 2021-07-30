@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/svelte";
-import App from '../../../App.svelte';
+import App from 'App.svelte';
 
 test("The application is opened with a login page by default", async () => {
   render(App, {});

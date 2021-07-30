@@ -1,7 +1,7 @@
 <script lang="ts">
 	import WindowsBar from './WindowsBar.svelte';
 	import MacosBar from './MacosBar.svelte';
-	import { remote } from '../../shared/remote';
+	import { remote } from 'shared/remote';
 
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'windows' : 'others';
 	let isMaximized: boolean = remote.invoke('isMaximized') as boolean;

@@ -1,11 +1,12 @@
 import { render, screen } from "@testing-library/svelte";
-import App from '../../../App.svelte';
-import { ProviderEnum } from "../../../models/skizzle/ProviderEnum";
-import { clickButton, clickButtonAsync } from "../../actions/clickButton";
-import { connectWith } from "../../actions/connection";
-import { GithubProfileBuilder } from "../../builders/api/ProfileBuilder";
-import { OAuthConfigBuilder } from "../../builders/providers/OAuthConfigBuilder";
-import { RequesterBuilder } from "../../builders/requesters/RequesterBuilder";
+import App from 'App.svelte';
+import { ProviderEnum } from "models/skizzle/ProviderEnum";
+import { clickButton, clickButtonAsync } from "tests/actions/clickButton";
+import { connectWith } from "tests/actions/connection";
+import { GithubProfileBuilder } from "tests/builders/api/ProfileBuilder";
+import { OAuthConfigBuilder } from "tests/builders/providers/OAuthConfigBuilder";
+import { RequesterBuilder } from "tests/builders/requesters/RequesterBuilder";
+import { config as urls } from 'config';
 
 test("The application is opened and click on accounts tabs and connect user to github", async () => {
   const profile = new GithubProfileBuilder()
@@ -16,7 +17,7 @@ test("The application is opened and click on accounts tabs and connect user to g
   const config = new OAuthConfigBuilder().withToken('Bearer token').build();
 
   new RequesterBuilder()
-    .get('https://api.github.com/user', profile)
+    .get(urls.Github.get.profile(), profile)
 
   render(App, {});
 

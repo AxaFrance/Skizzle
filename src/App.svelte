@@ -1,17 +1,17 @@
 <script lang="ts">
-	import Boundary from './components/ErrorBoundary';
-	import Accounts from './components/Accounts';
-	import Main from './components/Main';
-	import Settings from './components/Settings';
-	import Header from './components/Header';
-	import Navigation from './components/Navigation';
-	import Notification from './components/Notification';
-	import { Views } from './models/skizzle/ViewsEnum';
-	import { offline, settings } from './shared/stores/default.store';
-	import { clientAuthenticated } from './shared/stores/authentication.store';
-	import Loader from './components/Loader';
+	import Boundary from 'components/ErrorBoundary';
+	import Accounts from 'components/Accounts';
+	import Main from 'components/Main';
+	import Settings from 'components/Settings';
+	import Header from 'components/Header';
+	import Navigation from 'components/Navigation';
+	import Notification from 'components/Notification';
+	import { Views } from 'models/skizzle/ViewsEnum';
+	import { offline, settings } from 'shared/stores/default.store';
+	import { clientAuthenticated } from 'shared/stores/authentication.store';
+	import Loader from 'components/Loader';
 	import { onMount } from 'svelte';
-	import { remote } from './shared/remote';
+	import { remote } from 'shared/remote';
 
 	let update: boolean = false;
 	let version: string;

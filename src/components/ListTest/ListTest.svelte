@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
-  import { getDateStr, getLabelsFrom, getPullRequestsFromCustomSettings } from '../../shared/utils';
-  import AccountTitle from "../AccountTitle";
-  import type { CustomListType, PullRequestType } from "../../models/skizzle";
-  import { customLists, notifications, pullRequests, repositories, settings } from '../../shared/stores/default.store';
-  import Icons from '../icons';
-  import TagInput from '../TagInput';
-  import { client } from '../../shared/stores/authentication.store';
-  import { remote } from '../../shared/remote';
+  import { getDateStr, getLabelsFrom, getPullRequestsFromCustomSettings } from 'shared/utils';
+  import AccountTitle from "components/AccountTitle";
+  import type { CustomListType, PullRequestType } from "models/skizzle";
+  import { customLists, notifications, pullRequests, repositories, settings } from 'shared/stores/default.store';
+  import Icons from 'components/icons';
+  import TagInput from 'components/TagInput';
+  import { client } from 'shared/stores/authentication.store';
+  import { remote } from 'shared/remote';
 
 	export let onDone: () => void;
   export let isInCreationMode: boolean = false;

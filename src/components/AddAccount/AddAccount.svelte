@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Icons from '../icons';
-	import { isFetchingData, offline } from '../../shared/stores/default.store';
-	import type { ProviderEnum } from '../../models/skizzle';
-	import { remote } from '../../shared/remote';
-	import { client } from '../../shared/stores/authentication.store';
+	import Icons from 'components/icons';
+	import { isFetchingData, offline } from 'shared/stores/default.store';
+	import type { ProviderEnum } from 'models/skizzle';
+	import { remote } from 'shared/remote';
+	import { client } from 'shared/stores/authentication.store';
 	
 	export let provider: ProviderEnum;
 	export let text: string;

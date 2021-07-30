@@ -5,11 +5,11 @@ import {
 	AzureDevOpsVoteEnum,
 	GithubPullRequestApiType,
 	GithubVoteEnum,
-} from '../models/api';
-import type { PullRequestType } from '../models/skizzle';
+} from 'models/api';
+import type { PullRequestType } from 'models/skizzle';
 import { From, Mapper } from './Mapper';
 import { get } from 'svelte/store';
-import { profiles } from '../shared/stores/default.store';
+import { profiles } from 'shared/stores/default.store';
 
 export type PullRequestMapperType = From<
 	AzureDevOpsPullRequestApiType,

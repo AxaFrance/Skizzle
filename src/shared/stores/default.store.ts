@@ -6,13 +6,13 @@ import type {
 	SettingsType,
 	NotificationType,
 	ProfileType,
-} from '../../models/skizzle';
-import { ThemeEnum, ProviderEnum } from '../../models/skizzle';
-import { Service } from '../../services/Service';
+} from 'models/skizzle';
+import { ThemeEnum, ProviderEnum } from 'models/skizzle';
+import { Service } from 'services/Service';
 import { get } from 'svelte/store';
 import { createStore } from './store';
 import { v4 as uuidv4 } from 'uuid';
-import { remote } from '../remote';
+import { remote } from 'shared/remote';
 
 const predicate = <T extends CommonType>(
 	value: T[],
@@ -20,8 +20,6 @@ const predicate = <T extends CommonType>(
 ): T[] => {
 	return value.filter(x => x.provider !== provider);
 };
-
-let timer: NodeJS.Timeout;
 
 export const refreshPullRequests = async () => {
 	const isOffline = get(offline);
@@ -115,7 +113,7 @@ export const settings = createStore<SettingsType>(
 		key: 'settings',
 		subscriber: initialValue => settings => {
 			if (settings.refresh_delay > 0) {
-				timer = setInterval(refreshPullRequests, settings.refresh_delay * 60000);
+				setInterval(refreshPullRequests, settings.refresh_delay * 60000);
 			}
 
 			Object.keys(initialValue).forEach(element => {

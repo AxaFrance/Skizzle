@@ -1,6 +1,6 @@
 <script lang="ts">	
   import { createEventDispatcher } from 'svelte';
-	import Icons from '../icons';
+	import Icons from 'components/icons';
 
   export let id: string;
   export let label: string;

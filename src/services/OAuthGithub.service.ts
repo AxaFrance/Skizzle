@@ -2,15 +2,15 @@ import {
 	ProfileMapper,
 	PullRequestMapper,
 	RepositoryMapper,
-} from '../mappers';
+} from 'mappers';
 import type {
 	ProfileType,
 	PullRequestType,
 	RepositoryType
-} from '../models/skizzle';
-import { ProviderEnum } from '../models/skizzle';
-import { OAuthGithubRequester } from '../requesters/OAuthGithub.requester';
-import { clientAuthenticated } from '../shared/stores/authentication.store';
+} from 'models/skizzle';
+import { ProviderEnum } from 'models/skizzle';
+import { OAuthGithubRequester } from 'requesters/OAuthGithub.requester';
+import { clientAuthenticated } from 'shared/stores/authentication.store';
 import { get } from 'svelte/store';
 import type { IService, ServiceParams } from './Service';
 

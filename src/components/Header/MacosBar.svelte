@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { WindowEnum } from "../../models/skizzle";
-	import { remote } from "../../shared/remote";
+	import { WindowEnum } from "models/skizzle";
+	import { remote } from "shared/remote";
 
 	export let isMaximized: boolean = false;
 

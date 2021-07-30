@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icons from '../icons';
+	import Icons from 'components/icons';
 	export let onSubmit: (string) => void;
 	export let onCancel: () => void;
 	export let disabled: boolean;
@@ -18,6 +18,20 @@
 		onCancel();
 	};
 </script>
+
+<div class="search">
+	<Icons.Search color="#4e4e4e" />
+	<form aria-label="valider la recherche de repository" on:submit={search}>
+		<input aria-label="rechercher les repository par valeur" bind:value={query} {disabled} {placeholder} />
+		<input type="submit" />
+		{#if query}
+			<button on:click={cancel} class="delete">
+				<Icons.Delete color="#4e4e4e" />
+			</button>
+		{/if}
+	</form>
+</div>
+
 
 <style>
 	form {
@@ -67,15 +81,3 @@
 	}
 </style>
 
-<div class="search">
-	<Icons.Search color="#4e4e4e" />
-	<form on:submit={search}>
-		<input bind:value={query} {disabled} {placeholder} />
-		<input type="submit" />
-		{#if query}
-			<button on:click={cancel} class="delete">
-				<Icons.Delete color="#4e4e4e" />
-			</button>
-		{/if}
-	</form>
-</div>

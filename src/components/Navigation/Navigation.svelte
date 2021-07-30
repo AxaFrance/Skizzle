@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Icons from '../icons';
-	import { Views } from '../../models/skizzle';
+	import Icons from 'components/icons';
+	import { Views } from 'models/skizzle';
 
 	export let currentView: Views;
 	export let onViewChange: Function;

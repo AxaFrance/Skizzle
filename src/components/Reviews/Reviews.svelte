@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Icons from '../icons';
-	import type { ReviewType } from '../../models/skizzle/ReviewType';
+	import Icons from 'components/icons';
+	import type { ReviewType } from 'models/skizzle/ReviewType';
 
 	export let reviews: ReviewType;
 

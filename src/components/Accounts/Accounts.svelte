@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
-	import Tabs from '../Tabs';
-	import AzureDevOps from '../AzureDevOps';
-	import Github from '../Github';
-	import Icons from '../icons';
+	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
+	import Tabs from 'components/Tabs';
+	import AzureDevOps from 'components/AzureDevOps';
+	import Github from 'components/Github';
+	import Icons from 'components/icons';
 
 	let currentProvider = ProviderEnum.AzureDevOps;
 

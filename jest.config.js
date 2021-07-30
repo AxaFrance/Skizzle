@@ -17,6 +17,7 @@ module.exports = {
     ],
     ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
   },
+  moduleDirectories: ["src","node_modules"],
   moduleFileExtensions: [
     "js",
     "mjs",
@@ -28,7 +29,8 @@ module.exports = {
   collectCoverageFrom: [
     "src/**/*.js",
     "src/**/*.svelte",
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "!src/tests/**/*"
   ],
   coverageProvider: "babel",
   coveragePathIgnorePatterns: [

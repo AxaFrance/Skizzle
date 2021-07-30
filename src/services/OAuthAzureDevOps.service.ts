@@ -4,19 +4,19 @@ import {
 	ProjectMapper,
 	PullRequestMapper,
 	RepositoryMapper,
-} from '../mappers';
+} from 'mappers';
 import {
 	AzureDevOpsCommentApiEnum,
 	AzureDevOpsCommentStatusApiEnum,
-} from '../models/api';
+} from 'models/api';
 import type {
 	ProfileType,
 	PullRequestType,
 	RepositoryType,
-} from '../models/skizzle';
-import { ProviderEnum } from '../models/skizzle';
-import { OAuthAzureDevOpsRequester } from '../requesters/OAuthAzureDevOps.requester';
-import { clientAuthenticated } from '../shared/stores/authentication.store';
+} from 'models/skizzle';
+import { ProviderEnum } from 'models/skizzle';
+import { OAuthAzureDevOpsRequester } from 'requesters/OAuthAzureDevOps.requester';
+import { clientAuthenticated } from 'shared/stores/authentication.store';
 import { get } from 'svelte/store';
 import type { IService, ServiceParams } from './Service';
 

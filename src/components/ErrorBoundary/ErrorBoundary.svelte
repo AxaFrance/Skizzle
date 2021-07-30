@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { remote } from "../../shared/remote";
+	import { remote } from "shared/remote";
 
 	export let error = null;
 	export let onError = null;

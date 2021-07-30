@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
-	import type { CustomListType } from '../../models/skizzle/CustomListType';
-	import AccountTitle from '../AccountTitle';
-	import Fieldset from '../Fieldset';
+	import type { CustomListType } from 'models/skizzle/CustomListType';
+	import AccountTitle from 'components/AccountTitle';
+	import Fieldset from 'components/Fieldset';
 	import {
 		repositories,
 		customLists,
 		notifications,
-	} from '../../shared/stores/default.store';
-	import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
-	import Icons from '../icons';
-	import { remote } from '../../shared/remote';
+	} from 'shared/stores/default.store';
+	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
+	import Icons from 'components/icons';
+	import { remote } from 'shared/remote';
 
 	export let onDone: () => void;
 	export let id: string;

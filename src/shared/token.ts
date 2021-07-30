@@ -1,9 +1,8 @@
-import type { ProviderEnum } from '../models/skizzle';
 import { get } from 'svelte/store';
-import type { OAuthConfig, OAuthConfigType } from '../providers';
-import { client } from './stores/authentication.store';
+import type { OAuthConfig, OAuthConfigType } from 'providers';
 import { isLoading, settings } from './stores/default.store';
 import { remote } from './remote';
+import { client } from './stores/authentication.store';
 
 const getToken = async <T extends OAuthConfigType>(
 	config: OAuthConfig<T>,
@@ -23,7 +22,7 @@ const getToken = async <T extends OAuthConfigType>(
 
 		client.update(n => ({
 			...n,
-			[provider]: {},
+			[provider]: undefined,
 		}));
 	} else {
 		if (result.access_token) {

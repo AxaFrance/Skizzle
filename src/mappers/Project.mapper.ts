@@ -1,8 +1,8 @@
 import type {
 	AzureDevOpsProjectApiType,
 	GithubProjectApiType,
-} from '../models/api';
-import type { ProjectType } from '../models/skizzle';
+} from 'models/api';
+import type { ProjectType } from 'models/skizzle';
 import { From, Mapper } from './Mapper';
 
 export type ProjectMapperType = From<

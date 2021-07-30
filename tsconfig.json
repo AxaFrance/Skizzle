@@ -11,7 +11,8 @@
 		"forceConsistentCasingInFileNames": true,
 		"moduleResolution": "node",
 		"allowSyntheticDefaultImports": true,
-		"isolatedModules": true
+		"isolatedModules": true,
+		"baseUrl": "src"
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules/*", "__sapper__/*", "public/*", "tools/*"],

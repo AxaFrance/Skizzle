@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { isFetchingData, repositories } from '../../shared/stores/default.store';
-	import { deleteRepository } from '../../utils';
-	import Icons from '../icons';
-	import AccountTitle from '../AccountTitle';
-	import { ProviderEnum } from '../../models/skizzle/ProviderEnum';
-	import type { ProfileType, RepositoryType } from '../../models/skizzle';
-	import Modale from '../Modale';
-	import { copyToClipboard } from '../../shared/utils';
-	import ImportExport from '../ImportExport';
+	import { isFetchingData, repositories } from 'shared/stores/default.store';
+	import { deleteRepository } from 'utils';
+	import Icons from 'components/icons';
+	import AccountTitle from 'components/AccountTitle';
+	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
+	import type { ProfileType, RepositoryType } from 'models/skizzle';
+	import Modale from 'components/Modale';
+	import { copyToClipboard } from 'shared/utils';
+	import ImportExport from 'components/ImportExport';
 
 	export let profile: ProfileType;
 

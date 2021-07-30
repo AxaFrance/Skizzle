@@ -1,6 +1,7 @@
 import { configure } from '@testing-library/dom';
-import type { OAuthConfigType } from './providers/OAuthConfig.provider';
-import { electron } from './tests/mocks/setup';
+import type { OAuthConfigType } from 'providers/OAuthConfig.provider';
+import { electron } from 'tests/mocks/setup';
+import 'shared/stores/default.store'
 
 jest.mock('./shared/token', () => ({
   getToken: jest.fn().mockResolvedValue({

@@ -4,14 +4,14 @@
 		pullRequests,
 		customLists,
 		notifications,
-	} from '../../shared/stores/default.store';
-	import PullRequest from '../PullRequest';
-	import Tabs from '../Tabs';
-	import ListTest from '../ListTest';
-	import Modale from '../Modale';
-	import type { CustomListType } from '../../models/skizzle';
-	import { getPullRequestsFromCustomSettings } from '../../shared/utils';
-	import { remote } from '../../shared/remote';
+	} from 'shared/stores/default.store';
+	import PullRequest from 'components/PullRequest';
+	import Tabs from 'components/Tabs';
+	import ListTest from 'components/ListTest';
+	import Modale from 'components/Modale';
+	import type { CustomListType } from 'models/skizzle';
+	import { getPullRequestsFromCustomSettings } from 'shared/utils';
+	import { remote } from 'shared/remote';
 
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;

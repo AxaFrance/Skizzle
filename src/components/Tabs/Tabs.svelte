@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icons from '../icons';
+	import Icons from 'components/icons';
 	export let data: any;
 	export let onChange: (value: any) => void;
 	export let current: any;

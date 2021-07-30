@@ -1,4 +1,4 @@
-import type { AzureDevOpsProfileApiType, GithubProfileApiType } from '../../../models/api/ProfileApiType';
+import type { AzureDevOpsProfileApiType, GithubProfileApiType } from 'models/api/ProfileApiType';
 import { v4 } from 'uuid';
 
 class AzureDevOpsProfileBuilder {

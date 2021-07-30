@@ -17,7 +17,7 @@
 		"build": "run-p svelte-build electron-build",
 		"svelte-autobuild": "rollup -c -w --extend",
 		"electron-autobuild": "tsc -w ./src/electron/electron.ts --outDir ./public/build/",
-		"start": "cross-env TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling run-p dev electron",
+		"start": "cross-env TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling npm run dev",
 		"electron": "electron --trace-warnings .",
 		"dev": "run-p start:dev electron-autobuild svelte-autobuild",
 		"test": "jest src --config jest.config.js",

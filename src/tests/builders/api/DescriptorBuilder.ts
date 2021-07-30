@@ -1,4 +1,4 @@
-import type { AzureDevOpsDescriptorApiType } from '../../../models/api/AvatarApiType';
+import type { AzureDevOpsDescriptorApiType } from 'models/api/AvatarApiType';
 
 class AzureDevOpsDescriptorBuilder {
   private descriptor = {} as AzureDevOpsDescriptorApiType;
