@@ -1,11 +1,73 @@
 <script lang="ts">
-	import { checkRepository } from 'utils';
-	import { repositories } from 'shared/stores/default.store';
+	import { ProviderEnum } from 'models/skizzle';
+	import type { ProfileType } from 'models/skizzle';
 	import type { RepositoryType } from 'models/skizzle/RepositoryType';
+	import { Service } from 'services/Service';
+	import { repositories } from 'shared/stores/default.store';
+	import { checkRepository } from 'utils';
 
-	export let search: string;
-	export let repos: RepositoryType[];
+	export let query: string;
+	export let profile: ProfileType;
+
+	let repos: RepositoryType[] = [];
+
+	$: resultsFetching = Service.getRepositories(profile.provider, {
+		profile,
+		query,
+	});
+
+	$: resultsFetching.then(results => {
+		if (profile.provider === ProviderEnum.AzureDevOps) {
+			repos = results.filter(
+				({ projectName, name }) =>
+					name.toLocaleLowerCase().includes(query.toLocaleLowerCase()) ||
+					projectName?.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
+			);
+		} else {
+			repos = results;
+		}
+	});
 </script>
+
+{#if query}
+	{#await resultsFetching}
+		<p>Recherche en cours...</p>
+	{:then}
+		<div class="container">
+			<h2>
+				Résultats pour "
+				<b>{query}</b>
+				"
+			</h2>
+			{#if repos}
+				<ul class="repo-projects">
+					{#each repos as repository}
+						<li class="repo-project">
+							<span class="name">
+								{repository.fullName ||
+									(repository.projectName ? repository.projectName + ' / ' : '') +
+										repository.name}
+							</span>
+							<input
+								type="checkbox"
+								id={repository.repositoryId}
+								checked={$repositories.some(
+									x => x.repositoryId === repository.repositoryId,
+								)}
+								on:change={event => checkRepository(event, repository)}
+							/>
+							<label class="follow" for={repository.repositoryId}>
+								{$repositories.some(x => x.repositoryId === repository.repositoryId)
+									? 'Ne plus suivre'
+									: 'Suivre'}
+							</label>
+						</li>
+					{/each}
+				</ul>
+			{/if}
+		</div>
+	{/await}
+{/if}
 
 <style>
 	ul {
@@ -58,27 +120,3 @@
 		text-decoration: none;
 	}
 </style>
-
-<div class="container">
-	<h2>Résultats pour "<b>{search}</b>"</h2>
-	{#if repos}
-		<ul class="repo-projects">
-			{#each repos as repository}
-				<li class="repo-project">
-					<span class="name">{repository.fullName || (repository.projectName ? repository.projectName + ' / ' : '') + repository.name}</span>
-					<input
-						type="checkbox"
-						id={repository.repositoryId}
-						checked={$repositories.some(x => x.repositoryId === repository.repositoryId)}
-						on:change={event => checkRepository(event, repository)} />
-					<label
-						class="follow"
-						for={repository.repositoryId}
-					>
-						{$repositories.some(x => x.repositoryId === repository.repositoryId) ? 'Ne plus suivre' : 'Suivre'}
-					</label>
-				</li>
-			{/each}
-		</ul>
-	{/if}
-</div>
