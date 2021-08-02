@@ -3,6 +3,7 @@ import type { CommonType } from './CommonType';
 import type { ReviewType } from './ReviewType';
 
 type UserType = {
+	id: string;
 	name: string;
 	avatar?: string;
 };
@@ -24,6 +25,7 @@ type PullRequestType = {
 	url: string;
 	comments: CommentType[];
 	reviewers: ReviewType;
+	hasReviewed: boolean;
 } & CommonType;
 
 export type { UserType, LabelType, PullRequestType };

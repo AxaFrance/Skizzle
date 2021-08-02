@@ -7,9 +7,11 @@
 	} from 'shared/stores/default.store';
 	import PullRequest from 'components/PullRequest';
 	import Tabs from 'components/Tabs';
-	import Modale from 'components/Modale';
 	import CustomListSettings from 'components/CustomListSettings';
-	import type { CustomListType, ExportType } from 'models/skizzle';
+	import Modale from 'components/Modale';
+	import type { CustomListType } from 'models/skizzle';
+	import { getPullRequestsFromCustomSettings } from 'shared/utils';
+	import { remote } from 'shared/remote';
 
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;
@@ -26,10 +28,7 @@
 		);
 
 		if (currentTabData) {
-			const result: boolean = await window.remote.invoke('file-export', {
-				name: currentTabData.name,
-				repositoriesIds: currentTabData.repositoriesIds,
-			} as ExportType);
+			const result: boolean = await remote.invoke('file-export', currentTabData);
 
 			if (result) {
 				notifications.update(notifications => [
@@ -56,30 +55,11 @@
 	};
 
 	const filterList = (customList: CustomListType) => {
-		let filteredPullRequests = $pullRequests;
-
-		if (customList.repositoriesIds.length) {
-			filteredPullRequests = filteredPullRequests
-				.filter(pullRequest => !!pullRequest)
-				.filter(pullRequest =>
-					customList.repositoriesIds
-						.map(String)
-						.includes(String(pullRequest.repositoryId)),
-				);
-		}
-
-		if (customList.tags) {
-			// filteredPullRequests = filteredPullRequests.filter(pullRequest =>
-			// 	pullRequest.labels
-			// 		?.map(label => label.name.toLocaleLowerCase())
-			// 		.includes(customList.tags.map(tag => tag.toLocaleLowerCase())),
-			// );
-		}
-
-		return filteredPullRequests;
+		return getPullRequestsFromCustomSettings($pullRequests, customList)
+					.filter(x => !customList.hiddenPullRequestsIds.some(y => x.pullRequestId === y));
 	};
 
-	const getTabs = lists => {
+	const getTabs = (lists: CustomListType[]) => {
 		const tabs = {
 			all: {
 				label: 'Toutes',
@@ -99,7 +79,6 @@
 	};
 
 	$: tabs = getTabs($customLists);
-
 	$: displayedList =
 		currentTab === 'all'
 			? $pullRequests
@@ -114,6 +93,12 @@
 		creatingList = true;
 	}}
 />
+
+{#if creatingList || modifyingListId}
+	<Modale onClose={closeModale}>
+		<CustomListSettings customList={$customLists.find(({ id }) => id === modifyingListId)} isInCreationMode={creatingList} onDone={closeModale} />
+	</Modale>
+{/if}
 
 <div class="content">
 	{#if currentTab !== 'all'}
@@ -143,11 +128,6 @@
 		<p class="no-pr">Il n'y a aucune pull request à afficher dans cette liste.</p>
 	{/if}
 </div>
-{#if creatingList || modifyingListId}
-	<Modale onClose={closeModale}>
-		<CustomListSettings id={modifyingListId} onDone={closeModale} />
-	</Modale>
-{/if}
 
 <style>
 	.content {

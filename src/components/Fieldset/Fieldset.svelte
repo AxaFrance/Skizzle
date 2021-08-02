@@ -1,7 +1,7 @@
 <script lang="ts">
-	export let title: string;
-	export let intro: string;
-	export let outro: string;
+	export let title: string = undefined;
+	export let intro: string = undefined;
+	export let outro: string = undefined;
 </script>
 
 <fieldset>

@@ -61,7 +61,7 @@
 		border-left: 1px solid #ccc;
 	}
 
-	.content :global(ul, ol) {
+	.content :global(ul), .content :global(ol) {
 		padding-left: 1rem;
 	}
 

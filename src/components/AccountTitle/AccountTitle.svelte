@@ -9,6 +9,7 @@
 		font-weight: bold;
 		font-family: 'roboto slab', sans-serif;
 		border-left: 4px solid var(--color);
+		align-items: center;
 	}
 </style>
 

@@ -4,14 +4,15 @@ import type {
 	PullRequestType,
 	RepositoryType,
 	SettingsType,
-	ProviderEnum,
 	NotificationType,
+	ProfileType,
 } from 'models/skizzle';
-import { ThemeEnum } from 'models/skizzle';
+import { ThemeEnum, ProviderEnum } from 'models/skizzle';
 import { Service } from 'services/Service';
 import { get } from 'svelte/store';
 import { createStore } from './store';
 import { v4 as uuidv4 } from 'uuid';
+import { remote } from 'shared/remote';
 
 const predicate = <T extends CommonType>(
 	value: T[],
@@ -19,8 +20,6 @@ const predicate = <T extends CommonType>(
 ): T[] => {
 	return value.filter(x => x.provider !== provider);
 };
-
-let timer: NodeJS.Timeout;
 
 export const refreshPullRequests = async () => {
 	const isOffline = get(offline);
@@ -61,7 +60,7 @@ export const refreshPullRequests = async () => {
 						? 'Plusieurs repositories ont étés mis à jour'
 						: `Le repo ${newValues[0].repositoryName} a une nouvelle pull request`;
 
-				window.remote.send('notifier', {
+				remote.send('notifier', {
 					title,
 					body,
 				});
@@ -76,6 +75,7 @@ export const refreshPullRequests = async () => {
 	}
 };
 
+export const profiles = createStore<ProfileType[]>([], { key: 'profiles' });
 export const pullRequests = createStore<PullRequestType[]>([], {
 	key: 'pullRequests',
 	predicate,
@@ -113,7 +113,7 @@ export const settings = createStore<SettingsType>(
 		key: 'settings',
 		subscriber: initialValue => settings => {
 			if (settings.refresh_delay > 0) {
-				timer = setInterval(refreshPullRequests, settings.refresh_delay * 60000);
+				setInterval(refreshPullRequests, settings.refresh_delay * 60000);
 			}
 
 			Object.keys(initialValue).forEach(element => {
@@ -124,7 +124,7 @@ export const settings = createStore<SettingsType>(
 				}
 			});
 
-			window.remote.send('launch-startup', settings.launch_at_startup);
+			remote.send('launch-startup', settings.launch_at_startup);
 		},
 	},
 );

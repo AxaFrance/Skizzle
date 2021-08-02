@@ -1,5 +1,8 @@
-import { notifications } from 'shared/stores/default.store';
+import type { CustomListType, PullRequestType } from 'models/skizzle';
+import { notifications, profiles } from 'shared/stores/default.store';
+import { get } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
+import { remote } from './remote';
 
 export const addItem = <T>(key: string, value: T): void =>
 	localStorage.setItem(key, JSON.stringify(value));
@@ -20,12 +23,7 @@ export type Dictionary<T> = {
 };
 
 export const getDateStr = (date: Date): string => {
-	const today = new Date();
-	const oneDay = 24 * 60 * 60 * 1000;
-	const diffDays = Math.round(
-		Math.abs((date.getTime() - today.getTime()) / oneDay),
-	);
-
+	const diffDays = getDiffDays(date);
 	const hours = `${date.getHours()}`.padStart(2, '0');
 	const minutes = `${date.getMinutes()}`.padStart(2, '0');
 
@@ -39,9 +37,14 @@ export const getDateStr = (date: Date): string => {
 	}
 };
 
-export const copyToClipboard = async (data: string, message: string) => {
-	const result: boolean = await window.remote.invoke('copy-to-clipboard', data);
+export const getDiffDays = (date: Date): number => {
+	const today = new Date();
+	const oneDay = 24 * 60 * 60 * 1000;
+	return Math.round(Math.abs((date.getTime() - today.getTime()) / oneDay));
+};
 
+export const copyToClipboard = async (data: string, message: string) => {
+	const result: boolean = await remote.invoke('copy-to-clipboard', data);
 	if (result) {
 		notifications.update(notifications => [
 			...notifications,
@@ -61,3 +64,26 @@ export const isJson = (str: string): boolean => {
 	}
 	return true;
 };
+
+export const getLabelsFrom = (pullRequests: PullRequestType[]): string[] => {
+	return pullRequests.reduce((acc, curr) => {
+		const result = (curr.labels || []).map(value => {
+			if (value?.name && !acc.includes(value.name)) {
+				return value.name;
+			}
+		}, []).filter(x => x);
+
+		return [...acc, ...result];
+	}, [])
+}
+
+export const getPullRequestsFromCustomSettings = (pullRequests: PullRequestType[], settings: CustomListType): PullRequestType[] => {
+	return pullRequests.filter(pr => !settings.provider || settings.provider === pr.provider)
+		.filter(pr => !settings.repositoryId || settings.repositoryId === pr.repositoryId)
+		.filter(pr => settings.tags.length === 0 || settings.tags.some(x => (pr.labels ?? []).some(y => y.name === x)))
+		.filter(pr => !settings.withoutOwnedByUserPR || (settings.withoutOwnedByUserPR && pr.user.id && get(profiles).find(x => x.provider === pr.provider)?.id !== pr.user.id))
+		.filter(pr => !settings.withoutOldPR || (settings.withoutOldPR && pr.date && getDiffDays(new Date(pr.date)) < 30))
+		.filter(pr => !settings.withoutConflict || (settings.withoutConflict && !pr.isConflict))
+		.filter(pr => !settings.withoutDraft || (settings.withoutDraft && !pr.isDraft)) 
+		.filter(pr => !settings.withoutCheckedByOwner || (settings.withoutCheckedByOwner && !pr.hasReviewed));
+}

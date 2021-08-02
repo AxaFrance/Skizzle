@@ -5,6 +5,7 @@
 	import { ThemeEnum } from 'models/skizzle';
 	import { settings } from 'shared/stores/default.store';
 	import Icons from 'components/icons';
+	import Switch from 'components/Switch';
 
 	let currentPlatform: string =
 		navigator.platform === 'Win32' ? 'Windows' : 'macOS';
@@ -36,14 +37,11 @@
 					: 'Skizzle ne se lancera pas au démarrage de '
 			} ${currentPlatform}.`}
 		>
-			<div class="field checkbox">
-				<input
-					id="startup"
-					type="checkbox"
-					bind:checked={$settings.launch_at_startup}
-				/>
-				<label for="startup">Lancer Skizzle au démarrage</label>
-			</div>
+			<Switch
+				vspace={2}
+				bind:active={$settings.launch_at_startup}
+				label="Lancer Skizzle au démarrage"
+			/>
 			<p class="text" />
 		</Fieldset>
 
@@ -133,67 +131,5 @@
 
 	.field {
 		margin-bottom: 1rem;
-	}
-
-	.checkbox input {
-		display: none;
-	}
-
-	label {
-		font-size: 0.8rem;
-	}
-
-	.checkbox label {
-		position: relative;
-		display: flex;
-		align-items: center;
-
-		cursor: pointer;
-	}
-
-	.checkbox label:before {
-		content: '';
-		display: inline-block;
-		width: 3rem;
-		height: 1.5rem;
-		margin-right: 0.5rem;
-		background-color: #333;
-		border-radius: 1rem;
-		transition: background-color linear 0.2s;
-	}
-
-	.checkbox label:after {
-		content: '';
-		position: absolute;
-		left: 1px;
-		top: 1px;
-		width: calc(1.5rem - 2px);
-		height: calc(1.5rem - 2px);
-		border-radius: 50%;
-		background-color: #fff;
-		transition: transform ease-in-out 0.2s;
-	}
-
-	.checkbox input:checked + label:before {
-		background-color: var(--color);
-	}
-
-	.checkbox input:checked + label:after {
-		transform: translateX(calc(100% + 2px));
-	}
-
-	[type='url'] {
-		width: 30rem;
-		padding: 0.5rem;
-		font-size: 0.8rem;
-		border-radius: 4px;
-		border: none;
-		background-color: #fff;
-	}
-
-	select {
-		padding: 0.5rem;
-		border: none;
-		border-radius: 4px;
 	}
 </style>

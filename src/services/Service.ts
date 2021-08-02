@@ -6,7 +6,7 @@ import type {
 	RepositoryType,
 } from 'models/skizzle';
 import { ProviderEnum } from 'models/skizzle';
-import { isFetchingData } from 'shared/stores/default.store';
+import { isFetchingData, profiles } from 'shared/stores/default.store';
 import type { Dictionary } from 'shared/utils';
 import { OAuthAzureDevOpsService } from './OAuthAzureDevOps.service';
 import { OAuthGithubService } from './OAuthGithub.service';
@@ -42,6 +42,13 @@ export class Service {
 		try {
 			const result = await Service.INSTANCES[provider].getProfile(userId);
 			isFetchingData.set(false);
+			profiles.update(n => {
+				if (!n.some(x => x.id === result.id && x.provider === result.provider)) {
+					return [...n, result];
+				}
+
+				return n;
+			});
 			return result;
 		} catch {
 			isFetchingData.set(false);

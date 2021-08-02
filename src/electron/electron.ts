@@ -14,7 +14,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { autoUpdater } from 'electron-updater';
 import type { SettingsType } from '../models/skizzle/SettingsType';
-import type { ExportType } from '../models/skizzle/ExportType';
+import type { CustomListType } from '../models/skizzle/CustomListType';
 import { WindowEnum } from '../models/skizzle/WindowEnum';
 import { requester } from './requester';
 
@@ -25,8 +25,8 @@ try {
 
 const setAppUserModelId = () => {
 	//@ts-ignore
-	global.appUserModelId = 'skizzle';
-	app.setAppUserModelId('skizzle');
+	global.appUserModelId = 'com.axa.skizzle';
+	app.setAppUserModelId('com.axa.skizzle');
 };
 
 setAppUserModelId();
@@ -79,7 +79,9 @@ const createWindow = () => {
 		window = null;
 	});
 
-	window.webContents.openDevTools({ mode: 'detach' });
+	if (!app.isPackaged) {
+		window.webContents.openDevTools({ mode: 'detach' });
+	}
 
 	//@ts-ignore
 	window.on('render-process-gone', () => hangOrCrash(window));
@@ -197,12 +199,12 @@ ipcMain.handle(
 	'file-export',
 	async (
 		event: Electron.IpcMainEvent,
-		{ name, repositoriesIds }: ExportType,
+		currentTabData: CustomListType,
 	) => {
 		try {
 			const { filePath } = await dialog.showSaveDialog(window, {
 				title: 'Exporter la liste sous...',
-				defaultPath: `${name}.json`,
+				defaultPath: `${currentTabData.name}.json`,
 				filters: [
 					{
 						name: 'Skizzle List',
@@ -213,14 +215,7 @@ ipcMain.handle(
 
 			fs.writeFileSync(
 				filePath,
-				JSON.stringify(
-					{
-						name,
-						repositoriesIds,
-					},
-					undefined,
-					2,
-				),
+				JSON.stringify(currentTabData, undefined, 2),
 			);
 
 			return true;

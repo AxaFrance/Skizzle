@@ -1,44 +1,40 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
-	import type { CustomListType } from 'models/skizzle/CustomListType';
-	import AccountTitle from 'components/AccountTitle';
-	import Fieldset from 'components/Fieldset';
 	import {
-		repositories,
+		getDateStr,
+		getLabelsFrom,
+		getPullRequestsFromCustomSettings,
+	} from 'shared/utils';
+	import AccountTitle from 'components/AccountTitle';
+	import type { CustomListType, PullRequestType } from 'models/skizzle';
+	import {
 		customLists,
 		notifications,
+		pullRequests,
+		repositories,
+		settings,
 	} from 'shared/stores/default.store';
-	import { ProviderEnum } from 'models/skizzle/ProviderEnum';
 	import Icons from 'components/icons';
+	import TagInput from 'components/TagInput';
+	import { client } from 'shared/stores/authentication.store';
+	import Radio from 'components/Radio';
+	import Switch from 'components/Switch';
 
 	export let onDone: () => void;
-	export let id: string;
+	export let isInCreationMode: boolean = false;
+	export let customList: CustomListType = {
+		id: uuidv4(),
+		name: '',
+		tags: [],
+	} as CustomListType;
 
-	let tags: string[] = $customLists.find(list => list.id === id)?.tags ?? [];
-
-	let listName: string = $customLists.find(list => list.id === id)
-		? $customLists.find(list => list.id === id).name
-		: null;
-
-	let selectedRepoId: string;
-	let repositoriesIds: string[] = $customLists.find(list => list.id === id)
-		? $customLists.find(list => list.id === id).repositoriesIds
-		: [];
-
-	let tag: string;
+	let isListDisplayed = false;
 
 	const onImport = async () => {
 		const result: any = await window.remote.invoke('file-import');
 
 		if (result) {
-			const data = JSON.parse(result) as CustomListType;
-
-			const list: CustomListType = {
-				id: uuidv4(),
-				...data,
-			};
-
-			customLists.update(_list => [..._list, list]);
+			customList = { ...JSON.parse(result), id: uuidv4() } as CustomListType;
 
 			notifications.update(notifications => [
 				...notifications,
@@ -47,298 +43,239 @@
 					id: uuidv4(),
 				},
 			]);
-
-			onDone();
 		}
 	};
 
-	const onSubmit = (event): void => {
-		event.preventDefault();
+	const saveSettings = () => {
+		updateSettings({
+			...customList,
+			hiddenPullRequestsIds: pullRequestsList.reduce((acc, curr) => {
+				if (!curr.show) {
+					acc.push(curr.pullRequest.pullRequestId);
+				}
 
-		if (event.submitter.id !== 'import') {
-			if (id) {
-				const list: CustomListType = {
-					id,
-					name: listName,
-					repositoriesIds,
-					tags,
-				};
+				return acc;
+			}, [] as string[]),
+		});
 
-				customLists.update(_list =>
-					_list.map(__list => {
-						if (__list.id === id) {
-							return list;
-						}
+		notifications.update(notifications => [
+			...notifications,
+			{
+				text: `Liste ${isInCreationMode ? 'créée' : 'modifiée'}`,
+				id: uuidv4(),
+			},
+		]);
 
-						return __list;
-					}),
-				);
+		onDone();
+	};
+
+	const updateSettings = (list: CustomListType) => {
+		customLists.update(x => {
+			const exist = ({ id }: CustomListType) => list.id === id;
+
+			if (!x.some(exist)) {
+				x = [...x, list];
 			} else {
-				const list: CustomListType = {
-					id: uuidv4(),
-					name: listName,
-					repositoriesIds,
-					tags,
-				};
-
-				customLists.update(_list => [..._list, list]);
-				notifications.update(notifications => [
-					...notifications,
-					{
-						text: 'Liste crée.',
-						id: uuidv4(),
-					},
-				]);
-			}
-			onDone();
-		}
-	};
-
-	const onAddTag = (event: KeyboardEvent): void => {
-		event.preventDefault();
-
-		if (event.key === ';') {
-			console.log(tag, tags, event.key);
-			const result = tag.substring(0, tag.indexOf(';'));
-
-			if (result) {
-				tags = [...tags, result];
+				x[x.indexOf(x.find(exist))] = list;
 			}
 
-			tag = '';
-		} else if (event.key === 'Backspace' && !tag) {
-			const result = tags.slice(0, tags.length - 1);
-
-			tags = [...result];
-		}
+			return x;
+		});
 	};
 
-	const deleteRepository = (id: string): void => {
-		const newRepositoriesIds = repositoriesIds.filter(repo => repo !== id);
-		repositoriesIds = [...newRepositoriesIds];
+	const getTags = (event: CustomEvent<{ tags: string[] }>) => {
+		customList.tags = event.detail.tags;
 	};
+
+	$: pullRequestsList = getPullRequestsFromCustomSettings(
+		$pullRequests,
+		customList,
+	)
+		.filter(pr => !!pr)
+		.map(x => ({
+			pullRequest: x,
+			show:
+				!customList.hiddenPullRequestsIds ||
+				!customList.hiddenPullRequestsIds.some(y => y === x.pullRequestId),
+		})) as { pullRequest: PullRequestType; show: boolean }[];
 </script>
 
-<!-- svelte-ignore a11y-no-onchange a11y-autofocus -->
-<form on:submit={onSubmit}>
+<div>
 	<AccountTitle>
-		{id ? `Modifier la liste "${listName}"` : 'Nouvelle liste'}
-		<input
-			id="import"
-			on:click={onImport}
-			type="submit"
-			value={'Charger une liste'}
-		/>
+		{customList.name ? 'Modification de la liste' : "Création d'une liste"}
+		<button class="import" on:click={onImport}>Importer</button>
 	</AccountTitle>
-	<Fieldset
-		title="Nom de la liste"
-		intro="Choisissez un nom pour votre liste, il apparaitra dans l'onglet."
-	>
-		<input autofocus bind:value={listName} id="list-name" type="text" />
-	</Fieldset>
-
-	{#if $repositories.length}
-		<Fieldset
-			title="Repositories"
-			intro={`Choisissez parmi les repositories auxquels vous êtes abonnés. Skizzle
-				n'affichera que des pull requests de ces repositories dans votre liste${
-					listName ? ` "${listName}"` : ''
-				}.`}
-		>
-			<div class="field">
-				<select bind:value={selectedRepoId} id="repos">
-					{#if !selectedRepoId}
-						<option default value="">Selectionnez un repository</option>
-					{/if}
-					{#if $repositories.filter(repo => repo.provider === ProviderEnum.AzureDevOps).length}
-						<optgroup label="Azure Devops">
-							{#each $repositories
-								.filter(repo => repo.provider === ProviderEnum.AzureDevOps)
-								.sort((a, b) => (a.projectName > b.projectName ? 1 : -1)) as repository}
-								<option
-									disabled={repositoriesIds.includes(repository.repositoryId)}
-									value={repository.repositoryId}
-								>
-									{repository.projectName}
-									/
-									{repository.name}
-								</option>
-							{/each}
-						</optgroup>
-					{/if}
-					{#if $repositories.filter(repo => repo.provider === ProviderEnum.Github).length}
-						<optgroup label="Github">
-							{#each $repositories
-								.filter(repo => repo.provider === ProviderEnum.Github)
-								.sort((a, b) => (a.name > b.name ? 1 : -1)) as repository}
-								<option
-									disabled={repositoriesIds.includes(repository.repositoryId)}
-									value={repository.repositoryId}
-								>
-									{repository.name}
-								</option>
-							{/each}
-						</optgroup>
-					{/if}
-				</select>
-				<button
-					class="add"
-					disabled={!selectedRepoId || repositoriesIds.includes(selectedRepoId)}
-					on:click={() => {
-						repositoriesIds = [...repositoriesIds, selectedRepoId];
-					}}
-				>Ajouter</button>
-			</div>
-			{#if repositoriesIds.length}
-				<p class="intro">
-					{repositoriesIds.length}
-					{repositoriesIds.length > 1
-						? 'repositories sélectionnés'
-						: 'repository sélectionné'}
-				</p>
-				<ul class="items-list">
-					{#each repositoriesIds as repo}
-						<li class="item">
-							{#if $repositories.find(({ repositoryId }) => repo == repositoryId).projectName}
-								{$repositories.find(({ repositoryId }) => repo == repositoryId)
-									.projectName}
-								/
-							{/if}
-							{$repositories.find(({ repositoryId }) => repo == repositoryId).name}
-							<button
-								class="remove"
-								on:click={e => {
-									e.preventDefault();
-									deleteRepository(repo);
-								}}
-							>
-								<Icons.Delete />
-							</button>
-						</li>
-					{/each}
-				</ul>
-			{:else}
-				<p class="intro">Il n'y a aucun repository selectionné</p>
-			{/if}
-		</Fieldset>
-	{/if}
-
-	<Fieldset
-		title="Tags"
-		intro="Saisissez un ou plusieurs tag, Skizzle affichera uniquement les pull requests comportant les tags sélectionnés."
-		outro={tag
-			? `Skizzle n'affichera que les pull requests contenant le tag "${tag}"`
-			: 'Skizzle affichera toutes les pull requests quelque soit leur tag'}
-	>
+	<div class="fields">
 		<div class="field">
-			<input id="list-name" type="text" bind:value={tag} on:keyup={onAddTag} />
+			<label for="list-name">Nom de la liste :</label>
+			<input id="list-name" type="text" bind:value={customList.name} />
 		</div>
-	</Fieldset>
-
-	<div class="bar">
-		<input
-			disabled={!listName}
-			type="submit"
-			value={id ? 'Modifier la liste' : 'Créer la liste'}
-		/>
+		<div class="field">
+			<TagInput
+				id="tags"
+				label="Afficher les pull request contenant les tags :"
+				suggestions={getLabelsFrom($pullRequests)}
+				tags={customList.tags}
+				on:tags={event => getTags(event)}
+			/>
+		</div>
+		<div class="field">
+			<label for="list-provider">Afficher les pull requests de mon compte :</label>
+			<select id="list-provider" bind:value={customList.provider}>
+				<option value="">-- Selectionner un service --</option>
+				{#each Object.keys($client) as key}
+					<option value={key}>
+						{key}
+					</option>
+				{/each}
+			</select>
+		</div>
+		<div class="field">
+			<label for="repo">Afficher les pull requests de ce repository :</label>
+			<select id="repo" bind:value={customList.repositoryId}>
+				<option value="">-- Selectionner un repository --</option>
+				{#each $repositories as repository}
+					<option value={repository.repositoryId}>
+						{repository.name}
+					</option>
+				{/each}
+			</select>
+		</div>
+		<div class="field">
+			<p>Masquer les pull requests</p>
+			<ul>
+				<li>
+					<Radio
+						bind:checked={customList.withoutOwnedByUserPR}
+						label="Que j'ai créé"
+					/>
+				</li>
+				<li>
+					<Radio
+						bind:checked={customList.withoutOldPR}
+						label="Datant de plus de 30 jours"
+					/>
+				</li>
+				<li>
+					<Radio bind:checked={customList.withoutConflict} label="En conflit" />
+				</li>
+				<li>
+					<Radio bind:checked={customList.withoutDraft} label="En brouillon" />
+				</li>
+				<li>
+					<Radio
+						bind:checked={customList.withoutCheckedByOwner}
+						label="Que j'ai déjà approuvé"
+					/>
+				</li>
+			</ul>
+		</div>
+		{#if pullRequestsList.length > 0}
+			<div class="field">
+				<Switch
+					vspace={1}
+					bind:active={isListDisplayed}
+					label="Masquer manuellement certaines pull requests"
+				/>
+				{#if isListDisplayed}
+					<ul>
+						{#each pullRequestsList.filter(pr => pr != null) as { pullRequest, show } (pullRequest.pullRequestId)}
+							<li>
+								<Radio
+									on:change={() => (show = !show)}
+									checked={!show}
+									label={pullRequest.title}
+								/>
+							</li>
+						{/each}
+					</ul>
+				{/if}
+			</div>
+		{/if}
 	</div>
-</form>
+</div>
+<div class="action">
+	<button class="cancel" on:click={() => onDone()}>Annuler</button>
+	<button class="cta" on:click={() => saveSettings()}>Enregistrer</button>
+</div>
 
 <style>
-	.intro {
-		font-size: 0.8rem;
-	}
-
-	.intro:not(:last-child) {
-		margin-bottom: 1rem;
-	}
-
-	.items-list {
-		flex-wrap: wrap;
-		list-style: none;
-		display: flex;
-	}
-
-	.item {
-		display: flex;
-		align-items: center;
-		margin-right: 0.5rem;
-		margin-bottom: 0.5rem;
-		font-size: 0.8rem;
+	.import {
 		padding: 0.5rem;
-		color: #fff;
-		border-radius: 4px;
-		background-color: var(--color);
-	}
-
-	.add {
-		margin-left: 0.5rem;
 		color: var(--color);
-		cursor: pointer;
-		background-color: transparent;
+		font-size: 1rem;
 		border: none;
-		transition: opacity linear 0.2s;
-	}
-
-	.add:hover {
-		opacity: 0.8;
-	}
-
-	.add:disabled {
-		opacity: 0.5;
+		background-color: transparent;
 	}
 
 	.field {
-		margin-bottom: 1rem;
+		margin-bottom: 1.5rem;
 	}
 
-	.remove {
-		margin-left: 0.5rem;
-		cursor: pointer;
-		border: none;
-		background-color: transparent;
-		transition: opacity linear 0.2s;
-	}
-
-	.remove:hover {
-		opacity: 0.5;
-	}
-
-	.remove :global(svg) {
-		width: 1rem;
-		height: 1rem;
-	}
-
-	select {
-		padding: 0.5rem;
-		border: none;
-		border-radius: 4px;
+	label {
+		display: block;
+		margin-bottom: 0.2rem;
 	}
 
 	[type='text'] {
+		width: 100%;
 		padding: 0.5rem;
+		color: #fff;
 		font-size: 1rem;
 		border-radius: 4px;
-		border: none;
-		background-color: #fff;
+		background-color: #555;
 	}
 
-	[type='submit'] {
+	select {
+		width: 100%;
+		padding: 0.5rem;
+		color: #fff;
+		font-size: 1rem;
+		border-radius: 4px;
+		background-color: #555;
+	}
+
+	ul {
+		list-style: none;
+		border-radius: 4px;
+		background-color: #555;
+	}
+
+	li {
+		padding: 0.5rem;
+	}
+
+	li:not(:last-child) {
+		border-bottom: 1px solid #666;
+	}
+
+	.action {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.cta {
 		padding: 0.5rem 1rem;
 		color: #fff;
 		font-size: 1rem;
+		cursor: pointer;
 		border-radius: 4px;
 		border: none;
 		background-color: var(--color);
 		transition: opacity linear 0.2s;
 	}
 
-	[type='submit']:disabled {
-		opacity: 0.5;
+	.cancel {
+		padding: 0.5rem 1rem;
+		color: #fff;
+		font-size: 1rem;
+		cursor: pointer;
+		border: none;
+		background-color: transparent;
+		transition: opacity linear 0.2s;
 	}
 
-	.bar {
-		display: flex;
-		justify-content: flex-end;
+	:global(.isListDisplayed) {
+		margin-bottom: 0.2rem;
 	}
 </style>

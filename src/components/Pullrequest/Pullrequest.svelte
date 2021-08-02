@@ -8,12 +8,13 @@
 	import Reviews from 'components/Reviews';
 	import Icons from 'components/icons';
 	import Comment from 'components/Comment';
+	import { remote } from 'shared/remote';
 
 	export let pullRequest: PullRequestType;
 
 	let detailsModal = false;
 
-	const openLink = () => window.remote.openDefaultBrowser(pullRequest.url);
+	const openLink = () => remote.openDefaultBrowser(pullRequest.url);
 	const openModale = () => (detailsModal = true);
 	const closeModale = () => (detailsModal = false);
 </script>

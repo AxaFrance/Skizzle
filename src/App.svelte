@@ -7,10 +7,11 @@
 	import Navigation from 'components/Navigation';
 	import Notification from 'components/Notification';
 	import { Views } from 'models/skizzle/ViewsEnum';
-	import { offline, settings, needIntro } from 'shared/stores/default.store';
-	import { onMount } from 'svelte';
-	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Loader from 'components/Loader';
+	import { onMount } from 'svelte';
+	import { remote } from 'shared/remote';
+	import { offline, settings, needIntro } from 'shared/stores/default.store';
+	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Intro from 'views/Intro';
 
 	let update: boolean = false;
@@ -32,16 +33,16 @@
 	window.addEventListener('online', () => offline.set(false));
 	window.addEventListener('offline', () => offline.set(true));
 
-	// onMount(() => {
-	// 	setInterval(async () => {
-	// 		version = await window.remote.invoke('check-for-update-request');
-	// 	}, 60000);
+	onMount(() => {
+		setInterval(async () => {
+			version = await remote.invoke('check-for-update-request');
+		}, 60000);
 
-	// 	window.remote.receive('check-for-update-response', () => (update = true));
-	// });
+		remote.receive('check-for-update-response', () => (update = true));
+	});
 
 	const checkForUpdateRestart = () =>
-		window.remote.invoke('check-for-update-restart');
+		remote.invoke('check-for-update-restart');
 </script>
 
 <Header />
@@ -70,6 +71,11 @@
 
 <style>
 	@font-face {
+		font-family: 'Icons';
+		src: url('../assets/icons.woff');
+	}
+
+	@font-face {
 		font-family: 'roboto slab';
 		src: url('../assets/fonts/RobotoSlab-SemiBold.ttf') format('truetype');
 		font-weight: normal;
@@ -83,13 +89,29 @@
 		font-style: normal;
 	}
 
+	:global(::-webkit-scrollbar) {
+		width: 10px;
+	}
+
+	:global(::-webkit-scrollbar-track) {
+		background: #444;
+	}
+
+	:global(::-webkit-scrollbar-thumb) {
+		background-color: #666;
+		border-radius: 20px;
+		border: 3px solid #444;
+	}
+
 	:global(*) {
 		margin: 0;
 		padding: 0;
+		border: 0;
+		vertical-align: baseline;
 		box-sizing: border-box;
 	}
 
-	:global(html, body) {
+	:global(html), :global(body) {
 		height: 100%;
 	}
 
@@ -102,8 +124,12 @@
 		background-color: #333;
 	}
 
-	:global(button, input) {
+	:global(button), :global(input) {
 		font-family: 'roboto', sans-serif;
+	}
+
+	:global(button) {
+		cursor: pointer;
 	}
 
 	main {

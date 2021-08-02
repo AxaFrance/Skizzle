@@ -4,14 +4,14 @@ import { ProviderEnum } from 'models/skizzle';
 import {
 	OAuthAzureDevOpsConfig,
 	OAuthAzureDevOpsConfigType,
-} from '../../providers/OAuthAzureDevOpsConfig.provider';
-import { getToken } from '../token';
-import type { Dictionary } from '../utils';
+} from 'providers/OAuthAzureDevOpsConfig.provider';
+import { getToken } from 'shared/token';
 import {
 	OAuthGithubConfig,
 	OAuthGithubConfigType,
 } from 'providers/OAuthGithubConfig.provider';
 import { createStore } from './store';
+import type { Dictionary } from 'shared/utils';
 
 /**
  * Authentication
@@ -60,42 +60,41 @@ const createIntervalRefresh = (key: string, element: OAuthConfigType) => {
 };
 
 const authentication = async (client: Dictionary<OAuthConfigType>) => {
-	Object.entries(client).forEach(([key, value]) => {
+	const configs = Object.entries(client)
+
+	configs.forEach(([key, value]) => {
+		const exist = !!client[key] && Object.getOwnPropertyNames(client[key]).length >= 1;
 		switch (key) {
 			case ProviderEnum.Github:
 				clientAuthenticated.update(x => ({
 					...x,
-					isGithubAuthenticated: value && !!value.access_token,
+					isGithubAuthenticated: exist && value && !!value.access_token,
 				}));
 				break;
 			case ProviderEnum.AzureDevOps:
 				clientAuthenticated.update(x => ({
 					...x,
-					isAzureDevOpsAuthenticated: value && !!value.access_token,
+					isAzureDevOpsAuthenticated: exist && value && !!value.access_token,
 				}));
 				break;
 		}
 	});
 
-	for (const key in client) {
-		if (Object.prototype.hasOwnProperty.call(client, key)) {
-			const element = client[key];
+	for (const [key, value] of configs.filter(([key, _]) => !!client[key] && Object.getOwnPropertyNames(client[key]).length >= 1)) {
+		const interval = timer[key];
 
-			const interval = timer[key];
+		if (value && value.current_date && !interval) {
+			createIntervalRefresh(key, value);
+		}
 
-			if (element && element.current_date && !interval) {
-				createIntervalRefresh(key, element);
-			}
-
-			if (element && !element.access_token) {
-				switch (key) {
-					case ProviderEnum.AzureDevOps:
-						await getToken<OAuthAzureDevOpsConfigType>(new OAuthAzureDevOpsConfig());
-						break;
-					case ProviderEnum.Github:
-						await getToken<OAuthGithubConfigType>(new OAuthGithubConfig());
-						break;
-				}
+		if (value && !value.access_token) {
+			switch (key) {
+				case ProviderEnum.AzureDevOps:
+					await getToken<OAuthAzureDevOpsConfigType>(new OAuthAzureDevOpsConfig());
+					break;
+				case ProviderEnum.Github:
+					await getToken<OAuthGithubConfigType>(new OAuthGithubConfig());
+					break;
 			}
 		}
 	}

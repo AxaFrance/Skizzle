@@ -1,5 +1,5 @@
+import { config } from 'config';
 import type {
-	IdentityType,
 	AzureDevOpsAvatarApiType,
 	AzureDevOpsDescriptorApiType,
 	AzureDevOpsCommentApiType,
@@ -15,15 +15,14 @@ import type {
 	AzureDevOpsRepositoryApiType,
 	AzureDevOpsReviewApiType,
 	AzureDevOpsReviewsApiType,
+	IdentityType,
 } from 'models/api';
 import type { HeaderType } from 'models/skizzle';
 import type { OAuthAzureDevOpsConfigType } from 'providers/OAuthAzureDevOpsConfig.provider';
 import { Requester } from './Requester';
 
 export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigType> {
-	private readonly API_VERSION = '6.1-preview';
-
-	protected getHeader(config: OAuthAzureDevOpsConfigType): HeaderType {
+	public getHeader(config: OAuthAzureDevOpsConfigType): HeaderType {
 		return {
 			'content-type': 'application/json',
 			authorization: config.access_token,
@@ -31,16 +30,12 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 	}
 
 	public async getProfile(userId: string): Promise<AzureDevOpsProfileApiType> {
-		return super.fetch(
-			`https://app.vssps.visualstudio.com/_apis/profile/profiles/${userId}?details=true&api-version=${this.API_VERSION}`,
-		);
+		return super.fetch(config.AzureDevOps.get.profile(userId));
 	}
 
 	public async getDescriptor(userId: IdentityType): Promise<string> {
 		return (
-			await super.fetch<AzureDevOpsDescriptorApiType>(
-				`https://vssps.dev.azure.com/_apis/graph/descriptors/${userId}?api-version=${this.API_VERSION}`,
-			)
+			await super.fetch<AzureDevOpsDescriptorApiType>(config.AzureDevOps.get.descriptor(userId))
 		).value;
 	}
 
@@ -49,9 +44,7 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		organizationName: string,
 	): Promise<string> {
 		return (
-			await super.fetch<AzureDevOpsAvatarApiType>(
-				`https://vssps.dev.azure.com/${organizationName}/_apis/graph/Subjects/${descriptor}/avatars?size=large&api-version=${this.API_VERSION}`,
-			)
+			await super.fetch<AzureDevOpsAvatarApiType>(config.AzureDevOps.get.avatar(organizationName, descriptor))
 		).value;
 	}
 
@@ -59,31 +52,39 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		userId?: string,
 	): Promise<AzureDevOpsOrganizationApiType[]> {
 		return (
-			await super.fetch<AzureDevOpsOrganizationsApiType>(
-				`https://app.vssps.visualstudio.com/_apis/accounts?memberId=${userId}&api-version=${this.API_VERSION}`,
-			)
+			await super.fetch<AzureDevOpsOrganizationsApiType>(config.AzureDevOps.get.organizations(userId))
 		).value;
 	}
 
 	public async getProjects(
 		organization?: string,
 	): Promise<AzureDevOpsProjectApiType[]> {
-		return (
-			await super.fetch<AzureDevOpsProjectsApiType>(
-				`https://dev.azure.com/${organization}/_apis/projects?$top=1000&api-version=${this.API_VERSION}`,
-			)
-		).value;
+		try { 
+			const projects = (
+				await super.fetch<AzureDevOpsProjectsApiType>(config.AzureDevOps.get.projects(organization))
+			).value;
+
+			return projects;
+		} catch (err) {
+			console.error(err);
+			return [];
+		}
 	}
 
 	public async getRepositories(
 		organization?: string,
 		project?: string,
 	): Promise<AzureDevOpsRepositoryApiType[]> {
-		return (
-			await super.fetch<AzureDevOpsRepositoriesApiType>(
-				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories?includeLinks=true&api-version=${this.API_VERSION}`,
-			)
-		).value;
+		try { 
+			const repositories = (
+				await super.fetch<AzureDevOpsRepositoriesApiType>(config.AzureDevOps.get.repositories(organization, project))
+			).value;
+	
+			return repositories;
+		} catch (err) {
+			console.error(err);
+			return [];
+		}
 	}
 
 	public async getPullRequests(
@@ -92,9 +93,7 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		repository?: string,
 	): Promise<AzureDevOpsPullRequestApiType[]> {
 		const pullRequests = (
-			await super.fetch<AzureDevOpsPullRequestsApiType>(
-				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repository}/pullRequests?searchCriteria.status=active&includeLinks=true&api-version=${this.API_VERSION}`,
-			)
+			await super.fetch<AzureDevOpsPullRequestsApiType>(config.AzureDevOps.get.pullRequests(organization, project, repository))
 		).value;
 
 		return pullRequests
@@ -109,9 +108,7 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		pullRequest?: string,
 	): Promise<AzureDevOpsCommentApiType[]> {
 		return (
-			await super.fetch<AzureDevOpsCommentsApiType>(
-				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repository}/pullRequests/${pullRequest}/threads?api-version=${this.API_VERSION}`,
-			)
+			await super.fetch<AzureDevOpsCommentsApiType>(config.AzureDevOps.get.comments(organization, project, repository, pullRequest))
 		).value;
 	}
 
@@ -122,9 +119,7 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		pullRequest?: string,
 	): Promise<AzureDevOpsReviewApiType[]> {
 		return (
-			await super.fetch<AzureDevOpsReviewsApiType>(
-				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repository}/pullRequests/${pullRequest}/reviewers?api-version=${this.API_VERSION}`,
-			)
+			await super.fetch<AzureDevOpsReviewsApiType>(config.AzureDevOps.get.reviews(organization, project, repository, pullRequest),)
 		).value;
 	}
 }

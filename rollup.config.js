@@ -12,6 +12,31 @@ import svg from 'rollup-plugin-svelte-svg';
 const createPreprocessors = require('./svelte.config').createPreprocessors;
 const production = !process.env.ROLLUP_WATCH;
 
+function serve() {
+	let server;
+
+	function toExit() {
+		if (server) server.kill(0);
+	}
+
+	return {
+		writeBundle() {
+			if (server) return;
+			server = require('child_process').spawn(
+				'npm',
+				['run', 'electron'],
+				{
+					stdio: ['ignore', 'inherit', 'inherit'],
+					shell: true,
+				},
+			);
+
+			process.on('SIGTERM', toExit);
+			process.on('exit', toExit);
+		},
+	};
+}
+
 export default {
 	input: 'src/index.ts',
 	output: {
@@ -42,6 +67,7 @@ export default {
 			sourceMap: !production,
 			inlineSources: !production,
 		}),
+		!production && serve(),
 		!production && livereload('public'),
 		production && terser(),
 		filesize(),

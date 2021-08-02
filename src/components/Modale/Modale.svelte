@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let onClose: () => void;
-	export let fullHeight:boolean = true;
+	export let fullHeight: boolean = true;
 </script>
 
 <style>

@@ -1,6 +1,7 @@
-<script>
+<script lang="ts">
 	import {
 		offline,
+		profiles,
 		pullRequests,
 		repositories,
 	} from 'shared/stores/default.store';
@@ -12,6 +13,7 @@
 	export let profile: ProfileType;
 
 	const logout = (provider: ProviderEnum) => {
+		profiles.update(n => n.filter(x => profile.id !== x.id));
 		repositories.reset(provider);
 		pullRequests.reset(provider);
 		client.update(n => ({
@@ -26,8 +28,8 @@
 		<img width="64" height="64" src={profile.avatar} alt={profile.name} />
 	</div>
 	<div class="user">
-		<span class="name">{profile.name}</span>
-		{#if profile.email}<span class="email">{profile.email}</span>{/if}
+		<span class="name">{(profile?.email) ? profile?.name : 'Utilisateur/Utilisatrice anonyme'}</span>
+		{#if profile?.email}<span class="email">{profile.email}</span>{/if}
 	</div>
 	<button
 		on:click={() => logout(profile.provider)}

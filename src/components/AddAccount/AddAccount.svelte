@@ -1,9 +1,25 @@
-<script>
+<script lang="ts">
 	import Icons from 'components/icons';
 	import { isFetchingData, offline } from 'shared/stores/default.store';
+	import type { ProviderEnum } from 'models/skizzle';
+	import { remote } from 'shared/remote';
+	import { client } from 'shared/stores/authentication.store';
 	
-	export let onClick: () => void;
+	export let provider: ProviderEnum;
 	export let text: string;
+
+	const authorize = (provider: ProviderEnum, isSilent = false) => {
+		remote.send('oauth', provider, isSilent);
+		remote.receive('getToken', args =>
+			client.update(n => ({
+				...n,
+				[provider]: {
+					...n[provider],
+					...args,
+				},
+			})),
+		);
+	};
 </script>
 
 <style>
@@ -33,5 +49,5 @@
 </style>
 
 <div>
-	<button on:click={onClick} disabled={$isFetchingData || $offline}><Icons.AddAccount />{text}</button>
+	<button role="button" title={text} on:click={() => authorize(provider)} disabled={$isFetchingData || $offline}><Icons.AddAccount />{text}</button>
 </div>

@@ -25,8 +25,8 @@
 
 <div class={`search ${className}`} style={`margin-bottom: ${vspace}rem`}>
 	<Icons.Search color="#4e4e4e" />
-	<form on:submit|preventDefault={search}>
-		<input bind:value={query} {disabled} {placeholder} />
+	<form aria-label="valider la recherche de repository" on:submit|preventDefault={search}>
+		<input aria-label="rechercher les repository par valeur" bind:value={query} {disabled} {placeholder} />
 		<input type="submit" />
 		{#if query}
 			<button on:click|preventDefault={cancel} class="delete">
