@@ -1,37 +1,40 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import Icons from 'components/icons';
-	export let onSubmit: (string) => void;
-	export let onCancel: () => void;
-	export let disabled: boolean;
+
+	export let disabled: boolean = false;
 	export let placeholder: string = '';
+	export let vspace: number = 0;
+
+	let className = '';
+	export { className as class };
+
+	const dispatch = createEventDispatcher();
 
 	let query: string = '';
 
-	const search = event => {
-		event.preventDefault();
-		onSubmit(query);
+	const search = () => {
+		dispatch('submit', { query });
 	};
 
-	const cancel = event => {
-		event.preventDefault();
+	const cancel = () => {
 		query = '';
-		onCancel();
+		dispatch('cancel');
 	};
 </script>
 
-<div class="search">
+<div class={`search ${className}`} style={`margin-bottom: ${vspace}rem`}>
 	<Icons.Search color="#4e4e4e" />
-	<form aria-label="valider la recherche de repository" on:submit={search}>
+	<form aria-label="valider la recherche de repository" on:submit|preventDefault={search}>
 		<input aria-label="rechercher les repository par valeur" bind:value={query} {disabled} {placeholder} />
 		<input type="submit" />
 		{#if query}
-			<button on:click={cancel} class="delete">
+			<button on:click|preventDefault={cancel} class="delete">
 				<Icons.Delete color="#4e4e4e" />
 			</button>
 		{/if}
 	</form>
 </div>
-
 
 <style>
 	form {
@@ -44,8 +47,6 @@
 
 	.search {
 		position: relative;
-		width: 20rem;
-		margin-bottom: 2rem;
 	}
 
 	.search > :global(svg) {
@@ -80,4 +81,3 @@
 		transform: translateY(-50%);
 	}
 </style>
-

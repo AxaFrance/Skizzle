@@ -22,7 +22,7 @@ const getToken = async <T extends OAuthConfigType>(
 
 		client.update(n => ({
 			...n,
-			[provider]: undefined,
+			[provider]: {},
 		}));
 	} else {
 		if (result.access_token) {

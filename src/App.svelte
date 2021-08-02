@@ -7,11 +7,12 @@
 	import Navigation from 'components/Navigation';
 	import Notification from 'components/Notification';
 	import { Views } from 'models/skizzle/ViewsEnum';
-	import { offline, settings } from 'shared/stores/default.store';
-	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Loader from 'components/Loader';
 	import { onMount } from 'svelte';
 	import { remote } from 'shared/remote';
+	import { offline, settings, needIntro } from 'shared/stores/default.store';
+	import { clientAuthenticated } from 'shared/stores/authentication.store';
+	import Intro from 'views/Intro';
 
 	let update: boolean = false;
 	let version: string;
@@ -48,19 +49,23 @@
 
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
 	<Boundary onError={console.error}>
-		{#if update}
-			<h1>{version}</h1>
-			<p>A new version has been downloaded.</p>
-			<p>Restart the application to apply the updates.</p>
-			<button>Later</button>
-			<button on:click={() => checkForUpdateRestart()}>Restart</button>
+		{#if $needIntro}
+			<Intro />
+		{:else}
+			{#if update}
+				<h1>{version}</h1>
+				<p>A new version has been downloaded.</p>
+				<p>Restart the application to apply the updates.</p>
+				<button>Later</button>
+				<button on:click={() => checkForUpdateRestart()}>Restart</button>
+			{/if}
+			<Loader />
+			<Navigation {currentView} {onViewChange} />
+			<div>
+				<svelte:component this={views[currentView]} />
+			</div>
+			<Notification />
 		{/if}
-		<Loader />
-		<Navigation {currentView} {onViewChange} />
-		<div>
-			<svelte:component this={views[currentView]} />
-		</div>
-		<Notification />
 	</Boundary>
 </main>
 

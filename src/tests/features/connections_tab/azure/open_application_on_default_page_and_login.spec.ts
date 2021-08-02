@@ -25,8 +25,8 @@ test("The application is opened and click on accounts tabs and connect user to a
 
   render(App, {});
 
-  clickButton('Ajouter un compte Azure DevOps');
+  clickButton('Ajouter un compte AzureDevOps');
   connectWith(ProviderEnum.AzureDevOps, config);
 
-  await screen.findByText('Votre compte Azure DevOps');
+  await screen.findByText('Votre compte AzureDevOps');
 })

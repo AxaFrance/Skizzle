@@ -28,10 +28,16 @@
 		<img width="64" height="64" src={profile.avatar} alt={profile.name} />
 	</div>
 	<div class="user">
-		<span class="name">{profile?.name}</span>
+		<span class="name">{(profile?.email) ? profile?.name : 'Utilisateur/Utilisatrice anonyme'}</span>
 		{#if profile?.email}<span class="email">{profile.email}</span>{/if}
 	</div>
-	<button on:click={() => logout(profile.provider)} title="Déconnexion" disabled={$offline}><Icons.Delete /></button>
+	<button
+		on:click={() => logout(profile.provider)}
+		title="Déconnexion"
+		disabled={$offline}
+	>
+		<Icons.Delete />
+	</button>
 </div>
 
 <style>

@@ -54,8 +54,7 @@
 			</select>
 		</Fieldset>
 
-		<Fieldset title="Proxy">
-			<label for="proxy">Serveur et port (ex: http://localhost:3000) :</label>
+		<Fieldset title="Proxy" intro="URL du serveur de proxy">
 			<input id="proxy" type="url" bind:value={$settings.proxy} />
 		</Fieldset>
 

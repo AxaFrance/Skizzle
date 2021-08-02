@@ -56,7 +56,7 @@ test("The application is opened and the user search for a repository", async () 
   render(App, {});
 
   await changeTabAsync("Comptes");
-  await screen.findByText('Votre compte Azure DevOps');
+  await screen.findByText('Votre compte AzureDevOps');
   await inputAsync("rechercher les repository par valeur", { value: repository.name });
   await formAsync("valider la recherche de repository");
   await screen.findByText('Project1 / Repository1');

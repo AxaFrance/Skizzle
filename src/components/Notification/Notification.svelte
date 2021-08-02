@@ -4,20 +4,23 @@
 	import Icons from 'components/icons';
 
 	const remove = (id: string) => () => {
-		notifications.update(_notifications => _notifications.filter(notification => notification.id !== id));
-	}
+		notifications.update(_notifications =>
+			_notifications.filter(notification => notification.id !== id),
+		);
+	};
 
 	const timersId = [];
 
 	notifications.subscribe(_notifications => {
-		const newNotification = _notifications.find(notification => !timersId.includes(notification.id));
+		const newNotification = _notifications?.find(
+			notification => !timersId.includes(notification.id),
+		);
 
-		if(newNotification) {
+		if (newNotification) {
 			setTimeout(remove(newNotification.id), 5000);
-			timersId.push(newNotification.id)
+			timersId.push(newNotification.id);
 		}
 	});
-
 </script>
 
 {#if $notifications.length}
@@ -71,11 +74,11 @@
 	}
 
 	div:before {
-		background-color: rgba(255,255,255,0.5);
+		background-color: rgba(255, 255, 255, 0.5);
 	}
 
 	div:after {
-		background-color: rgba(255,255,255,0.8);
+		background-color: rgba(255, 255, 255, 0.8);
 		animation: fill 5s;
 		transform-origin: 0 center;
 	}
@@ -98,12 +101,20 @@
 	}
 
 	@keyframes slideIn {
-		0% { transform: translateX(150%); }
-		100% { transform: translateX(0); }
+		0% {
+			transform: translateX(150%);
+		}
+		100% {
+			transform: translateX(0);
+		}
 	}
 
 	@keyframes fill {
-		0% { transform: scaleX(0); }
-		100% { transform: scaleX(1); }
+		0% {
+			transform: scaleX(0);
+		}
+		100% {
+			transform: scaleX(1);
+		}
 	}
 </style>

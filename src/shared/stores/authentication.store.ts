@@ -60,26 +60,27 @@ const createIntervalRefresh = (key: string, element: OAuthConfigType) => {
 };
 
 const authentication = async (client: Dictionary<OAuthConfigType>) => {
-	const configs = Object.entries(client).filter(([key, _]) => !!client[key] && Object.getOwnPropertyNames(client[key]).length >= 1);
+	const configs = Object.entries(client)
 
 	configs.forEach(([key, value]) => {
+		const exist = !!client[key] && Object.getOwnPropertyNames(client[key]).length >= 1;
 		switch (key) {
 			case ProviderEnum.Github:
 				clientAuthenticated.update(x => ({
 					...x,
-					isGithubAuthenticated: value && !!value.access_token,
+					isGithubAuthenticated: exist && value && !!value.access_token,
 				}));
 				break;
 			case ProviderEnum.AzureDevOps:
 				clientAuthenticated.update(x => ({
 					...x,
-					isAzureDevOpsAuthenticated: value && !!value.access_token,
+					isAzureDevOpsAuthenticated: exist && value && !!value.access_token,
 				}));
 				break;
 		}
 	});
 
-	for (const [key, value] of configs) {
+	for (const [key, value] of configs.filter(([key, _]) => !!client[key] && Object.getOwnPropertyNames(client[key]).length >= 1)) {
 		const interval = timer[key];
 
 		if (value && value.current_date && !interval) {
