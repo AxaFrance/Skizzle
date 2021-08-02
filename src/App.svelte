@@ -40,8 +40,7 @@
 		remote.receive('check-for-update-response', () => (update = true));
 	});
 
-	const checkForUpdateRestart = () =>
-		remote.invoke('check-for-update-restart');
+	const checkForUpdateRestart = () => remote.invoke('check-for-update-restart');
 </script>
 
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
@@ -108,7 +107,8 @@
 		box-sizing: border-box;
 	}
 
-	:global(html), :global(body) {
+	:global(html),
+	:global(body) {
 		height: 100%;
 	}
 
@@ -121,7 +121,8 @@
 		background-color: #333;
 	}
 
-	:global(button), :global(input) {
+	:global(button),
+	:global(input) {
 		font-family: 'roboto', sans-serif;
 	}
 

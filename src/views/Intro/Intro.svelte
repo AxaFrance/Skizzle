@@ -6,6 +6,7 @@
 	import Tabs from 'components/Tabs';
 	import { needIntro } from 'shared/stores/default.store';
 	import ProviderAccount from 'components/ProviderAccount';
+	import type { TabsType } from 'models/skizzle/TabsType';
 
 	let step = 0;
 
@@ -24,7 +25,7 @@
 			order: 1,
 			disabled: !$clientAuthenticated.isGithubAuthenticated,
 		},
-	};
+	} as TabsType;
 
 	const next = () => (step += 1);
 	const previous = () => (step -= 1);

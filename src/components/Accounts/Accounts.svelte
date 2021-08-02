@@ -3,10 +3,11 @@
 	import Tabs from 'components/Tabs';
 	import Icons from 'components/icons';
 	import ProviderAccount from 'components/ProviderAccount';
+	import type { TabsType } from 'models/skizzle/TabsType';
 
 	let provider = ProviderEnum.AzureDevOps;
 
-	const tabs = {
+	const tabs: TabsType = {
 		[ProviderEnum.AzureDevOps]: {
 			label: 'Azure DevOps',
 			icon: Icons.AzureDevOps,
@@ -41,7 +42,8 @@
 		background-color: #4e4e4e;
 	}
 
-	.content :global(.loader), .content :global(.error) {
+	.content :global(.loader),
+	.content :global(.error) {
 		position: absolute;
 		left: 50%;
 		top: 50%;

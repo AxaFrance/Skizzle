@@ -1,17 +1,18 @@
 <script lang="ts">
-	import { v4 as uuidv4 } from 'uuid';
-	import {
-		pullRequests,
-		customLists,
-		notifications,
-	} from 'shared/stores/default.store';
-	import PullRequest from 'components/PullRequest';
-	import Tabs from 'components/Tabs';
 	import CustomListSettings from 'components/CustomListSettings';
 	import Modale from 'components/Modale';
+	import PullRequest from 'components/PullRequest';
+	import Tabs from 'components/Tabs';
 	import type { CustomListType } from 'models/skizzle';
-	import { getPullRequestsFromCustomSettings } from 'shared/utils';
+	import type { TabsType } from 'models/skizzle/TabsType';
 	import { remote } from 'shared/remote';
+	import {
+		customLists,
+		notifications,
+		pullRequests,
+	} from 'shared/stores/default.store';
+	import { getPullRequestsFromCustomSettings } from 'shared/utils';
+	import { v4 as uuidv4 } from 'uuid';
 
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;
@@ -55,12 +56,13 @@
 	};
 
 	const filterList = (customList: CustomListType) => {
-		return getPullRequestsFromCustomSettings($pullRequests, customList)
-					.filter(x => !customList.hiddenPullRequestsIds.some(y => x.pullRequestId === y));
+		return getPullRequestsFromCustomSettings($pullRequests, customList).filter(
+			x => !customList.hiddenPullRequestsIds.some(y => x.pullRequestId === y),
+		);
 	};
 
 	const getTabs = (lists: CustomListType[]) => {
-		const tabs = {
+		const tabs: TabsType = {
 			all: {
 				label: 'Toutes',
 				order: 0,
@@ -72,10 +74,26 @@
 				label: list.name,
 				order: index + 1,
 				counter: filterList(list).length,
+				sortable: true,
 			};
 		});
 
 		return tabs;
+	};
+
+	const onSave = (tabs: TabsType) => {
+		const tabIds = Object.entries(tabs)
+			.sort(([a], [b]) => {
+				if (tabs[a].order < tabs[b].order) return -1;
+				if (tabs[a].order > tabs[b].order) return 1;
+				return 0;
+			})
+			.filter(([_, tab]) => tab.sortable)
+			.map(([id]) => id);
+
+		customLists.update(_lists =>
+			tabIds.map(id => $customLists.find(c => c.id === id)),
+		);
 	};
 
 	$: tabs = getTabs($customLists);
@@ -92,11 +110,16 @@
 	onCreation={() => {
 		creatingList = true;
 	}}
+	{onSave}
 />
 
 {#if creatingList || modifyingListId}
 	<Modale onClose={closeModale}>
-		<CustomListSettings customList={$customLists.find(({ id }) => id === modifyingListId)} isInCreationMode={creatingList} onDone={closeModale} />
+		<CustomListSettings
+			customList={$customLists.find(({ id }) => id === modifyingListId)}
+			isInCreationMode={creatingList}
+			onDone={closeModale}
+		/>
 	</Modale>
 {/if}
 
