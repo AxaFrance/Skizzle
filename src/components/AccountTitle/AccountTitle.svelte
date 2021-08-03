@@ -6,7 +6,7 @@
 		padding-left: 0.5rem;
 		color: #fff;
 		font-size: 1.3rem;
-		font-weight: bold;
+		font-weight: normal;
 		font-family: 'roboto slab', sans-serif;
 		border-left: 4px solid var(--color);
 		align-items: center;

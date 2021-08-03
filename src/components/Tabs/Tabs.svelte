@@ -17,6 +17,7 @@
 	.tab {
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		overflow: hidden;
 		max-width: 10rem;
 		padding: 1rem;
@@ -74,7 +75,7 @@
 	}
 
 	small {
-		margin-left: auto;
+		margin-left: 0.2rem;
 		color: var(--color);
 	}
 
@@ -84,6 +85,27 @@
 		white-space: nowrap;
 		text-overflow: ellipsis;
 	}
+
+	.select {
+		width: 100%;
+		padding: 0.5rem;
+		color: #fff;
+		cursor: pointer;
+		font-family: 'Source sans pro', sans-serif;
+		border: 0;
+		background-color: transparent;
+		transition: opacity linear 0.2s;
+	}
+
+	.select:hover {
+		opacity: 0.8;
+	}
+
+	@media only screen and (max-width: 300px) {
+		nav {
+			padding: 0.5rem;
+		}
+	}
 </style>
 
 <script lang="ts">
@@ -92,30 +114,54 @@
 	export let onChange: (value: any) => void
 	export let current: any
 	export let onCreation: () => void = undefined
+
+	let width
 </script>
 
-<nav>
-	{#each Object.keys(data).sort((a, b) => (data[a].order < data[b].order ? -1 : 1)) as tab}
-		<button
-			title={data[tab].label}
-			class="tab"
-			class:fixed={tab === 'all'}
-			class:current={current === tab || Object.keys(data).length === 1}
-			on:click={() => onChange(tab)}
-			disabled={data[tab].disabled}
-		>
-			{#if data[tab].icon}
-				<svelte:component this={data[tab].icon} />
+<div bind:clientWidth={width}>
+	<nav>
+		{#if width > 300}
+			{#each Object.keys(data).sort( (a, b) => (data[a].order < data[b].order ? -1 : 1) ) as tab}
+				<button
+					title={data[tab].label}
+					class="tab"
+					class:fixed={tab === 'all'}
+					class:current={current === tab || Object.keys(data).length === 1}
+					on:click={() => onChange(tab)}
+					disabled={data[tab].disabled}
+				>
+					<span>
+						{#if data[tab].icon}
+							<svelte:component this={data[tab].icon} />
+						{/if}
+
+						{data[tab].label}
+					</span>
+					{#if data[tab].counter}<small>{data[tab].counter}</small>{/if}
+				</button>
+			{/each}
+			{#if onCreation}
+				<button on:click={onCreation} title="Créer une nouvelle liste" class="add">
+					<Icons.Plus />
+				</button>
 			{/if}
-			<span>
-				{data[tab].label}
-			</span>
-			{#if data[tab].counter}<small>{data[tab].counter}</small>{/if}
-		</button>
-	{/each}
-	{#if onCreation}
-		<button on:click={onCreation} title="Créer une nouvelle liste" class="add">
-			<Icons.Plus />
-		</button>
-	{/if}
-</nav>
+		{:else}
+			<select
+				on:blur={() => {}}
+				class="select"
+				value={current}
+				on:change={e => {
+					console.log({ e })
+					onChange(e.target.value)
+				}}
+			>
+				{#each Object.keys(data).sort( (a, b) => (data[a].order < data[b].order ? -1 : 1) ) as tab}
+					<option value={tab}>
+						{data[tab].label}
+						{#if data[tab].counter}({data[tab].counter}){/if}
+					</option>
+				{/each}
+			</select>
+		{/if}
+	</nav>
+</div>

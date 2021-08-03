@@ -1,20 +1,15 @@
-<script lang="ts">
-	export let onClose: () => void;
-	export let fullHeight: boolean = true;
-</script>
-
 <style>
 	.overlay {
 		position: fixed;
 		left: 0;
-		top: 2rem;
+		top: 0;
 		right: 0;
 		bottom: 0;
 		z-index: 2;
-		backdrop-filter: blur(15px);
-		background-color: rgba(0, 0, 0, 0.5);
-		animation: fadeIn linear 0.3s;
+		backdrop-filter: blur(40px);
+		background-color: rgba(0, 0, 0, 0.1);
 	}
+
 	.modale {
 		position: fixed;
 		top: 50%;
@@ -25,11 +20,10 @@
 		max-height: calc(100vh - 10rem);
 		transform: translateX(-50%) translateY(-50%);
 		border-radius: 8px;
-		background-color: #333;
-		animation: fadeIn linear 0.3s;
+		background-color: #444;
 	}
 
-	.full-height {
+	.fullHeight {
 		height: calc(100vh - 10rem);
 	}
 
@@ -55,21 +49,28 @@
 		overflow: auto;
 	}
 
-	@keyframes fadeIn {
-		0% {
-			opacity: 0;
+	@media only screen and (max-width: 500px) {
+		.modale {
+			width: calc(100vw - 1rem);
+			max-height: calc(100vh - 4rem);
 		}
-		100% {
-			opacity: 1;
+
+		.fullHeight {
+			height: calc(100vh - 1rem);
 		}
 	}
 </style>
 
-<div class="overlay">
-	<div class={`modale ${fullHeight ? 'full-height' : ''}`}>
-		<button on:click={onClose}>Fermer</button>
-		<div class="content">
-			<slot />
-		</div>
+<script lang="ts">
+	import { fly, fade } from 'svelte/transition'
+	export let onClose: () => void
+	export let fullHeight: boolean = true
+</script>
+
+<div class="overlay" on:click={onClose} in:fade out:fade />
+<div in:fly={{ y: 200 }} out:fly={{ y: 200 }} class="modale" class:fullHeight>
+	<button on:click={onClose}>Fermer</button>
+	<div class="content">
+		<slot />
 	</div>
 </div>
