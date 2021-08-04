@@ -13,12 +13,14 @@
 	import { offline, settings, needIntro } from 'shared/stores/default.store';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Intro from 'views/Intro';
+	import Builds from 'components/Builds';
 
 	let update: boolean = false;
 	let version: string;
 
 	const views = {
 		[Views.Main]: Main,
+		[Views.Builds]: Builds,
 		[Views.Accounts]: Accounts,
 		[Views.Settings]: Settings,
 	};

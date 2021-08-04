@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icons from 'components/icons';
 	import { Views } from 'models/skizzle';
+	import { repositories } from 'shared/stores/default.store';
 
 	export let currentView: Views;
 	export let onViewChange: Function;
@@ -62,6 +63,10 @@
 	<button title="Listes" role="tab" on:click={setView(Views.Main)} class={getClass(Views.Main)}>
 		<Icons.List color={getColor(Views.Main)} />
 		Listes
+	</button>
+	<button title="Builds" role="tab" on:click={setView(Views.Builds)} class={getClass(Views.Builds)} disabled={$repositories.length === 0}>
+		<Icons.Accounts color={getColor(Views.Builds)} />
+		Builds
 	</button>
 	<button title="Comptes" role="tab" on:click={setView(Views.Accounts)} class={getClass(Views.Accounts)}>
 		<Icons.Accounts color={getColor(Views.Accounts)} />
