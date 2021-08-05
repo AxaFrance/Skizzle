@@ -7,6 +7,7 @@ import {
 	Tray,
 	dialog,
 	clipboard,
+	nativeTheme
 } from 'electron';
 import OAuthWindow from './OAuthWindow';
 import { ProviderEnum } from '../models/skizzle/ProviderEnum';
@@ -55,13 +56,15 @@ const hangOrCrash = async (window: BrowserWindow) => {
 };
 
 const createWindow = () => {
+	const isMacOs = process.mas === true || process.platform === 'darwin';
+	nativeTheme.themeSource = 'system';
 	window = new BrowserWindow({
 		title: 'Skizzle',
 		center: true,
 		width: 1024,
 		height: 768,
 		resizable: true,
-		frame: false,
+		icon: path.join(__dirname, '../../', (isMacOs) ? 'assets/icon.icns' : 'assets/icon.ico'),
 		webPreferences: {
 			preload: path.join(__dirname, "../../preload.js"),
 			contextIsolation: true,
@@ -99,12 +102,13 @@ const createWindow = () => {
 	window.flashFrame(true);
 
 	const iconName =
-		process.mas === true || process.platform === 'darwin'
+		isMacOs
 			? 'assets/icon-macos.png'
 			: 'assets/icon.png';
 
 	const iconPath = path.join(__dirname, '../../', iconName);
 
+	window.setMenuBarVisibility(false);
 	tray = new Tray(iconPath);
 	tray.setToolTip('Skizzle application');
 
