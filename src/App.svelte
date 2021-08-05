@@ -3,7 +3,6 @@
 	import Accounts from 'components/Accounts';
 	import Main from 'components/Main';
 	import Settings from 'components/Settings';
-	import Header from 'components/Header';
 	import Navigation from 'components/Navigation';
 	import Notification from 'components/Notification';
 	import { Views } from 'models/skizzle/ViewsEnum';
@@ -44,8 +43,6 @@
 	const checkForUpdateRestart = () =>
 		remote.invoke('check-for-update-restart');
 </script>
-
-<Header />
 
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
 	<Boundary onError={console.error}>
