@@ -59,15 +59,15 @@
 </style>
 
 <nav>
-	<button title="Listes" role="tab" on:click={setView(Views.Main)} class={getClass(Views.Main)}>
+	<button title="Listes" on:click={setView(Views.Main)} class={getClass(Views.Main)}>
 		<Icons.List color={getColor(Views.Main)} />
 		Listes
 	</button>
-	<button title="Comptes" role="tab" on:click={setView(Views.Accounts)} class={getClass(Views.Accounts)}>
+	<button title="Comptes" on:click={setView(Views.Accounts)} class={getClass(Views.Accounts)}>
 		<Icons.Accounts color={getColor(Views.Accounts)} />
 		Comptes
 	</button>
-	<button title="Réglages" role="tab" on:click={setView(Views.Settings)} class={getClass(Views.Settings)}>
+	<button title="Réglages" on:click={setView(Views.Settings)} class={getClass(Views.Settings)}>
 		<Icons.Settings color={getColor(Views.Settings)} />
 		Réglages
 	</button>

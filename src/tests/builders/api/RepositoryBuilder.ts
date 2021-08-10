@@ -8,7 +8,7 @@ class AzureDevOpsRepositoryBuilder {
     this.repository.id = v4();
   }
 
-  withRepositoryName(name: string): AzureDevOpsRepositoryBuilder {
+  withName(name: string): AzureDevOpsRepositoryBuilder {
     this.repository.name = name;
 
     return this;
@@ -26,13 +26,13 @@ class GithubRepositoryBuilder {
     this.repository.id = v4();
   }
 
-  withRepositoryName(name: string): GithubRepositoryBuilder {
+  withName(name: string): GithubRepositoryBuilder {
     this.repository.name = name;
 
     return this;
   }
 
-  withRepositoryOwner(owner: string): GithubRepositoryBuilder {
+  withOwner(owner: string): GithubRepositoryBuilder {
     this.repository.owner = {
       login: owner
     };
@@ -40,13 +40,13 @@ class GithubRepositoryBuilder {
     return this;
   }
 
-  withRepositoryFullName(fullName: string): GithubRepositoryBuilder {
+  withFullName(fullName: string): GithubRepositoryBuilder {
     this.repository.full_name = fullName;
 
     return this;
   }
 
-  withRepositoryCloneUrl(cloneUrl: string): GithubRepositoryBuilder {
+  withCloneUrl(cloneUrl: string): GithubRepositoryBuilder {
     this.repository.clone_url = cloneUrl;
 
     return this;

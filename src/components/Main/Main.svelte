@@ -57,7 +57,7 @@
 
 	const filterList = (customList: CustomListType) => {
 		return getPullRequestsFromCustomSettings($pullRequests, customList).filter(
-			x => !customList.hiddenPullRequestsIds.some(y => x.pullRequestId === y),
+			x => !customList.hiddenPullRequestsIds?.some(y => x.pullRequestId === y),
 		);
 	};
 

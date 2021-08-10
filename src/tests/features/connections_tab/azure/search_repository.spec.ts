@@ -1,18 +1,18 @@
-import { connectWith } from "tests/actions/connection";
-import { ProviderEnum } from "models/skizzle";
-import { render,screen } from "@testing-library/svelte";
-import { AzureDevOpsDescriptorBuilder } from "tests/builders/api/DescriptorBuilder";
-import { AzureDevOpsProfileBuilder } from "tests/builders/api/ProfileBuilder";
-import { OAuthConfigBuilder } from "tests/builders/providers/OAuthConfigBuilder";
-import { RequesterBuilder } from "tests/builders/requesters/RequesterBuilder";
-import { changeTabAsync } from "tests/actions/changeTab";
+import { render, screen } from "@testing-library/svelte";
 import App from 'App.svelte';
-import { inputAsync } from "tests/actions/input";
+import { config as urls } from 'config';
+import { ProviderEnum } from "models/skizzle";
+import { clickButton } from "tests/actions/clickButton";
+import { connectWith } from "tests/actions/connection";
 import { formAsync } from "tests/actions/form";
+import { inputAsync } from "tests/actions/input";
+import { AzureDevOpsDescriptorBuilder } from "tests/builders/api/DescriptorBuilder";
 import { AzureDevOpsOrganizationBuilder, AzureDevOpsOrganizationsBuilder } from "tests/builders/api/OrganizationBuilder";
+import { AzureDevOpsProfileBuilder } from "tests/builders/api/ProfileBuilder";
 import { AzureDevOpsProjectBuilder, AzureDevOpsProjectsBuilder } from "tests/builders/api/ProjectBuilder";
 import { AzureDevOpsRepositoriesBuilder, AzureDevOpsRepositoryBuilder } from "tests/builders/api/RepositoryBuilder";
-import { config as urls } from 'config';
+import { OAuthConfigBuilder } from "tests/builders/providers/OAuthConfigBuilder";
+import { RequesterBuilder } from "tests/builders/requesters/RequesterBuilder";
 
 test("The application is opened and the user search for a repository", async () => {
   const config = new OAuthConfigBuilder()
@@ -38,7 +38,7 @@ test("The application is opened and the user search for a repository", async () 
     .withProjects(project)
     .build();
   const repository = new AzureDevOpsRepositoryBuilder()
-    .withRepositoryName('Repository1')
+    .withName('Repository1')
     .build();
   const repositories = new AzureDevOpsRepositoriesBuilder()
     .withRepositories(repository)
@@ -49,13 +49,15 @@ test("The application is opened and the user search for a repository", async () 
     .get(urls.AzureDevOps.get.descriptor(profile.id), descriptor)
     .get(urls.AzureDevOps.get.organizations(profile.id), organizations)
     .get(urls.AzureDevOps.get.projects(organization.accountName), projects)
-    .get(urls.AzureDevOps.get.repositories(organization.accountName, project.id), repositories);
+    .get(urls.AzureDevOps.get.repositories(organization.accountName, project.id), repositories)
+    .build();
   
   connectWith(ProviderEnum.AzureDevOps, config);
 
   render(App, {});
 
-  await changeTabAsync("Comptes");
+  clickButton("Comptes");
+
   await screen.findByText('Votre compte AzureDevOps');
   await inputAsync("rechercher les repository par valeur", { value: repository.name });
   await formAsync("valider la recherche de repository");

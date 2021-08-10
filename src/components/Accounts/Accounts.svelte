@@ -23,7 +23,7 @@
 
 <Tabs
 	current={provider}
-	onChange={currentProvider => (provider = currentProvider)}
+	onChange={currentProvider => { provider = currentProvider; }}
 	data={tabs}
 />
 <div class="content">

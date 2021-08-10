@@ -11,7 +11,7 @@
 	} from 'shared/stores/default.store';
 	import { copyToClipboard, isJson } from 'shared/utils';
 	import { HighlightAuto } from 'svelte-highlight';
-	import 'svelte-highlight/styles/dark.css';
+	import 'svelte-highlight/src/styles/dark.css';
 	import { v4 as uuidv4 } from 'uuid';
 
 	export let followedRepositories: RepositoryType[];

@@ -20,6 +20,7 @@ export const client = createStore<Dictionary<OAuthConfigType>>(
 	{},
 	{ key: 'clientToken' },
 );
+
 export const clientHasProvider = (provider: ProviderEnum): boolean => {
 	const value = get(client) as Dictionary<OAuthConfigType>;
 
