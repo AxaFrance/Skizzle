@@ -63,6 +63,8 @@ const createWindow = () => {
 		title: 'Skizzle',
 		center: true,
 		width: 1024,
+		minWidth: 250,
+		minHeight: 500,
 		height: 768,
 		resizable: true,
 		icon: path.join(__dirname, '../../', (isMacOs) ? 'assets/icon.icns' : 'assets/icon.ico'),
@@ -108,7 +110,7 @@ const createWindow = () => {
 			: 'assets/icon.png';
 
 	const iconPath = path.join(__dirname, '../../', iconName);
-	
+
 	window.setMenuBarVisibility(false);
 	tray = new Tray(iconPath);
 	tray.setToolTip('Skizzle application');

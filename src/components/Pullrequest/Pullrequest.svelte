@@ -1,72 +1,3 @@
-<script lang="ts">
-	import { getDateStr } from 'shared/utils';
-	import type { PullRequestType } from 'models/skizzle';
-	import Labels from 'components/Labels';
-	import Modale from 'components/Modale';
-	import { isFetchingData } from 'shared/stores/default.store';
-	import Avatar from 'components/Avatar';
-	import Reviews from 'components/Reviews';
-	import Icons from 'components/icons';
-	import Comment from 'components/Comment';
-	import { remote } from 'shared/remote';
-
-	export let pullRequest: PullRequestType;
-
-	let detailsModal = false;
-
-	const openLink = () => remote.openDefaultBrowser(pullRequest.url);
-	const openModale = () => (detailsModal = true);
-	const closeModale = () => (detailsModal = false);
-</script>
-
-<div class="pr">
-	<button class="link" on:click={openLink} />
-	<Avatar className="pr__avatar" {pullRequest} />
-	<div class="details">
-		<header>
-			<h2 class="author">
-				{pullRequest.user.name} - {getDateStr(new Date(pullRequest.date))}
-			</h2>
-		</header>
-		<h3 class="title">
-			{pullRequest.title}
-		</h3>
-		<p class="repo">
-			{#if pullRequest.projectName}
-				{pullRequest.projectName}&nbsp;/
-			{/if}
-			{pullRequest.repositoryName}
-		</p>
-	</div>
-	<footer>
-		{#if pullRequest.isAutoComplete}
-			<span class="status status--auto-complete">Auto-complete</span>
-		{/if}
-		{#if pullRequest.isDraft}
-			<span class="status status--draft">Draft</span>
-		{/if}
-		{#if pullRequest.isConflict}
-			<span class="status status--conflicts">Conflits</span>
-		{/if}
-		{#if pullRequest.reviewers}
-			<Reviews reviews={pullRequest.reviewers} />
-		{/if}
-		<Labels labels={pullRequest.labels} />
-		<button class="more" on:click={openModale} disabled={$isFetchingData}>
-			<Icons.Ellipsis />
-		</button>
-	</footer>
-</div>
-{#if detailsModal}
-	<Modale onClose={closeModale}>
-		{#each pullRequest.comments as comment}
-			<Comment {comment} />
-		{:else}
-			<p class="no-comment">Il n'y a aucun commentaire sur cette pull request.</p>
-		{/each}
-	</Modale>
-{/if}
-
 <style>
 	.pr {
 		position: relative;
@@ -94,6 +25,7 @@
 	header {
 		margin-bottom: 0.5rem;
 		font-size: 0.8rem;
+		line-height: 1.1;
 		color: #aaa;
 	}
 
@@ -190,4 +122,83 @@
 		border-color: #82ff82;
 		color: #82ff82;
 	}
+
+	@media only screen and (max-width: 350px) {
+		.pr :global(.pr__avatar) {
+			display: none;
+		}
+
+		.title {
+			font-size: 0.8rem;
+		}
+	}
 </style>
+
+<script lang="ts">
+	import { getDateStr } from 'shared/utils'
+	import type { PullRequestType } from 'models/skizzle'
+	import Labels from 'components/Labels'
+	import Modale from 'components/Modale'
+	import { isFetchingData } from 'shared/stores/default.store'
+	import Avatar from 'components/Avatar'
+	import Reviews from 'components/Reviews'
+	import Icons from 'components/icons'
+	import Comment from 'components/Comment'
+	import { remote } from 'shared/remote'
+
+	export let pullRequest: PullRequestType
+
+	let detailsModal = false
+
+	const openLink = () => remote.openDefaultBrowser(pullRequest.url)
+	const openModale = () => (detailsModal = true)
+	const closeModale = () => (detailsModal = false)
+</script>
+
+<div class="pr">
+	<button class="link" on:click={openLink} />
+	<Avatar className="pr__avatar" {pullRequest} />
+	<div class="details">
+		<header>
+			<h2 class="author">
+				{pullRequest.user.name} - {getDateStr(new Date(pullRequest.date))}
+			</h2>
+		</header>
+		<h3 class="title">
+			{pullRequest.title}
+		</h3>
+		<p class="repo">
+			{#if pullRequest.projectName}
+				{pullRequest.projectName}&nbsp;/
+			{/if}
+			{pullRequest.repositoryName}
+		</p>
+	</div>
+	<footer>
+		{#if pullRequest.isAutoComplete}
+			<span class="status status--auto-complete">Auto-complete</span>
+		{/if}
+		{#if pullRequest.isDraft}
+			<span class="status status--draft">Draft</span>
+		{/if}
+		{#if pullRequest.isConflict}
+			<span class="status status--conflicts">Conflits</span>
+		{/if}
+		{#if pullRequest.reviewers}
+			<Reviews reviews={pullRequest.reviewers} />
+		{/if}
+		<Labels labels={pullRequest.labels} />
+		<button class="more" on:click={openModale} disabled={$isFetchingData}>
+			<Icons.Ellipsis />
+		</button>
+	</footer>
+</div>
+{#if detailsModal}
+	<Modale onClose={closeModale}>
+		{#each pullRequest.comments as comment}
+			<Comment {comment} />
+		{:else}
+			<p class="no-comment">Il n'y a aucun commentaire sur cette pull request.</p>
+		{/each}
+	</Modale>
+{/if}

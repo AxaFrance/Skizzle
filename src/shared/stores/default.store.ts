@@ -108,6 +108,7 @@ export const settings = createStore<SettingsType>(
 		proxy: '',
 		theme: ThemeEnum.Orange,
 		language: 'en',
+		compact: false
 	},
 	{
 		key: 'settings',

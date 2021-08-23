@@ -6,4 +6,5 @@ export type SettingsType = {
 	launch_at_startup: boolean;
 	theme: ThemeEnum;
 	language: string;
+	compact: boolean;
 };
