@@ -1,12 +1,13 @@
 import { render, screen } from "@testing-library/svelte";
 import App from 'App.svelte';
+import { config as urls } from 'config';
 import { ProviderEnum } from "models/skizzle/ProviderEnum";
 import { clickButton, clickButtonAsync } from "tests/actions/clickButton";
 import { connectWith } from "tests/actions/connection";
+import { select } from "tests/actions/select";
 import { GithubProfileBuilder } from "tests/builders/api/ProfileBuilder";
 import { OAuthConfigBuilder } from "tests/builders/providers/OAuthConfigBuilder";
 import { RequesterBuilder } from "tests/builders/requesters/RequesterBuilder";
-import { config as urls } from 'config';
 
 test("The application is opened and click on accounts tabs and connect user to github", async () => {
   const profile = new GithubProfileBuilder()
@@ -18,11 +19,14 @@ test("The application is opened and click on accounts tabs and connect user to g
 
   new RequesterBuilder()
     .get(urls.Github.get.profile(), profile)
+    .build();
 
   render(App, {});
 
-  await clickButtonAsync('Github');
-  clickButton('Ajouter un compte Github');
+  clickButton("Comptes");
+
+  select('Sélectionner', 'Github');
+  await clickButtonAsync('Ajouter un compte Github');
   connectWith(ProviderEnum.Github, config);
 
   await screen.findByText('Votre compte Github');

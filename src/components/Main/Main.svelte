@@ -1,3 +1,133 @@
+<script lang="ts">
+	import { v4 as uuidv4 } from 'uuid';
+	import { pullRequests, customLists, notifications } from 'shared/stores/default.store';
+	import PullRequest from 'components/PullRequest';
+	import Tabs from 'components/Tabs';
+	import CustomListSettings from 'components/CustomListSettings';
+	import Modale from 'components/Modale';
+	import type { CustomListType } from 'models/skizzle';
+	import { getPullRequestsFromCustomSettings } from 'shared/utils';
+	import { remote } from 'shared/remote';
+
+	let creatingList: boolean = false;
+	let modifyingListId: string = null;
+	let currentTab: string = 'all';
+
+	const closeModale = () => {
+		creatingList = false;
+		modifyingListId = null;
+	};
+
+	const exportList = async () => {
+		const currentTabData = $customLists.find(customList => customList.id == currentTab);
+
+		if (currentTabData) {
+			const result: boolean = await remote.invoke('file-export', currentTabData);
+
+			if (result) {
+				notifications.update(notifications => [
+					...notifications,
+					{
+						text: 'Liste exportée.',
+						id: uuidv4()
+					}
+				]);
+			}
+		}
+	};
+
+	const deleteList = () => {
+		customLists.update(list => list.filter(_list => _list.id !== currentTab));
+		notifications.update(notifications => [
+			...notifications,
+			{
+				text: 'Liste supprimée.',
+				id: uuidv4()
+			}
+		]);
+		currentTab = 'all';
+	};
+
+	const filterList = (customList: CustomListType) => {
+		return getPullRequestsFromCustomSettings($pullRequests, customList).filter(
+			x => !customList.hiddenPullRequestsIds?.some(y => x.pullRequestId === y)
+		);
+	};
+
+	const getTabs = (lists: CustomListType[]) => {
+		const tabs = {
+			all: {
+				label: 'Toutes',
+				order: 0
+			}
+		};
+
+		lists.forEach((list, index) => {
+			tabs[list.id] = {
+				label: list.name,
+				order: index + 1,
+				counter: filterList(list).length
+			};
+		});
+
+		return tabs;
+	};
+
+	$: tabs = getTabs($customLists);
+	$: displayedList =
+		currentTab === 'all'
+			? $pullRequests
+			: filterList($customLists.find(({ id }) => id === currentTab));
+</script>
+
+<Tabs
+	current={currentTab}
+	onChange={tab => (currentTab = tab)}
+	data={tabs}
+	onCreation={() => {
+		creatingList = true;
+	}}
+/>
+
+{#if creatingList || modifyingListId}
+	<Modale onClose={closeModale}>
+		<CustomListSettings
+			customList={$customLists.find(({ id }) => id === modifyingListId)}
+			isInCreationMode={creatingList}
+			onDone={closeModale}
+		/>
+	</Modale>
+{/if}
+
+<div class="content">
+	{#if currentTab !== 'all'}
+		<div class="bar">
+			<button
+				on:click={() => {
+					modifyingListId = currentTab;
+				}}
+			>
+				Modifier
+			</button>
+			<button on:click={deleteList}>Supprimer</button>
+			<button on:click={exportList}>Exporter</button>
+		</div>
+	{/if}
+	{#if displayedList.length}
+		<ul class="list">
+			{#each displayedList as pullRequest}
+				{#if pullRequest}
+					<li>
+						<PullRequest {pullRequest} />
+					</li>
+				{/if}
+			{/each}
+		</ul>
+	{:else}
+		<p class="no-pr">Il n'y a aucune pull request à afficher dans cette liste.</p>
+	{/if}
+</div>
+
 <style>
 	.content {
 		position: relative;
@@ -56,133 +186,3 @@
 		}
 	}
 </style>
-
-<script lang="ts">
-	import { v4 as uuidv4 } from 'uuid'
-	import { pullRequests, customLists, notifications } from 'shared/stores/default.store'
-	import PullRequest from 'components/PullRequest'
-	import Tabs from 'components/Tabs'
-	import CustomListSettings from 'components/CustomListSettings'
-	import Modale from 'components/Modale'
-	import type { CustomListType } from 'models/skizzle'
-	import { getPullRequestsFromCustomSettings } from 'shared/utils'
-	import { remote } from 'shared/remote'
-
-	let creatingList: boolean = false
-	let modifyingListId: string = null
-	let currentTab: string = 'all'
-
-	const closeModale = () => {
-		creatingList = false
-		modifyingListId = null
-	}
-
-	const exportList = async () => {
-		const currentTabData = $customLists.find(customList => customList.id == currentTab)
-
-		if (currentTabData) {
-			const result: boolean = await remote.invoke('file-export', currentTabData)
-
-			if (result) {
-				notifications.update(notifications => [
-					...notifications,
-					{
-						text: 'Liste exportée.',
-						id: uuidv4()
-					}
-				])
-			}
-		}
-	}
-
-	const deleteList = () => {
-		customLists.update(list => list.filter(_list => _list.id !== currentTab))
-		notifications.update(notifications => [
-			...notifications,
-			{
-				text: 'Liste supprimée.',
-				id: uuidv4()
-			}
-		])
-		currentTab = 'all'
-	}
-
-	const filterList = (customList: CustomListType) => {
-		return getPullRequestsFromCustomSettings($pullRequests, customList).filter(
-			x => !customList.hiddenPullRequestsIds.some(y => x.pullRequestId === y)
-		)
-	}
-
-	const getTabs = (lists: CustomListType[]) => {
-		const tabs = {
-			all: {
-				label: 'Toutes',
-				order: 0
-			}
-		}
-
-		lists.forEach((list, index) => {
-			tabs[list.id] = {
-				label: list.name,
-				order: index + 1,
-				counter: filterList(list).length
-			}
-		})
-
-		return tabs
-	}
-
-	$: tabs = getTabs($customLists)
-	$: displayedList =
-		currentTab === 'all'
-			? $pullRequests
-			: filterList($customLists.find(({ id }) => id === currentTab))
-</script>
-
-<Tabs
-	current={currentTab}
-	onChange={tab => (currentTab = tab)}
-	data={tabs}
-	onCreation={() => {
-		creatingList = true
-	}}
-/>
-
-{#if creatingList || modifyingListId}
-	<Modale onClose={closeModale}>
-		<CustomListSettings
-			customList={$customLists.find(({ id }) => id === modifyingListId)}
-			isInCreationMode={creatingList}
-			onDone={closeModale}
-		/>
-	</Modale>
-{/if}
-
-<div class="content">
-	{#if currentTab !== 'all'}
-		<div class="bar">
-			<button
-				on:click={() => {
-					modifyingListId = currentTab
-				}}
-			>
-				Modifier
-			</button>
-			<button on:click={deleteList}>Supprimer</button>
-			<button on:click={exportList}>Exporter</button>
-		</div>
-	{/if}
-	{#if displayedList.length}
-		<ul class="list">
-			{#each displayedList as pullRequest}
-				{#if pullRequest}
-					<li>
-						<PullRequest {pullRequest} />
-					</li>
-				{/if}
-			{/each}
-		</ul>
-	{:else}
-		<p class="no-pr">Il n'y a aucune pull request à afficher dans cette liste.</p>
-	{/if}
-</div>

@@ -62,9 +62,9 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		try { 
 			const projects = (
 				await super.fetch<AzureDevOpsProjectsApiType>(config.AzureDevOps.get.projects(organization))
-			).value;
+			)?.value;
 
-			return projects;
+			return projects || [];
 		} catch (err) {
 			console.error(err);
 			return [];
