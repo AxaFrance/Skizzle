@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/svelte";
 import App from 'App.svelte';
+import { config as urls } from 'config';
 import { ProviderEnum } from "models/skizzle/ProviderEnum";
 import { clickButton } from "tests/actions/clickButton";
 import { connectWith } from "tests/actions/connection";
@@ -7,7 +8,6 @@ import { AzureDevOpsDescriptorBuilder } from "tests/builders/api/DescriptorBuild
 import { AzureDevOpsProfileBuilder } from "tests/builders/api/ProfileBuilder";
 import { OAuthConfigBuilder } from "tests/builders/providers/OAuthConfigBuilder";
 import { RequesterBuilder } from "tests/builders/requesters/RequesterBuilder";
-import { config as urls } from 'config';
 
 test("The application is opened and click on accounts tabs and connect user to azure dev ops", async () => {
   const profile = new AzureDevOpsProfileBuilder()
@@ -22,6 +22,7 @@ test("The application is opened and click on accounts tabs and connect user to a
   new RequesterBuilder()
     .get(urls.AzureDevOps.get.profile('me'), profile)
     .get(urls.AzureDevOps.get.descriptor(String(profile.id)), descriptor)
+    .build();
 
   render(App, {});
 
@@ -29,4 +30,6 @@ test("The application is opened and click on accounts tabs and connect user to a
   connectWith(ProviderEnum.AzureDevOps, config);
 
   await screen.findByText('Votre compte AzureDevOps');
+  screen.getByText("John Doe");
+  screen.getByText("john.doe@email.com");
 })

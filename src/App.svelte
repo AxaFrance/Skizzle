@@ -1,3 +1,70 @@
+<script lang="ts">
+	import Boundary from 'components/ErrorBoundary';
+	import Accounts from 'components/Accounts';
+	import Main from 'components/Main';
+	import Settings from 'components/Settings';
+	import Navigation from 'components/Navigation';
+	import Notification from 'components/Notification';
+	import { Views } from 'models/skizzle/ViewsEnum';
+	import Loader from 'components/Loader';
+	import { onMount } from 'svelte';
+	import { remote } from 'shared/remote';
+	import { offline, settings, needIntro } from 'shared/stores/default.store';
+	import { clientAuthenticated } from 'shared/stores/authentication.store';
+	import Intro from 'views/Intro';
+
+	let update: boolean = false;
+	let version: string;
+
+	const views = {
+		[Views.Main]: Main,
+		[Views.Accounts]: Accounts,
+		[Views.Settings]: Settings
+	};
+
+	let currentView: Views =
+		$clientAuthenticated.isGithubAuthenticated ||
+		$clientAuthenticated.isAzureDevOpsAuthenticated
+			? Views.Main
+			: Views.Accounts;
+	const onViewChange = (view: Views) => (currentView = view);
+
+	window.addEventListener('online', () => offline.set(false));
+	window.addEventListener('offline', () => offline.set(true));
+
+	onMount(() => {
+		setInterval(async () => {
+			version = await remote.invoke('check-for-update-request');
+		}, 60000);
+
+		remote.receive('check-for-update-response', () => (update = true));
+	});
+
+	const checkForUpdateRestart = () => remote.invoke('check-for-update-restart');
+</script>
+
+<main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
+	<Boundary onError={console.error}>
+		{#if $needIntro}
+			<Intro />
+		{:else}
+			{#if update}
+				<h1>{version}</h1>
+				<p>A new version has been downloaded.</p>
+				<p>Restart the application to apply the updates.</p>
+				<button>Later</button>
+				<button on:click={() => checkForUpdateRestart()}>Restart</button>
+			{/if}
+			<Loader />
+			<Navigation {currentView} {onViewChange} />
+			<div>
+				<svelte:component this={views[currentView]} />
+			</div>
+			<Notification />
+		{/if}
+	</Boundary>
+</main>
+
 <style>
 	@font-face {
 		font-family: 'Icons';
@@ -87,70 +154,3 @@
 		opacity: 0.5;
 	}
 </style>
-
-<script lang="ts">
-	import Boundary from 'components/ErrorBoundary'
-	import Accounts from 'components/Accounts'
-	import Main from 'components/Main'
-	import Settings from 'components/Settings'
-	import Navigation from 'components/Navigation'
-	import Notification from 'components/Notification'
-	import { Views } from 'models/skizzle/ViewsEnum'
-	import Loader from 'components/Loader'
-	import { onMount } from 'svelte'
-	import { remote } from 'shared/remote'
-	import { offline, settings, needIntro } from 'shared/stores/default.store'
-	import { clientAuthenticated } from 'shared/stores/authentication.store'
-	import Intro from 'views/Intro'
-
-	let update: boolean = false
-	let version: string
-
-	const views = {
-		[Views.Main]: Main,
-		[Views.Accounts]: Accounts,
-		[Views.Settings]: Settings
-	}
-
-	let currentView: Views =
-		$clientAuthenticated.isGithubAuthenticated ||
-		$clientAuthenticated.isAzureDevOpsAuthenticated
-			? Views.Main
-			: Views.Accounts
-	const onViewChange = (view: Views) => (currentView = view)
-
-	window.addEventListener('online', () => offline.set(false))
-	window.addEventListener('offline', () => offline.set(true))
-
-	onMount(() => {
-		setInterval(async () => {
-			version = await remote.invoke('check-for-update-request')
-		}, 60000)
-
-		remote.receive('check-for-update-response', () => (update = true))
-	})
-
-	const checkForUpdateRestart = () => remote.invoke('check-for-update-restart')
-</script>
-
-<main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
-	<Boundary onError={console.error}>
-		{#if $needIntro}
-			<Intro />
-		{:else}
-			{#if update}
-				<h1>{version}</h1>
-				<p>A new version has been downloaded.</p>
-				<p>Restart the application to apply the updates.</p>
-				<button>Later</button>
-				<button on:click={() => checkForUpdateRestart()}>Restart</button>
-			{/if}
-			<Loader />
-			<Navigation {currentView} {onViewChange} />
-			<div>
-				<svelte:component this={views[currentView]} />
-			</div>
-			<Notification />
-		{/if}
-	</Boundary>
-</main>

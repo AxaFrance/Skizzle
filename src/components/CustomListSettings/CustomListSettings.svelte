@@ -1,121 +1,40 @@
-<style>
-	.import {
-		padding: 0.5rem;
-		color: var(--color);
-		font-size: 1rem;
-		border: none;
-		background-color: transparent;
-	}
-
-	.field {
-		margin-bottom: 1.5rem;
-	}
-
-	label {
-		display: block;
-		margin-bottom: 0.2rem;
-	}
-
-	[type='text'] {
-		width: 100%;
-		padding: 0.5rem;
-		color: #fff;
-		font-size: 1rem;
-		border-radius: 4px;
-		background-color: #555;
-	}
-
-	select {
-		width: 100%;
-		padding: 0.5rem;
-		color: #fff;
-		font-size: 1rem;
-		border-radius: 4px;
-		background-color: #555;
-	}
-
-	ul {
-		list-style: none;
-		border-radius: 4px;
-		background-color: #555;
-	}
-
-	li {
-		padding: 0.5rem;
-	}
-
-	li:not(:last-child) {
-		border-bottom: 1px solid #666;
-	}
-
-	.action {
-		display: flex;
-		justify-content: flex-end;
-	}
-
-	.cta {
-		padding: 0.5rem 1rem;
-		color: #fff;
-		font-size: 1rem;
-		cursor: pointer;
-		border-radius: 4px;
-		border: none;
-		background-color: var(--color);
-		transition: opacity linear 0.2s;
-	}
-
-	.cancel {
-		padding: 0.5rem 1rem;
-		color: #fff;
-		font-size: 1rem;
-		cursor: pointer;
-		border: none;
-		background-color: transparent;
-		transition: opacity linear 0.2s;
-	}
-
-	:global(.isListDisplayed) {
-		margin-bottom: 0.2rem;
-	}
-</style>
-
 <script lang="ts">
-	import { v4 as uuidv4 } from 'uuid'
+	import { v4 as uuidv4 } from 'uuid';
 	import {
 		getDateStr,
 		getLabelsFrom,
 		getPullRequestsFromCustomSettings
-	} from 'shared/utils'
-	import AccountTitle from 'components/AccountTitle'
-	import type { CustomListType, PullRequestType } from 'models/skizzle'
+	} from 'shared/utils';
+	import AccountTitle from 'components/AccountTitle';
+	import type { CustomListType, PullRequestType } from 'models/skizzle';
 	import {
 		customLists,
 		notifications,
 		pullRequests,
 		repositories,
 		settings
-	} from 'shared/stores/default.store'
-	import Icons from 'components/icons'
-	import TagInput from 'components/TagInput'
-	import { client } from 'shared/stores/authentication.store'
-	import Radio from 'components/Radio'
-	import Switch from 'components/Switch'
+	} from 'shared/stores/default.store';
+	import Icons from 'components/icons';
+	import TagInput from 'components/TagInput';
+	import { client } from 'shared/stores/authentication.store';
+	import Radio from 'components/Radio';
+	import Switch from 'components/Switch';
 
-	export let onDone: () => void
-	export let isInCreationMode: boolean = false
+	export let onDone: () => void;
+	export let isInCreationMode: boolean = false;
 	export let customList: CustomListType = {
 		id: uuidv4(),
 		name: '',
 		tags: []
-	} as CustomListType
+	} as CustomListType;
 
-	let isListDisplayed = false
+	let isListDisplayed = false;
 
 	const onImport = async () => {
-		const result: any = await window.remote.invoke('file-import')
+		const result: any = await window.remote.invoke('file-import');
 
 		if (result) {
-			customList = { ...JSON.parse(result), id: uuidv4() } as CustomListType
+			customList = { ...JSON.parse(result), id: uuidv4() } as CustomListType;
 
 			notifications.update(notifications => [
 				...notifications,
@@ -123,21 +42,21 @@
 					text: 'Liste importée.',
 					id: uuidv4()
 				}
-			])
+			]);
 		}
-	}
+	};
 
 	const saveSettings = () => {
 		updateSettings({
 			...customList,
 			hiddenPullRequestsIds: pullRequestsList.reduce((acc, curr) => {
 				if (!curr.show) {
-					acc.push(curr.pullRequest.pullRequestId)
+					acc.push(curr.pullRequest.pullRequestId);
 				}
 
-				return acc
+				return acc;
 			}, [] as string[])
-		})
+		});
 
 		notifications.update(notifications => [
 			...notifications,
@@ -145,28 +64,28 @@
 				text: `Liste ${isInCreationMode ? 'créée' : 'modifiée'}`,
 				id: uuidv4()
 			}
-		])
+		]);
 
-		onDone()
-	}
+		onDone();
+	};
 
 	const updateSettings = (list: CustomListType) => {
 		customLists.update(x => {
-			const exist = ({ id }: CustomListType) => list.id === id
+			const exist = ({ id }: CustomListType) => list.id === id;
 
 			if (!x.some(exist)) {
-				x = [...x, list]
+				x = [...x, list];
 			} else {
-				x[x.indexOf(x.find(exist))] = list
+				x[x.indexOf(x.find(exist))] = list;
 			}
 
-			return x
-		})
-	}
+			return x;
+		});
+	};
 
 	const getTags = (event: CustomEvent<{ tags: string[] }>) => {
-		customList.tags = event.detail.tags
-	}
+		customList.tags = event.detail.tags;
+	};
 
 	$: pullRequestsList = getPullRequestsFromCustomSettings($pullRequests, customList)
 		.filter(pr => !!pr)
@@ -175,7 +94,7 @@
 			show:
 				!customList.hiddenPullRequestsIds ||
 				!customList.hiddenPullRequestsIds.some(y => y === x.pullRequestId)
-		})) as { pullRequest: PullRequestType; show: boolean }[]
+		})) as { pullRequest: PullRequestType; show: boolean }[];
 </script>
 
 <div>
@@ -270,3 +189,84 @@
 	<button class="cancel" on:click={() => onDone()}>Annuler</button>
 	<button class="cta" on:click={() => saveSettings()}>Enregistrer</button>
 </div>
+
+<style>
+	.import {
+		padding: 0.5rem;
+		color: var(--color);
+		font-size: 1rem;
+		border: none;
+		background-color: transparent;
+	}
+
+	.field {
+		margin-bottom: 1.5rem;
+	}
+
+	label {
+		display: block;
+		margin-bottom: 0.2rem;
+	}
+
+	[type='text'] {
+		width: 100%;
+		padding: 0.5rem;
+		color: #fff;
+		font-size: 1rem;
+		border-radius: 4px;
+		background-color: #555;
+	}
+
+	select {
+		width: 100%;
+		padding: 0.5rem;
+		color: #fff;
+		font-size: 1rem;
+		border-radius: 4px;
+		background-color: #555;
+	}
+
+	ul {
+		list-style: none;
+		border-radius: 4px;
+		background-color: #555;
+	}
+
+	li {
+		padding: 0.5rem;
+	}
+
+	li:not(:last-child) {
+		border-bottom: 1px solid #666;
+	}
+
+	.action {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.cta {
+		padding: 0.5rem 1rem;
+		color: #fff;
+		font-size: 1rem;
+		cursor: pointer;
+		border-radius: 4px;
+		border: none;
+		background-color: var(--color);
+		transition: opacity linear 0.2s;
+	}
+
+	.cancel {
+		padding: 0.5rem 1rem;
+		color: #fff;
+		font-size: 1rem;
+		cursor: pointer;
+		border: none;
+		background-color: transparent;
+		transition: opacity linear 0.2s;
+	}
+
+	:global(.isListDisplayed) {
+		margin-bottom: 0.2rem;
+	}
+</style>

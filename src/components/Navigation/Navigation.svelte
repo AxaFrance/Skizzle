@@ -1,3 +1,45 @@
+<script lang="ts">
+	import { fade } from 'svelte/transition';
+	import Icons from 'components/icons';
+	import { Views } from 'models/skizzle';
+	import { settings } from 'shared/stores/default.store';
+	export let currentView: Views;
+	export let onViewChange: Function;
+
+	$: compact = $settings.compact;
+
+	const setView = (view: Views) => () => onViewChange(view);
+	$: getColor = (view: Views) => (currentView === view ? `#fff` : '#d3d3d3');
+</script>
+
+<nav transition:fade class:compact>
+	<button
+		title="Listes"
+		on:click={setView(Views.Main)}
+		class:selected={currentView === Views.Main}
+	>
+		<Icons.List color={getColor(Views.Main)} />
+		{#if !compact}<span in:fade out:fade>Listes</span>{/if}
+	</button>
+	<button
+		title="Comptes"
+		on:click={setView(Views.Accounts)}
+		class:selected={currentView === Views.Accounts}
+	>
+		<Icons.Accounts color={getColor(Views.Accounts)} />
+		{#if !compact}<span in:fade out:fade>Comptes</span>{/if}
+	</button>
+	<button
+		class="bottom"
+		title="Réglages"
+		on:click={setView(Views.Settings)}
+		class:selected={currentView === Views.Settings}
+	>
+		<Icons.Settings color={getColor(Views.Settings)} />
+		{#if !compact}<span in:fade out:fade>Réglages</span>{/if}
+	</button>
+</nav>
+
 <style>
 	nav {
 		flex-grow: 0;
@@ -77,48 +119,3 @@
 		}
 	}
 </style>
-
-<script lang="ts">
-	import { fade } from 'svelte/transition'
-	import Icons from 'components/icons'
-	import { Views } from 'models/skizzle'
-	import { settings } from 'shared/stores/default.store'
-	export let currentView: Views
-	export let onViewChange: Function
-
-	$: compact = $settings.compact
-
-	const setView = (view: Views) => () => onViewChange(view)
-	$: getColor = (view: Views) => (currentView === view ? `#fff` : '#d3d3d3')
-</script>
-
-<nav transition:fade class:compact>
-	<button
-		title="Listes"
-		role="tab"
-		on:click={setView(Views.Main)}
-		class:selected={currentView === Views.Main}
-	>
-		<Icons.List color={getColor(Views.Main)} />
-		{#if !compact}<span in:fade out:fade>Listes</span>{/if}
-	</button>
-	<button
-		title="Comptes"
-		role="tab"
-		on:click={setView(Views.Accounts)}
-		class:selected={currentView === Views.Accounts}
-	>
-		<Icons.Accounts color={getColor(Views.Accounts)} />
-		{#if !compact}<span in:fade out:fade>Comptes</span>{/if}
-	</button>
-	<button
-		class="bottom"
-		title="Réglages"
-		role="tab"
-		on:click={setView(Views.Settings)}
-		class:selected={currentView === Views.Settings}
-	>
-		<Icons.Settings color={getColor(Views.Settings)} />
-		{#if !compact}<span in:fade out:fade>Réglages</span>{/if}
-	</button>
-</nav>
