@@ -24,5 +24,5 @@ export type {
 	AzureDevOpsProjectApiType,
 	GithubProjectApiType,
 	AzureDevOpsProjectsApiType,
-	GithubProjectsApiType,
+	GithubProjectsApiType
 };

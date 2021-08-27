@@ -1,12 +1,6 @@
-import type {
-	AzureDevOpsCommentApiType,
-	GithubCommentApiType,
-} from './CommentsApiType';
+import type { AzureDevOpsCommentApiType, GithubCommentApiType } from './CommentsApiType';
 import type { AzureDevOpsRepositoryApiType } from './RepositoriesApiType';
-import type {
-	AzureDevOpsReviewApiType,
-	GithubReviewApiType,
-} from './ReviewsApiType';
+import type { AzureDevOpsReviewApiType, GithubReviewApiType } from './ReviewsApiType';
 
 type PullRequestsApiType = {};
 
@@ -78,13 +72,12 @@ type AzureDevOpsPullRequestsApiType = {
 	value: Array<AzureDevOpsPullRequestApiType> & PullRequestsApiType;
 };
 
-type GithubPullRequestsApiType = Array<GithubPullRequestApiType> &
-	PullRequestsApiType;
+type GithubPullRequestsApiType = Array<GithubPullRequestApiType> & PullRequestsApiType;
 
 export type {
 	PullRequestsApiType,
 	AzureDevOpsPullRequestApiType,
 	GithubPullRequestApiType,
 	AzureDevOpsPullRequestsApiType,
-	GithubPullRequestsApiType,
+	GithubPullRequestsApiType
 };

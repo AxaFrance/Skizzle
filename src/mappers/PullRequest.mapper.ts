@@ -4,7 +4,7 @@ import {
 	AzureDevOpsPullRequestApiType,
 	AzureDevOpsVoteEnum,
 	GithubPullRequestApiType,
-	GithubVoteEnum,
+	GithubVoteEnum
 } from 'models/api';
 import type { PullRequestType } from 'models/skizzle';
 import { From, Mapper } from './Mapper';
@@ -16,10 +16,7 @@ export type PullRequestMapperType = From<
 	GithubPullRequestApiType
 >;
 
-export class PullRequestMapper extends Mapper<
-	PullRequestMapperType,
-	PullRequestType
-> {
+export class PullRequestMapper extends Mapper<PullRequestMapperType, PullRequestType> {
 	public to(data: PullRequestMapperType[], params: any): PullRequestType[] {
 		return data.map(value => {
 			const date = new Date(value.creationDate || value.updated_at);
@@ -32,7 +29,7 @@ export class PullRequestMapper extends Mapper<
 					}
 
 					return {
-						name: x.name,
+						name: x.name
 					};
 				});
 
@@ -52,7 +49,7 @@ export class PullRequestMapper extends Mapper<
 				user: {
 					id: value.createdBy?.id || value.user?.id?.toString(),
 					name: value.createdBy?.displayName || value.user?.login,
-					avatar: value.createdBy?.descriptor || value.user?.avatar_url,
+					avatar: value.createdBy?.descriptor || value.user?.avatar_url
 				},
 				url:
 					value.html_url ||
@@ -60,7 +57,7 @@ export class PullRequestMapper extends Mapper<
 				isDraft: value.isDraft || value.draft,
 				isConflict: value.mergeStatus && value.mergeStatus === 'conflicts',
 				isAutoComplete: !!value.autoCompleteSetBy,
-				...params,
+				...params
 			};
 
 			if (value.comments) {
@@ -71,7 +68,11 @@ export class PullRequestMapper extends Mapper<
 				result.hasReviewed = value.reviewers.some((x: ReviewMapperType) => {
 					const profile = get(profiles).find(({ provider }) => provider === params.provider);
 					var key = x.vote || x.state || '';
-					return profile.id === x.id.toString() && (`${key}` === AzureDevOpsVoteEnum.Approved.toString() || `${key}` === GithubVoteEnum.Approved)
+					return (
+						profile.id === x.id.toString() &&
+						(`${key}` === AzureDevOpsVoteEnum.Approved.toString() ||
+							`${key}` === GithubVoteEnum.Approved)
+					);
 				});
 				result.reviewers = new ReviewMapper().to(value.reviewers);
 			}

@@ -32,7 +32,7 @@ export type {
 	UserType,
 	NotificationType,
 	ExportType,
-	HeaderType,
+	HeaderType
 };
 
 export { ProviderEnum, ThemeEnum, Views, WindowEnum };

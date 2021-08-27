@@ -5,7 +5,7 @@
 
 	const remove = (id: string) => () => {
 		notifications.update(_notifications =>
-			_notifications.filter(notification => notification.id !== id),
+			_notifications.filter(notification => notification.id !== id)
 		);
 	};
 
@@ -13,7 +13,7 @@
 
 	notifications.subscribe(_notifications => {
 		const newNotification = _notifications?.find(
-			notification => !timersId.includes(notification.id),
+			notification => !timersId.includes(notification.id)
 		);
 
 		if (newNotification) {

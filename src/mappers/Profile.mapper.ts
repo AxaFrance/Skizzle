@@ -1,14 +1,8 @@
-import type {
-	AzureDevOpsProfileApiType,
-	GithubProfileApiType,
-} from 'models/api';
+import type { AzureDevOpsProfileApiType, GithubProfileApiType } from 'models/api';
 import type { ProfileType } from 'models/skizzle';
 import { From, Mapper } from './Mapper';
 
-export type ProfileMapperType = From<
-	AzureDevOpsProfileApiType,
-	GithubProfileApiType
->;
+export type ProfileMapperType = From<AzureDevOpsProfileApiType, GithubProfileApiType>;
 
 export class ProfileMapper extends Mapper<ProfileMapperType, ProfileType> {
 	public to(data: ProfileMapperType, params: any): ProfileType {
@@ -25,7 +19,7 @@ export class ProfileMapper extends Mapper<ProfileMapperType, ProfileType> {
 			id: data.id,
 			name: data.name || data.displayName,
 			avatar: avatar,
-			...params,
+			...params
 		};
 	}
 }

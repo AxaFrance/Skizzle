@@ -26,8 +26,7 @@ type AzureDevOpsRepositoriesApiType = {
 	value: Array<AzureDevOpsRepositoryApiType> & RepositoriesApiType;
 };
 
-type GithubRepositoriesApiType = Array<GithubRepositoryApiType> &
-	RepositoriesApiType;
+type GithubRepositoriesApiType = Array<GithubRepositoryApiType> & RepositoriesApiType;
 type GithubSeachRepositoriesApiType = {
 	items: Array<GithubRepositoryApiType> & RepositoriesApiType;
 };
@@ -38,5 +37,5 @@ export type {
 	GithubRepositoryApiType,
 	AzureDevOpsRepositoriesApiType,
 	GithubRepositoriesApiType,
-	GithubSeachRepositoriesApiType,
+	GithubSeachRepositoriesApiType
 };

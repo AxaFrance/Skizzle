@@ -7,14 +7,14 @@ enum AzureDevOpsVoteEnum {
 	ApproveWithSuggestions = 5,
 	NoVote = 0,
 	WaitingForAuthor = -5,
-	Rejected = -10,
+	Rejected = -10
 }
 
 enum GithubVoteEnum {
 	Approved = 'APPROVED',
 	RequestChange = 'CHANGES_REQUESTED',
 	Pending = 'PENDING',
-	Comment = 'COMMENTED',
+	Comment = 'COMMENTED'
 }
 
 type AzureDevOpsReviewApiType = {
@@ -38,7 +38,7 @@ export type {
 	AzureDevOpsReviewApiType,
 	AzureDevOpsReviewsApiType,
 	GithubReviewApiType,
-	GithubReviewsApiType,
+	GithubReviewsApiType
 };
 
 export { AzureDevOpsVoteEnum, GithubVoteEnum };

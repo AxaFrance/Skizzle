@@ -4,7 +4,7 @@
 	import type { ProviderEnum } from 'models/skizzle';
 	import { remote } from 'shared/remote';
 	import { client } from 'shared/stores/authentication.store';
-	
+
 	export let provider: ProviderEnum;
 	export let text: string;
 
@@ -15,12 +15,21 @@
 				...n,
 				[provider]: {
 					...n[provider],
-					...args,
-				},
-			})),
+					...args
+				}
+			}))
 		);
 	};
 </script>
+
+<div>
+	<button
+		role="button"
+		title={text}
+		on:click={() => authorize(provider)}
+		disabled={$isFetchingData || $offline}><Icons.AddAccount />{text}</button
+	>
+</div>
 
 <style>
 	div {
@@ -47,7 +56,3 @@
 		transform: translateY(-50%);
 	}
 </style>
-
-<div>
-	<button role="button" title={text} on:click={() => authorize(provider)} disabled={$isFetchingData || $offline}><Icons.AddAccount />{text}</button>
-</div>

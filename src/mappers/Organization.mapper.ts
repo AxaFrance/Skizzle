@@ -1,6 +1,6 @@
 import type {
 	AzureDevOpsOrganizationApiType,
-	GithubOrganizationApiType,
+	GithubOrganizationApiType
 } from 'models/api';
 import type { OrganizationType } from 'models/skizzle';
 import { From, Mapper } from './Mapper';
@@ -10,19 +10,16 @@ export type OrganizationMapperType = From<
 	GithubOrganizationApiType
 >;
 
-export class OrganizationMapper extends Mapper<
-	OrganizationMapperType,
-	OrganizationType
-> {
+export class OrganizationMapper extends Mapper<OrganizationMapperType, OrganizationType> {
 	public to(data: OrganizationMapperType[], params: any): OrganizationType[] {
 		return data.map(value => {
 			const data = {
 				organizationName: value.accountName || value.login,
-				...params,
+				...params
 			};
 
 			return {
-				...data,
+				...data
 			};
 		});
 	}

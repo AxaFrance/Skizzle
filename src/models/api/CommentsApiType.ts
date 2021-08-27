@@ -6,7 +6,7 @@ enum AzureDevOpsCommentApiEnum {
 	Text = 'text',
 	System = 'system',
 	CodeChange = 'codeChange',
-	Unknown = 'unknown',
+	Unknown = 'unknown'
 }
 
 enum AzureDevOpsCommentStatusApiEnum {
@@ -16,7 +16,7 @@ enum AzureDevOpsCommentStatusApiEnum {
 	Fixed = 'fixed',
 	Pending = 'pending',
 	Unknown = 'unknown',
-	WontFix = 'wontFix',
+	WontFix = 'wontFix'
 }
 
 type AzureDevOpsCommentAuthorApiType = {
@@ -44,7 +44,7 @@ type AzureDevOpsCommentApiType = {
 
 enum GithubUserEnum {
 	User = 'User',
-	Bot = 'Bot',
+	Bot = 'Bot'
 }
 
 type GithubCommentUserApiType = {
@@ -73,11 +73,7 @@ export type {
 	GithubCommentApiType,
 	AzureDevOpsCommentsApiType,
 	GithubCommentsApiType,
-	AzureDevOpsCommentType,
+	AzureDevOpsCommentType
 };
 
-export {
-	AzureDevOpsCommentStatusApiEnum,
-	AzureDevOpsCommentApiEnum,
-	GithubUserEnum,
-};
+export { AzureDevOpsCommentStatusApiEnum, AzureDevOpsCommentApiEnum, GithubUserEnum };

@@ -1,6 +1,6 @@
 import type {
 	AzureDevOpsAvatarApiType,
-	AzureDevOpsDescriptorApiType,
+	AzureDevOpsDescriptorApiType
 } from './AvatarApiType';
 import type {
 	CommentsApiType,
@@ -8,7 +8,7 @@ import type {
 	GithubCommentApiType,
 	AzureDevOpsCommentsApiType,
 	GithubCommentsApiType,
-	AzureDevOpsCommentType,
+	AzureDevOpsCommentType
 } from './CommentsApiType';
 import type { IdentityType } from './IdentityType';
 import type {
@@ -16,26 +16,26 @@ import type {
 	AzureDevOpsOrganizationApiType,
 	GithubOrganizationApiType,
 	AzureDevOpsOrganizationsApiType,
-	GithubOrganizationsApiType,
+	GithubOrganizationsApiType
 } from './OrganizationsApiType';
 import type {
 	ProfileApiType,
 	AzureDevOpsProfileApiType,
-	GithubProfileApiType,
+	GithubProfileApiType
 } from './ProfileApiType';
 import type {
 	ProjectsApiType,
 	AzureDevOpsProjectApiType,
 	GithubProjectApiType,
 	AzureDevOpsProjectsApiType,
-	GithubProjectsApiType,
+	GithubProjectsApiType
 } from './ProjectsApiType';
 import type {
 	PullRequestsApiType,
 	AzureDevOpsPullRequestApiType,
 	GithubPullRequestApiType,
 	AzureDevOpsPullRequestsApiType,
-	GithubPullRequestsApiType,
+	GithubPullRequestsApiType
 } from './PullRequestsApiType';
 import type {
 	RepositoriesApiType,
@@ -43,19 +43,19 @@ import type {
 	GithubRepositoryApiType,
 	AzureDevOpsRepositoriesApiType,
 	GithubRepositoriesApiType,
-	GithubSeachRepositoriesApiType,
+	GithubSeachRepositoriesApiType
 } from './RepositoriesApiType';
 import type {
 	AzureDevOpsReviewApiType,
 	AzureDevOpsReviewsApiType,
 	GithubReviewApiType,
-	GithubReviewsApiType,
+	GithubReviewsApiType
 } from './ReviewsApiType';
 
 import {
 	AzureDevOpsCommentStatusApiEnum,
 	AzureDevOpsCommentApiEnum,
-	GithubUserEnum,
+	GithubUserEnum
 } from './CommentsApiType';
 import { AzureDevOpsVoteEnum, GithubVoteEnum } from './ReviewsApiType';
 
@@ -96,7 +96,7 @@ export type {
 	AzureDevOpsReviewApiType,
 	AzureDevOpsReviewsApiType,
 	GithubReviewApiType,
-	GithubReviewsApiType,
+	GithubReviewsApiType
 };
 
 export {
@@ -104,5 +104,5 @@ export {
 	AzureDevOpsCommentApiEnum,
 	GithubUserEnum,
 	AzureDevOpsVoteEnum,
-	GithubVoteEnum,
+	GithubVoteEnum
 };

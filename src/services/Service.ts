@@ -3,7 +3,7 @@ import type {
 	ProfileType,
 	ProjectType,
 	PullRequestType,
-	RepositoryType,
+	RepositoryType
 } from 'models/skizzle';
 import { ProviderEnum } from 'models/skizzle';
 import { isFetchingData, profiles } from 'shared/stores/default.store';
@@ -31,12 +31,12 @@ export interface IService {
 export class Service {
 	private static readonly INSTANCES: Dictionary<IService> = {
 		[ProviderEnum.AzureDevOps]: OAuthAzureDevOpsService.getInstance(),
-		[ProviderEnum.Github]: OAuthGithubService.getInstance(),
+		[ProviderEnum.Github]: OAuthGithubService.getInstance()
 	};
 
 	public static async getProfile(
 		provider: ProviderEnum,
-		userId?: string,
+		userId?: string
 	): Promise<ProfileType> {
 		isFetchingData.set(true);
 		try {
@@ -58,14 +58,11 @@ export class Service {
 	public static async getAvatar(
 		provider: ProviderEnum,
 		params: string,
-		organizationName?: string,
+		organizationName?: string
 	): Promise<string> {
 		isFetchingData.set(true);
 		try {
-			const result = await Service.INSTANCES[provider].getAvatar(
-				params,
-				organizationName,
-			);
+			const result = await Service.INSTANCES[provider].getAvatar(params, organizationName);
 			isFetchingData.set(false);
 			return result;
 		} catch {
@@ -75,7 +72,7 @@ export class Service {
 
 	public static async getRepositories(
 		provider: ProviderEnum,
-		params: ServiceParams,
+		params: ServiceParams
 	): Promise<RepositoryType[]> {
 		isFetchingData.set(true);
 		try {
@@ -89,7 +86,7 @@ export class Service {
 
 	public static async getPullRequests(
 		provider: ProviderEnum,
-		params: ServiceParams,
+		params: ServiceParams
 	): Promise<PullRequestType[]> {
 		isFetchingData.set(true);
 		try {

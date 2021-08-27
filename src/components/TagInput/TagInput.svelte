@@ -15,7 +15,7 @@
 	let mouseOverSuggestion: boolean = false;
 
 	const inputTag = (
-		event: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement },
+		event: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }
 	) => {
 		const value = event.currentTarget.value;
 
@@ -48,9 +48,7 @@
 	$: chipTags = [...tags] as string[];
 	$: suggestionsFiltered = suggestions
 		.filter(x => !chipTags.includes(x))
-		.filter(x =>
-			x.toLocaleLowerCase().startsWith(value.toLocaleLowerCase()),
-		) as string[];
+		.filter(x => x.toLocaleLowerCase().startsWith(value.toLocaleLowerCase())) as string[];
 </script>
 
 {#if show}

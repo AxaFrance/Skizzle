@@ -19,15 +19,15 @@ export default class OAuthWindow {
 			show: false,
 			webPreferences: {
 				nodeIntegration: false,
-				contextIsolation: true,
-			},
+				contextIsolation: true
+			}
 		});
 	}
 
 	public startRequest(
 		authorizationUrl: string,
 		event: Electron.IpcMainEvent,
-		isSilent = false,
+		isSilent = false
 	): void {
 		const values = Object.entries(this.params)
 			.filter(([key, _]) => !this.authorizeFilter.some(x => x === key))
@@ -41,12 +41,8 @@ export default class OAuthWindow {
 			this.window.show();
 		}
 
-		this.window.webContents.on('will-navigate', (e, url) =>
-			this.login(event, url),
-		);
-		this.window.webContents.on('will-redirect', (e, url) =>
-			this.login(event, url),
-		);
+		this.window.webContents.on('will-navigate', (e, url) => this.login(event, url));
+		this.window.webContents.on('will-redirect', (e, url) => this.login(event, url));
 	}
 
 	private login(event: Electron.IpcMainEvent, url: string): void {
@@ -57,7 +53,7 @@ export default class OAuthWindow {
 		if (_accessCode) {
 			event.sender.send('getToken', {
 				code: _accessCode,
-				...this.params,
+				...this.params
 			});
 
 			if (this.window) {
@@ -66,11 +62,7 @@ export default class OAuthWindow {
 		}
 	}
 
-	public async requestToken(
-		url: string,
-		body: string | object,
-		settings?: SettingsType,
-	) {
+	public async requestToken(url: string, body: string | object, settings?: SettingsType) {
 		try {
 			const result = await request.post(url).proxy(settings.proxy).send(body);
 

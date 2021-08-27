@@ -1,63 +1,13 @@
-<style>
-	.content {
-		flex: 1 0 auto;
-		padding: 1rem;
-	}
-
-	.field {
-		display: flex;
-	}
-
-	.field :global(svg) {
-		display: block;
-		width: 15rem;
-		height: auto;
-		border: 4px solid #fff;
-	}
-
-	[type='radio'] {
-		display: none;
-	}
-
-	.field :global([type='range']) {
-		max-width: 15rem;
-	}
-
-	.ui {
-		opacity: 0.5;
-		margin-right: 1rem;
-		cursor: pointer;
-		transition: opacity linear 0.2s, box-shadow linear 0.2s;
-	}
-
-	.ui:hover {
-		opacity: 1;
-	}
-
-	input:checked + .ui {
-		opacity: 1;
-		box-shadow: 0 0 0 4px var(--color);
-	}
-
-	form :global(h1) {
-		margin-bottom: 2rem;
-	}
-
-	.field {
-		margin-bottom: 1rem;
-	}
-</style>
-
 <script lang="ts">
-	import AccountTitle from 'components/AccountTitle'
-	import Fieldset from 'components/Fieldset'
-	import Range from 'components/Range'
-	import { ThemeEnum } from 'models/skizzle'
-	import { settings } from 'shared/stores/default.store'
-	import Icons from 'components/icons'
-	import Switch from 'components/Switch'
+	import AccountTitle from 'components/AccountTitle';
+	import Fieldset from 'components/Fieldset';
+	import Range from 'components/Range';
+	import { ThemeEnum } from 'models/skizzle';
+	import { settings } from 'shared/stores/default.store';
+	import Icons from 'components/icons';
+	import Switch from 'components/Switch';
 
-	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS'
+	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS';
 </script>
 
 <div class="content">
@@ -131,3 +81,53 @@
 		</Fieldset>
 	</form>
 </div>
+
+<style>
+	.content {
+		flex: 1 0 auto;
+		padding: 1rem;
+	}
+
+	.field {
+		display: flex;
+	}
+
+	.field :global(svg) {
+		display: block;
+		width: 15rem;
+		height: auto;
+		border: 4px solid #fff;
+	}
+
+	[type='radio'] {
+		display: none;
+	}
+
+	.field :global([type='range']) {
+		max-width: 15rem;
+	}
+
+	.ui {
+		opacity: 0.5;
+		margin-right: 1rem;
+		cursor: pointer;
+		transition: opacity linear 0.2s, box-shadow linear 0.2s;
+	}
+
+	.ui:hover {
+		opacity: 1;
+	}
+
+	input:checked + .ui {
+		opacity: 1;
+		box-shadow: 0 0 0 4px var(--color);
+	}
+
+	form :global(h1) {
+		margin-bottom: 2rem;
+	}
+
+	.field {
+		margin-bottom: 1rem;
+	}
+</style>

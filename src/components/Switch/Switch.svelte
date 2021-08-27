@@ -1,3 +1,19 @@
+<script lang="ts">
+	import { v4 as uuid } from 'uuid';
+	export let active: boolean = false;
+	export let label: string = null;
+	export let vspace: number = 0;
+
+	let id = uuid();
+</script>
+
+<div style={`margin-bottom: ${vspace * 0.5}rem`}>
+	<input {id} type="checkbox" bind:checked={active} />
+	{#if label}
+		<label for={id}>{label}</label>
+	{/if}
+</div>
+
 <style>
 	input {
 		display: none;
@@ -44,19 +60,3 @@
 		transform: translateX(calc(100% + 2px)) translateY(-50%);
 	}
 </style>
-
-<script lang="ts">
-	import { v4 as uuid } from 'uuid'
-	export let active: boolean = false
-	export let label: string = null
-	export let vspace: number = 0
-
-	let id = uuid()
-</script>
-
-<div style={`margin-bottom: ${vspace * 0.5}rem`}>
-	<input {id} type="checkbox" bind:checked={active} />
-	{#if label}
-		<label for={id}>{label}</label>
-	{/if}
-</div>

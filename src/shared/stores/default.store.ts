@@ -5,7 +5,7 @@ import type {
 	RepositoryType,
 	SettingsType,
 	NotificationType,
-	ProfileType,
+	ProfileType
 } from 'models/skizzle';
 import { ThemeEnum, ProviderEnum } from 'models/skizzle';
 import { Service } from 'services/Service';
@@ -14,10 +14,7 @@ import { createStore } from './store';
 import { v4 as uuidv4 } from 'uuid';
 import { remote } from 'shared/remote';
 
-const predicate = <T extends CommonType>(
-	value: T[],
-	provider: ProviderEnum,
-): T[] => {
+const predicate = <T extends CommonType>(value: T[], provider: ProviderEnum): T[] => {
 	return value.filter(x => x.provider !== provider);
 };
 
@@ -35,7 +32,7 @@ export const refreshPullRequests = async () => {
 			try {
 				for (const repository of values) {
 					result = result.concat(
-						await Service.getPullRequests(repository.provider, { repository }),
+						await Service.getPullRequests(repository.provider, { repository })
 					);
 				}
 			} catch {
@@ -44,9 +41,7 @@ export const refreshPullRequests = async () => {
 
 			const newValues = result.filter(
 				pullRequest =>
-					!oldValues.some(
-						({ pullRequestId }) => pullRequest.pullRequestId === pullRequestId,
-					),
+					!oldValues.some(({ pullRequestId }) => pullRequest.pullRequestId === pullRequestId)
 			);
 
 			if (newValues.length > 0) {
@@ -62,15 +57,13 @@ export const refreshPullRequests = async () => {
 
 				remote.send('notifier', {
 					title,
-					body,
+					body
 				});
 			}
 			0;
 
 			pullRequests.reset();
-			pullRequests.set(
-				result.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)),
-			);
+			pullRequests.set(result.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)));
 		}
 	}
 };
@@ -78,11 +71,11 @@ export const refreshPullRequests = async () => {
 export const profiles = createStore<ProfileType[]>([], { key: 'profiles' });
 export const pullRequests = createStore<PullRequestType[]>([], {
 	key: 'pullRequests',
-	predicate,
+	predicate
 });
 export const repositories = createStore<RepositoryType[]>([], {
 	key: 'repositories',
-	predicate,
+	predicate
 });
 export const isLoading = createStore<boolean>(false, {});
 export const isFetchingData = createStore<boolean>(false, {});
@@ -95,11 +88,11 @@ export const offline = createStore<boolean>(false, {
 				...notifications,
 				{
 					text: 'Vous êtes actuellement deconnecté',
-					id: uuidv4(),
-				},
+					id: uuidv4()
+				}
 			]);
 		}
-	},
+	}
 });
 export const settings = createStore<SettingsType>(
 	{
@@ -126,11 +119,11 @@ export const settings = createStore<SettingsType>(
 			});
 
 			remote.send('launch-startup', settings.launch_at_startup);
-		},
-	},
+		}
+	}
 );
 export const customLists = createStore<CustomListType[]>([], {
-	key: 'customLists',
+	key: 'customLists'
 });
 
 export const needIntro = createStore<boolean>(true, { key: 'needIntro' });

@@ -46,10 +46,7 @@
 		</p>
 	{/await}
 {:else}
-	<AddAccount
-		text={`Ajouter un compte ${provider}`}
-		{provider}
-	/>
+	<AddAccount text={`Ajouter un compte ${provider}`} {provider} />
 {/if}
 
 <style>

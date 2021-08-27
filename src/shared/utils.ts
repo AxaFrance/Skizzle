@@ -9,11 +9,9 @@ export const addItem = <T>(key: string, value: T): void =>
 
 export const removeItem = (key: string): void => localStorage.removeItem(key);
 
-export const removeItems = (keys: string[]): void =>
-	keys.forEach(key => removeItem(key));
+export const removeItems = (keys: string[]): void => keys.forEach(key => removeItem(key));
 
-export const getItem = <T>(key: string): T =>
-	JSON.parse(localStorage.getItem(key)) as T;
+export const getItem = <T>(key: string): T => JSON.parse(localStorage.getItem(key)) as T;
 
 export const existValue = <T>(items: T[], value: T) =>
 	!!items && items.some(x => x === value);
@@ -50,8 +48,8 @@ export const copyToClipboard = async (data: string, message: string) => {
 			...notifications,
 			{
 				text: message,
-				id: uuidv4(),
-			},
+				id: uuidv4()
+			}
 		]);
 	}
 };
@@ -67,23 +65,46 @@ export const isJson = (str: string): boolean => {
 
 export const getLabelsFrom = (pullRequests: PullRequestType[]): string[] => {
 	return pullRequests.reduce((acc, curr) => {
-		const result = (curr.labels || []).map(value => {
-			if (value?.name && !acc.includes(value.name)) {
-				return value.name;
-			}
-		}, []).filter(x => x);
+		const result = (curr.labels || [])
+			.map(value => {
+				if (value?.name && !acc.includes(value.name)) {
+					return value.name;
+				}
+			}, [])
+			.filter(x => x);
 
 		return [...acc, ...result];
-	}, [])
-}
+	}, []);
+};
 
-export const getPullRequestsFromCustomSettings = (pullRequests: PullRequestType[], settings: CustomListType): PullRequestType[] => {
-	return pullRequests.filter(pr => !settings.provider || settings.provider === pr.provider)
+export const getPullRequestsFromCustomSettings = (
+	pullRequests: PullRequestType[],
+	settings: CustomListType
+): PullRequestType[] => {
+	return pullRequests
+		.filter(pr => !settings.provider || settings.provider === pr.provider)
 		.filter(pr => !settings.repositoryId || settings.repositoryId === pr.repositoryId)
-		.filter(pr => settings.tags.length === 0 || settings.tags.some(x => (pr.labels ?? []).some(y => y.name === x)))
-		.filter(pr => !settings.withoutOwnedByUserPR || (settings.withoutOwnedByUserPR && pr.user.id && get(profiles).find(x => x.provider === pr.provider)?.id !== pr.user.id))
-		.filter(pr => !settings.withoutOldPR || (settings.withoutOldPR && pr.date && getDiffDays(new Date(pr.date)) < 30))
+		.filter(
+			pr =>
+				settings.tags.length === 0 ||
+				settings.tags.some(x => (pr.labels ?? []).some(y => y.name === x))
+		)
+		.filter(
+			pr =>
+				!settings.withoutOwnedByUserPR ||
+				(settings.withoutOwnedByUserPR &&
+					pr.user.id &&
+					get(profiles).find(x => x.provider === pr.provider)?.id !== pr.user.id)
+		)
+		.filter(
+			pr =>
+				!settings.withoutOldPR ||
+				(settings.withoutOldPR && pr.date && getDiffDays(new Date(pr.date)) < 30)
+		)
 		.filter(pr => !settings.withoutConflict || (settings.withoutConflict && !pr.isConflict))
-		.filter(pr => !settings.withoutDraft || (settings.withoutDraft && !pr.isDraft)) 
-		.filter(pr => !settings.withoutCheckedByOwner || (settings.withoutCheckedByOwner && !pr.hasReviewed));
-}
+		.filter(pr => !settings.withoutDraft || (settings.withoutDraft && !pr.isDraft))
+		.filter(
+			pr =>
+				!settings.withoutCheckedByOwner || (settings.withoutCheckedByOwner && !pr.hasReviewed)
+		);
+};

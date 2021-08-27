@@ -8,7 +8,7 @@ require('superagent-proxy')(superagent);
 export const requester = async (
 	url: string,
 	headers?: HeaderType,
-	settings?: SettingsType,
+	settings?: SettingsType
 ) => {
 	try {
 		//info('Begin', { url, headers, settings });

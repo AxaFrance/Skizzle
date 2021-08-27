@@ -29,8 +29,8 @@ export abstract class Requester<T extends OAuthConfigType> {
 				JSON.stringify({
 					url,
 					options: headers,
-					settings: get(settings),
-				}),
+					settings: get(settings)
+				})
 			)) as S;
 
 			return data;

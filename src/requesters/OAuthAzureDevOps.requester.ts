@@ -15,7 +15,7 @@ import type {
 	AzureDevOpsRepositoryApiType,
 	AzureDevOpsReviewApiType,
 	AzureDevOpsReviewsApiType,
-	IdentityType,
+	IdentityType
 } from 'models/api';
 import type { HeaderType } from 'models/skizzle';
 import type { OAuthAzureDevOpsConfigType } from 'providers/OAuthAzureDevOpsConfig.provider';
@@ -25,7 +25,7 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 	public getHeader(config: OAuthAzureDevOpsConfigType): HeaderType {
 		return {
 			'content-type': 'application/json',
-			authorization: config.access_token,
+			authorization: config.access_token
 		};
 	}
 
@@ -35,33 +35,36 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 
 	public async getDescriptor(userId: IdentityType): Promise<string> {
 		return (
-			await super.fetch<AzureDevOpsDescriptorApiType>(config.AzureDevOps.get.descriptor(userId))
+			await super.fetch<AzureDevOpsDescriptorApiType>(
+				config.AzureDevOps.get.descriptor(userId)
+			)
 		).value;
 	}
 
-	public async getAvatar(
-		descriptor: string,
-		organizationName: string,
-	): Promise<string> {
+	public async getAvatar(descriptor: string, organizationName: string): Promise<string> {
 		return (
-			await super.fetch<AzureDevOpsAvatarApiType>(config.AzureDevOps.get.avatar(organizationName, descriptor))
+			await super.fetch<AzureDevOpsAvatarApiType>(
+				config.AzureDevOps.get.avatar(organizationName, descriptor)
+			)
 		).value;
 	}
 
 	public async getOrganizations(
-		userId?: string,
+		userId?: string
 	): Promise<AzureDevOpsOrganizationApiType[]> {
 		return (
-			await super.fetch<AzureDevOpsOrganizationsApiType>(config.AzureDevOps.get.organizations(userId))
+			await super.fetch<AzureDevOpsOrganizationsApiType>(
+				config.AzureDevOps.get.organizations(userId)
+			)
 		).value;
 	}
 
-	public async getProjects(
-		organization?: string,
-	): Promise<AzureDevOpsProjectApiType[]> {
-		try { 
+	public async getProjects(organization?: string): Promise<AzureDevOpsProjectApiType[]> {
+		try {
 			const projects = (
-				await super.fetch<AzureDevOpsProjectsApiType>(config.AzureDevOps.get.projects(organization))
+				await super.fetch<AzureDevOpsProjectsApiType>(
+					config.AzureDevOps.get.projects(organization)
+				)
 			)?.value;
 
 			return projects || [];
@@ -73,13 +76,15 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 
 	public async getRepositories(
 		organization?: string,
-		project?: string,
+		project?: string
 	): Promise<AzureDevOpsRepositoryApiType[]> {
-		try { 
+		try {
 			const repositories = (
-				await super.fetch<AzureDevOpsRepositoriesApiType>(config.AzureDevOps.get.repositories(organization, project))
+				await super.fetch<AzureDevOpsRepositoriesApiType>(
+					config.AzureDevOps.get.repositories(organization, project)
+				)
 			).value;
-	
+
 			return repositories;
 		} catch (err) {
 			console.error(err);
@@ -90,10 +95,12 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 	public async getPullRequests(
 		organization?: string,
 		project?: string,
-		repository?: string,
+		repository?: string
 	): Promise<AzureDevOpsPullRequestApiType[]> {
 		const pullRequests = (
-			await super.fetch<AzureDevOpsPullRequestsApiType>(config.AzureDevOps.get.pullRequests(organization, project, repository))
+			await super.fetch<AzureDevOpsPullRequestsApiType>(
+				config.AzureDevOps.get.pullRequests(organization, project, repository)
+			)
 		).value;
 
 		return pullRequests
@@ -105,10 +112,12 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		organization?: string,
 		project?: string,
 		repository?: string,
-		pullRequest?: string,
+		pullRequest?: string
 	): Promise<AzureDevOpsCommentApiType[]> {
 		return (
-			await super.fetch<AzureDevOpsCommentsApiType>(config.AzureDevOps.get.comments(organization, project, repository, pullRequest))
+			await super.fetch<AzureDevOpsCommentsApiType>(
+				config.AzureDevOps.get.comments(organization, project, repository, pullRequest)
+			)
 		).value;
 	}
 
@@ -116,10 +125,12 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 		organization?: string,
 		project?: string,
 		repository?: string,
-		pullRequest?: string,
+		pullRequest?: string
 	): Promise<AzureDevOpsReviewApiType[]> {
 		return (
-			await super.fetch<AzureDevOpsReviewsApiType>(config.AzureDevOps.get.reviews(organization, project, repository, pullRequest),)
+			await super.fetch<AzureDevOpsReviewsApiType>(
+				config.AzureDevOps.get.reviews(organization, project, repository, pullRequest)
+			)
 		).value;
 	}
 }

@@ -1,7 +1,4 @@
-import type {
-	AzureDevOpsRepositoryApiType,
-	GithubRepositoryApiType,
-} from 'models/api';
+import type { AzureDevOpsRepositoryApiType, GithubRepositoryApiType } from 'models/api';
 import type { RepositoryType } from 'models/skizzle';
 import { From, Mapper } from './Mapper';
 
@@ -10,10 +7,7 @@ export type RepositoryMapperType = From<
 	GithubRepositoryApiType
 >;
 
-export class RepositoryMapper extends Mapper<
-	RepositoryMapperType,
-	RepositoryType
-> {
+export class RepositoryMapper extends Mapper<RepositoryMapperType, RepositoryType> {
 	public to(data: RepositoryMapperType[], params: any): RepositoryType[] {
 		return data.map(value => {
 			return {
@@ -24,7 +18,7 @@ export class RepositoryMapper extends Mapper<
 				gitUrl:
 					value.clone_url ||
 					`https://dev.azure.com/${params.organizationName}/${params.projectName}/_git/${value.name}.git`,
-				...params,
+				...params
 			};
 		});
 	}

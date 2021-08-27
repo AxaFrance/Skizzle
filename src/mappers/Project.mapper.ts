@@ -1,14 +1,8 @@
-import type {
-	AzureDevOpsProjectApiType,
-	GithubProjectApiType,
-} from 'models/api';
+import type { AzureDevOpsProjectApiType, GithubProjectApiType } from 'models/api';
 import type { ProjectType } from 'models/skizzle';
 import { From, Mapper } from './Mapper';
 
-export type ProjectMapperType = From<
-	AzureDevOpsProjectApiType,
-	GithubProjectApiType
->;
+export type ProjectMapperType = From<AzureDevOpsProjectApiType, GithubProjectApiType>;
 
 export class ProjectMapper extends Mapper<ProjectMapperType, ProjectType> {
 	public to(data: ProjectMapperType[], params: any): ProjectType[] {
@@ -16,11 +10,11 @@ export class ProjectMapper extends Mapper<ProjectMapperType, ProjectType> {
 			const data = {
 				projectId: value.id,
 				name: value.name,
-				...params,
+				...params
 			};
 
 			return {
-				...data,
+				...data
 			};
 		});
 	}

@@ -10,9 +10,18 @@
 		pending: Icons.Wait,
 		comment: Icons.Bubble,
 		requestChange: Icons.Change,
-		rejected: Icons.Rejected,
+		rejected: Icons.Rejected
 	};
 </script>
+
+{#each Object.entries(reviews) as [key, value]}
+	{#if key !== 'others'}
+		<div title={key}>
+			<svelte:component this={icons[key]} color="#fff" />
+			<span>{value}</span>
+		</div>
+	{/if}
+{/each}
 
 <style>
 	div {
@@ -39,12 +48,3 @@
 		line-height: 1;
 	}
 </style>
-
-{#each Object.entries(reviews) as [key, value]}
-	{#if key !== 'others'}
-		<div title={key}>
-			<svelte:component this={icons[key]} color="#fff" />
-			<span>{value}</span>
-		</div>
-	{/if}
-{/each}

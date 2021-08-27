@@ -3,7 +3,7 @@
 		offline,
 		profiles,
 		pullRequests,
-		repositories,
+		repositories
 	} from 'shared/stores/default.store';
 	import Icons from 'components/icons';
 	import type { ProviderEnum } from 'models/skizzle/ProviderEnum';
@@ -18,7 +18,7 @@
 		pullRequests.reset(provider);
 		client.update(n => ({
 			...n,
-			[provider]: {},
+			[provider]: {}
 		}));
 	};
 </script>
@@ -28,7 +28,9 @@
 		<img width="64" height="64" src={profile.avatar} alt={profile.name} />
 	</div>
 	<div class="user">
-		<span class="name">{(profile?.email) ? profile?.name : 'Utilisateur/Utilisatrice anonyme'}</span>
+		<span class="name"
+			>{profile?.email ? profile?.name : 'Utilisateur/Utilisatrice anonyme'}</span
+		>
 		{#if profile?.email}<span class="email">{profile.email}</span>{/if}
 	</div>
 	<button

@@ -1,3 +1,7 @@
+<h1>
+	<slot />
+</h1>
+
 <style>
 	h1 {
 		display: flex;
@@ -12,7 +16,3 @@
 		align-items: center;
 	}
 </style>
-
-<h1>
-	<slot />
-</h1>

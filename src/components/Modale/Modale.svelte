@@ -1,3 +1,17 @@
+<script lang="ts">
+	import { fly, fade } from 'svelte/transition';
+	export let onClose: () => void;
+	export let fullHeight: boolean = true;
+</script>
+
+<div class="overlay" on:click={onClose} in:fade out:fade />
+<div in:fly={{ y: 200 }} out:fly={{ y: 200 }} class="modale" class:fullHeight>
+	<button on:click={onClose}>Fermer</button>
+	<div class="content">
+		<slot />
+	</div>
+</div>
+
 <style>
 	.overlay {
 		position: fixed;
@@ -60,17 +74,3 @@
 		}
 	}
 </style>
-
-<script lang="ts">
-	import { fly, fade } from 'svelte/transition'
-	export let onClose: () => void
-	export let fullHeight: boolean = true
-</script>
-
-<div class="overlay" on:click={onClose} in:fade out:fade />
-<div in:fly={{ y: 200 }} out:fly={{ y: 200 }} class="modale" class:fullHeight>
-	<button on:click={onClose}>Fermer</button>
-	<div class="content">
-		<slot />
-	</div>
-</div>

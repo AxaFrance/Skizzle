@@ -5,6 +5,8 @@
 	export let value: number;
 </script>
 
+<input {min} {max} {step} bind:value type="range" />
+
 <style>
 	input[type='range'] {
 		-webkit-appearance: none;
@@ -32,5 +34,3 @@
 		transform: translateY(calc(-50% + 0.25rem));
 	}
 </style>
-
-<input {min} {max} {step} bind:value type="range" />

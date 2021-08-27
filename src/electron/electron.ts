@@ -22,7 +22,7 @@ import { requester } from './requester';
 try {
 	autoUpdater.logger = require('electron-log');
 	require('electron-reloader')(module);
-} catch (_) { }
+} catch (_) {}
 
 const setAppUserModelId = () => {
 	//@ts-ignore
@@ -43,7 +43,7 @@ const hangOrCrash = async (window: BrowserWindow) => {
 		type: 'info',
 		title: 'Renderer Process Hanging',
 		message: 'This process is hanging.',
-		buttons: ['Reload', 'Close'],
+		buttons: ['Reload', 'Close']
 	};
 
 	const index = await dialog.showMessageBox(window, options);
@@ -67,13 +67,13 @@ const createWindow = () => {
 		minHeight: 500,
 		height: 768,
 		resizable: true,
-		icon: path.join(__dirname, '../../', (isMacOs) ? 'assets/icon.icns' : 'assets/icon.ico'),
+		icon: path.join(__dirname, '../../', isMacOs ? 'assets/icon.icns' : 'assets/icon.ico'),
 		webPreferences: {
-			preload: path.join(__dirname, "../../preload.js"),
+			preload: path.join(__dirname, '../../preload.js'),
 			contextIsolation: true,
 			nodeIntegration: false,
 			experimentalFeatures: true
-		},
+		}
 	});
 
 	const url = app.isPackaged
@@ -104,10 +104,7 @@ const createWindow = () => {
 	window.once('focus', () => window.flashFrame(false));
 	window.flashFrame(true);
 
-	const iconName =
-		isMacOs
-			? 'assets/icon-macos.png'
-			: 'assets/icon.png';
+	const iconName = isMacOs ? 'assets/icon-macos.png' : 'assets/icon.png';
 
 	const iconPath = path.join(__dirname, '../../', iconName);
 
@@ -118,7 +115,7 @@ const createWindow = () => {
 	const contextMenu = Menu.buildFromTemplate([
 		{
 			label: 'About Skizzle',
-			role: 'about',
+			role: 'about'
 		},
 		{
 			label: 'Edit',
@@ -127,7 +124,7 @@ const createWindow = () => {
 				{
 					label: 'Redo',
 					accelerator: 'Shift+CmdOrCtrl+Z',
-					role: 'redo',
+					role: 'redo'
 				},
 				{ type: 'separator' },
 				{ label: 'Cut', accelerator: 'CmdOrCtrl+X', role: 'cut' },
@@ -136,16 +133,16 @@ const createWindow = () => {
 				{
 					label: 'Select All',
 					accelerator: 'CmdOrCtrl+A',
-					role: 'selectAll',
-				},
-			],
+					role: 'selectAll'
+				}
+			]
 		},
 		{
 			label: 'Quit',
 			role: 'quit',
 			click: () => app.quit(),
-			accelerator: 'CommandOrControl+Q',
-		},
+			accelerator: 'CommandOrControl+Q'
+		}
 	]);
 
 	tray.setContextMenu(contextMenu);
@@ -163,10 +160,10 @@ const createWindow = () => {
 			params: {
 				client_id: '90831528b6fd1b9f98d7',
 				scope: 'repo user read:org',
-				client_secret: 'dd17cefb74536fa55088ae713f220bf736e5b310',
-			},
+				client_secret: 'dd17cefb74536fa55088ae713f220bf736e5b310'
+			}
 		},
-		['client_secret'],
+		['client_secret']
 	);
 
 	azure = new OAuthWindow(
@@ -182,17 +179,24 @@ const createWindow = () => {
 				scope:
 					'vso.analytics vso.build vso.code vso.connected_server vso.dashboards vso.entitlements vso.extension vso.extension.data vso.graph vso.identity vso.loadtest vso.machinegroup_manage vso.memberentitlementmanagement vso.notification vso.packaging vso.project vso.release vso.securefiles_read vso.serviceendpoint vso.symbols vso.taskgroups_read vso.test vso.variablegroups_read vso.wiki vso.work',
 				client_assertion:
-					'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im9PdmN6NU1fN3AtSGpJS2xGWHo5M3VfVjBabyJ9.eyJjaWQiOiIyNjk0MDg2Ni0yNTc1LTQ2MjctYjJhNC1kZmY1OTcyMTcyYjMiLCJjc2kiOiJlMmMyNmQyOC00MDljLTQ2OTAtYWM4Mi1mZDc5Y2U3NDk0NjgiLCJuYW1laWQiOiI2ZTBkMzcwYi01ZDA1LTY3ODgtYjk0ZC1lY2E2ODU5ZTRhZTEiLCJpc3MiOiJhcHAudnN0b2tlbi52aXN1YWxzdHVkaW8uY29tIiwiYXVkIjoiYXBwLnZzdG9rZW4udmlzdWFsc3R1ZGlvLmNvbSIsIm5iZiI6MTU3OTg4MjU4OSwiZXhwIjoxNzM3NzM1Mzg5fQ.JZ3XeXL22-nw-9BHi3sigm_Wruj1uPKBO-bA_um3tFaauex2eTvsEPPJZ3C5GYOdldroMRE_UGZUvBNctL2Ya6JjjESWEwwhTb2kkHs9r466ewnU7l-UfjdWV-cPJoKWlfEhU7IfH1PD1eSPJijXeB6zQYpPkM-TNAyVZl3PwOoOFdqkQrV1_eufxfiYeO9aBaxCCtzo_b3PsgvSVuZxGVWVdS0svX8bB_RKiwcWCcR089-5OnhK38OZVfx-RVP2HF2Eb-xmqTsQjcvWMdBam_sND3HKeo02GnxrByBizvTLyb6cE1yJJ-K1YY9vIGuWMaYjBLXFWEykYD60tr_bog',
-			},
+					'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im9PdmN6NU1fN3AtSGpJS2xGWHo5M3VfVjBabyJ9.eyJjaWQiOiIyNjk0MDg2Ni0yNTc1LTQ2MjctYjJhNC1kZmY1OTcyMTcyYjMiLCJjc2kiOiJlMmMyNmQyOC00MDljLTQ2OTAtYWM4Mi1mZDc5Y2U3NDk0NjgiLCJuYW1laWQiOiI2ZTBkMzcwYi01ZDA1LTY3ODgtYjk0ZC1lY2E2ODU5ZTRhZTEiLCJpc3MiOiJhcHAudnN0b2tlbi52aXN1YWxzdHVkaW8uY29tIiwiYXVkIjoiYXBwLnZzdG9rZW4udmlzdWFsc3R1ZGlvLmNvbSIsIm5iZiI6MTU3OTg4MjU4OSwiZXhwIjoxNzM3NzM1Mzg5fQ.JZ3XeXL22-nw-9BHi3sigm_Wruj1uPKBO-bA_um3tFaauex2eTvsEPPJZ3C5GYOdldroMRE_UGZUvBNctL2Ya6JjjESWEwwhTb2kkHs9r466ewnU7l-UfjdWV-cPJoKWlfEhU7IfH1PD1eSPJijXeB6zQYpPkM-TNAyVZl3PwOoOFdqkQrV1_eufxfiYeO9aBaxCCtzo_b3PsgvSVuZxGVWVdS0svX8bB_RKiwcWCcR089-5OnhK38OZVfx-RVP2HF2Eb-xmqTsQjcvWMdBam_sND3HKeo02GnxrByBizvTLyb6cE1yJJ-K1YY9vIGuWMaYjBLXFWEykYD60tr_bog'
+			}
 		},
-		['client_assertion'],
+		['client_assertion']
 	);
 };
 
-autoUpdater.on('update-downloaded', () => window.webContents.send('check-for-update-response'));
+autoUpdater.on('update-downloaded', () =>
+	window.webContents.send('check-for-update-response')
+);
 
-ipcMain.handle('check-for-update-request', async (event, _) => (await autoUpdater.checkForUpdates()).updateInfo.version);
-ipcMain.handle('check-for-update-restart', async (event, _) => autoUpdater.quitAndInstall(true, true));
+ipcMain.handle(
+	'check-for-update-request',
+	async (event, _) => (await autoUpdater.checkForUpdates()).updateInfo.version
+);
+ipcMain.handle('check-for-update-restart', async (event, _) =>
+	autoUpdater.quitAndInstall(true, true)
+);
 
 ipcMain.handle('copy-to-clipboard', async (event, url: string) => {
 	clipboard.writeText(url, 'clipboard');
@@ -204,10 +208,7 @@ ipcMain.handle('isMaximized', event => window.isMaximized());
 
 ipcMain.handle(
 	'file-export',
-	async (
-		event: Electron.IpcMainEvent,
-		currentTabData: CustomListType,
-	) => {
+	async (event: Electron.IpcMainEvent, currentTabData: CustomListType) => {
 		try {
 			const { filePath } = await dialog.showSaveDialog(window, {
 				title: 'Exporter la liste sous...',
@@ -215,21 +216,18 @@ ipcMain.handle(
 				filters: [
 					{
 						name: 'Skizzle List',
-						extensions: ['json'],
-					},
-				],
+						extensions: ['json']
+					}
+				]
 			});
 
-			fs.writeFileSync(
-				filePath,
-				JSON.stringify(currentTabData, undefined, 2),
-			);
+			fs.writeFileSync(filePath, JSON.stringify(currentTabData, undefined, 2));
 
 			return true;
 		} catch {
 			return false;
 		}
-	},
+	}
 );
 
 ipcMain.handle('file-import', async (event: Electron.IpcMainEvent) => {
@@ -237,7 +235,7 @@ ipcMain.handle('file-import', async (event: Electron.IpcMainEvent) => {
 		const { filePaths } = await dialog.showOpenDialog(window, {
 			properties: ['openFile'],
 			title: 'Importer une liste',
-			filters: [{ name: 'Skizzle List', extensions: ['json'] }],
+			filters: [{ name: 'Skizzle List', extensions: ['json'] }]
 		});
 
 		return fs.readFileSync(filePaths[0], 'utf8');
@@ -248,39 +246,36 @@ ipcMain.handle('file-import', async (event: Electron.IpcMainEvent) => {
 
 ipcMain.on('restart', () => {
 	app.relaunch();
-	app.exit()
-})
+	app.exit();
+});
 
-ipcMain.on(
-	'state',
-	(event: Electron.IpcMainEvent, { state }: { state: WindowEnum }) => {
-		switch (state) {
-			case WindowEnum.Maximize:
-				window.maximize();
-				break;
-			case WindowEnum.Minimize:
-				window.minimize();
-				break;
-			case WindowEnum.Unmaximize:
-				window.unmaximize();
-				break;
-			case WindowEnum.Hide:
-				window.hide();
-				break;
-		}
-	},
-);
+ipcMain.on('state', (event: Electron.IpcMainEvent, { state }: { state: WindowEnum }) => {
+	switch (state) {
+		case WindowEnum.Maximize:
+			window.maximize();
+			break;
+		case WindowEnum.Minimize:
+			window.minimize();
+			break;
+		case WindowEnum.Unmaximize:
+			window.unmaximize();
+			break;
+		case WindowEnum.Hide:
+			window.hide();
+			break;
+	}
+});
 
 if (app.isPackaged) {
 	const settings = app.getLoginItemSettings();
 
 	app.setLoginItemSettings({
-		openAtLogin: settings.openAtLogin,
+		openAtLogin: settings.openAtLogin
 	});
 
 	ipcMain.on('launch-startup', (event, arg) => {
 		app.setLoginItemSettings({
-			openAtLogin: arg,
+			openAtLogin: arg
 		});
 	});
 }
@@ -315,15 +310,11 @@ if (!gotTheLock) {
 				azure.startRequest(
 					'https://app.vssps.visualstudio.com/oauth2/authorize',
 					event,
-					isSilent,
+					isSilent
 				);
 				break;
 			case ProviderEnum.Github:
-				github.startRequest(
-					'https://github.com/login/oauth/authorize',
-					event,
-					isSilent,
-				);
+				github.startRequest('https://github.com/login/oauth/authorize', event, isSilent);
 				break;
 		}
 	});
@@ -332,11 +323,7 @@ if (!gotTheLock) {
 		'token',
 		async (
 			event,
-			{
-				key,
-				body,
-				settings,
-			}: { key: ProviderEnum; body: any; settings: SettingsType },
+			{ key, body, settings }: { key: ProviderEnum; body: any; settings: SettingsType }
 		) => {
 			try {
 				switch (key) {
@@ -344,21 +331,21 @@ if (!gotTheLock) {
 						return azure.requestToken(
 							'https://app.vssps.visualstudio.com/oauth2/token',
 							body,
-							settings,
+							settings
 						);
 					case ProviderEnum.Github:
 						return github.requestToken(
 							'https://github.com/login/oauth/access_token',
 							body,
-							settings,
+							settings
 						);
 				}
 			} catch (err) {
 				return {
-					message: `Can't reach acces_token call: ${err}`,
+					message: `Can't reach acces_token call: ${err}`
 				};
 			}
-		},
+		}
 	);
 
 	ipcMain.handle('request', async (event, args) => {

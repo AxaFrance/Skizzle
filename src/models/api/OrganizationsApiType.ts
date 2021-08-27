@@ -17,13 +17,12 @@ type AzureDevOpsOrganizationsApiType = {
 	value: Array<AzureDevOpsOrganizationApiType> & OrganizationsApiType;
 };
 
-type GithubOrganizationsApiType = Array<GithubOrganizationApiType> &
-	OrganizationsApiType;
+type GithubOrganizationsApiType = Array<GithubOrganizationApiType> & OrganizationsApiType;
 
 export type {
 	OrganizationsApiType,
 	AzureDevOpsOrganizationApiType,
 	GithubOrganizationApiType,
 	AzureDevOpsOrganizationsApiType,
-	GithubOrganizationsApiType,
+	GithubOrganizationsApiType
 };

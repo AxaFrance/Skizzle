@@ -13,7 +13,7 @@
 
 	$: resultsFetching = Service.getRepositories(profile.provider, {
 		profile,
-		query,
+		query
 	});
 
 	$: resultsFetching.then(results => {
@@ -21,7 +21,7 @@
 			repos = results.filter(
 				({ projectName, name }) =>
 					name.toLocaleLowerCase().includes(query.toLocaleLowerCase()) ||
-					projectName?.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
+					projectName?.toLocaleLowerCase().includes(query.toLocaleLowerCase())
 			);
 		} else {
 			repos = results;
@@ -45,15 +45,12 @@
 						<li class="repo-project">
 							<span class="name">
 								{repository.fullName ||
-									(repository.projectName ? repository.projectName + ' / ' : '') +
-										repository.name}
+									(repository.projectName ? repository.projectName + ' / ' : '') + repository.name}
 							</span>
 							<input
 								type="checkbox"
 								id={repository.repositoryId}
-								checked={$repositories.some(
-									x => x.repositoryId === repository.repositoryId,
-								)}
+								checked={$repositories.some(x => x.repositoryId === repository.repositoryId)}
 								on:change={event => checkRepository(event, repository)}
 							/>
 							<label class="follow" for={repository.repositoryId}>

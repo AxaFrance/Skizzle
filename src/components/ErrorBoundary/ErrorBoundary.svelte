@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { remote } from "shared/remote";
+	import { remote } from 'shared/remote';
 
 	export let error = null;
 	export let onError = null;
@@ -10,8 +10,7 @@
 		}
 	};
 
-	let ENV =
-		typeof process !== 'undefined' && process.env && process.env.NODE_ENV;
+	let ENV = typeof process !== 'undefined' && process.env && process.env.NODE_ENV;
 	let DEV = ENV !== 'production';
 
 	$: if ($error && onError) onError($error);
@@ -23,12 +22,11 @@
 		<p>
 			Bien joué, celui-ci est plutôt rare puisque pas encore découvert par l'équipe
 			<!-- svelte-ignore a11y-invalid-attribute -->
-			de développement de Skizzle. Vous pouvez maintenant <a
+			de développement de Skizzle. Vous pouvez maintenant
+			<a
 				href="#"
 				on:click={() =>
-					remote.openDefaultBrowser(
-						'https://github.com/AxaGuilDEv/Skizzle/issues/new',
-					)}
+					remote.openDefaultBrowser('https://github.com/AxaGuilDEv/Skizzle/issues/new')}
 			>
 				créer une issue sur Github
 			</a>

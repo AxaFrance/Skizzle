@@ -27,10 +27,9 @@
 <section>
 	<AccountTitle>
 		Vos repositories suivis
-		<button
-			title="Partager votre liste"
-			on:click={() => (shareDisplayed = true)}
-		><Icons.Share /></button>
+		<button title="Partager votre liste" on:click={() => (shareDisplayed = true)}
+			><Icons.Share /></button
+		>
 	</AccountTitle>
 	<p class="intro">
 		Vous suivez actuellement <b>{followedRepositories.length}</b>
@@ -50,7 +49,7 @@
 						on:click={() =>
 							copyToClipboard(
 								repository.gitUrl,
-								`L'url du repository est copiée dans le presse-papiers.`,
+								`L'url du repository est copiée dans le presse-papiers.`
 							)}
 						title="Copier l'url de ce repository"
 					>
@@ -69,10 +68,7 @@
 	</ul>
 	{#if shareDisplayed}
 		<Modale onClose={() => (shareDisplayed = false)} fullHeight={false}>
-			<ImportExport
-				{followedRepositories}
-				bind:shareDisplayed
-			/>
+			<ImportExport {followedRepositories} bind:shareDisplayed />
 		</Modale>
 	{/if}
 </section>

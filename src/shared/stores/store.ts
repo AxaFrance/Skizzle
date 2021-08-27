@@ -14,11 +14,11 @@ const getStoreValue = (storage, initialValue) => {
 	}
 
 	return storage ? storage : initialValue;
-}
+};
 
 export const createStore = <T>(
 	initialValue: T,
-	{ key, predicate, subscriber }: StoreOptionsType<T>,
+	{ key, predicate, subscriber }: StoreOptionsType<T>
 ) => {
 	const storage = getItem<T>(key);
 
@@ -44,6 +44,6 @@ export const createStore = <T>(
 				set(initialValue);
 			}
 		},
-		initialValue,
+		initialValue
 	};
 };

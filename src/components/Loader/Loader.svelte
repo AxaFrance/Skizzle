@@ -1,3 +1,13 @@
+<script lang="ts">
+	import { fade } from 'svelte/transition';
+	import { isFetchingData, isLoading, settings } from 'shared/stores/default.store';
+	$: compact = $settings.compact;
+</script>
+
+{#if $isLoading || $isFetchingData}
+	<div in:fade out:fade={{ delay: 200 }} class:compact />
+{/if}
+
 <style>
 	div {
 		animation: fadeIn 0.2s;
@@ -60,13 +70,3 @@
 		}
 	}
 </style>
-
-<script lang="ts">
-	import { fade } from 'svelte/transition'
-	import { isFetchingData, isLoading, settings } from 'shared/stores/default.store'
-	$: compact = $settings.compact
-</script>
-
-{#if $isLoading || $isFetchingData}
-	<div in:fade out:fade={{ delay: 200 }} class:compact />
-{/if}

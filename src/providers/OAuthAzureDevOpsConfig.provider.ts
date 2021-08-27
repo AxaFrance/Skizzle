@@ -17,7 +17,7 @@ export class OAuthAzureDevOpsConfig extends OAuthConfig<OAuthAzureDevOpsConfigTy
 		'client_assertion',
 		'grant_type',
 		'assertion',
-		'redirect_uri',
+		'redirect_uri'
 	];
 
 	constructor() {
@@ -27,12 +27,11 @@ export class OAuthAzureDevOpsConfig extends OAuthConfig<OAuthAzureDevOpsConfigTy
 
 		this.params = {
 			...this.params,
-			client_assertion_type:
-				'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+			client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
 			grant_type: this.params.refresh_token
 				? 'refresh_token'
 				: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-			assertion,
+			assertion
 		};
 	}
 

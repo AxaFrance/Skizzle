@@ -1,8 +1,5 @@
 import { CommentMapper, CommentMapperType } from './Comment.mapper';
-import {
-	OrganizationMapper,
-	OrganizationMapperType,
-} from './Organization.mapper';
+import { OrganizationMapper, OrganizationMapperType } from './Organization.mapper';
 import { ProfileMapper, ProfileMapperType } from './Profile.mapper';
 import { ProjectMapper, ProjectMapperType } from './Project.mapper';
 import { PullRequestMapper, PullRequestMapperType } from './PullRequest.mapper';
@@ -18,7 +15,7 @@ export {
 	PullRequestMapper,
 	RepositoryMapper,
 	ReviewMapper,
-	Mapper,
+	Mapper
 };
 
 export type {
@@ -27,5 +24,5 @@ export type {
 	ProfileMapperType,
 	ProjectMapperType,
 	PullRequestMapperType,
-	RepositoryMapperType,
+	RepositoryMapperType
 };

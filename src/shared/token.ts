@@ -4,9 +4,7 @@ import { isLoading, settings } from './stores/default.store';
 import { remote } from './remote';
 import { client } from './stores/authentication.store';
 
-const getToken = async <T extends OAuthConfigType>(
-	config: OAuthConfig<T>,
-) => {
+const getToken = async <T extends OAuthConfigType>(config: OAuthConfig<T>) => {
 	const provider = config.getProvider();
 
 	const body = config.getBody();
@@ -14,7 +12,7 @@ const getToken = async <T extends OAuthConfigType>(
 	const result = await remote.invoke('token', {
 		key: provider,
 		body,
-		settings: get(settings),
+		settings: get(settings)
 	});
 
 	if (result.message) {
@@ -22,7 +20,7 @@ const getToken = async <T extends OAuthConfigType>(
 
 		client.update(n => ({
 			...n,
-			[provider]: {},
+			[provider]: {}
 		}));
 	} else {
 		if (result.access_token) {
@@ -31,12 +29,12 @@ const getToken = async <T extends OAuthConfigType>(
 				[provider]: {
 					...n[provider],
 					...result,
-					current_date: new Date(),
-				},
+					current_date: new Date()
+				}
 			}));
 		}
 	}
 	isLoading.set(false);
 };
 
-export { getToken }
+export { getToken };

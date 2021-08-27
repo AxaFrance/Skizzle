@@ -3,17 +3,10 @@ import {
 	ProfileMapper,
 	ProjectMapper,
 	PullRequestMapper,
-	RepositoryMapper,
+	RepositoryMapper
 } from 'mappers';
-import {
-	AzureDevOpsCommentApiEnum,
-	AzureDevOpsCommentStatusApiEnum,
-} from 'models/api';
-import type {
-	ProfileType,
-	PullRequestType,
-	RepositoryType,
-} from 'models/skizzle';
+import { AzureDevOpsCommentApiEnum, AzureDevOpsCommentStatusApiEnum } from 'models/api';
+import type { ProfileType, PullRequestType, RepositoryType } from 'models/skizzle';
 import { ProviderEnum } from 'models/skizzle';
 import { OAuthAzureDevOpsRequester } from 'requesters/OAuthAzureDevOps.requester';
 import { clientAuthenticated } from 'shared/stores/authentication.store';
@@ -49,39 +42,34 @@ export class OAuthAzureDevOpsService implements IService {
 
 		const profileMapped = profileMapper.to(profile, {
 			provider: this.provider,
-			descriptor,
+			descriptor
 		});
 
 		return profileMapped;
 	}
-	
-	public async getAvatar(
-		descriptor: string,
-		organizationName?: string,
-	): Promise<string> {
+
+	public async getAvatar(descriptor: string, organizationName?: string): Promise<string> {
 		const avatar = await this.requester.getAvatar(descriptor, organizationName);
 
 		return `data:image/png;base64,${avatar}`;
 	}
 
-	public async getRepositories({
-		profile,
-	}: ServiceParams): Promise<RepositoryType[]> {
+	public async getRepositories({ profile }: ServiceParams): Promise<RepositoryType[]> {
 		const { id } = profile;
 
 		const organizations = new OrganizationMapper().to(
 			await this.requester.getOrganizations(id),
-			{ provider: this.provider },
+			{ provider: this.provider }
 		);
 
 		const projects = (
 			await Promise.all(
 				organizations.map(async ({ organizationName }) => {
-					return new ProjectMapper().to(
-						await this.requester.getProjects(organizationName),
-						{ organizationName, provider: this.provider },
-					);
-				}),
+					return new ProjectMapper().to(await this.requester.getProjects(organizationName), {
+						organizationName,
+						provider: this.provider
+					});
+				})
 			)
 		).reduce((prev, curr) => prev.concat(curr), []);
 
@@ -94,31 +82,23 @@ export class OAuthAzureDevOpsService implements IService {
 							organizationName,
 							projectId,
 							projectName: name,
-							provider: this.provider,
-						},
+							provider: this.provider
+						}
 					);
-				}),
+				})
 			)
 		).reduce((prev, curr) => prev.concat(curr), []);
 
 		return repositories;
 	}
 
-	public async getPullRequests({
-		repository,
-	}: ServiceParams): Promise<PullRequestType[]> {
-		const {
-			organizationName,
-			projectId,
-			projectName,
-			repositoryId,
-			name,
-		} = repository;
+	public async getPullRequests({ repository }: ServiceParams): Promise<PullRequestType[]> {
+		const { organizationName, projectId, projectName, repositoryId, name } = repository;
 
 		let result = await this.requester.getPullRequests(
 			organizationName,
 			projectId,
-			repositoryId,
+			repositoryId
 		);
 
 		result = await Promise.all(
@@ -127,20 +107,20 @@ export class OAuthAzureDevOpsService implements IService {
 					organizationName,
 					projectId,
 					repositoryId,
-					pullRequest.pullRequestId,
+					pullRequest.pullRequestId
 				);
 
 				if (comments.length > 0) {
 					comments = comments.sort(
-						(a, b) => Date.parse(b.lastUpdatedDate) - Date.parse(a.lastUpdatedDate),
+						(a, b) => Date.parse(b.lastUpdatedDate) - Date.parse(a.lastUpdatedDate)
 					);
 					pullRequest.creationDate = comments[0].lastUpdatedDate;
 
 					comments.forEach(
 						comment =>
 							(comment.comments = comment.comments.filter(
-								x => x.commentType === AzureDevOpsCommentApiEnum.Text,
-							)),
+								x => x.commentType === AzureDevOpsCommentApiEnum.Text
+							))
 					);
 
 					comments = comments
@@ -148,7 +128,7 @@ export class OAuthAzureDevOpsService implements IService {
 							comment =>
 								comment.comments.length > 0 &&
 								!comment.isDeleted &&
-								comment.status === AzureDevOpsCommentStatusApiEnum.Active,
+								comment.status === AzureDevOpsCommentStatusApiEnum.Active
 						)
 						.reduce((acc, curr) => {
 							acc.push(...curr.comments);
@@ -160,7 +140,7 @@ export class OAuthAzureDevOpsService implements IService {
 				}
 
 				return pullRequest;
-			}),
+			})
 		);
 
 		return new PullRequestMapper().to(result, {
@@ -169,7 +149,7 @@ export class OAuthAzureDevOpsService implements IService {
 			projectName,
 			repositoryId,
 			repositoryName: name,
-			provider: this.provider,
+			provider: this.provider
 		});
 	}
 }
