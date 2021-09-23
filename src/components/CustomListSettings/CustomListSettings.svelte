@@ -1,24 +1,18 @@
 <script lang="ts">
-	import { v4 as uuidv4 } from 'uuid';
-	import {
-		getDateStr,
-		getLabelsFrom,
-		getPullRequestsFromCustomSettings
-	} from 'shared/utils';
 	import AccountTitle from 'components/AccountTitle';
+	import Radio from 'components/Radio';
+	import Switch from 'components/Switch';
+	import TagInput from 'components/TagInput';
 	import type { CustomListType, PullRequestType } from 'models/skizzle';
+	import { client } from 'shared/stores/authentication.store';
 	import {
 		customLists,
 		notifications,
 		pullRequests,
-		repositories,
-		settings
+		repositories
 	} from 'shared/stores/default.store';
-	import Icons from 'components/icons';
-	import TagInput from 'components/TagInput';
-	import { client } from 'shared/stores/authentication.store';
-	import Radio from 'components/Radio';
-	import Switch from 'components/Switch';
+	import { getLabelsFrom, getPullRequestsFromCustomSettings } from 'shared/utils';
+	import { v4 as uuidv4 } from 'uuid';
 
 	export let onDone: () => void;
 	export let isInCreationMode: boolean = false;
@@ -99,7 +93,9 @@
 
 <div>
 	<AccountTitle>
-		{customList.name ? 'Modification de la liste' : "Création d'une liste"}
+		{$customLists.some(x => x.id === customList.id)
+			? 'Modification de la liste'
+			: "Création d'une liste"}
 		<button class="import" on:click={onImport}>Importer</button>
 	</AccountTitle>
 	<div class="fields">
@@ -129,9 +125,13 @@
 		</div>
 		<div class="field">
 			<label for="repo">Afficher les pull requests de ce repository :</label>
-			<select id="repo" bind:value={customList.repositoryId}>
+			<select
+				id="repo"
+				bind:value={customList.repositoryId}
+				disabled={$repositories.length === 0}
+			>
 				<option value="">-- Selectionner un repository --</option>
-				{#each $repositories as repository}
+				{#each $repositories.filter(x => !customList.provider || x.provider === customList.provider) as repository}
 					<option value={repository.repositoryId}>
 						{repository.name}
 					</option>
@@ -187,7 +187,9 @@
 </div>
 <div class="action">
 	<button class="cancel" on:click={() => onDone()}>Annuler</button>
-	<button class="cta" on:click={() => saveSettings()}>Enregistrer</button>
+	<button class="cta" on:click={() => saveSettings()} disabled={!customList.name}
+		>Enregistrer</button
+	>
 </div>
 
 <style>
@@ -249,7 +251,6 @@
 		padding: 0.5rem 1rem;
 		color: #fff;
 		font-size: 1rem;
-		cursor: pointer;
 		border-radius: 4px;
 		border: none;
 		background-color: var(--color);
