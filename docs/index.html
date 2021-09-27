@@ -106,15 +106,19 @@
 		</ul>
 	</div>
 	<footer class="skz-footer">
-		<a class="skz-download" download>Download Skizzle for macOS</a>
-		<div class="doge">
-			<span>Wow.</span>
-			<span>Such download</span>
-			<span>Many good app</span>
-			<span>Very enjoyable</span>
-			<span>Much code reviews</span>
-			<span>So thank you</span>
+		<div class="skz-download-container">
+			<a class="skz-download" download>Download Skizzle for macOS</a>
+			<a class="skz-secondary-download" download>Download Skizzle for Windows</a>
+			<div class="doge">
+				<span>Wow.</span>
+				<span>Such download</span>
+				<span>Many good app</span>
+				<span>Very enjoyable</span>
+				<span>Much code reviews</span>
+				<span>So thank you</span>
+			</div>
 		</div>
+
 		<p>
 			Skizzle is an
 			<a href="https://github.com/AxaGuilDEv/Skizzle">open source project</a>
@@ -126,29 +130,39 @@
 	<script>
 		var version = '1.2.0';
 
-		function getFileName() {
+		function getIsMacOS() {
 			var platform = window.navigator.platform;
 			var macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
-			var fileName =
-				'https://github.com/AxaGuilDEv/Skizzle/releases/download/v' +
-				version +
-				'/Skizzle-' +
-				(macosPlatforms.indexOf(platform) !== -1 ? '' : 'Setup-') +
-				version;
 
-			if (macosPlatforms.indexOf(platform) !== -1) {
-				return fileName + '.dmg';
+			return macosPlatforms.indexOf(platform) !== -1;
+		}
+
+		function getFileName() {
+			var url = 'https://github.com/AxaGuilDEv/Skizzle/releases/download/v'
+			var macOSFileName = url + version + '/Skizzle-' + version + '.dmg';
+			var windowsFileName = url + version + '/Skizzle-Setup-' + version + '.exe';
+
+			return {
+				macOSFileName,
+				windowsFileName
 			}
-
-			return fileName + '.exe';
 		}
 
 		document.addEventListener('DOMContentLoaded', () => {
-			var fileName = getFileName();
+			var { macOSFileName, windowsFileName } = getFileName();
 			var downloadButtons = document.querySelectorAll('.skz-download');
+			var secondariesDownloadButtons = document.querySelectorAll('.skz-secondary-download');
+
+			var isMacOS = getIsMacOS();
 
 			downloadButtons.forEach(function (button) {
-				button.setAttribute('href', fileName);
+				button.textContent = isMacOS ? 'Download Skizzle for macOS' : 'Download Skizzle for Windows';
+				button.setAttribute('href', isMacOS ? macOSFileName : windowsFileName);
+			});
+
+			secondariesDownloadButtons.forEach(function (button) {
+				button.textContent = isMacOS ? 'Download Skizzle for Windows' : 'Download Skizzle for macOS';
+				button.setAttribute('href', isMacOS ? windowsFileName : macOSFileName);
 			});
 		});
 	</script>
