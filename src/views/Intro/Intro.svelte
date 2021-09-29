@@ -6,6 +6,7 @@
 	import Tabs from 'components/Tabs';
 	import { needIntro } from 'shared/stores/default.store';
 	import ProviderAccount from 'components/ProviderAccount';
+	import { onMount } from 'svelte';
 
 	let step = 0;
 
@@ -28,6 +29,10 @@
 
 	const next = () => (step += 1);
 	const previous = () => (step -= 1);
+
+	onMount(() => {
+		localStorage.clear();
+	});
 </script>
 
 <main>
