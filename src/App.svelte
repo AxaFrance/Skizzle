@@ -32,15 +32,15 @@
 	window.addEventListener('online', () => offline.set(false));
 	window.addEventListener('offline', () => offline.set(true));
 
-	onMount(() => {
-		setInterval(async () => {
-			version = await remote.invoke('check-for-update-request');
-		}, 60000);
+	// onMount(() => {
+	// 	setInterval(async () => {
+	// 		version = await remote.invoke('check-for-update-request');
+	// 	}, 60000);
 
-		remote.receive('check-for-update-response', () => (update = true));
-	});
+	// 	remote.receive('check-for-update-response', () => (update = true));
+	// });
 
-	const checkForUpdateRestart = () => remote.invoke('check-for-update-restart');
+	// const checkForUpdateRestart = () => remote.invoke('check-for-update-restart');
 </script>
 
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
