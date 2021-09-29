@@ -81,6 +81,7 @@ body {
 	text-decoration: underline;
 	font-size: 0.8rem;
 	cursor: pointer;
+	color: #fff;
 }
 
 .skz-secondary-download:hover {
@@ -152,7 +153,9 @@ body {
 	z-index: 2;
 }
 
-.skz-footer .skz-download {
+.skz-download-container {
+	display: flex;
+	flex-direction: column;
 	margin: auto;
 }
 
@@ -180,6 +183,7 @@ body {
 	top: 0;
 	width: 100%;
 	height: 100%;
+	pointer-events: none;
 	font-family: 'Comic sans MS', sans-serif;
 }
 
@@ -223,7 +227,7 @@ body {
 	transition-delay: 2.5s;
 }
 
-.skz-download:hover + .doge span {
+[download]:hover ~ .doge span {
 	opacity: 1;
 }
 
