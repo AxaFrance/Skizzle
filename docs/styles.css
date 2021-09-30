@@ -38,13 +38,11 @@ body {
 .skz-hero {
 	position: relative;
 	overflow: hidden;
-	min-height: 45rem;
-	height: 30vh;
 	background: radial-gradient(circle, #333 000%, #000 100%);
 }
 
 .skz-title {
-	margin-top: 3rem;
+	margin-top: 0;
 	margin-bottom: 2rem;
 	text-align: center;
 	font-size: 3rem;
@@ -101,28 +99,33 @@ body {
 	flex-direction: column;
 	align-items: center;
 	text-align: center;
+	padding: 3rem;
 }
 
 .skz-details {
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-gap: 3rem;
 	width: 100%;
 	max-width: 1400px;
 	margin: 0 auto;
 	padding: 3rem;
 }
 
+@media only screen and (max-width: 800px) {
+	.skz-details {
+		grid-template-columns: none;
+	}
+}
+
 .skz-detail {
-	flex: 0 0 33.33%;
+	min-width: 12.5rem;
 	padding-left: 1rem;
 	border-left: 4px solid #ff8a00;
 }
 
 .skz-detail p {
 	line-height: 1.3;
-}
-
-.skz-detail:not(:last-child) {
-	margin-right: 3rem;
 }
 
 .skz-detail h2 {
@@ -144,7 +147,7 @@ body {
 	color: #fff;
 	font-size: 0.8rem;
 	padding: 3rem;
-	/* background-color: #222; */
+	overflow: hidden;
 	background: radial-gradient(circle, #333 000%, #000 100%);
 }
 
