@@ -14,10 +14,10 @@ export class OAuthGithubConfig extends OAuthConfig<OAuthGithubConfigType> {
 		super(ProviderEnum.Github);
 	}
 
-	public getBody(): OAuthGithubConfigType {
+	public getBody(config?: OAuthGithubConfigType): OAuthGithubConfigType {
 		const condition = new Set(this.bodyKeys);
 
-		return Object.entries(this.params).reduce((acc, [key, val]) => {
+		return Object.entries(config ?? this.params).reduce((acc, [key, val]) => {
 			if (condition.has(key)) {
 				acc[key] = val;
 			}

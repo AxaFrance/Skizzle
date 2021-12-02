@@ -1,14 +1,21 @@
+import { ProviderEnum, SettingsType, CustomListType } from 'models/skizzle';
+
 export {};
 
 declare global {
 	interface Window {
 		remote: {
-			send: (channel: string, ...args: any) => void;
-			receive: (channel: string, func: (...args: any) => void) => void;
-			once: (channel: string, func: (...args: any) => void) => void;
-			invoke: (channel: string, ...args: any) => any;
+			notification: (title: string, body: string) => void;
+			authorize: (channel: string, provider: ProviderEnum) => void;
+			setLaunchAtStartUp: (launchAtStartUp: boolean) => void;
+			restartApp: () => void;
+			fileImport: () => Promise<string>;
+			fileExport: (data: CustomListType) => Promise<boolean>;
+			copyToClipboard: (data: string) => Promise<boolean>;
+			checkForUpdateRequest: () => Promise<string>;
+			checkForUpdateRestart: () => void;
 			openDefaultBrowser: (url: string) => void;
-			isProduction: () => boolean;
+			receive: (channel: string, func: (...args: any) => void) => void;
 		};
 	}
 }

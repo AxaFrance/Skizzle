@@ -25,7 +25,7 @@ export class OAuthAzureDevOpsRequester extends Requester<OAuthAzureDevOpsConfigT
 	public getHeader(config: OAuthAzureDevOpsConfigType): HeaderType {
 		return {
 			'content-type': 'application/json',
-			authorization: config.access_token
+			authorization: `bearer ${config.access_token}`
 		};
 	}
 

@@ -1,3 +1,1 @@
-import type { Dictionary } from 'shared/utils';
-
-export type ReviewType = Dictionary<number>;
+export type ReviewType = Record<string, number>;

@@ -16,6 +16,7 @@ import { ProviderEnum } from './ProviderEnum';
 import { ThemeEnum } from './ThemeEnum';
 import { Views } from './ViewsEnum';
 import { WindowEnum } from './WindowEnum';
+import { FetchMethodEnum } from './FetchMethodEnum';
 
 export type {
 	CommentType,
@@ -35,4 +36,4 @@ export type {
 	HeaderType
 };
 
-export { ProviderEnum, ThemeEnum, Views, WindowEnum };
+export { ProviderEnum, ThemeEnum, Views, WindowEnum, FetchMethodEnum };

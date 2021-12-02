@@ -8,9 +8,10 @@
 	export let provider: ProviderEnum;
 	export let text: string;
 
-	const authorize = (provider: ProviderEnum, isSilent = false) => {
-		remote.send('oauth', provider, isSilent);
-		remote.receive('getToken', args =>
+	const authorize = () => {
+		const channel = 'getToken';
+		remote.authorize(channel, provider);
+		remote.receive(channel, args =>
 			client.update(n => ({
 				...n,
 				[provider]: {
@@ -26,7 +27,7 @@
 	<button
 		role="button"
 		title={text}
-		on:click={() => authorize(provider)}
+		on:click={() => authorize()}
 		disabled={$isFetchingData || $offline}><Icons.AddAccount />{text}</button
 	>
 </div>
