@@ -8,7 +8,7 @@ type StoreOptionsType<T> = {
 	subscriber?: (initialValue: T) => (value: T) => void;
 };
 
-const getStoreValue = (storage, initialValue) => {
+const getStoreValue = <T>(storage: T, initialValue: T) => {
 	if (typeof storage === 'boolean') {
 		return storage;
 	}

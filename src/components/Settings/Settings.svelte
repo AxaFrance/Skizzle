@@ -3,7 +3,7 @@
 	import Fieldset from 'components/Fieldset';
 	import Range from 'components/Range';
 	import { ThemeEnum } from 'models/skizzle';
-	import { settings } from 'shared/stores/default.store';
+	import { isElectron, settings } from 'shared/stores/default.store';
 	import Icons from 'components/icons';
 	import Switch from 'components/Switch';
 
@@ -26,21 +26,23 @@
 			</div>
 		</Fieldset>
 
-		<Fieldset
-			title="Au démarrage"
-			outro={`${
-				$settings.launch_at_startup
-					? 'Skizzle se lancera automatiquement à chaque démarrage de '
-					: 'Skizzle ne se lancera pas au démarrage de '
-			} ${currentPlatform}.`}
-		>
-			<Switch
-				vspace={2}
-				bind:active={$settings.launch_at_startup}
-				label="Lancer Skizzle au démarrage"
-			/>
-			<p class="text" />
-		</Fieldset>
+		{#if $isElectron}
+			<Fieldset
+				title="Au démarrage"
+				outro={`${
+					$settings.launch_at_startup
+						? 'Skizzle se lancera automatiquement à chaque démarrage de '
+						: 'Skizzle ne se lancera pas au démarrage de '
+				} ${currentPlatform}.`}
+			>
+				<Switch
+					vspace={2}
+					bind:active={$settings.launch_at_startup}
+					label="Lancer Skizzle au démarrage"
+				/>
+				<p class="text" />
+			</Fieldset>
+		{/if}
 
 		<Fieldset
 			title="Menu compact"
@@ -55,9 +57,11 @@
 			</select>
 		</Fieldset>
 
-		<Fieldset title="Proxy" intro="URL du serveur de proxy">
-			<input id="proxy" type="url" bind:value={$settings.proxy} />
-		</Fieldset>
+		{#if $isElectron}
+			<Fieldset title="Proxy" intro="URL du serveur de proxy">
+				<input id="proxy" type="url" bind:value={$settings.proxy} />
+			</Fieldset>
+		{/if}
 
 		<Fieldset title="Theme" intro="Choisissez un theme pour l'interface de Skizzle.">
 			<div class="field">

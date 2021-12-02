@@ -19,7 +19,7 @@ export class OAuthGithubRequester extends Requester<OAuthGithubConfigType> {
 	public getHeader(config: OAuthGithubConfigType): HeaderType {
 		return {
 			accept: 'application/vnd.github.v3+json',
-			authorization: config.access_token
+			authorization: `bearer ${config.access_token}`
 		};
 	}
 

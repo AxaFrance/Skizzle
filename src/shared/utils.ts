@@ -16,9 +16,7 @@ export const getItem = <T>(key: string): T => JSON.parse(localStorage.getItem(ke
 export const existValue = <T>(items: T[], value: T) =>
 	!!items && items.some(x => x === value);
 
-export type Dictionary<T> = {
-	[Key: string]: T;
-};
+export type Dictionary<T> = Record<string, T>;
 
 export const getDateStr = (date: Date): string => {
 	const diffDays = getDiffDays(date);
@@ -42,7 +40,7 @@ export const getDiffDays = (date: Date): number => {
 };
 
 export const copyToClipboard = async (data: string, message: string) => {
-	const result: boolean = await remote.invoke('copy-to-clipboard', data);
+	const result: boolean = await remote.copyToClipboard(data);
 	if (result) {
 		notifications.update(notifications => [
 			...notifications,

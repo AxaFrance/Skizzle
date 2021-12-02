@@ -4,12 +4,14 @@
 	import Switch from 'components/Switch';
 	import TagInput from 'components/TagInput';
 	import type { CustomListType, PullRequestType } from 'models/skizzle';
+	import { remote } from 'shared/remote';
 	import { client } from 'shared/stores/authentication.store';
 	import {
 		customLists,
 		notifications,
 		pullRequests,
-		repositories
+		repositories,
+		isElectron
 	} from 'shared/stores/default.store';
 	import { getLabelsFrom, getPullRequestsFromCustomSettings } from 'shared/utils';
 	import { v4 as uuidv4 } from 'uuid';
@@ -25,8 +27,23 @@
 	let isListDisplayed = false;
 
 	const onImport = async () => {
-		const result: any = await window.remote.invoke('file-import');
+		const result: any = await remote.fileImport();
 
+		readFile(result);
+	};
+
+	const onChangeFile = (event: Event) => {
+		const { files } = event.target as HTMLInputElement;
+
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			const content = reader.result as string;
+			readFile(content);
+		};
+		reader.readAsDataURL(files[0]);
+	};
+
+	const readFile = (result: any) => {
 		if (result) {
 			customList = { ...JSON.parse(result), id: uuidv4() } as CustomListType;
 
@@ -96,7 +113,16 @@
 		{$customLists.some(x => x.id === customList.id)
 			? 'Modification de la liste'
 			: "Création d'une liste"}
-		<button class="import" on:click={onImport}>Importer</button>
+		{#if $isElectron}
+			<button class="import" on:click={onImport}>Importer</button>
+		{:else}
+			<input
+				class="import"
+				type="file"
+				accept=".json"
+				on:change={event => onChangeFile(event)}
+			/>
+		{/if}
 	</AccountTitle>
 	<div class="fields">
 		<div class="field">

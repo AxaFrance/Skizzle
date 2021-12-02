@@ -9,19 +9,16 @@ const getToken = async <T extends OAuthConfigType>(config: OAuthConfig<T>) => {
 
 	const body = config.getBody();
 
-	const result = await remote.invoke('token', {
-		key: provider,
-		body,
-		settings: get(settings)
-	});
+	const result = await remote.getToken<T>(provider, body, get(settings));
 
-	if (result.message) {
-		console.error({ message: result.message });
+	if (!result || result?.message) {
+		console.error({ message: result?.message || 'Une erreur est survenue.' });
 
-		client.update(n => ({
-			...n,
-			[provider]: {}
-		}));
+		client.update(n => {
+			delete n[provider];
+
+			return n;
+		});
 	} else {
 		if (result.access_token) {
 			client.update(n => ({
