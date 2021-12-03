@@ -7,4 +7,5 @@ export type SettingsType = {
 	theme: ThemeEnum;
 	language: string;
 	compact: boolean;
+	preRelease: boolean;
 };

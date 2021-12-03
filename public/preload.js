@@ -20,10 +20,14 @@ contextBridge.exposeInMainWorld(
     fileExport: (data) => ipcRenderer.invoke('file-export', data),
     copyToClipboard: (data) => ipcRenderer.invoke('copy-to-clipboard', data),
     checkForUpdateRequest: () => ipcRenderer.invoke('check-for-update-request'),
-    checkForUpdateRestart: () => ipcRenderer.invoke('check-for-update-restart'),
+    checkForUpdateRestart: () => ipcRenderer.send('check-for-update-restart'),
     openDefaultBrowser: (url) => shell.openExternal(url),
     receive: (channel, func) => {
       ipcRenderer.on(channel, (event, ...args) => func(...args));
     },
+    setPreRelease: (preRelease) => {
+      ipcRenderer.send('toggle-pre-release', preRelease)
+    },
+    version: () => ipcRenderer.invoke('get-version'),
   }
 );

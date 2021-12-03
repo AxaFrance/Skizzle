@@ -97,7 +97,8 @@ export const settings = createStore<SettingsType>(
 		proxy: '',
 		theme: ThemeEnum.Orange,
 		language: 'en',
-		compact: false
+		compact: false,
+		preRelease: false
 	},
 	{
 		key: 'settings',
@@ -117,6 +118,8 @@ export const settings = createStore<SettingsType>(
 			if (isElectronRenderer()) {
 				remote.setLaunchAtStartUp(settings.launch_at_startup);
 			}
+
+			remote.setPreRelease(settings.preRelease);
 		}
 	}
 );

@@ -7,6 +7,7 @@
 	import Icons from 'components/icons';
 	import Switch from 'components/Switch';
 	import SkizzleCache from 'shared/cache';
+	import { remote } from 'shared/remote';
 
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS';
 </script>
@@ -52,6 +53,15 @@
 			<Switch bind:active={$settings.compact} label="Mode compact" />
 		</Fieldset>
 
+		{#if $isElectron}
+			<Fieldset
+				title="Pré-version"
+				intro="Ce paramètre permet d'accèder aux pré-version (Attention: ces versions peuvent être instables)."
+			>
+				<Switch bind:active={$settings.preRelease} label="Pré-version" />
+			</Fieldset>
+		{/if}
+
 		<Fieldset title="Langue" intro="Choisissez ici la langue de l'interface de Skizzle.">
 			<select>
 				<option value={$settings.language}>{$settings.language}</option>
@@ -63,7 +73,7 @@
 				<input id="proxy" type="url" bind:value={$settings.proxy} />
 			</Fieldset>
 		{/if}
-    
+
 		<Fieldset title="Cache" intro="Vider le cache de l'application.">
 			<button on:click={() => SkizzleCache.clear()}>Vider le cache</button>
 		</Fieldset>
@@ -89,6 +99,9 @@
 			</div>
 		</Fieldset>
 	</form>
+	{#await remote.getVersion() then version}
+		<small>Skizzle {version}</small>
+	{/await}
 </div>
 
 <style>

@@ -19,8 +19,6 @@ export type PullRequestMapperType = From<
 export class PullRequestMapper extends Mapper<PullRequestMapperType, PullRequestType> {
 	public to(data: PullRequestMapperType[], params: any): PullRequestType[] {
 		return data.map(value => {
-			const date = new Date(value.creationDate || value.updated_at);
-
 			const labels =
 				value.labels &&
 				value.labels.map((x: any) => {
@@ -71,6 +69,7 @@ export class PullRequestMapper extends Mapper<PullRequestMapperType, PullRequest
 					return (
 						profile.id === x.id.toString() &&
 						(`${key}` === AzureDevOpsVoteEnum.Approved.toString() ||
+							`${key}` === AzureDevOpsVoteEnum.ApproveWithSuggestions.toString() ||
 							`${key}` === GithubVoteEnum.Approved)
 					);
 				});

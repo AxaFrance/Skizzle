@@ -1,6 +1,5 @@
-import { get } from 'svelte/store';
 import type { OAuthConfig, OAuthConfigType } from 'providers';
-import { isLoading, settings } from './stores/default.store';
+import { isLoading } from './stores/default.store';
 import { remote } from './remote';
 import { client } from './stores/authentication.store';
 
@@ -9,7 +8,7 @@ const getToken = async <T extends OAuthConfigType>(config: OAuthConfig<T>) => {
 
 	const body = config.getBody();
 
-	const result = await remote.getToken<T>(provider, body, get(settings));
+	const result = await remote.getToken<T>(provider, body);
 
 	if (!result || result?.message) {
 		console.error({ message: result?.message || 'Une erreur est survenue.' });

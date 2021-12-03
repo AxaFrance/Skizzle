@@ -14,9 +14,15 @@
 	import { offline, settings, needIntro, isElectron } from 'shared/stores/default.store';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Intro from 'views/Intro';
+	import { bytesToSize } from 'shared/utils';
 
 	let update: boolean = false;
 	let version: string;
+	$: progressState = { enabled: false, percent: 0, bytesPerSecond: 0 } as {
+		enabled: boolean;
+		percent: number;
+		bytesPerSecond: number;
+	};
 
 	const views = {
 		[Views.Main]: Main,
@@ -41,7 +47,24 @@
 			}, 60000);
 
 			remote.receive('check-for-update-response', () => (update = true));
-			remote.receive('download-progress-response', progress => console.log({ progress }));
+			remote.receive('download-progress-response', progress => {
+				progressState = {
+					enabled: true,
+					percent: progress.percent,
+					bytesPerSecond: progress.bytesPerSecond
+				};
+
+				if (progress.percent === 100) {
+					setTimeout(() => {
+						progressState = {
+							enabled: false,
+							percent: 0,
+							bytesPerSecond: 0
+						};
+						update = true;
+					}, 1000);
+				}
+			});
 		}
 	});
 
@@ -62,6 +85,14 @@
 					<button on:click={() => checkForUpdateRestart()} title="Redémarrer"
 						><Icons.Check bind:color={$settings.theme} /></button
 					>
+				</div>
+			{/if}
+			{#if progressState.enabled && $isElectron}
+				<div class="downloaded" in:slide out:blur>
+					<p>Téléchargement de la nouvelle version de Skizzle (v.{version}).</p>
+					<p>
+						{progressState.percent.toFixed(0)}% {bytesToSize(progressState.bytesPerSecond)}
+					</p>
 				</div>
 			{/if}
 			<Loader />

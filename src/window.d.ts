@@ -16,6 +16,8 @@ declare global {
 			checkForUpdateRestart: () => void;
 			openDefaultBrowser: (url: string) => void;
 			receive: (channel: string, func: (...args: any) => void) => void;
+			setPreRelease: (preRelease: boolean) => void;
+			version: () => Promise<string>;
 		};
 	}
 }

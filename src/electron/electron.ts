@@ -188,6 +188,8 @@ ipcMain.handle(
 	async (event, _) => (await autoUpdater.checkForUpdates()).updateInfo.version
 );
 
+ipcMain.handle('get-version', (event, _) => app.getVersion());
+
 ipcMain.on('check-for-update-restart', (event, _) =>
 	autoUpdater.quitAndInstall(true, true)
 );
@@ -196,6 +198,10 @@ ipcMain.handle('copy-to-clipboard', async (event, url: string) => {
 	clipboard.writeText(url, 'clipboard');
 
 	return true;
+});
+
+ipcMain.on('toggle-pre-release', (event, arg) => {
+	autoUpdater.allowPrerelease = arg;
 });
 
 ipcMain.handle(

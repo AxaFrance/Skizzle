@@ -59,11 +59,7 @@ const data = {
 			}
 		}
 	},
-	getToken: async <T>(
-		provider: ProviderEnum,
-		body: string | T,
-		settings: SettingsType
-	) => {
+	getToken: async <T>(provider: ProviderEnum, body: string | T) => {
 		switch (provider) {
 			case ProviderEnum.AzureDevOps: {
 				const data = await ky('https://app.vssps.visualstudio.com/oauth2/token', {
@@ -159,6 +155,16 @@ const data = {
 	receive: (channel: string, func: (...args: any) => void) => {
 		if (isElectronRenderer()) {
 			window.remote.receive(channel, func);
+		}
+	},
+	setPreRelease: (preRelease: boolean) => {
+		if (isElectronRenderer()) {
+			window.remote.setPreRelease(preRelease);
+		}
+	},
+	getVersion: () => {
+		if (isElectronRenderer()) {
+			return window.remote.version();
 		}
 	}
 };
