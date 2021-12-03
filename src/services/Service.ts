@@ -1,7 +1,6 @@
 import type {
 	OrganizationType,
 	ProfileType,
-	ProjectType,
 	PullRequestType,
 	RepositoryType
 } from 'models/skizzle';
@@ -15,7 +14,6 @@ export type ServiceParams = {
 	query?: string;
 	profile?: ProfileType;
 	organization?: OrganizationType;
-	project?: ProjectType;
 	repository?: RepositoryType;
 	pullRequest?: PullRequestType;
 };

@@ -35,9 +35,7 @@
 	{:then}
 		<div class="container">
 			<h2>
-				Résultats pour "
-				<b>{query}</b>
-				"
+				Résultats pour "<b>{query}</b>"
 			</h2>
 			{#if repos}
 				<ul class="repo-projects">

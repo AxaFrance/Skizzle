@@ -33,6 +33,12 @@ export default class OAuthWindow {
 		this.window.loadURL(authURL);
 
 		this.window.show();
+    
+		this.window.on('close', event => {
+			event.preventDefault();
+
+			this.window.hide();
+		});
 
 		this.window.webContents.on('will-navigate', (e, url) =>
 			this.login(channel, event, url)

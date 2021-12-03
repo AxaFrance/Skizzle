@@ -3,4 +3,5 @@ export type HeaderType = {
 	'content-type'?: string;
 	authorization?: string;
 	'user-agent'?: string;
+	'x-cache-expires'?: string;
 };
