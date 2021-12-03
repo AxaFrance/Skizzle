@@ -10,7 +10,7 @@ type OwnerApiType = {
 type AzureDevOpsRepositoryApiType = {
 	id?: IdentityType;
 	name?: string;
-	projects?: AzureDevOpsProjectApiType;
+	project?: AzureDevOpsProjectApiType;
 };
 
 type GithubRepositoryApiType = {

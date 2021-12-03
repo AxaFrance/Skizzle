@@ -1,7 +1,6 @@
 import {
 	OrganizationMapper,
 	ProfileMapper,
-	ProjectMapper,
 	PullRequestMapper,
 	RepositoryMapper
 } from 'mappers';
@@ -62,26 +61,13 @@ export class OAuthAzureDevOpsService implements IService {
 			{ provider: this.provider }
 		);
 
-		const projects = (
-			await Promise.all(
-				organizations.map(async ({ organizationName }) => {
-					return new ProjectMapper().to(await this.requester.getProjects(organizationName), {
-						organizationName,
-						provider: this.provider
-					});
-				})
-			)
-		).reduce((prev, curr) => prev.concat(curr), []);
-
 		const repositories = (
 			await Promise.all(
-				projects.map(async ({ organizationName, projectId, name }) => {
+				organizations.map(async ({ organizationName }) => {
 					return new RepositoryMapper().to(
-						await this.requester.getRepositories(organizationName, projectId),
+						await this.requester.getRepositories(organizationName),
 						{
 							organizationName,
-							projectId,
-							projectName: name,
 							provider: this.provider
 						}
 					);
@@ -95,17 +81,12 @@ export class OAuthAzureDevOpsService implements IService {
 	public async getPullRequests({ repository }: ServiceParams): Promise<PullRequestType[]> {
 		const { organizationName, projectId, projectName, repositoryId, name } = repository;
 
-		let result = await this.requester.getPullRequests(
-			organizationName,
-			projectId,
-			repositoryId
-		);
+		let result = await this.requester.getPullRequests(organizationName, repositoryId);
 
 		result = await Promise.all(
 			result.map(async pullRequest => {
 				let comments = await this.requester.getComments(
 					organizationName,
-					projectId,
 					repositoryId,
 					pullRequest.pullRequestId
 				);

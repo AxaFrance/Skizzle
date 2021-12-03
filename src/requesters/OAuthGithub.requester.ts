@@ -16,15 +16,16 @@ import type { OAuthGithubConfigType } from 'providers/OAuthGithubConfig.provider
 import { Requester } from './Requester';
 
 export class OAuthGithubRequester extends Requester<OAuthGithubConfigType> {
-	public getHeader(config: OAuthGithubConfigType): HeaderType {
+	public getHeader(config: OAuthGithubConfigType, headers?: HeaderType): HeaderType {
 		return {
 			accept: 'application/vnd.github.v3+json',
-			authorization: `bearer ${config.access_token}`
+			authorization: `bearer ${config.access_token}`,
+			...headers
 		};
 	}
 
 	public async getProfile(): Promise<GithubProfileApiType> {
-		return super.fetch(config.Github.get.profile());
+		return super.fetch(config.Github.get.profile(), true);
 	}
 
 	public async getRepositories(

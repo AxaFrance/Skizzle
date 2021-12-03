@@ -6,6 +6,7 @@
 	import { isElectron, settings } from 'shared/stores/default.store';
 	import Icons from 'components/icons';
 	import Switch from 'components/Switch';
+	import SkizzleCache from 'shared/cache';
 
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS';
 </script>
@@ -62,6 +63,10 @@
 				<input id="proxy" type="url" bind:value={$settings.proxy} />
 			</Fieldset>
 		{/if}
+
+		<Fieldset title="Cache" intro="Vider le cache de l'application.">
+			<button on:click={() => SkizzleCache.clear()}>Vider le cache</button>
+		</Fieldset>
 
 		<Fieldset title="Theme" intro="Choisissez un theme pour l'interface de Skizzle.">
 			<div class="field">

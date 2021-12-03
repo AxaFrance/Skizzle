@@ -28,30 +28,16 @@ export const config: Record<ProviderEnum, ConfigType> = {
 				`https://vssps.dev.azure.com/${organization}/_apis/graph/Subjects/${descriptor}/avatars?size=large&api-version=${AZURE_DEV_OPS_API_VERSION}`,
 			organizations: (userId: IdentityType) =>
 				`https://app.vssps.visualstudio.com/_apis/accounts?memberId=${userId}&api-version=${AZURE_DEV_OPS_API_VERSION}`,
-			projects: (organization: string) =>
-				`https://dev.azure.com/${organization}/_apis/projects?$top=1000&api-version=${AZURE_DEV_OPS_API_VERSION}`,
-			repositories: (organization: string, project: IdentityType) =>
-				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories?includeLinks=true&api-version=${AZURE_DEV_OPS_API_VERSION}`,
-			pullRequests: (
-				organization: string,
-				project: IdentityType,
-				repository: IdentityType
-			) =>
-				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repository}/pullRequests?searchCriteria.status=active&includeLinks=true&api-version=${AZURE_DEV_OPS_API_VERSION}`,
+			repositories: (organization: string) =>
+				`https://dev.azure.com/${organization}/_apis/git/repositories?includeLinks=true&api-version=${AZURE_DEV_OPS_API_VERSION}`,
+			pullRequests: (organization: string, repository: IdentityType) =>
+				`https://dev.azure.com/${organization}/_apis/git/repositories/${repository}/pullRequests?searchCriteria.status=active&includeLinks=true&api-version=${AZURE_DEV_OPS_API_VERSION}`,
 			comments: (
 				organization: string,
-				project: IdentityType,
 				repository: IdentityType,
 				pullRequest: IdentityType
 			) =>
-				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repository}/pullRequests/${pullRequest}/threads?api-version=${AZURE_DEV_OPS_API_VERSION}`,
-			reviews: (
-				organization: string,
-				project: IdentityType,
-				repository: IdentityType,
-				pullRequest: IdentityType
-			) =>
-				`https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repository}/pullRequests/${pullRequest}/reviewers?api-version=${AZURE_DEV_OPS_API_VERSION}`
+				`https://dev.azure.com/${organization}/_apis/git/repositories/${repository}/pullRequests/${pullRequest}/threads?api-version=${AZURE_DEV_OPS_API_VERSION}`
 		},
 		oidc: {
 			authorize: 'https://app.vssps.visualstudio.com/oauth2/authorize',
