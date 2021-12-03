@@ -18,9 +18,9 @@ export abstract class OAuthConfig<T extends OAuthConfigType> {
 		this.provider = provider;
 	}
 
-	public abstract getBody(): T | string;
+	public abstract getBody(config?: T): T | string;
 
-	public getProvider(): string {
+	public getProvider(): ProviderEnum {
 		return this.provider;
 	}
 }

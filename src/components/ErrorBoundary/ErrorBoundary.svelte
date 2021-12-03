@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { remote } from 'shared/remote';
+	import { isElectron } from 'shared/stores/default.store';
 
 	export let error = null;
 	export let onError = null;
 
 	const restart = () => {
-		if (remote) {
-			remote.send('restart');
+		if ($isElectron) {
+			remote.restartApp();
 		}
 	};
 
@@ -32,7 +33,9 @@
 			</a>
 			pour nous le signaler. Merci !
 		</p>
-		<button on:click={restart}>Redémarrer Skizzle</button>
+		{#if $isElectron}
+			<button on:click={restart}>Redémarrer Skizzle</button>
+		{/if}
 		<div class="frame">
 			<b>{$error.message}</b>
 			<pre class="trace">

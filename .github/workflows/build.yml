@@ -21,11 +21,11 @@ jobs:
           node-version: 14
       - name: Install dependencies
         run: npm install
-      - name: Test electron application
-        run: npm run coverage
+      #- name: Test electron application
+      # run: npm run coverage
   build:
     if: github.ref == 'refs/heads/alpha' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/master'
-    #needs: test
+    needs: test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

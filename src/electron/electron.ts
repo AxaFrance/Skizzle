@@ -10,14 +10,12 @@ import {
 	nativeTheme
 } from 'electron';
 import OAuthWindow from './OAuthWindow';
-import { ProviderEnum } from '../models/skizzle/ProviderEnum';
+import type { ProviderEnum } from '../models/skizzle/ProviderEnum';
 import * as path from 'path';
 import * as fs from 'fs';
 import { autoUpdater } from 'electron-updater';
-import type { SettingsType } from '../models/skizzle/SettingsType';
 import type { CustomListType } from '../models/skizzle/CustomListType';
-import { WindowEnum } from '../models/skizzle/WindowEnum';
-import { requester } from './requester';
+import { config } from '../config';
 
 try {
 	autoUpdater.logger = require('electron-log');
@@ -34,8 +32,7 @@ setAppUserModelId();
 autoUpdater.autoInstallOnAppQuit = true;
 
 let window: BrowserWindow;
-let github: OAuthWindow;
-let azure: OAuthWindow;
+let children: Record<ProviderEnum, OAuthWindow> = undefined;
 let tray: Tray;
 
 const hangOrCrash = async (window: BrowserWindow) => {
@@ -72,7 +69,8 @@ const createWindow = () => {
 			preload: path.join(__dirname, '../../preload.js'),
 			contextIsolation: true,
 			nodeIntegration: false,
-			experimentalFeatures: true
+			experimentalFeatures: true,
+			webSecurity: false
 		}
 	});
 
@@ -154,47 +152,43 @@ const createWindow = () => {
 		window.focus();
 	});
 
-	github = new OAuthWindow(
-		{
-			parent: window,
-			params: {
-				client_id: '90831528b6fd1b9f98d7',
-				scope: 'repo user read:org',
-				client_secret: 'dd17cefb74536fa55088ae713f220bf736e5b310'
-			}
-		},
-		['client_secret']
-	);
+	children = Object.fromEntries(
+		Object.entries(config).reduce((acc, [key, value]) => {
+			acc.push([
+				key,
+				new OAuthWindow(
+					{
+						parent: window,
+						request: {
+							url: value.oidc.authorize
+						},
+						params: {
+							...value.oidc.params
+						}
+					},
+					value.oidc.unAuthorizedFilter
+				)
+			]);
 
-	azure = new OAuthWindow(
-		{
-			parent: window,
-			params: {
-				client_id: '26940866-2575-4627-B2A4-DFF5972172B3',
-				client_secret: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIs',
-				response_type: 'code',
-				redirect_uri: 'https://localhost:3000/',
-				post_logout_redirect_uri: 'https://localhost:3000/',
-				response_mode: 'query',
-				scope:
-					'vso.analytics vso.build vso.code vso.connected_server vso.dashboards vso.entitlements vso.extension vso.extension.data vso.graph vso.identity vso.loadtest vso.machinegroup_manage vso.memberentitlementmanagement vso.notification vso.packaging vso.project vso.release vso.securefiles_read vso.serviceendpoint vso.symbols vso.taskgroups_read vso.test vso.variablegroups_read vso.wiki vso.work',
-				client_assertion:
-					'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im9PdmN6NU1fN3AtSGpJS2xGWHo5M3VfVjBabyJ9.eyJjaWQiOiIyNjk0MDg2Ni0yNTc1LTQ2MjctYjJhNC1kZmY1OTcyMTcyYjMiLCJjc2kiOiJlMmMyNmQyOC00MDljLTQ2OTAtYWM4Mi1mZDc5Y2U3NDk0NjgiLCJuYW1laWQiOiI2ZTBkMzcwYi01ZDA1LTY3ODgtYjk0ZC1lY2E2ODU5ZTRhZTEiLCJpc3MiOiJhcHAudnN0b2tlbi52aXN1YWxzdHVkaW8uY29tIiwiYXVkIjoiYXBwLnZzdG9rZW4udmlzdWFsc3R1ZGlvLmNvbSIsIm5iZiI6MTU3OTg4MjU4OSwiZXhwIjoxNzM3NzM1Mzg5fQ.JZ3XeXL22-nw-9BHi3sigm_Wruj1uPKBO-bA_um3tFaauex2eTvsEPPJZ3C5GYOdldroMRE_UGZUvBNctL2Ya6JjjESWEwwhTb2kkHs9r466ewnU7l-UfjdWV-cPJoKWlfEhU7IfH1PD1eSPJijXeB6zQYpPkM-TNAyVZl3PwOoOFdqkQrV1_eufxfiYeO9aBaxCCtzo_b3PsgvSVuZxGVWVdS0svX8bB_RKiwcWCcR089-5OnhK38OZVfx-RVP2HF2Eb-xmqTsQjcvWMdBam_sND3HKeo02GnxrByBizvTLyb6cE1yJJ-K1YY9vIGuWMaYjBLXFWEykYD60tr_bog'
-			}
-		},
-		['client_assertion']
-	);
+			return acc;
+		}, [])
+	) as Record<ProviderEnum, OAuthWindow>;
 };
 
 autoUpdater.on('update-downloaded', () =>
 	window.webContents.send('check-for-update-response')
 );
 
+autoUpdater.on('download-progress', progress =>
+	window.webContents.send('download-progress-response', progress)
+);
+
 ipcMain.handle(
 	'check-for-update-request',
 	async (event, _) => (await autoUpdater.checkForUpdates()).updateInfo.version
 );
-ipcMain.handle('check-for-update-restart', async (event, _) =>
+
+ipcMain.on('check-for-update-restart', (event, _) =>
 	autoUpdater.quitAndInstall(true, true)
 );
 
@@ -203,8 +197,6 @@ ipcMain.handle('copy-to-clipboard', async (event, url: string) => {
 
 	return true;
 });
-
-ipcMain.handle('isMaximized', event => window.isMaximized());
 
 ipcMain.handle(
 	'file-export',
@@ -244,28 +236,6 @@ ipcMain.handle('file-import', async (event: Electron.IpcMainEvent) => {
 	}
 });
 
-ipcMain.on('restart', () => {
-	app.relaunch();
-	app.exit();
-});
-
-ipcMain.on('state', (event: Electron.IpcMainEvent, { state }: { state: WindowEnum }) => {
-	switch (state) {
-		case WindowEnum.Maximize:
-			window.maximize();
-			break;
-		case WindowEnum.Minimize:
-			window.minimize();
-			break;
-		case WindowEnum.Unmaximize:
-			window.unmaximize();
-			break;
-		case WindowEnum.Hide:
-			window.hide();
-			break;
-	}
-});
-
 if (app.isPackaged) {
 	const settings = app.getLoginItemSettings();
 
@@ -294,6 +264,7 @@ if (!gotTheLock) {
 	});
 
 	app.commandLine.appendSwitch('disable-site-isolation-trials');
+	app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
 
 	app.whenReady().then(() => {
 		createWindow();
@@ -304,56 +275,8 @@ if (!gotTheLock) {
 		});
 	});
 
-	ipcMain.on('oauth', async (event, key: ProviderEnum, isSilent = false) => {
-		switch (key) {
-			case ProviderEnum.AzureDevOps:
-				azure.startRequest(
-					'https://app.vssps.visualstudio.com/oauth2/authorize',
-					event,
-					isSilent
-				);
-				break;
-			case ProviderEnum.Github:
-				github.startRequest('https://github.com/login/oauth/authorize', event, isSilent);
-				break;
-		}
-	});
-
-	ipcMain.handle(
-		'token',
-		async (
-			event,
-			{ key, body, settings }: { key: ProviderEnum; body: any; settings: SettingsType }
-		) => {
-			try {
-				switch (key) {
-					case ProviderEnum.AzureDevOps:
-						return azure.requestToken(
-							'https://app.vssps.visualstudio.com/oauth2/token',
-							body,
-							settings
-						);
-					case ProviderEnum.Github:
-						return github.requestToken(
-							'https://github.com/login/oauth/access_token',
-							body,
-							settings
-						);
-				}
-			} catch (err) {
-				return {
-					message: `Can't reach acces_token call: ${err}`
-				};
-			}
-		}
-	);
-
-	ipcMain.handle('request', async (event, args) => {
-		const { url, options, settings } = JSON.parse(args);
-
-		options['user-agent'] = window.webContents.session.getUserAgent();
-
-		return requester(url, options, settings);
+	ipcMain.on('oauth', async (event, channel: string, key: ProviderEnum) => {
+		children[key].startRequest(channel, event);
 	});
 
 	ipcMain.on('notifier', (event, arg) => {

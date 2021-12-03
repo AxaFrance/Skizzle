@@ -22,7 +22,7 @@
 		const currentTabData = $customLists.find(customList => customList.id == currentTab);
 
 		if (currentTabData) {
-			const result: boolean = await remote.invoke('file-export', currentTabData);
+			const result: boolean = await remote.fileExport(currentTabData);
 
 			if (result) {
 				notifications.update(notifications => [

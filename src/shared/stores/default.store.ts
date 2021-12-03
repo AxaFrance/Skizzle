@@ -12,7 +12,7 @@ import { Service } from 'services/Service';
 import { get } from 'svelte/store';
 import { createStore } from './store';
 import { v4 as uuidv4 } from 'uuid';
-import { remote } from 'shared/remote';
+import { isElectronRenderer, remote } from 'shared/remote';
 
 const predicate = <T extends CommonType>(value: T[], provider: ProviderEnum): T[] => {
 	return value.filter(x => x.provider !== provider);
@@ -55,12 +55,8 @@ export const refreshPullRequests = async () => {
 						? 'Plusieurs repositories ont étés mis à jour'
 						: `Le repo ${newValues[0].repositoryName} a une nouvelle pull request`;
 
-				remote.send('notifier', {
-					title,
-					body
-				});
+				remote.notification(title, body);
 			}
-			0;
 
 			pullRequests.reset();
 			pullRequests.set(result.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)));
@@ -118,12 +114,14 @@ export const settings = createStore<SettingsType>(
 				}
 			});
 
-			remote.send('launch-startup', settings.launch_at_startup);
+			if (isElectronRenderer()) {
+				remote.setLaunchAtStartUp(settings.launch_at_startup);
+			}
 		}
 	}
 );
 export const customLists = createStore<CustomListType[]>([], {
 	key: 'customLists'
 });
-
 export const needIntro = createStore<boolean>(true, { key: 'needIntro' });
+export const isElectron = createStore<boolean>(isElectronRenderer(), {});

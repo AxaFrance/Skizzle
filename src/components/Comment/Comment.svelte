@@ -1,5 +1,5 @@
 <script lang="ts">
-	import marked from 'marked';
+	import { marked } from 'marked';
 	import { Service } from 'services/Service';
 	import type { CommentType } from 'models/skizzle';
 

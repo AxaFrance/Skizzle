@@ -35,8 +35,8 @@ export class OAuthAzureDevOpsConfig extends OAuthConfig<OAuthAzureDevOpsConfigTy
 		};
 	}
 
-	public getBody(): string {
-		return Object.entries(this.params)
+	public getBody(config?: OAuthAzureDevOpsConfigType): string {
+		return Object.entries(config ?? this.params)
 			.filter(([key, _]) => this.bodyKeys.some(x => x === key))
 			.map(([key, value]) => `${key}=${value}`)
 			.join('&');

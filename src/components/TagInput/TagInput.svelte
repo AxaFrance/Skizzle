@@ -81,6 +81,7 @@
 					<div
 						class="suggestions"
 						on:mouseover={() => (mouseOverSuggestion = true)}
+						on:focus={() => (mouseOverSuggestion = true)}
 						on:mouseleave={() => (mouseOverSuggestion = false)}
 					>
 						<ul>
