@@ -33,7 +33,7 @@ export default class OAuthWindow {
 		this.window.loadURL(authURL);
 
 		this.window.show();
-
+    
 		this.window.on('close', event => {
 			event.preventDefault();
 

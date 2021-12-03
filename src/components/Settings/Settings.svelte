@@ -63,7 +63,7 @@
 				<input id="proxy" type="url" bind:value={$settings.proxy} />
 			</Fieldset>
 		{/if}
-
+    
 		<Fieldset title="Cache" intro="Vider le cache de l'application.">
 			<button on:click={() => SkizzleCache.clear()}>Vider le cache</button>
 		</Fieldset>
