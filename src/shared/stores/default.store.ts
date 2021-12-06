@@ -94,11 +94,11 @@ export const settings = createStore<SettingsType>(
 	{
 		refresh_delay: 5,
 		launch_at_startup: false,
-		proxy: '',
 		theme: ThemeEnum.Orange,
 		language: 'en',
 		compact: false,
-		preRelease: false
+		preRelease: false,
+		updateAvailable: false
 	},
 	{
 		key: 'settings',
