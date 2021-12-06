@@ -1,21 +1,79 @@
 <script lang="ts">
-	import AccountTitle from 'components/AccountTitle';
 	import Fieldset from 'components/Fieldset';
-	import Range from 'components/Range';
-	import { ThemeEnum } from 'models/skizzle';
-	import { isElectron, settings } from 'shared/stores/default.store';
 	import Icons from 'components/icons';
+	import Range from 'components/Range';
 	import Switch from 'components/Switch';
+	import { ThemeEnum } from 'models/skizzle';
 	import SkizzleCache from 'shared/cache';
 	import { remote } from 'shared/remote';
+	import { isElectron, settings } from 'shared/stores/default.store';
+	import { bytesToSize } from 'shared/utils';
+	import { onMount } from 'svelte';
 
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS';
+	let update: boolean = false;
+	let version: string;
+
+	$: progressState = { enabled: false, percent: 0, bytesPerSecond: 0 } as {
+		enabled: boolean;
+		percent: number;
+		bytesPerSecond: number;
+	};
+
+	onMount(() => {
+		if ($isElectron) {
+			setInterval(async () => {
+				version = await remote.checkForUpdateRequest();
+			}, 60000);
+
+			remote.receive('check-for-update-response', () => (update = true));
+			remote.receive('download-progress-response', progress => {
+				progressState = {
+					enabled: true,
+					percent: progress.percent,
+					bytesPerSecond: progress.bytesPerSecond
+				};
+
+				if (progress.percent === 100) {
+					setTimeout(() => {
+						progressState = {
+							enabled: false,
+							percent: 0,
+							bytesPerSecond: 0
+						};
+						update = true;
+					}, 1000);
+				}
+			});
+		}
+	});
+
+	const checkForUpdateRestart = () => remote.checkForUpdateRestart();
 </script>
 
 <div class="content">
+	<div class="infos">
+		<Icons.Logo />
+		{#await remote.getVersion() then version}
+			<p class="version"><b>Version</b> : {version}</p>
+		{/await}
+		{#if update && $isElectron}
+			<div class="update">
+				<h2>Une nouvelle version est disponible ! 🎉</h2>
+				<p>Elle sera installée automatiquement au prochain démarrage de Skizzle.</p>
+				<button on:click={checkForUpdateRestart}>Redémarrer Skizzle</button>
+			</div>
+		{/if}
+		{#if progressState.enabled && $isElectron}
+			<div class="downloaded">
+				<p>Téléchargement de la nouvelle version de Skizzle (v.{version}).</p>
+				<p>
+					{progressState.percent.toFixed(0)}% {bytesToSize(progressState.bytesPerSecond)}
+				</p>
+			</div>
+		{/if}
+	</div>
 	<form>
-		<AccountTitle>Réglages</AccountTitle>
-
 		<Fieldset
 			title="Rafraichissement"
 			intro="Réglez ici le délai qu'utilisera Skizzle pour rafraichir les données."
@@ -99,12 +157,18 @@
 			</div>
 		</Fieldset>
 	</form>
-	{#await remote.getVersion() then version}
-		<small>Skizzle {version}</small>
-	{/await}
 </div>
 
 <style>
+	.infos {
+		margin-bottom: 2rem;
+	}
+
+	.version {
+		margin-bottom: 1rem;
+		font-size: 12px;
+	}
+
 	.content {
 		flex: 1 0 auto;
 		padding: 1rem;
@@ -146,10 +210,52 @@
 	}
 
 	form :global(h1) {
-		margin-bottom: 2rem;
+		margin-bottom: 1rem;
 	}
 
 	.field {
 		margin-bottom: 1rem;
+	}
+
+	.update {
+		position: relative;
+		padding: 1rem 1rem 1rem 1.5rem;
+		border-radius: 8px;
+		background-color: #444;
+	}
+
+	.update:before {
+		content: '';
+		position: absolute;
+		left: 0.5rem;
+		top: 0.5rem;
+		bottom: 0.5rem;
+		width: 3px;
+		border-radius: 8px;
+		background-color: var(--color);
+	}
+
+	.update h2 {
+		margin-bottom: 0.5rem;
+		font-size: 1.2rem;
+		font-family: 'Roboto slab', serif;
+	}
+
+	.update p {
+		font-size: 0.8rem;
+	}
+
+	.update button {
+		position: absolute;
+		right: 0.5rem;
+		top: 50%;
+		padding: 0.5rem 1rem;
+		color: #fff;
+		font-size: 1rem;
+		border-radius: 4px;
+		border: none;
+		background-color: var(--color);
+		transition: opacity linear 0.2s;
+		transform: translateY(-50%);
 	}
 </style>
