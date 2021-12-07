@@ -75,13 +75,6 @@ export const getLabelsFrom = (pullRequests: PullRequestType[]): string[] => {
 	}, []);
 };
 
-export const bytesToSize = (bytes: number) => {
-	var sizes = ['Octets', 'Ko', 'Mo', 'Go', 'To'];
-	if (bytes == 0) return '0 Byte';
-	var i = Math.floor(Math.log(bytes) / Math.log(1024));
-	return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i] + '/s';
-};
-
 export const getPullRequestsFromCustomSettings = (
 	pullRequests: PullRequestType[],
 	settings: CustomListType

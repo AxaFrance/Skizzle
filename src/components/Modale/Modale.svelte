@@ -34,6 +34,7 @@
 		max-height: calc(100vh - 10rem);
 		transform: translateX(-50%) translateY(-50%);
 		border-radius: 8px;
+		border: 1px solid rgba(255, 255, 255, 0.1);
 		background-color: #444;
 	}
 
