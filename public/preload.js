@@ -28,6 +28,6 @@ contextBridge.exposeInMainWorld(
     setPreRelease: (preRelease) => {
       ipcRenderer.send('toggle-pre-release', preRelease)
     },
-    version: () => ipcRenderer.invoke('get-version'),
+    version: () => ipcRenderer.invoke('get-version')
   }
 );
