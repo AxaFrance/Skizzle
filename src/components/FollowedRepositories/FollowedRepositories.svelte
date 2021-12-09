@@ -27,7 +27,7 @@
 <section>
 	<AccountTitle>
 		Followed repositories
-		<button title="Partager votre liste" on:click={() => (shareDisplayed = true)}
+		<button title="Share you list" on:click={() => (shareDisplayed = true)}
 			><Icons.Share /></button
 		>
 	</AccountTitle>
@@ -47,10 +47,7 @@
 				{#if repository.gitUrl}
 					<button
 						on:click={() =>
-							copyToClipboard(
-								repository.gitUrl,
-								`repository url is copied in clipboard.`
-							)}
+							copyToClipboard(repository.gitUrl, `repository url is copied in clipboard.`)}
 						title="Copy repository url"
 					>
 						<Icons.Copy />

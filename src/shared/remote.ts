@@ -1,6 +1,7 @@
 import ky from 'ky';
-import type { CustomListType, SettingsType } from 'models/skizzle';
+import type { CustomListType } from 'models/skizzle';
 import { ProviderEnum } from 'models/skizzle';
+import SkizzleCache from './cache';
 
 const isElectronRenderer = () => {
 	// Renderer process
@@ -165,6 +166,14 @@ const data = {
 	getVersion: () => {
 		if (isElectronRenderer()) {
 			return window.remote.version();
+		}
+	},
+	clearApplicationsData: () => {
+		if (isElectronRenderer()) {
+			return window.remote.clearApplicationsData();
+		} else {
+			localStorage.clear();
+			SkizzleCache.clear();
 		}
 	}
 };

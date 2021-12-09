@@ -18,6 +18,7 @@ declare global {
 			receive: (channel: string, func: (...args: any) => void) => void;
 			setPreRelease: (preRelease: boolean) => void;
 			version: () => Promise<string>;
+			clearApplicationsData: () => void;
 		};
 	}
 }

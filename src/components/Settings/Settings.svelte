@@ -104,10 +104,7 @@
 			</Fieldset>
 		{/if}
 
-		<Fieldset
-			title="Compact navigation"
-			intro="Reduce the sidebar width."
-		>
+		<Fieldset title="Compact navigation" intro="Reduce the sidebar width.">
 			<Switch bind:active={$settings.compact} label="Compact mode" />
 		</Fieldset>
 
@@ -125,9 +122,18 @@
 
 		<Fieldset
 			title="Cache"
-			intro="If you encounter any dysfunctional behavior from Skizzle, cleaning the application is maybe necessary."
+			intro="If you encounter any dysfunctional behavior from Skizzle, cleaning the application cache is maybe necessary."
 		>
 			<button class="button" on:click={() => SkizzleCache.clear()}>Clean the cache</button>
+		</Fieldset>
+
+		<Fieldset
+			title="Applications Data"
+			intro="If you encounter any dysfunctional behavior from Skizzle, cleaning the all application data is maybe necessary."
+		>
+			<button class="button" on:click={() => remote.clearApplicationsData()}
+				>Clean the application and refresh</button
+			>
 		</Fieldset>
 
 		<Fieldset title="Theme" intro="Change Skizzle user interface main color.">
@@ -257,15 +263,6 @@
 		border: none;
 		background-color: var(--color);
 		transition: opacity linear 0.2s;
-	}
-
-	select {
-		width: 100%;
-		padding: 0.5rem;
-		color: #fff;
-		font-size: 1rem;
-		border-radius: 4px;
-		background-color: #555;
 	}
 
 	.progress {
