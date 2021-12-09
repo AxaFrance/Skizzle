@@ -7,6 +7,8 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/AxaGuilDEv/skizzle/Check%20tests?style=for-the-badge) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/AxaGuilDEv/skizzle?style=for-the-badge) [![GitHub license](https://img.shields.io/github/license/AxaGuilDEv/skizzle?style=for-the-badge)](https://github.com/AxaGuilDEv/Skizzle/blob/master/LICENSE.md) [![GitHub issues](https://img.shields.io/github/issues/AxaGuilDEv/skizzle?style=for-the-badge)](https://github.com/AxaGuilDEv/skizzle/issues) [![GitHub stars](https://img.shields.io/github/stars/AxaGuilDEv/skizzle?style=for-the-badge)](https://github.com/AxaGuilDEv/skizzle/stargazers) [![GitHub forks](https://img.shields.io/github/forks/AxaGuilDEv/skizzle?style=for-the-badge)](https://github.com/AxaGuilDEv/skizzle/network) ![GitHub All Releases](https://img.shields.io/github/downloads/AxaGuilDEv/skizzle/total?style=for-the-badge)
 
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=skizzle)](https://sonarcloud.io/summary/new_code?id=skizzle)
+
 <hr />
 
 # Introduction
