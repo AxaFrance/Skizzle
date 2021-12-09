@@ -8,11 +8,11 @@
 	import { ThemeEnum } from 'models/skizzle';
 	import SkizzleCache from 'shared/cache';
 	import { remote } from 'shared/remote';
-	import { isElectron,settings } from 'shared/stores/default.store';
+	import { isElectron, settings } from 'shared/stores/default.store';
 	import { onMount } from 'svelte';
 
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS';
-	let isWarningDisplayed:boolean = false;
+	let isWarningDisplayed: boolean = false;
 
 	$: progressState = { enabled: false, percent: 50 } as {
 		enabled: boolean;
@@ -131,7 +131,7 @@
 				{/each}
 			</div>
 		</Fieldset>
-		
+
 		{#if $isElectron}
 			<Fieldset
 				title="Advanced versions"
@@ -151,24 +151,41 @@
 			<button class="button" on:click={() => SkizzleCache.clear()}>Clean the cache</button>
 		</Fieldset>
 
-		<Fieldset
-			title="Reset application"
-			intro="Reset all application settings and data."
-		>
-			<button class="button danger" on:click|preventDefault={() => {isWarningDisplayed = true}}
-				>Reset application</button
+		<Fieldset title="Reset application" intro="Reset all application settings and data.">
+			<button
+				class="button danger"
+				on:click|preventDefault={() => {
+					isWarningDisplayed = true;
+				}}>Reset application</button
 			>
 		</Fieldset>
 
 		{#if isWarningDisplayed}
-		<Modale fullHeight={false} onClose={() => {isWarningDisplayed = false}}>
-			<AccountTitle>Do you confirm to reset Skizzle ?</AccountTitle>
-			<p>If you confirm, you will lose all your settings, and will need to login again to your Github or Azure accounts.</p>
-			<div class="bar">
-				<button class="button danger" on:click|preventDefault={() => remote.clearApplicationsData()}><Icons.Trash color="#fff"/> Yes, reset Skizzle.</button>
-				<button class="button clear" on:click|preventDefault={() => {isWarningDisplayed = false}}>Cancel</button>
-			</div>
-		</Modale>
+			<Modale
+				fullHeight={false}
+				onClose={() => {
+					isWarningDisplayed = false;
+				}}
+			>
+				<AccountTitle>Do you confirm to reset Skizzle ?</AccountTitle>
+				<p>
+					If you confirm, you will lose all your settings, and will need to login again to your
+					Github or Azure accounts.
+				</p>
+				<div class="bar">
+					<button
+						class="button danger"
+						on:click|preventDefault={() => remote.clearApplicationsData()}
+						><Icons.Trash color="#fff" /> Yes, reset Skizzle.</button
+					>
+					<button
+						class="button clear"
+						on:click|preventDefault={() => {
+							isWarningDisplayed = false;
+						}}>Cancel</button
+					>
+				</div>
+			</Modale>
 		{/if}
 	</form>
 </div>
