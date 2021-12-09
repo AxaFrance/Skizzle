@@ -6,7 +6,7 @@
 
 <div class="overlay" on:click={onClose} in:fade out:fade />
 <div in:fly={{ y: 200 }} out:fly={{ y: 200 }} class="modale" class:fullHeight>
-	<button on:click={onClose}>Fermer</button>
+	<button on:click={onClose}>Close</button>
 	<div class="content">
 		<slot />
 	</div>

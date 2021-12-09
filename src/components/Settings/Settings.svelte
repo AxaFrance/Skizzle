@@ -48,11 +48,11 @@
 		{#if ($settings.updateAvailable || progressState.enabled) && $isElectron}
 			<div class="update">
 				<div class="info">
-					<h2>Une nouvelle version est disponible ! 🎉</h2>
+					<h2>New version available! 🎉</h2>
 					{#if progressState.enabled}
-						<p>Téléchargement de la nouvelle version de Skizzle.</p>
+						<p>Downloading new version...</p>
 					{:else}
-						<p>Elle sera installée automatiquement au prochain démarrage de Skizzle.</p>
+						<p>It will be installed at next Skizzle restart.</p>
 					{/if}
 				</div>
 				<div class="state">
@@ -64,7 +64,7 @@
 							{progressState.percent.toFixed(0)}%
 						</p>
 					{:else}
-						<button class="button" on:click={checkForUpdateRestart}>Redémarrer Skizzle</button>
+						<button class="button" on:click={checkForUpdateRestart}>Restart Skizzle</button>
 					{/if}
 				</div>
 			</div>
@@ -72,10 +72,10 @@
 	</div>
 	<form>
 		<Fieldset
-			title="Rafraichissement"
-			intro="Réglez ici le délai qu'utilisera Skizzle pour rafraichir les données."
-			outro={`Skizzle rafraichira les données toutes les ${
-				$settings.refresh_delay !== 1 ? `${$settings.refresh_delay} minutes` : '60 secondes'
+			title="Refresh"
+			intro="Set the refresh pull request lists delay."
+			outro={`Skizzle will refresh data every ${
+				$settings.refresh_delay !== 1 ? `${$settings.refresh_delay} minutes` : '60 seconds'
 			}.`}
 		>
 			<div class="field">
@@ -85,58 +85,52 @@
 
 		{#if $isElectron}
 			<Fieldset
-				title="Au démarrage"
-				intro={`Si vous le souhaitez, Skizzle peut se lancer automatiquement au démarrage de votre ${
+				title="Launch on startup"
+				intro={`Skizzle can launch itself at your ${
 					currentPlatform === 'macOS' ? 'Mac' : 'PC'
-				}.`}
+				} startup.`}
 				outro={`${
 					$settings.launch_at_startup
-						? 'Skizzle se lancera automatiquement à chaque démarrage de '
-						: 'Skizzle ne se lancera pas au démarrage de '
-				} ${currentPlatform}.`}
+						? 'Skizzle will launch on '
+						: 'Skizzle will not launch on '
+				} ${currentPlatform} startup.`}
 			>
 				<Switch
 					vspace={2}
 					bind:active={$settings.launch_at_startup}
-					label="Lancer Skizzle au démarrage"
+					label="Launch Skizzle at startup"
 				/>
 				<p class="text" />
 			</Fieldset>
 		{/if}
 
 		<Fieldset
-			title="Menu compact"
-			intro="Ce paramètre permet de réduire la largeur de la barre latérale de navigation."
+			title="Compact navigation"
+			intro="Reduce the sidebar width."
 		>
-			<Switch bind:active={$settings.compact} label="Mode compact" />
+			<Switch bind:active={$settings.compact} label="Compact mode" />
 		</Fieldset>
 
 		{#if $isElectron}
 			<Fieldset
-				title="Versions avancées"
-				intro="Installer automatiquement les mises à jour des versions avancées de Skizzle (Attention: ces versions peuvent être instables)."
+				title="Advanced versions"
+				intro="Automatically install Skizzle advanced updates. Warning: this could bring instability."
 			>
 				<Switch
 					bind:active={$settings.preRelease}
-					label="Installer les versions avancées de Skizzle"
+					label="Install Skizzle advanced versions"
 				/>
 			</Fieldset>
 		{/if}
 
-		<Fieldset title="Langue" intro="Choisissez la langue de l'interface de Skizzle.">
-			<select>
-				<option value={$settings.language}>{$settings.language}</option>
-			</select>
-		</Fieldset>
-
 		<Fieldset
 			title="Cache"
-			intro="Si vous rencontrez des dysfonctionnements avec Skizzle, il peut être nécessaire de vider le cache de l'application."
+			intro="If you encounter any dysfunctional behavior from Skizzle, cleaning the application is maybe necessary."
 		>
-			<button class="button" on:click={() => SkizzleCache.clear()}>Vider le cache</button>
+			<button class="button" on:click={() => SkizzleCache.clear()}>Clean the cache</button>
 		</Fieldset>
 
-		<Fieldset title="Theme" intro="Choisissez un theme pour l'interface de Skizzle.">
+		<Fieldset title="Theme" intro="Change Skizzle user interface main color.">
 			<div class="field">
 				{#each Object.values(ThemeEnum) as value}
 					<input

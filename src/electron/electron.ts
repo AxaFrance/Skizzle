@@ -209,7 +209,7 @@ ipcMain.handle(
 	async (event: Electron.IpcMainEvent, currentTabData: CustomListType) => {
 		try {
 			const { filePath } = await dialog.showSaveDialog(window, {
-				title: 'Exporter la liste sous...',
+				title: 'Export list as...',
 				defaultPath: `${currentTabData.name}.json`,
 				filters: [
 					{
@@ -232,7 +232,7 @@ ipcMain.handle('file-import', async (event: Electron.IpcMainEvent) => {
 	try {
 		const { filePaths } = await dialog.showOpenDialog(window, {
 			properties: ['openFile'],
-			title: 'Importer une liste',
+			title: 'Import list',
 			filters: [{ name: 'Skizzle List', extensions: ['json'] }]
 		});
 

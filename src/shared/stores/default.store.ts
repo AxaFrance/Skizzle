@@ -47,13 +47,13 @@ export const refreshPullRequests = async () => {
 			if (newValues.length > 0) {
 				let title =
 					newValues.length > 1
-						? 'De nouvelles pull requests sont disponibles'
-						: 'Une nouvelle pull request est disponible';
+						? 'New pull requests are available'
+						: 'New pull request is available';
 
 				let body =
 					newValues.length > 1
-						? 'Plusieurs repositories ont étés mis à jour'
-						: `Le repo ${newValues[0].repositoryName} a une nouvelle pull request`;
+						? 'Pull requests have been published on repositories you follow.'
+						: `The repository ${newValues[0].repositoryName} has a new pull request.`;
 
 				remote.notification(title, body);
 			}
@@ -83,7 +83,7 @@ export const offline = createStore<boolean>(false, {
 			notifications.update(notifications => [
 				...notifications,
 				{
-					text: 'Vous êtes actuellement deconnecté',
+					text: 'You are disconnected',
 					id: uuidv4()
 				}
 			]);

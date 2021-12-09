@@ -69,23 +69,22 @@
 	};
 </script>
 
-<AccountTitle>Importer / Exporter une liste de repositories.</AccountTitle>
+<AccountTitle>Import / Export repositories list.</AccountTitle>
 <p class="intro">
-	Skizzle permet d'importer et d'exporter une liste de repositories suivis. Vous pouvez
-	partager votre liste avec les autres membres de votre équipe.
+	Skizzle can import and export lists of followed repositories, so you can share it with your team.
 </p>
 <Tabs
 	onChange={changeTab}
 	current={currentTab}
 	data={{
-		import: { order: 0, label: 'Importer' },
-		export: { order: 1, label: 'Exporter' }
+		import: { order: 0, label: 'Import' },
+		export: { order: 1, label: 'Export' }
 	}}
 />
 <div class="container">
 	{#if currentTab === 'export'}
 		<p class="intro">
-			Copiez le code JSON et importez-le dans une autre instance de Skizzle.
+			Copy JSON code et import it in another Skizzle instance.
 		</p>
 		<div class="code">
 			<HighlightAuto code={JSON.stringify(getExportCode(), undefined, 2)} />
@@ -94,9 +93,9 @@
 				on:click={() =>
 					copyToClipboard(
 						JSON.stringify(getExportCode(), undefined, 2),
-						'Code copié dans le presse-papier.'
+						'Copied in clipboard.'
 					)}
-				title="Copier l'url de ce repository"
+				title="Copy repository url"
 			>
 				<Icons.Copy />
 			</button>
@@ -104,16 +103,15 @@
 	{:else}
 		<form on:submit|preventDefault={importCode}>
 			<p class="intro">
-				Collez le code JSON provenant d'une autre instance de Skizzle. <b>Attention</b> Skizzle
-				remplacera les repositories que vous suivez actuellement.
+				Paste the JSON code from another Skizzle instance. <b>Warning</b> Skizzle will delete all current followed repositories.
 			</p>
-			<textarea bind:value={code} placeholder="Collez ici votre code JSON" />
+			<textarea bind:value={code} placeholder="Paste here your JSON code" />
 			<div class="bar">
 				<input
 					disabled={!isJson(code)}
 					type="submit"
 					class="import-button"
-					value="Importer les repositories"
+					value="Import repositories"
 				/>
 			</div>
 		</form>

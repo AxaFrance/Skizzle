@@ -15,10 +15,10 @@
 </script>
 
 {#if $isLoading}
-	<p class="loader">Chargement ...</p>
+	<p class="loader">Loading ...</p>
 {:else if $clientAuthenticated[`is${provider}Authenticated`]}
 	{#await Service.getProfile(provider)}
-		<p class="loader">Chargement du profil ...</p>
+		<p class="loader">Loading your profile ...</p>
 	{:then profile}
 		{#if profile}
 			{#if follow}
@@ -27,13 +27,13 @@
 				<AccountSummary {profile} />
 			{:else}
 				<section>
-					<AccountTitle>Votre compte {provider}</AccountTitle>
+					<AccountTitle>Your {provider} account</AccountTitle>
 					<AccountSummary {profile} />
 				</section>
 				<div class="content">
 					<section>
-						<AccountTitle>Suivre un nouveau repository</AccountTitle>
-						<p class="intro">Cherchez le nom d'un projet ou repository.</p>
+						<AccountTitle>Follow a repository</AccountTitle>
+						<p class="intro">Search for a project or repository name.</p>
 						<SearchRepos {profile} />
 					</section>
 					<FollowedRepositories {profile} />
@@ -42,11 +42,11 @@
 		{/if}
 	{:catch}
 		<p class="error">
-			Impossible de récupérer votre profil à cause d'une erreur technique.
+			Unable to get your profile because of a technical error.
 		</p>
 	{/await}
 {:else}
-	<AddAccount text={`Ajouter un compte ${provider}`} {provider} />
+	<AddAccount text={`Add a ${provider} account`} {provider} />
 {/if}
 
 <style>

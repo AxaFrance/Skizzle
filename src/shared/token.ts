@@ -11,7 +11,7 @@ const getToken = async <T extends OAuthConfigType>(config: OAuthConfig<T>) => {
 	const result = await remote.getToken<T>(provider, body);
 
 	if (!result || result?.message) {
-		console.error({ message: result?.message || 'Une erreur est survenue.' });
+		console.error({ message: result?.message || 'An error has occured.' });
 
 		client.update(n => {
 			delete n[provider];
