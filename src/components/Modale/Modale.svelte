@@ -2,6 +2,8 @@
 	import { fly, fade } from 'svelte/transition';
 	export let onClose: () => void;
 	export let fullHeight: boolean = true;
+
+	console.log({ fullHeight})
 </script>
 
 <div class="overlay" on:click={onClose} in:fade out:fade />

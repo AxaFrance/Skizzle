@@ -131,7 +131,6 @@
 				{/each}
 			</div>
 		</Fieldset>
-
 		{#if $isElectron}
 			<Fieldset
 				title="Advanced versions"
