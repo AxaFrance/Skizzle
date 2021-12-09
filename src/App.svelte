@@ -7,9 +7,11 @@
 	import Notification from 'components/Notification';
 	import { Views } from 'models/skizzle/ViewsEnum';
 	import Loader from 'components/Loader';
-	import { offline, settings, needIntro } from 'shared/stores/default.store';
+	import { offline, settings, needIntro, isElectron } from 'shared/stores/default.store';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Intro from 'views/Intro';
+	import { onMount } from 'svelte';
+	import { remote } from 'shared/remote';
 
 	const views = {
 		[Views.Main]: Main,
@@ -26,6 +28,18 @@
 
 	window.addEventListener('online', () => offline.set(false));
 	window.addEventListener('offline', () => offline.set(true));
+
+	onMount(() => {
+		if ($isElectron) {
+			setInterval(async () => {
+				await remote.checkForUpdateRequest();
+			}, 60000);
+
+			remote.receive('check-for-update-response', () =>
+				settings.update(x => ({ ...x, updateAvailable: true }))
+			);
+		}
+	});
 </script>
 
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">

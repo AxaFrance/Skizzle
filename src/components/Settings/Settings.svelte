@@ -17,15 +17,7 @@
 	};
 
 	onMount(() => {
-		console.log('settings');
 		if ($isElectron) {
-			setInterval(async () => {
-				await remote.checkForUpdateRequest();
-			}, 60000);
-
-			remote.receive('check-for-update-response', () =>
-				settings.update(x => ({ ...x, updateAvailable: true }))
-			);
 			remote.receive('download-progress-response', progress => {
 				settings.update(x => ({ ...x, updateAvailable: false }));
 				progressState = {
@@ -271,15 +263,6 @@
 		border: none;
 		background-color: var(--color);
 		transition: opacity linear 0.2s;
-	}
-
-	[type='url'] {
-		width: 100%;
-		padding: 0.5rem;
-		color: #fff;
-		font-size: 1rem;
-		border-radius: 4px;
-		background-color: #555;
 	}
 
 	select {
