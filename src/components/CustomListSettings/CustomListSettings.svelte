@@ -111,10 +111,10 @@
 <div>
 	<AccountTitle>
 		{$customLists.some(x => x.id === customList.id)
-			? 'Modification de la liste'
-			: "Création d'une liste"}
+			? 'List modification'
+			: "New list"}
 		{#if $isElectron}
-			<button class="import" on:click={onImport}>Importer</button>
+			<button class="import" on:click={onImport}>Import</button>
 		{:else}
 			<input
 				class="import"
@@ -126,22 +126,22 @@
 	</AccountTitle>
 	<div class="fields">
 		<div class="field">
-			<label for="list-name">Nom de la liste :</label>
+			<label for="list-name">List name :</label>
 			<input id="list-name" type="text" bind:value={customList.name} />
 		</div>
 		<div class="field">
 			<TagInput
 				id="tags"
-				label="Afficher les pull request contenant les tags :"
+				label="View pull requests including tags :"
 				suggestions={getLabelsFrom($pullRequests)}
 				tags={customList.tags}
 				on:tags={event => getTags(event)}
 			/>
 		</div>
 		<div class="field">
-			<label for="list-provider">Afficher les pull requests de mon compte :</label>
+			<label for="list-provider">View pull requests from provider :</label>
 			<select id="list-provider" bind:value={customList.provider}>
-				<option value="">-- Selectionner un service --</option>
+				<option value="">-- Select a provider --</option>
 				{#each Object.keys($client) as key}
 					<option value={key}>
 						{key}
@@ -150,13 +150,13 @@
 			</select>
 		</div>
 		<div class="field">
-			<label for="repo">Afficher les pull requests de ce repository :</label>
+			<label for="repo">View pull requests from repository :</label>
 			<select
 				id="repo"
 				bind:value={customList.repositoryId}
 				disabled={$repositories.length === 0}
 			>
-				<option value="">-- Selectionner un repository --</option>
+				<option value="">-- Select a repository --</option>
 				{#each $repositories.filter(x => !customList.provider || x.provider === customList.provider) as repository}
 					<option value={repository.repositoryId}>
 						{repository.name}
@@ -165,24 +165,24 @@
 			</select>
 		</div>
 		<div class="field">
-			<p>Masquer les pull requests</p>
+			<p>Hide pull requests</p>
 			<ul>
 				<li>
-					<Radio bind:checked={customList.withoutOwnedByUserPR} label="Que j'ai créé" />
+					<Radio bind:checked={customList.withoutOwnedByUserPR} label="I created" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutOldPR} label="Datant de plus de 30 jours" />
+					<Radio bind:checked={customList.withoutOldPR} label="Older than 30 days" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutConflict} label="En conflit" />
+					<Radio bind:checked={customList.withoutConflict} label="In conflicts" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutDraft} label="En brouillon" />
+					<Radio bind:checked={customList.withoutDraft} label="Draft" />
 				</li>
 				<li>
 					<Radio
 						bind:checked={customList.withoutCheckedByOwner}
-						label="Que j'ai déjà approuvé"
+						label="I already approved"
 					/>
 				</li>
 			</ul>
@@ -192,7 +192,7 @@
 				<Switch
 					vspace={1}
 					bind:active={isListDisplayed}
-					label="Masquer manuellement certaines pull requests"
+					label="Hide specific pull requests"
 				/>
 				{#if isListDisplayed}
 					<ul>
@@ -212,9 +212,9 @@
 	</div>
 </div>
 <div class="action">
-	<button class="cancel" on:click={() => onDone()}>Annuler</button>
+	<button class="cancel" on:click={() => onDone()}>Cancel</button>
 	<button class="cta" on:click={() => saveSettings()} disabled={!customList.name}
-		>Enregistrer</button
+		>Save</button
 	>
 </div>
 

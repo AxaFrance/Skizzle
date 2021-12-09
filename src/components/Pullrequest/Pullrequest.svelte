@@ -46,7 +46,7 @@
 			<span class="status status--draft">Draft</span>
 		{/if}
 		{#if pullRequest.isConflict}
-			<span class="status status--conflicts">Conflits</span>
+			<span class="status status--conflicts">Conflicts</span>
 		{/if}
 		{#if pullRequest.reviewers}
 			<Reviews reviews={pullRequest.reviewers} />
@@ -62,7 +62,7 @@
 		{#each pullRequest.comments as comment}
 			<Comment {comment} />
 		{:else}
-			<p class="no-comment">Il n'y a aucun commentaire sur cette pull request.</p>
+			<p class="no-comment">There is no comments on this pull request.</p>
 		{/each}
 	</Modale>
 {/if}

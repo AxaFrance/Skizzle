@@ -14,29 +14,29 @@
 
 <nav transition:fade class:compact>
 	<button
-		title="Listes"
+		title="Lists"
 		on:click={setView(Views.Main)}
 		class:selected={currentView === Views.Main}
 	>
 		<Icons.List color={getColor(Views.Main)} />
-		{#if !compact}<span in:fade out:fade>Listes</span>{/if}
+		{#if !compact}<span in:fade out:fade>Lists</span>{/if}
 	</button>
 	<button
-		title="Comptes"
+		title="Accounts"
 		on:click={setView(Views.Accounts)}
 		class:selected={currentView === Views.Accounts}
 	>
 		<Icons.Accounts color={getColor(Views.Accounts)} />
-		{#if !compact}<span in:fade out:fade>Comptes</span>{/if}
+		{#if !compact}<span in:fade out:fade>Accounts</span>{/if}
 	</button>
 	<button
 		class="bottom"
-		title="Réglages"
+		title="Settings"
 		on:click={setView(Views.Settings)}
 		class:selected={currentView === Views.Settings}
 	>
 		<Icons.Settings color={getColor(Views.Settings)} />
-		{#if !compact}<span in:fade out:fade>Réglages</span>{/if}
+		{#if !compact}<span in:fade out:fade>Settings</span>{/if}
 	</button>
 </nav>
 

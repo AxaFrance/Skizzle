@@ -31,11 +31,11 @@
 
 {#if query}
 	{#await resultsFetching}
-		<p>Recherche en cours...</p>
+		<p>Searching...</p>
 	{:then}
 		<div class="container">
 			<h2>
-				Résultats pour "<b>{query}</b>"
+				Results for "<b>{query}</b>"
 			</h2>
 			{#if repos}
 				<ul class="repo-projects">
@@ -53,8 +53,8 @@
 							/>
 							<label class="follow" for={repository.repositoryId}>
 								{$repositories.some(x => x.repositoryId === repository.repositoryId)
-									? 'Ne plus suivre'
-									: 'Suivre'}
+									? 'Unfollow'
+									: 'Follow'}
 							</label>
 						</li>
 					{/each}

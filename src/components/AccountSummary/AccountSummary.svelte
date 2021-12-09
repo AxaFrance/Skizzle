@@ -29,13 +29,13 @@
 	</div>
 	<div class="user">
 		<span class="name"
-			>{profile?.email ? profile?.name : 'Utilisateur/Utilisatrice anonyme'}</span
+			>{profile?.email ? profile?.name : 'Anonymous user'}</span
 		>
 		{#if profile?.email}<span class="email">{profile.email}</span>{/if}
 	</div>
 	<button
 		on:click={() => logout(profile.provider)}
-		title="Déconnexion"
+		title="logout"
 		disabled={$offline}
 	>
 		<Icons.Delete />

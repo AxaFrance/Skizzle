@@ -25,11 +25,11 @@ export const getDateStr = (date: Date): string => {
 
 	switch (diffDays) {
 		case 0:
-			return `Aujourd'hui à ${hours}:${minutes}`;
+			return `Today at ${hours}:${minutes}`;
 		case 1:
-			return 'Hier';
+			return 'Yesterday';
 		default:
-			return `il y a ${diffDays} jours`;
+			return `${diffDays} days ago`;
 	}
 };
 

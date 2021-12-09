@@ -26,14 +26,14 @@
 
 <section>
 	<AccountTitle>
-		Vos repositories suivis
+		Followed repositories
 		<button title="Partager votre liste" on:click={() => (shareDisplayed = true)}
 			><Icons.Share /></button
 		>
 	</AccountTitle>
 	<p class="intro">
-		Vous suivez actuellement <b>{followedRepositories.length}</b>
-		repositories sur {ProviderEnum[profile.provider]}.
+		You follow <b>{followedRepositories.length}</b>
+		repositories on {ProviderEnum[profile.provider]}.
 	</p>
 	<ul>
 		{#each followedRepositories as repository}
@@ -49,15 +49,15 @@
 						on:click={() =>
 							copyToClipboard(
 								repository.gitUrl,
-								`L'url du repository est copiée dans le presse-papiers.`
+								`repository url is copied in clipboard.`
 							)}
-						title="Copier l'url de ce repository"
+						title="Copy repository url"
 					>
 						<Icons.Copy />
 					</button>
 				{/if}
 				<button
-					title="Se désabonner de ce repository"
+					title="Unfollox this repository"
 					on:click={() => deleteRepository(repository)}
 					disabled={$isFetchingData}
 				>

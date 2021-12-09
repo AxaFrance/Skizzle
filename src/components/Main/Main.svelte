@@ -28,7 +28,7 @@
 				notifications.update(notifications => [
 					...notifications,
 					{
-						text: 'Liste exportée.',
+						text: 'List exported.',
 						id: uuidv4()
 					}
 				]);
@@ -41,7 +41,7 @@
 		notifications.update(notifications => [
 			...notifications,
 			{
-				text: 'Liste supprimée.',
+				text: 'List deleted.',
 				id: uuidv4()
 			}
 		]);
@@ -57,7 +57,7 @@
 	const getTabs = (lists: CustomListType[]) => {
 		const tabs = {
 			all: {
-				label: 'Toutes',
+				label: 'All',
 				order: 0
 			}
 		};
@@ -107,10 +107,10 @@
 					modifyingListId = currentTab;
 				}}
 			>
-				Modifier
+				Modify
 			</button>
-			<button on:click={deleteList}>Supprimer</button>
-			<button on:click={exportList}>Exporter</button>
+			<button on:click={deleteList}>Delete</button>
+			<button on:click={exportList}>Export</button>
 		</div>
 	{/if}
 	{#if displayedList.length}
@@ -124,7 +124,7 @@
 			{/each}
 		</ul>
 	{:else}
-		<p class="no-pr">Il n'y a aucune pull request à afficher dans cette liste.</p>
+		<p class="no-pr">No pull request in this list.</p>
 	{/if}
 </div>
 

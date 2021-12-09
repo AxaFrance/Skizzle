@@ -37,26 +37,24 @@
 
 <main>
 	<div class={`step ${step === 0 ? 'current' : ''}`}>
-		<AccountTitle>Bienvenue dans Skizzle. 👋</AccountTitle>
+		<AccountTitle>Welcome to Skizzle. 👋</AccountTitle>
 		<p>
-			Skizzle vous permet de regrouper toutes les pull requests de vos projets issus de
-			Github ou Azure DevOps.
+			Skizzle is a pull request manager that allows you see all your teams work quickly in a single view. It works with your Azure DevOps and Github accounts.
 		</p>
 		<p>
-			Nous allons maintenant configurer ensemble l'application rapidement en quelques étapes.
-			Vous êtes prêt ?
+			Let's take a few steps to set your Skizzle up.
+			Are you ready?
 		</p>
 		<div class="actions">
 			<button class="next" on:click={next}>
-				C'est parti ! <Icons.ArrowRight />
+				Let's go! <Icons.ArrowRight />
 			</button>
 		</div>
 	</div>
 	<div class={`step ${step === 1 ? 'current' : ''}`}>
 		<AccountTitle>Ajouter un compte à Skizzle.</AccountTitle>
 		<p>
-			Skizzle supporte Github et Azure DevOps, pour pouvoir utiliser l'application vous devez
-			ajouter au moins un compte. Choisissez une option et laissez-vous guider.
+			Skizzle supports Github and Azure DevOps, in order to use the app, you have to set at least one account. Choose a provider and let yourself guided.
 		</p>
 		<ul class="block">
 			<li class={$clientAuthenticated.isAzureDevOpsAuthenticated ? 'valid' : ''}>
@@ -68,7 +66,7 @@
 		</ul>
 		<div class="actions">
 			<button class="previous" on:click={previous}>
-				<Icons.ArrowLeft /> Précédent
+				<Icons.ArrowLeft /> Previous
 			</button>
 			<button
 				disabled={!$clientAuthenticated.isAzureDevOpsAuthenticated &&
@@ -76,15 +74,14 @@
 				class="next"
 				on:click={next}
 			>
-				Suivant <Icons.ArrowRight />
+				Next <Icons.ArrowRight />
 			</button>
 		</div>
 	</div>
 	<div class={`step ${step === 2 ? 'current' : ''}`}>
-		<AccountTitle>Suivre des repositories</AccountTitle>
+		<AccountTitle>Follow repositories</AccountTitle>
 		<p>
-			Suivez les repositories qui vous intéressent, vous verrez alors leurs pull requests
-			dans vos listes.
+			Follow the repositories you interested in, and then Skizzle will show you their pull requests in your lists.
 		</p>
 		<div class="block">
 			<Tabs
@@ -98,23 +95,22 @@
 		</div>
 		<div class="actions">
 			<button class="previous" on:click={previous}>
-				<Icons.ArrowLeft /> Précédent
+				<Icons.ArrowLeft /> Previous
 			</button>
-			<button class="next" on:click={next}>Suivant <Icons.ArrowRight /></button>
+			<button class="next" on:click={next}>Next <Icons.ArrowRight /></button>
 		</div>
 	</div>
 	<div class={`step ${step === 3 ? 'current' : ''}`}>
-		<AccountTitle>Vous êtes prêt à utiliser Skizzle 🎉</AccountTitle>
+		<AccountTitle>You are now ready to use Skizzle 🎉</AccountTitle>
 		<p>
-			Vous pouvez maintenant suivre facilement vos projets et créer des listes
-			personnalisées.
+			You can now easily follow your projects and create custom lists. Enjoy!
 		</p>
 		<div class="actions">
 			<button class="previous" on:click={previous}>
-				<Icons.ArrowLeft /> Précédent
+				<Icons.ArrowLeft /> Previous
 			</button>
 			<button class="next" on:click={() => needIntro.set(false)}>
-				Utiliser Skizzle <Icons.ArrowRight />
+				Use Skizzle <Icons.ArrowRight />
 			</button>
 		</div>
 	</div>

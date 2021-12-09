@@ -19,22 +19,20 @@
 
 {#if $error}
 	<main>
-		<h1>Félicitations, vous avez trouvé un bug de Skizzle 🎉</h1>
+		<h1>Congratulations, you just found a bug on Skizzle 🎉</h1>
 		<p>
-			Bien joué, celui-ci est plutôt rare puisque pas encore découvert par l'équipe
-			<!-- svelte-ignore a11y-invalid-attribute -->
-			de développement de Skizzle. Vous pouvez maintenant
+			Well done, this one is pretty rare because not Skizzle development team is not aware of it yet. Now you can
 			<a
 				href="#"
 				on:click={() =>
 					remote.openDefaultBrowser('https://github.com/AxaGuilDEv/Skizzle/issues/new')}
 			>
-				créer une issue sur Github
+				create a Github issue
 			</a>
-			pour nous le signaler. Merci !
+			. Thanks!
 		</p>
 		{#if $isElectron}
-			<button on:click={restart}>Redémarrer Skizzle</button>
+			<button on:click={restart}>Restart Skizzle</button>
 		{/if}
 		<div class="frame">
 			<b>{$error.message}</b>
@@ -42,7 +40,7 @@
       {DEV ? $error.stack : ''}
     </pre>
 			<span>
-				Bug de Skizzle <i>Anonyme - {new Date().getFullYear()}</i>
+				Skizzle bug <i>Anonymous - {new Date().getFullYear()}</i>
 			</span>
 		</div>
 	</main>

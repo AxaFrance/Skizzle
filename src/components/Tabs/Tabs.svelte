@@ -32,7 +32,7 @@
 				</button>
 			{/each}
 			{#if onCreation}
-				<button on:click={onCreation} title="Créer une nouvelle liste" class="add">
+				<button on:click={onCreation} title="New list" class="add">
 					<Icons.Plus />
 				</button>
 			{/if}
@@ -40,7 +40,7 @@
 			<select
 				on:blur={() => {}}
 				class="select"
-				aria-label="Sélectionner"
+				aria-label="Select"
 				value={current}
 				on:change={e => {
 					onChange(e.target.value);

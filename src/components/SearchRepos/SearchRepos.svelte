@@ -20,6 +20,6 @@
 	vspace={1}
 	on:submit={onSearchSubmit}
 	on:cancel={onSearchCancel}
-	placeholder="Rechercher un projet ou un repos"
+	placeholder="Search for a project or repository"
 />
 <SearchResults query={search} {profile} />
