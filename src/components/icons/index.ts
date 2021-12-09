@@ -14,6 +14,7 @@ import User from './User.svelte';
 import UI from './UI.svelte';
 import Copy from './Copy.svelte';
 import Share from './Share.svelte';
+import Logo from './Logo.svelte';
 
 // Providers
 import AzureDevOps from './AzureDevOps.svelte';
@@ -33,6 +34,7 @@ import VisibilityOff from './VisibilityOff.svelte';
 
 export default {
 	List,
+	Logo,
 	Accounts,
 	AccountSettings,
 	AddAccount,

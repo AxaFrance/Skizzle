@@ -6,18 +6,27 @@
 
 <fieldset>
 	<legend>{title}</legend>
-	{#if intro}
-		<p>{intro}</p>
-	{/if}
-	<slot />
-	{#if outro}
-		<p>{outro}</p>
-	{/if}
+	<div class="content">
+		{#if intro}
+			<p>{intro}</p>
+		{/if}
+		<slot />
+		{#if outro}
+			<p>{outro}</p>
+		{/if}
+	</div>
 </fieldset>
 
 <style>
 	legend {
+		float: left;
+		margin-bottom: 0.2rem;
+		font-size: 1.3rem;
 		font-family: 'roboto slab', serif;
+	}
+
+	.content {
+		clear: both;
 	}
 
 	fieldset {
@@ -28,11 +37,12 @@
 	}
 
 	fieldset:not(:last-child) {
-		margin-bottom: 2rem;
+		margin-bottom: 1rem;
 	}
 
 	p {
-		font-size: 0.8rem;
+		font-size: 1rem;
+		color: #ccc;
 	}
 
 	p:not(:last-child) {

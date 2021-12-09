@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { slide, blur } from 'svelte/transition';
 	import Boundary from 'components/ErrorBoundary';
 	import Accounts from 'components/Accounts';
 	import Main from 'components/Main';
@@ -8,15 +7,11 @@
 	import Notification from 'components/Notification';
 	import { Views } from 'models/skizzle/ViewsEnum';
 	import Loader from 'components/Loader';
-	import Icons from 'components/icons';
-	import { onMount } from 'svelte';
-	import { remote } from 'shared/remote';
 	import { offline, settings, needIntro, isElectron } from 'shared/stores/default.store';
 	import { clientAuthenticated } from 'shared/stores/authentication.store';
 	import Intro from 'views/Intro';
-
-	let update: boolean = false;
-	let version: string;
+	import { onMount } from 'svelte';
+	import { remote } from 'shared/remote';
 
 	const views = {
 		[Views.Main]: Main,
@@ -37,15 +32,14 @@
 	onMount(() => {
 		if ($isElectron) {
 			setInterval(async () => {
-				version = await remote.checkForUpdateRequest();
+				await remote.checkForUpdateRequest();
 			}, 60000);
 
-			remote.receive('check-for-update-response', () => (update = true));
-			remote.receive('download-progress-response', progress => console.log({ progress }));
+			remote.receive('check-for-update-response', () =>
+				settings.update(x => ({ ...x, updateAvailable: true }))
+			);
 		}
 	});
-
-	const checkForUpdateRestart = () => remote.checkForUpdateRestart();
 </script>
 
 <main style="--color:{$settings.theme}; --color-focus:{$settings.theme}80">
@@ -53,17 +47,6 @@
 		{#if $needIntro}
 			<Intro />
 		{:else}
-			{#if update && $isElectron}
-				<div class="downloaded" in:slide out:blur>
-					<p>Redémarrer Skizzle pour installer la dernière version.</p>
-					<button on:click={() => (update = false)} title="Plus tard"
-						><Icons.Delete color="#828282" /></button
-					>
-					<button on:click={() => checkForUpdateRestart()} title="Redémarrer"
-						><Icons.Check bind:color={$settings.theme} /></button
-					>
-				</div>
-			{/if}
 			<Loader />
 			<Navigation {currentView} {onViewChange} />
 			<div>
@@ -165,33 +148,5 @@
 
 	:global(button:disabled) {
 		opacity: 0.5;
-	}
-
-	.downloaded {
-		position: absolute;
-		z-index: 1;
-		height: 4rem;
-		background-color: #444;
-		display: flex;
-		flex-direction: row;
-		bottom: 0.5rem;
-		right: 0.5rem;
-		padding: 0.5rem;
-		border-radius: 5px;
-		align-items: center;
-		width: 45%;
-
-		> p {
-			font-size: 18px;
-			margin-right: 1rem;
-		}
-
-		button {
-			background-color: transparent;
-
-			&:not(:last-child) {
-				margin-right: 1rem;
-			}
-		}
 	}
 </style>

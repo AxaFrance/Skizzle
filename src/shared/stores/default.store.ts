@@ -94,10 +94,11 @@ export const settings = createStore<SettingsType>(
 	{
 		refresh_delay: 5,
 		launch_at_startup: false,
-		proxy: '',
 		theme: ThemeEnum.Orange,
 		language: 'en',
-		compact: false
+		compact: false,
+		preRelease: false,
+		updateAvailable: false
 	},
 	{
 		key: 'settings',
@@ -117,6 +118,8 @@ export const settings = createStore<SettingsType>(
 			if (isElectronRenderer()) {
 				remote.setLaunchAtStartUp(settings.launch_at_startup);
 			}
+
+			remote.setPreRelease(settings.preRelease);
 		}
 	}
 );
