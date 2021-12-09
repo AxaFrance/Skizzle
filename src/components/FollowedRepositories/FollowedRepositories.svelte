@@ -27,7 +27,7 @@
 <section>
 	<AccountTitle>
 		Followed repositories
-		<button title="Share you list" on:click={() => (shareDisplayed = true)}
+		<button title="Share your list" on:click={() => (shareDisplayed = true)}
 			><Icons.Share /></button
 		>
 	</AccountTitle>

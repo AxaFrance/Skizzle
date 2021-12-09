@@ -15,6 +15,7 @@ import UI from './UI.svelte';
 import Copy from './Copy.svelte';
 import Share from './Share.svelte';
 import Logo from './Logo.svelte';
+import Trash from './Trash.svelte';
 
 // Providers
 import AzureDevOps from './AzureDevOps.svelte';
@@ -59,5 +60,6 @@ export default {
 	Copy,
 	Share,
 	Visibility,
-	VisibilityOff
+	VisibilityOff,
+	Trash
 };

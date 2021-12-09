@@ -52,7 +52,7 @@
 		</div>
 	</div>
 	<div class={`step ${step === 1 ? 'current' : ''}`}>
-		<AccountTitle>Ajouter un compte à Skizzle.</AccountTitle>
+		<AccountTitle>Connect Skizzle to your providers</AccountTitle>
 		<p>
 			Skizzle supports Github and Azure DevOps, in order to use the app, you have to set at least one account. Choose a provider and let yourself guided.
 		</p>
