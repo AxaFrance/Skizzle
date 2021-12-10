@@ -26,12 +26,7 @@
 <div class={`search ${className}`} style={`margin-bottom: ${vspace}rem`}>
 	<Icons.Search color="#4e4e4e" />
 	<form on:submit|preventDefault={search}>
-		<input
-			aria-label={placeholder}
-			bind:value={query}
-			{disabled}
-			{placeholder}
-		/>
+		<input aria-label={placeholder} bind:value={query} {disabled} {placeholder} />
 		<input type="submit" />
 		{#if query}
 			<button on:click|preventDefault={cancel} class="delete">

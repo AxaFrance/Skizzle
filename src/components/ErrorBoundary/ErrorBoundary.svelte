@@ -21,7 +21,8 @@
 	<main>
 		<h1>Congratulations, you just found a bug on Skizzle 🎉</h1>
 		<p>
-			Well done, this one is pretty rare because not Skizzle development team is not aware of it yet. Now you can
+			Well done, this one is pretty rare because not Skizzle development team is not aware of
+			it yet. Now you can
 			<a
 				href="#"
 				on:click={() =>

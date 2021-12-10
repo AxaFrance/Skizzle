@@ -41,9 +41,7 @@
 			{/if}
 		{/if}
 	{:catch}
-		<p class="error">
-			Unable to get your profile because of a technical error.
-		</p>
+		<p class="error">Unable to get your profile because of a technical error.</p>
 	{/await}
 {:else}
 	<AddAccount text={`Add a ${provider} account`} {provider} />

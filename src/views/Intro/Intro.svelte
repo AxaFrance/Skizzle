@@ -39,12 +39,10 @@
 	<div class={`step ${step === 0 ? 'current' : ''}`}>
 		<AccountTitle>Welcome to Skizzle. 👋</AccountTitle>
 		<p>
-			Skizzle is a pull request manager that allows you see all your teams work quickly in a single view. It works with your Azure DevOps and Github accounts.
+			Skizzle is a pull request manager that allows you see all your teams work quickly in a
+			single view. It works with your Azure DevOps and Github accounts.
 		</p>
-		<p>
-			Let's take a few steps to set your Skizzle up.
-			Are you ready?
-		</p>
+		<p>Let's take a few steps to set your Skizzle up. Are you ready?</p>
 		<div class="actions">
 			<button class="next" on:click={next}>
 				Let's go! <Icons.ArrowRight />
@@ -54,7 +52,8 @@
 	<div class={`step ${step === 1 ? 'current' : ''}`}>
 		<AccountTitle>Connect Skizzle to your providers</AccountTitle>
 		<p>
-			Skizzle supports Github and Azure DevOps, in order to use the app, you have to set at least one account. Choose a provider and let yourself guided.
+			Skizzle supports Github and Azure DevOps, in order to use the app, you have to set at
+			least one account. Choose a provider and let yourself guided.
 		</p>
 		<ul class="block">
 			<li class={$clientAuthenticated.isAzureDevOpsAuthenticated ? 'valid' : ''}>
@@ -81,7 +80,8 @@
 	<div class={`step ${step === 2 ? 'current' : ''}`}>
 		<AccountTitle>Follow repositories</AccountTitle>
 		<p>
-			Follow the repositories you interested in, and then Skizzle will show you their pull requests in your lists.
+			Follow the repositories you interested in, and then Skizzle will show you their pull
+			requests in your lists.
 		</p>
 		<div class="block">
 			<Tabs
@@ -102,9 +102,7 @@
 	</div>
 	<div class={`step ${step === 3 ? 'current' : ''}`}>
 		<AccountTitle>You are now ready to use Skizzle 🎉</AccountTitle>
-		<p>
-			You can now easily follow your projects and create custom lists. Enjoy!
-		</p>
+		<p>You can now easily follow your projects and create custom lists. Enjoy!</p>
 		<div class="actions">
 			<button class="previous" on:click={previous}>
 				<Icons.ArrowLeft /> Previous
