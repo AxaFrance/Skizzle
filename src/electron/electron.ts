@@ -204,6 +204,11 @@ ipcMain.on('toggle-pre-release', (event, arg) => {
 	autoUpdater.allowPrerelease = arg;
 });
 
+ipcMain.on('clear-applications-data', async (event, _) => {
+	await window.webContents.session.clearStorageData();
+	window.webContents.reload();
+})
+
 ipcMain.handle(
 	'file-export',
 	async (event: Electron.IpcMainEvent, currentTabData: CustomListType) => {

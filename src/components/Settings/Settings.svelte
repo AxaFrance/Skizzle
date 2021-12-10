@@ -1,15 +1,18 @@
 <script lang="ts">
+	import AccountTitle from 'components/AccountTitle';
 	import Fieldset from 'components/Fieldset';
 	import Icons from 'components/icons';
+	import Modale from 'components/Modale';
 	import Range from 'components/Range';
 	import Switch from 'components/Switch';
 	import { ThemeEnum } from 'models/skizzle';
 	import SkizzleCache from 'shared/cache';
 	import { remote } from 'shared/remote';
-	import { isElectron, settings } from 'shared/stores/default.store';
+	import { isElectron,settings } from 'shared/stores/default.store';
 	import { onMount } from 'svelte';
 
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS';
+	let isWarningDisplayed:boolean = false;
 
 	$: progressState = { enabled: false, percent: 50 } as {
 		enabled: boolean;
@@ -104,30 +107,8 @@
 			</Fieldset>
 		{/if}
 
-		<Fieldset
-			title="Compact navigation"
-			intro="Reduce the sidebar width."
-		>
+		<Fieldset title="Compact navigation" intro="Reduce the sidebar width.">
 			<Switch bind:active={$settings.compact} label="Compact mode" />
-		</Fieldset>
-
-		{#if $isElectron}
-			<Fieldset
-				title="Advanced versions"
-				intro="Automatically install Skizzle advanced updates. Warning: this could bring instability."
-			>
-				<Switch
-					bind:active={$settings.preRelease}
-					label="Install Skizzle advanced versions"
-				/>
-			</Fieldset>
-		{/if}
-
-		<Fieldset
-			title="Cache"
-			intro="If you encounter any dysfunctional behavior from Skizzle, cleaning the application is maybe necessary."
-		>
-			<button class="button" on:click={() => SkizzleCache.clear()}>Clean the cache</button>
 		</Fieldset>
 
 		<Fieldset title="Theme" intro="Change Skizzle user interface main color.">
@@ -150,6 +131,45 @@
 				{/each}
 			</div>
 		</Fieldset>
+		
+		{#if $isElectron}
+			<Fieldset
+				title="Advanced versions"
+				intro="Automatically install Skizzle advanced updates. Warning: this could bring instability."
+			>
+				<Switch
+					bind:active={$settings.preRelease}
+					label="Install Skizzle advanced versions"
+				/>
+			</Fieldset>
+		{/if}
+
+		<Fieldset
+			title="Cache"
+			intro="If you encounter any dysfunctional behavior from Skizzle, cleaning the application cache is maybe necessary."
+		>
+			<button class="button" on:click={() => SkizzleCache.clear()}>Clean the cache</button>
+		</Fieldset>
+
+		<Fieldset
+			title="Reset application"
+			intro="Reset all application settings and data."
+		>
+			<button class="button danger" on:click|preventDefault={() => {isWarningDisplayed = true}}
+				>Reset application</button
+			>
+		</Fieldset>
+
+		{#if isWarningDisplayed}
+		<Modale fullHeight={false} onClose={() => {isWarningDisplayed = false}}>
+			<AccountTitle>Do you confirm to reset Skizzle ?</AccountTitle>
+			<p>If you confirm, you will lose all your settings, and will need to login again to your Github or Azure accounts.</p>
+			<div class="bar">
+				<button class="button danger" on:click|preventDefault={() => remote.clearApplicationsData()}><Icons.Trash color="#fff"/> Yes, reset Skizzle.</button>
+				<button class="button clear" on:click|preventDefault={() => {isWarningDisplayed = false}}>Cancel</button>
+			</div>
+		</Modale>
+		{/if}
 	</form>
 </div>
 
@@ -250,6 +270,8 @@
 	}
 
 	.button {
+		display: flex;
+		align-items: center;
 		padding: 0.5rem 1rem;
 		color: #fff;
 		font-size: 1rem;
@@ -259,13 +281,8 @@
 		transition: opacity linear 0.2s;
 	}
 
-	select {
-		width: 100%;
-		padding: 0.5rem;
-		color: #fff;
-		font-size: 1rem;
-		border-radius: 4px;
-		background-color: #555;
+	.danger {
+		background-color: red;
 	}
 
 	.progress {
@@ -290,5 +307,20 @@
 
 	.state p {
 		margin-left: 0.5rem;
+	}
+
+	.bar {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		margin-top: 1rem;
+	}
+
+	.bar .button {
+		margin: 0 0.5rem;
+	}
+
+	.button.clear {
+		background-color: #333;
 	}
 </style>
