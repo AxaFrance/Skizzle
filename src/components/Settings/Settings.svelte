@@ -39,7 +39,10 @@
 		}
 	});
 
-	const checkForUpdateRestart = () => remote.checkForUpdateRestart();
+	const checkForUpdateRestart = () => {
+		settings.update(x => ({ ...x, updateAvailable: false }));
+		remote.checkForUpdateRestart();
+	};
 </script>
 
 <div class="content">
