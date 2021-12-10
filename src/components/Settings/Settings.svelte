@@ -10,7 +10,8 @@
 	import { remote } from 'shared/remote';
 	import { isElectron, settings } from 'shared/stores/default.store';
 	import { onMount } from 'svelte';
-
+	import Button from 'components/Button';
+	
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS';
 	let isWarningDisplayed: boolean = false;
 
@@ -70,7 +71,7 @@
 							{progressState.percent.toFixed(0)}%
 						</p>
 					{:else}
-						<button class="button" on:click={checkForUpdateRestart}>Restart Skizzle</button>
+						<Button class="button" on:click={checkForUpdateRestart}>Restart Skizzle</Button>
 					{/if}
 				</div>
 			</div>
@@ -150,15 +151,15 @@
 			title="Cache"
 			intro="If you encounter any dysfunctional behavior from Skizzle, cleaning the application cache is maybe necessary."
 		>
-			<button class="button" on:click={() => SkizzleCache.clear()}>Clean the cache</button>
+			<Button on:click={() => SkizzleCache.clear()}>Clean the cache</Button>
 		</Fieldset>
 
 		<Fieldset title="Reset application" intro="Reset all application settings and data.">
-			<button
-				class="button danger"
-				on:click|preventDefault={() => {
+			<Button
+				danger
+				on:click={() => {
 					isWarningDisplayed = true;
-				}}>Reset application</button
+				}}>Reset application</Button
 			>
 		</Fieldset>
 
@@ -175,16 +176,18 @@
 					Github or Azure accounts.
 				</p>
 				<div class="bar">
-					<button
-						class="button danger"
-						on:click|preventDefault={() => remote.clearApplicationsData()}
-						><Icons.Trash color="#fff" /> Yes, reset Skizzle.</button
+					<Button
+						danger
+						class="button"
+						on:click={() => remote.clearApplicationsData()}
+						><Icons.Trash color="#fff" /> Yes, reset Skizzle.</Button
 					>
-					<button
-						class="button clear"
-						on:click|preventDefault={() => {
+					<Button
+						clear
+						class="button"
+						on:click={() => {
 							isWarningDisplayed = false;
-						}}>Cancel</button
+						}}>Cancel</Button
 					>
 				</div>
 			</Modale>
@@ -280,28 +283,12 @@
 		font-size: 0.8rem;
 	}
 
-	.update .button {
+	.update :global(.button) {
 		position: absolute;
 		right: 1rem;
 		top: 50%;
 
 		transform: translateY(-50%);
-	}
-
-	.button {
-		display: flex;
-		align-items: center;
-		padding: 0.5rem 1rem;
-		color: #fff;
-		font-size: 1rem;
-		border-radius: 4px;
-		border: none;
-		background-color: var(--color);
-		transition: opacity linear 0.2s;
-	}
-
-	.danger {
-		background-color: red;
 	}
 
 	.progress {
@@ -335,11 +322,7 @@
 		margin-top: 1rem;
 	}
 
-	.bar .button {
+	.bar :global(.button) {
 		margin: 0 0.5rem;
-	}
-
-	.button.clear {
-		background-color: #333;
 	}
 </style>
