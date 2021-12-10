@@ -6,6 +6,7 @@
 	import type { CustomListType, PullRequestType } from 'models/skizzle';
 	import { remote } from 'shared/remote';
 	import { client } from 'shared/stores/authentication.store';
+	import Button from 'components/Button';
 	import {
 		customLists,
 		notifications,
@@ -207,9 +208,9 @@
 	</div>
 </div>
 <div class="action">
-	<button class="cancel" on:click={() => onDone()}>Cancel</button>
-	<button class="cta" on:click={() => saveSettings()} disabled={!customList.name}
-		>Save</button
+	<Button light on:click={() => onDone()}>Cancel</Button>
+	<Button on:click={() => saveSettings()} disabled={!customList.name}
+		>Save</Button
 	>
 </div>
 
@@ -266,26 +267,6 @@
 	.action {
 		display: flex;
 		justify-content: flex-end;
-	}
-
-	.cta {
-		padding: 0.5rem 1rem;
-		color: #fff;
-		font-size: 1rem;
-		border-radius: 4px;
-		border: none;
-		background-color: var(--color);
-		transition: opacity linear 0.2s;
-	}
-
-	.cancel {
-		padding: 0.5rem 1rem;
-		color: #fff;
-		font-size: 1rem;
-		cursor: pointer;
-		border: none;
-		background-color: transparent;
-		transition: opacity linear 0.2s;
 	}
 
 	:global(.isListDisplayed) {

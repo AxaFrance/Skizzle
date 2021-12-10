@@ -1,5 +1,6 @@
 <script lang="ts">
 	import AccountTitle from 'components/AccountTitle';
+import Button from 'components/Button';
 	import Icons from 'components/icons';
 	import Tabs from 'components/Tabs';
 	import type { RepositoryType } from 'models/skizzle';
@@ -107,12 +108,12 @@
 			</p>
 			<textarea bind:value={code} placeholder="Paste here your JSON code" />
 			<div class="bar">
-				<input
+				<Button
 					disabled={!isJson(code)}
 					type="submit"
-					class="import-button"
-					value="Import repositories"
-				/>
+				>
+				Import repositories
+				</Button>
 			</div>
 		</form>
 	{/if}
@@ -129,25 +130,6 @@
 		border: none;
 		border-radius: 4px;
 		background-color: #2b2b2b;
-	}
-
-	.import-button {
-		padding: 0.5rem 1rem;
-		color: #fff;
-		font-size: 1rem;
-		cursor: pointer;
-		border-radius: 4px;
-		border: none;
-		background-color: var(--color);
-		transition: opacity linear 0.2s;
-	}
-
-	.import-button:disabled {
-		opacity: 0.5;
-	}
-
-	.import-button:not(:disabled):hover {
-		opacity: 0.8;
 	}
 
 	.intro {
