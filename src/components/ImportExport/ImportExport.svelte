@@ -71,7 +71,8 @@
 
 <AccountTitle>Import / Export repositories list.</AccountTitle>
 <p class="intro">
-	Skizzle can import and export lists of followed repositories, so you can share it with your team.
+	Skizzle can import and export lists of followed repositories, so you can share it with
+	your team.
 </p>
 <Tabs
 	onChange={changeTab}
@@ -83,9 +84,7 @@
 />
 <div class="container">
 	{#if currentTab === 'export'}
-		<p class="intro">
-			Copy JSON code et import it in another Skizzle instance.
-		</p>
+		<p class="intro">Copy JSON code et import it in another Skizzle instance.</p>
 		<div class="code">
 			<HighlightAuto code={JSON.stringify(getExportCode(), undefined, 2)} />
 			<button
@@ -103,7 +102,8 @@
 	{:else}
 		<form on:submit|preventDefault={importCode}>
 			<p class="intro">
-				Paste the JSON code from another Skizzle instance. <b>Warning</b> Skizzle will delete all current followed repositories.
+				Paste the JSON code from another Skizzle instance. <b>Warning</b> Skizzle will delete all
+				current followed repositories.
 			</p>
 			<textarea bind:value={code} placeholder="Paste here your JSON code" />
 			<div class="bar">

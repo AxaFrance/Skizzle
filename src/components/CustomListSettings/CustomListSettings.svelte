@@ -110,9 +110,7 @@
 
 <div>
 	<AccountTitle>
-		{$customLists.some(x => x.id === customList.id)
-			? 'List modification'
-			: "New list"}
+		{$customLists.some(x => x.id === customList.id) ? 'List modification' : 'New list'}
 		{#if $isElectron}
 			<button class="import" on:click={onImport}>Import</button>
 		{:else}
@@ -180,10 +178,7 @@
 					<Radio bind:checked={customList.withoutDraft} label="Draft" />
 				</li>
 				<li>
-					<Radio
-						bind:checked={customList.withoutCheckedByOwner}
-						label="I already approved"
-					/>
+					<Radio bind:checked={customList.withoutCheckedByOwner} label="I already approved" />
 				</li>
 			</ul>
 		</div>
