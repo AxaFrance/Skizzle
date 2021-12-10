@@ -1,11 +1,11 @@
 ### Changelog
 All notable changes to this project will be documented in this file.
 
-#### [v2.0.8](https://github.com/AxaGuilDEv/Skizzle/compare/v2.0.5-beta...v2.0.8)
+#### [v2.0.9](https://github.com/AxaGuilDEv/Skizzle/compare/v2.0.5-beta...v2.0.9)
+- refactor(Code): clean code [`#135`](https://github.com/AxaGuilDEv/Skizzle/pull/135) by Mathieu De Baerdemaeker
+- feat(App): clear all storage in application and refresh the web content [`#134`](https://github.com/AxaGuilDEv/Skizzle/pull/134) by Mathieu De Baerdemaeker
 - feat(Lang): translate app in english [`#133`](https://github.com/AxaGuilDEv/Skizzle/pull/133) by Jérôme Boukorras
-- feat(App): clear all storage in application and refresh the web content [`1a53b3f`](https://github.com/AxaGuilDEv/Skizzle/commit/1a53b3f6e673416d032b6f9e83160bac27a60852) by DE BAERDEMAEKER Mathieu 
-- feat: ui for reset application [`d0dd924`](https://github.com/AxaGuilDEv/Skizzle/commit/d0dd92474997fd2185d4edcb0527adcc64fdf004) by Jérôme 
-- refactor(Code): clean code [`d25dc86`](https://github.com/AxaGuilDEv/Skizzle/commit/d25dc86906f8172052404bf47008faf1faeec0a9) by DE BAERDEMAEKER Mathieu 
+- fix(Update): hide update field when application restart [`540c803`](https://github.com/AxaGuilDEv/Skizzle/commit/540c8034b29671ac63229880543bf7705a589ab5) by DE BAERDEMAEKER Mathieu 
 
 #### [v2.0.5-beta](https://github.com/AxaGuilDEv/Skizzle/compare/v2.0.4-beta...v2.0.5-beta)
 > 9 December 2021
