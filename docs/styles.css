@@ -162,7 +162,7 @@ body {
 	margin: auto;
 }
 
-.skz-footer a:not(.skz-footer) {
+.skz-footer a:not(.skz-download) {
 	color: #fff;
 }
 
