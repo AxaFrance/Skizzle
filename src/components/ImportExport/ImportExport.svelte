@@ -159,7 +159,12 @@ import Button from 'components/Button';
 		margin-left: 1rem;
 	}
 
+	textarea {
+		flex-grow: 1;
+	}
+
 	.container {
+		flex-grow: 1;
 		margin-left: -2rem;
 		margin-right: -2rem;
 		margin-bottom: -2rem;
@@ -168,10 +173,26 @@ import Button from 'components/Button';
 		background-color: #4e4e4e;
 	}
 
+	form,
+	.container {
+		display: flex;
+		flex-direction: column;
+	}
+
+	form {
+		height: 100%;
+	}
+
 	.code {
 		position: relative;
 		border-radius: 4px;
 		overflow: hidden;
+		flex-grow: 1;
+	}
+
+	.code :global(pre),
+	.code :global(code) {
+		height: 100%;
 	}
 
 	.copy {

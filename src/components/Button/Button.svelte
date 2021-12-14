@@ -11,7 +11,9 @@
 
   const dispatch = createEventDispatcher();
   const onClick = (event) => {
-    event.preventDefault();
+    if(type !== "submit") {
+      event.preventDefault();
+    }
     dispatch('click');
   }
 </script>
