@@ -64,7 +64,7 @@
 		{/each}
 	</ul>
 	{#if shareDisplayed}
-		<Modale onClose={() => (shareDisplayed = false)} fullHeight={false}>
+		<Modale onClose={() => (shareDisplayed = false)} fullHeight={true}>
 			<ImportExport {followedRepositories} bind:shareDisplayed />
 		</Modale>
 	{/if}
