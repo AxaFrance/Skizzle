@@ -1,13 +1,12 @@
 <script lang="ts">
 	export let color: string = '#fff';
-	export let width: '2' | '4' | '8' | '16' | '24' | '32' | '64' = '24';
-	export let height: '2' | '4' | '8' | '16' | '24' | '32' | '64' = '24';
+	export let size: '2' | '4' | '8' | '16' | '24' | '32' | '64' = '24';
 </script>
 
 <svg
-	{width}
-	{height}
-	viewBox="0 0 {width} {height}"
+	width={size}
+	height={size}
+	viewBox="0 0 24 24"
 	fill="none"
 	xmlns="http://www.w3.org/2000/svg"
 >

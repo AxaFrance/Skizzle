@@ -48,11 +48,9 @@
 		currentTab = 'all';
 	};
 
-	const filterList = (customList: CustomListType) => {
-		return getPullRequestsFromCustomSettings($pullRequests, customList).filter(
-			x => !customList.hiddenPullRequestsIds?.some(y => x.pullRequestId === y)
-		);
-	};
+	const filterList = (customList: CustomListType) => getPullRequestsFromCustomSettings($pullRequests, customList).filter(
+		x => !customList.hiddenPullRequestsIds?.some(y => x.pullRequestId === y)
+	);
 
 	const getTabs = (lists: CustomListType[]) => {
 		const tabs = {
@@ -82,7 +80,9 @@
 
 <Tabs
 	current={currentTab}
-	onChange={tab => (currentTab = tab)}
+	onChange={tab => {
+		currentTab = tab
+		}}
 	data={tabs}
 	onCreation={() => {
 		creatingList = true;

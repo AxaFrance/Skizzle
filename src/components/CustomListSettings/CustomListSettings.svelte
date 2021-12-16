@@ -2,19 +2,14 @@
 	import AccountTitle from 'components/AccountTitle';
 	import Radio from 'components/Radio';
 	import Switch from 'components/Switch';
-	import TagInput from 'components/TagInput';
-	import type { CustomListType, PullRequestType } from 'models/skizzle';
+	import type { CustomListType,PullRequestType } from 'models/skizzle';
 	import { remote } from 'shared/remote';
-	import { client } from 'shared/stores/authentication.store';
-	import Button from 'components/Button';
 	import {
-		customLists,
-		notifications,
-		pullRequests,
-		repositories,
-		isElectron
+	customLists,isElectron,notifications,
+	pullRequests,
+	repositories
 	} from 'shared/stores/default.store';
-	import { getLabelsFrom, getPullRequestsFromCustomSettings } from 'shared/utils';
+	import { getLabelsFrom,getPullRequestsFromCustomSettings } from 'shared/utils';
 	import { v4 as uuidv4 } from 'uuid';
 
 	export let onDone: () => void;
@@ -22,7 +17,8 @@
 	export let customList: CustomListType = {
 		id: uuidv4(),
 		name: '',
-		tags: []
+		tags: [],
+		repositoriesId: []
 	} as CustomListType;
 
 	let isListDisplayed = false;
@@ -95,9 +91,14 @@
 		});
 	};
 
-	const getTags = (event: CustomEvent<{ tags: string[] }>) => {
-		customList.tags = event.detail.tags;
+	const onTagsChange = (event: CustomEvent<{ value: string[] }>) => {
+		customList.tags = event.detail.value;
 	};
+
+	const onRepositoriesChange = (event: CustomEvent<{ value: string[] }>) => {
+		customList.repositoriesId = event.detail.value;
+	};
+
 
 	$: pullRequestsList = getPullRequestsFromCustomSettings($pullRequests, customList)
 		.filter(pr => !!pr)
@@ -107,6 +108,11 @@
 				!customList.hiddenPullRequestsIds ||
 				!customList.hiddenPullRequestsIds.some(y => y === x.pullRequestId)
 		})) as { pullRequest: PullRequestType; show: boolean }[];
+
+		const repositoriesSelectorList = $repositories.reduce((acc, curr )=> {
+			acc[curr.repositoryId] = curr.fullName ? curr.fullName : `${curr.projectName}/${curr.name}`
+			return acc;
+		}, {})
 </script>
 
 <div>
@@ -125,44 +131,37 @@
 	</AccountTitle>
 	<div class="fields">
 		<div class="field">
-			<label for="list-name">List name :</label>
-			<input id="list-name" type="text" bind:value={customList.name} />
+			<label for="list-name">List name</label>
+			<input placeholder="Give your list a name" id="list-name" type="text" bind:value={customList.name} />
 		</div>
+
 		<div class="field">
-			<TagInput
-				id="tags"
-				label="View pull requests including tags :"
-				suggestions={getLabelsFrom($pullRequests)}
-				tags={customList.tags}
-				on:tags={event => getTags(event)}
+			<MultiSelector
+				value={customList.repositoriesId}
+				on:change={onRepositoriesChange}
+				list={repositoriesSelectorList}
+				placeholder="Start typing a repository name..."
+				label="View pull requests only from these repositories"
+				noMatchError="Doesn't match any of your repositories."
+				alreadySelectedError="This repository is already selected."
 			/>
 		</div>
+
 		<div class="field">
-			<label for="list-provider">View pull requests from provider :</label>
-			<select id="list-provider" bind:value={customList.provider}>
-				<option value="">-- Select a provider --</option>
-				{#each Object.keys($client) as key}
-					<option value={key}>
-						{key}
-					</option>
-				{/each}
-			</select>
+			<MultiSelector
+				value={customList.tags}
+				on:change={onTagsChange}
+				list={getLabelsFrom($pullRequests).sort().reduce((acc,curr) => {
+					acc[curr] = curr;
+					return acc;
+				}, {})}
+				placeholder="Start typing a tag name..."
+				label="Filter pull requests by tags"
+				alreadySelectedError="This tag is already selected."
+				allowFreeInput
+			/>
 		</div>
-		<div class="field">
-			<label for="repo">View pull requests from repository :</label>
-			<select
-				id="repo"
-				bind:value={customList.repositoryId}
-				disabled={$repositories.length === 0}
-			>
-				<option value="">-- Select a repository --</option>
-				{#each $repositories.filter(x => !customList.provider || x.provider === customList.provider) as repository}
-					<option value={repository.repositoryId}>
-						{repository.name}
-					</option>
-				{/each}
-			</select>
-		</div>
+
 		<div class="field">
 			<p>Hide pull requests</p>
 			<ul>
@@ -205,6 +204,7 @@
 				{/if}
 			</div>
 		{/if}
+		
 	</div>
 </div>
 <div class="action">
@@ -224,7 +224,7 @@
 	}
 
 	.field {
-		margin-bottom: 1.5rem;
+		margin-bottom: 2rem;
 	}
 
 	label {
@@ -260,7 +260,7 @@
 		padding: 0.5rem;
 	}
 
-	li:not(:last-child) {
+	ul li:not(:last-child) {
 		border-bottom: 1px solid #666;
 	}
 
@@ -271,5 +271,21 @@
 
 	:global(.isListDisplayed) {
 		margin-bottom: 0.2rem;
+	}
+
+	.marker {
+		position: relative;
+		padding: 0 0.5rem;
+		border-radius: 4px;
+		background-color: #555;
+	}
+
+	.repositories {
+		width: 100%;
+		padding: 0.5rem;
+		color: #fff;
+		font-size: 1rem;
+		border-radius: 4px;
+		background-color: #555;
 	}
 </style>
