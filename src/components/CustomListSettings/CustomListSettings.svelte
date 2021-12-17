@@ -1,6 +1,8 @@
 <script lang="ts">
 	import AccountTitle from 'components/AccountTitle';
-	import Radio from 'components/Radio';
+	import Button from 'components/Button';
+	import MultiSelector from 'components/MultiSelector';
+	import Checkbox from 'components/Checkbox';
 	import Switch from 'components/Switch';
 	import type { CustomListType,PullRequestType } from 'models/skizzle';
 	import { remote } from 'shared/remote';
@@ -163,22 +165,22 @@
 		</div>
 
 		<div class="field">
-			<p>Hide pull requests</p>
+			<p class="label">Hide pull requests</p>
 			<ul>
 				<li>
-					<Radio bind:checked={customList.withoutOwnedByUserPR} label="I created" />
+					<Checkbox bind:checked={customList.withoutOwnedByUserPR} label="I created" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutOldPR} label="Older than 30 days" />
+					<Checkbox bind:checked={customList.withoutOldPR} label="Older than 30 days" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutConflict} label="In conflicts" />
+					<Checkbox bind:checked={customList.withoutConflict} label="In conflicts" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutDraft} label="Draft" />
+					<Checkbox bind:checked={customList.withoutDraft} label="Draft" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutCheckedByOwner} label="I already approved" />
+					<Checkbox bind:checked={customList.withoutCheckedByOwner} label="I already approved" />
 				</li>
 			</ul>
 		</div>
@@ -193,7 +195,7 @@
 					<ul>
 						{#each pullRequestsList.filter(pr => pr != null) as { pullRequest, show } (pullRequest.pullRequestId)}
 							<li>
-								<Radio
+								<Checkbox
 									on:change={() => (show = !show)}
 									checked={!show}
 									label={pullRequest.title}
@@ -227,21 +229,12 @@
 		margin-bottom: 2rem;
 	}
 
-	label {
-		display: block;
-		margin-bottom: 0.2rem;
+	label, .label {
+		display: inline-block;
+		margin-bottom: 0.5rem;
 	}
 
 	[type='text'] {
-		width: 100%;
-		padding: 0.5rem;
-		color: #fff;
-		font-size: 1rem;
-		border-radius: 4px;
-		background-color: #555;
-	}
-
-	select {
 		width: 100%;
 		padding: 0.5rem;
 		color: #fff;
