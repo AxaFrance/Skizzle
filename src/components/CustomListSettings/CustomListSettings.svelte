@@ -13,6 +13,7 @@
 	} from 'shared/stores/default.store';
 	import { getLabelsFrom,getPullRequestsFromCustomSettings } from 'shared/utils';
 	import { v4 as uuidv4 } from 'uuid';
+import Icons from 'components/icons';
 
 	export let onDone: () => void;
 	export let isInCreationMode: boolean = false;
@@ -24,6 +25,11 @@
 	} as CustomListType;
 
 	let isListDisplayed = false;
+	let isNameAlreadyTaken = false;
+
+	const checkListName = () => {
+		isNameAlreadyTaken = !!$customLists.find(list => list.name === customList.name);
+	}
 
 	const onImport = async () => {
 		const result: any = await remote.fileImport();
@@ -134,7 +140,16 @@
 	<div class="fields">
 		<div class="field">
 			<label for="list-name">List name</label>
-			<input placeholder="Give your list a name" id="list-name" type="text" bind:value={customList.name} />
+			<div class="input-container">
+				<input placeholder="Give your list a name" id="list-name" type="text" bind:value={customList.name} on:input={checkListName} />
+				{#if customList.name.length}
+					{#if isNameAlreadyTaken}
+						<span class="name-warning">Another list has the same name</span>
+						{:else}
+						<span class="name-check"><Icons.Check color="#fff" size="16"/></span>
+					{/if}
+				{/if}
+			</div>
 		</div>
 
 		<div class="field">
@@ -211,7 +226,7 @@
 </div>
 <div class="action">
 	<Button light on:click={() => onDone()}>Cancel</Button>
-	<Button on:click={() => saveSettings()} disabled={!customList.name}
+	<Button on:click={() => saveSettings()} disabled={!customList.name || isNameAlreadyTaken}
 		>Save</Button
 	>
 </div>
@@ -266,19 +281,29 @@
 		margin-bottom: 0.2rem;
 	}
 
-	.marker {
+	.input-container {
 		position: relative;
-		padding: 0 0.5rem;
-		border-radius: 4px;
-		background-color: #555;
 	}
 
-	.repositories {
-		width: 100%;
-		padding: 0.5rem;
-		color: #fff;
-		font-size: 1rem;
-		border-radius: 4px;
-		background-color: #555;
+	.name-warning {
+		position: absolute;
+		right: 1rem;
+		top: 50%;
+		font-size: 0.8rem;
+		transform: translateY(-50%);
+	}
+
+	.name-check {
+		position: absolute;
+		right: 1rem;
+		top: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 50%;
+		background-color: var(--color);
+		transform: translateY(-50%);
 	}
 </style>
