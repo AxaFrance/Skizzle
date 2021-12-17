@@ -8,14 +8,19 @@
 	import type { CustomListType } from 'models/skizzle';
 	import { getPullRequestsFromCustomSettings } from 'shared/utils';
 	import { remote } from 'shared/remote';
+	import AccountTitle from 'components/AccountTitle';
+	import Button from 'components/Button';
+	import Icons from 'components/icons';
 
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;
 	let currentTab: string = 'all';
+	let isConfirmToDeleteDisplayed:boolean = false;
 
 	const closeModale = () => {
 		creatingList = false;
 		modifyingListId = null;
+		isConfirmToDeleteDisplayed = false;
 	};
 
 	const exportList = async () => {
@@ -36,6 +41,10 @@
 		}
 	};
 
+	const confirmToDelete = () => {
+		isConfirmToDeleteDisplayed = true;
+	}
+
 	const deleteList = () => {
 		customLists.update(list => list.filter(_list => _list.id !== currentTab));
 		notifications.update(notifications => [
@@ -46,13 +55,12 @@
 			}
 		]);
 		currentTab = 'all';
+		isConfirmToDeleteDisplayed = false;
 	};
 
-	const filterList = (customList: CustomListType) => {
-		return getPullRequestsFromCustomSettings($pullRequests, customList).filter(
-			x => !customList.hiddenPullRequestsIds?.some(y => x.pullRequestId === y)
-		);
-	};
+	const filterList = (customList: CustomListType) => getPullRequestsFromCustomSettings($pullRequests, customList).filter(
+		x => !customList.hiddenPullRequestsIds?.some(y => x.pullRequestId === y)
+	);
 
 	const getTabs = (lists: CustomListType[]) => {
 		const tabs = {
@@ -82,7 +90,9 @@
 
 <Tabs
 	current={currentTab}
-	onChange={tab => (currentTab = tab)}
+	onChange={tab => {
+		currentTab = tab
+		}}
 	data={tabs}
 	onCreation={() => {
 		creatingList = true;
@@ -99,6 +109,30 @@
 	</Modale>
 {/if}
 
+{#if isConfirmToDeleteDisplayed}
+	<Modale onClose={closeModale} fullHeight={false}>
+		<AccountTitle>Do you confirm to delete this list ?</AccountTitle>
+				<p class="modale-content">
+					If you confirm, your list <b>{tabs[currentTab].label}</b> will be destroyed.
+				</p>
+				<div class="modale-bar">
+					<Button
+						danger
+						class="button"
+						on:click={deleteList}
+						><Icons.Trash color="#fff" /> Yes, delete list.</Button
+					>
+					<Button
+						clear
+						class="button"
+						on:click={() => {
+							isConfirmToDeleteDisplayed = false;
+						}}>Cancel</Button
+					>
+				</div>
+	</Modale>
+{/if}
+
 <div class="content">
 	{#if currentTab !== 'all'}
 		<div class="bar">
@@ -109,7 +143,7 @@
 			>
 				Modify
 			</button>
-			<button on:click={deleteList}>Delete</button>
+			<button on:click={confirmToDelete}>Delete</button>
 			<button on:click={exportList}>Export</button>
 		</div>
 	{/if}
@@ -150,6 +184,9 @@
 		display: flex;
 		justify-content: flex-end;
 		margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+		border-radius: 8px;
+		background-color: #555;
 	}
 
 	.bar button {
@@ -169,7 +206,21 @@
 		top: 50%;
 		transform: translateX(-50%) translateY(-50%);
 	}
+	
+	.modale-bar {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		margin-top: 1rem;
+	}
 
+	.modale-bar :global(.button) {
+		margin: 0 0.5rem;
+	}
+
+	.modale-content b {
+		color: var(--color);
+	}
 	@media only screen and (max-width: 300px) {
 		.content {
 			padding: 0.2rem;

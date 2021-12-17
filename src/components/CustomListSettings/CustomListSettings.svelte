@@ -1,31 +1,35 @@
 <script lang="ts">
 	import AccountTitle from 'components/AccountTitle';
-	import Radio from 'components/Radio';
-	import Switch from 'components/Switch';
-	import TagInput from 'components/TagInput';
-	import type { CustomListType, PullRequestType } from 'models/skizzle';
-	import { remote } from 'shared/remote';
-	import { client } from 'shared/stores/authentication.store';
 	import Button from 'components/Button';
+	import MultiSelector from 'components/MultiSelector';
+	import Checkbox from 'components/Checkbox';
+	import Switch from 'components/Switch';
+	import type { CustomListType,PullRequestType } from 'models/skizzle';
+	import { remote } from 'shared/remote';
 	import {
-		customLists,
-		notifications,
-		pullRequests,
-		repositories,
-		isElectron
+	customLists,isElectron,notifications,
+	pullRequests,
+	repositories
 	} from 'shared/stores/default.store';
-	import { getLabelsFrom, getPullRequestsFromCustomSettings } from 'shared/utils';
+	import { getLabelsFrom,getPullRequestsFromCustomSettings } from 'shared/utils';
 	import { v4 as uuidv4 } from 'uuid';
+import Icons from 'components/icons';
 
 	export let onDone: () => void;
 	export let isInCreationMode: boolean = false;
 	export let customList: CustomListType = {
 		id: uuidv4(),
 		name: '',
-		tags: []
+		tags: [],
+		repositoriesId: []
 	} as CustomListType;
 
 	let isListDisplayed = false;
+	let isNameAlreadyTaken = false;
+
+	const checkListName = () => {
+		isNameAlreadyTaken = !!$customLists.find(list => list.name === customList.name);
+	}
 
 	const onImport = async () => {
 		const result: any = await remote.fileImport();
@@ -95,9 +99,14 @@
 		});
 	};
 
-	const getTags = (event: CustomEvent<{ tags: string[] }>) => {
-		customList.tags = event.detail.tags;
+	const onTagsChange = (event: CustomEvent<{ value: string[] }>) => {
+		customList.tags = event.detail.value;
 	};
+
+	const onRepositoriesChange = (event: CustomEvent<{ value: string[] }>) => {
+		customList.repositoriesId = event.detail.value;
+	};
+
 
 	$: pullRequestsList = getPullRequestsFromCustomSettings($pullRequests, customList)
 		.filter(pr => !!pr)
@@ -107,6 +116,11 @@
 				!customList.hiddenPullRequestsIds ||
 				!customList.hiddenPullRequestsIds.some(y => y === x.pullRequestId)
 		})) as { pullRequest: PullRequestType; show: boolean }[];
+
+		const repositoriesSelectorList = $repositories.reduce((acc, curr )=> {
+			acc[curr.repositoryId] = curr.fullName ? curr.fullName : `${curr.projectName}/${curr.name}`
+			return acc;
+		}, {})
 </script>
 
 <div>
@@ -125,61 +139,63 @@
 	</AccountTitle>
 	<div class="fields">
 		<div class="field">
-			<label for="list-name">List name :</label>
-			<input id="list-name" type="text" bind:value={customList.name} />
+			<label for="list-name">List name</label>
+			<div class="input-container">
+				<input placeholder="Give your list a name" id="list-name" type="text" bind:value={customList.name} on:input={checkListName} />
+				{#if customList.name.length}
+					{#if isNameAlreadyTaken}
+						<span class="name-warning">Another list has the same name</span>
+						{:else}
+						<span class="name-check"><Icons.Check color="#fff" size="16"/></span>
+					{/if}
+				{/if}
+			</div>
 		</div>
+
 		<div class="field">
-			<TagInput
-				id="tags"
-				label="View pull requests including tags :"
-				suggestions={getLabelsFrom($pullRequests)}
-				tags={customList.tags}
-				on:tags={event => getTags(event)}
+			<MultiSelector
+				value={customList.repositoriesId}
+				on:change={onRepositoriesChange}
+				list={repositoriesSelectorList}
+				placeholder="Start typing a repository name..."
+				label="View pull requests only from these repositories"
+				noMatchError="Doesn't match any of your repositories."
+				alreadySelectedError="This repository is already selected."
 			/>
 		</div>
+
 		<div class="field">
-			<label for="list-provider">View pull requests from provider :</label>
-			<select id="list-provider" bind:value={customList.provider}>
-				<option value="">-- Select a provider --</option>
-				{#each Object.keys($client) as key}
-					<option value={key}>
-						{key}
-					</option>
-				{/each}
-			</select>
+			<MultiSelector
+				value={customList.tags}
+				on:change={onTagsChange}
+				list={getLabelsFrom($pullRequests).sort().reduce((acc,curr) => {
+					acc[curr] = curr;
+					return acc;
+				}, {})}
+				placeholder="Start typing a tag name..."
+				label="Filter pull requests by tags"
+				alreadySelectedError="This tag is already selected."
+				allowFreeInput
+			/>
 		</div>
+
 		<div class="field">
-			<label for="repo">View pull requests from repository :</label>
-			<select
-				id="repo"
-				bind:value={customList.repositoryId}
-				disabled={$repositories.length === 0}
-			>
-				<option value="">-- Select a repository --</option>
-				{#each $repositories.filter(x => !customList.provider || x.provider === customList.provider) as repository}
-					<option value={repository.repositoryId}>
-						{repository.name}
-					</option>
-				{/each}
-			</select>
-		</div>
-		<div class="field">
-			<p>Hide pull requests</p>
+			<p class="label">Hide pull requests</p>
 			<ul>
 				<li>
-					<Radio bind:checked={customList.withoutOwnedByUserPR} label="I created" />
+					<Checkbox bind:checked={customList.withoutOwnedByUserPR} label="I created" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutOldPR} label="Older than 30 days" />
+					<Checkbox bind:checked={customList.withoutOldPR} label="Older than 30 days" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutConflict} label="In conflicts" />
+					<Checkbox bind:checked={customList.withoutConflict} label="In conflicts" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutDraft} label="Draft" />
+					<Checkbox bind:checked={customList.withoutDraft} label="Draft" />
 				</li>
 				<li>
-					<Radio bind:checked={customList.withoutCheckedByOwner} label="I already approved" />
+					<Checkbox bind:checked={customList.withoutCheckedByOwner} label="I already approved" />
 				</li>
 			</ul>
 		</div>
@@ -194,7 +210,7 @@
 					<ul>
 						{#each pullRequestsList.filter(pr => pr != null) as { pullRequest, show } (pullRequest.pullRequestId)}
 							<li>
-								<Radio
+								<Checkbox
 									on:change={() => (show = !show)}
 									checked={!show}
 									label={pullRequest.title}
@@ -205,11 +221,12 @@
 				{/if}
 			</div>
 		{/if}
+		
 	</div>
 </div>
 <div class="action">
 	<Button light on:click={() => onDone()}>Cancel</Button>
-	<Button on:click={() => saveSettings()} disabled={!customList.name}
+	<Button on:click={() => saveSettings()} disabled={!customList.name || isNameAlreadyTaken}
 		>Save</Button
 	>
 </div>
@@ -224,24 +241,15 @@
 	}
 
 	.field {
-		margin-bottom: 1.5rem;
+		margin-bottom: 2rem;
 	}
 
-	label {
-		display: block;
-		margin-bottom: 0.2rem;
+	label, .label {
+		display: inline-block;
+		margin-bottom: 0.5rem;
 	}
 
 	[type='text'] {
-		width: 100%;
-		padding: 0.5rem;
-		color: #fff;
-		font-size: 1rem;
-		border-radius: 4px;
-		background-color: #555;
-	}
-
-	select {
 		width: 100%;
 		padding: 0.5rem;
 		color: #fff;
@@ -260,7 +268,7 @@
 		padding: 0.5rem;
 	}
 
-	li:not(:last-child) {
+	ul li:not(:last-child) {
 		border-bottom: 1px solid #666;
 	}
 
@@ -271,5 +279,31 @@
 
 	:global(.isListDisplayed) {
 		margin-bottom: 0.2rem;
+	}
+
+	.input-container {
+		position: relative;
+	}
+
+	.name-warning {
+		position: absolute;
+		right: 1rem;
+		top: 50%;
+		font-size: 0.8rem;
+		transform: translateY(-50%);
+	}
+
+	.name-check {
+		position: absolute;
+		right: 1rem;
+		top: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 50%;
+		background-color: var(--color);
+		transform: translateY(-50%);
 	}
 </style>
