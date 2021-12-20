@@ -1,8 +1,8 @@
 <script lang="ts">
-	import AccountTitle from 'components/AccountTitle';
+	import Button from 'components/Button';
+	import Confirmation from 'components/Confirmation';
 	import Fieldset from 'components/Fieldset';
 	import Icons from 'components/icons';
-	import Modale from 'components/Modale';
 	import Range from 'components/Range';
 	import Switch from 'components/Switch';
 	import { ThemeEnum } from 'models/skizzle';
@@ -10,8 +10,7 @@
 	import { remote } from 'shared/remote';
 	import { isElectron, settings } from 'shared/stores/default.store';
 	import { onMount } from 'svelte';
-	import Button from 'components/Button';
-	
+
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS';
 	let isWarningDisplayed: boolean = false;
 
@@ -43,6 +42,14 @@
 	const checkForUpdateRestart = () => {
 		settings.update(x => ({ ...x, updateAvailable: false }));
 		remote.checkForUpdateRestart();
+	};
+
+	const confirmReset = () => {
+		isWarningDisplayed = true;
+	};
+
+	const cancelReset = () => {
+		isWarningDisplayed = false;
 	};
 </script>
 
@@ -135,6 +142,7 @@
 				{/each}
 			</div>
 		</Fieldset>
+
 		{#if $isElectron}
 			<Fieldset
 				title="Advanced versions"
@@ -151,46 +159,21 @@
 			title="Cache"
 			intro="If you encounter any dysfunctional behavior from Skizzle, cleaning the application cache is maybe necessary."
 		>
-			<Button on:click={() => SkizzleCache.clear()}>Clean the cache</Button>
+			<Button on:click={SkizzleCache.clear}>Clean the cache</Button>
 		</Fieldset>
 
 		<Fieldset title="Reset application" intro="Reset all application settings and data.">
-			<Button
-				danger
-				on:click={() => {
-					isWarningDisplayed = true;
-				}}>Reset application</Button
-			>
+			<Button danger on:click={confirmReset}>Reset application</Button>
 		</Fieldset>
 
 		{#if isWarningDisplayed}
-			<Modale
-				fullHeight={false}
-				onClose={() => {
-					isWarningDisplayed = false;
-				}}
-			>
-				<AccountTitle>Do you confirm to reset Skizzle ?</AccountTitle>
-				<p>
-					If you confirm, you will lose all your settings, and will need to login again to your
-					Github or Azure accounts.
-				</p>
-				<div class="bar">
-					<Button
-						danger
-						class="button"
-						on:click={() => remote.clearApplicationsData()}
-						><Icons.Trash color="#fff" /> Yes, reset Skizzle.</Button
-					>
-					<Button
-						clear
-						class="button"
-						on:click={() => {
-							isWarningDisplayed = false;
-						}}>Cancel</Button
-					>
-				</div>
-			</Modale>
+			<Confirmation
+				title="Do you confirm to reset Skizzle ?"
+				text="If you confirm, you will lose all your settings, and will need to login again to your Github or Azure accounts."
+				confirmLabel="Yes, reset Skizzle."
+				on:cancel={cancelReset}
+				on:confirm={remote.clearApplicationsData}
+			/>
 		{/if}
 	</form>
 </div>
@@ -313,16 +296,5 @@
 
 	.state p {
 		margin-left: 0.5rem;
-	}
-
-	.bar {
-		display: flex;
-		justify-content: center;
-		width: 100%;
-		margin-top: 1rem;
-	}
-
-	.bar :global(.button) {
-		margin: 0 0.5rem;
 	}
 </style>
