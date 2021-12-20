@@ -58,7 +58,7 @@
 	</footer>
 </div>
 {#if detailsModal}
-	<Modale onClose={closeModale}>
+	<Modale on:close={closeModale}>
 		{#each pullRequest.comments as comment}
 			<Comment {comment} />
 		{:else}

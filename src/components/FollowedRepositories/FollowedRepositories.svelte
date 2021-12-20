@@ -13,6 +13,10 @@
 
 	let shareDisplayed: boolean = false;
 
+	const hideShare = () => {
+		shareDisplayed = false;
+	};
+
 	$: followedRepositories = $repositories
 		.filter(({ provider }) => provider === profile.provider)
 		.sort((a, b) => {
@@ -64,7 +68,7 @@
 		{/each}
 	</ul>
 	{#if shareDisplayed}
-		<Modale onClose={() => (shareDisplayed = false)} fullHeight={true}>
+		<Modale on:close={hideShare}>
 			<ImportExport {followedRepositories} bind:shareDisplayed />
 		</Modale>
 	{/if}

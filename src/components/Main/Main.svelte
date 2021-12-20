@@ -106,7 +106,7 @@
 />
 
 {#if creatingList || modifyingListId}
-	<Modale onClose={closeModale}>
+	<Modale on:close={closeModale}>
 		<CustomListSettings
 			customList={$customLists.find(({ id }) => id === modifyingListId)}
 			isInCreationMode={creatingList}

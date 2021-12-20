@@ -14,7 +14,7 @@
 	const onCancel = () => dispatch('cancel');
 </script>
 
-<Modale onClose={onCancel} fullHeight={false}>
+<Modale on:close={onCancel} fullHeight={false}>
 	<AccountTitle>{title}</AccountTitle>
 	<p class="modale-content">
 		{@html text}

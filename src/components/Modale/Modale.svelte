@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { fly, fade } from 'svelte/transition';
-	export let onClose: () => void;
 	export let fullHeight: boolean = true;
+
+	const dispatch = createEventDispatcher();
+	const onClose = () => dispatch('close');
 </script>
 
 <div class="overlay" on:click={onClose} in:fade out:fade />
