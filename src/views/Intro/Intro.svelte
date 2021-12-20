@@ -86,7 +86,7 @@
 		<div class="block">
 			<Tabs
 				current={currentProvider}
-				onChange={provider => (currentProvider = provider)}
+				on:change={({ detail: { tab } }) => (currentProvider = tab)}
 				data={tabs}
 			/>
 			<div class="repos">

@@ -1,24 +1,34 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import Icons from 'components/icons';
+
 	export let data: any;
-	export let onChange: (value: any) => void;
-	export let current: any;
-	export let onCreation: () => void = undefined;
+	export let current: string;
+	export let withAddButton: boolean = false;
 
 	let width;
+
+	const dispatch = createEventDispatcher();
+	const onChange = tab => () => dispatch('change', { tab });
+	const onSelectChange = e => onChange(e.target.value)();
+	const onAdd = () => dispatch('add');
+
+	$: sortedTabs = Object.keys(data).sort((a, b) =>
+		data[a].order < data[b].order ? -1 : 1
+	);
 </script>
 
 <div class="tabs" bind:clientWidth={width}>
 	<nav>
 		{#if width > 300}
-			{#each Object.keys(data).sort( (a, b) => (data[a].order < data[b].order ? -1 : 1) ) as tab}
+			{#each sortedTabs as tab}
 				<button
 					title={data[tab].label}
 					class="tab"
 					role="tab"
 					class:fixed={tab === 'all'}
 					class:current={current === tab || Object.keys(data).length === 1}
-					on:click={() => onChange(tab)}
+					on:click={onChange(tab)}
 					disabled={data[tab].disabled}
 				>
 					<span>
@@ -31,25 +41,19 @@
 					{#if data[tab].counter}<small>{data[tab].counter}</small>{/if}
 				</button>
 			{/each}
-			{#if onCreation}
-				<button on:click={onCreation} title="New list" class="add">
+			{#if withAddButton}
+				<button on:click={onAdd} title="New list" class="add">
 					<Icons.Plus />
 				</button>
 			{/if}
 		{:else}
-			<select
-				on:blur={() => {}}
-				class="select"
-				aria-label="Select"
-				value={current}
-				on:change={e => {
-					onChange(e.target.value);
-				}}
-			>
-				{#each Object.keys(data).sort( (a, b) => (data[a].order < data[b].order ? -1 : 1) ) as tab}
+			<select class="select" aria-label="Select" value={current} on:change={onSelectChange}>
+				{#each sortedTabs as tab}
 					<option value={tab}>
 						{data[tab].label}
-						{#if data[tab].counter}({data[tab].counter}){/if}
+						{#if data[tab].counter}
+							({data[tab].counter})
+						{/if}
 					</option>
 				{/each}
 			</select>

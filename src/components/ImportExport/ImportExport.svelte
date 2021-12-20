@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AccountTitle from 'components/AccountTitle';
-import Button from 'components/Button';
+	import Button from 'components/Button';
 	import Icons from 'components/icons';
 	import Tabs from 'components/Tabs';
 	import type { RepositoryType } from 'models/skizzle';
@@ -17,7 +17,7 @@ import Button from 'components/Button';
 	let currentTab: string = 'import';
 	let code: string = '';
 
-	const changeTab = (tab: string) => (currentTab = tab);
+	const changeTab = ({ detail: { tab } }) => (currentTab = tab);
 
 	const importCode = async () => {
 		let repositoriesImported = JSON.parse(code) as RepositoryType[];
@@ -76,7 +76,7 @@ import Button from 'components/Button';
 	your team.
 </p>
 <Tabs
-	onChange={changeTab}
+	on:change={changeTab}
 	current={currentTab}
 	data={{
 		import: { order: 0, label: 'Import' },
@@ -108,12 +108,7 @@ import Button from 'components/Button';
 			</p>
 			<textarea bind:value={code} placeholder="Paste here your JSON code" />
 			<div class="bar">
-				<Button
-					disabled={!isJson(code)}
-					type="submit"
-				>
-				Import repositories
-				</Button>
+				<Button disabled={!isJson(code)} type="submit">Import repositories</Button>
 			</div>
 		</form>
 	{/if}

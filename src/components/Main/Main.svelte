@@ -83,6 +83,14 @@
 		return tabs;
 	};
 
+	const onChangeTab = ({ detail: { tab } }) => {
+		currentTab = tab;
+	};
+
+	const onAddtab = () => {
+		creatingList = true;
+	};
+
 	const onDeleteCancel = () => {
 		isConfirmToDeleteDisplayed = false;
 	};
@@ -95,14 +103,11 @@
 </script>
 
 <Tabs
+	withAddButton
 	current={currentTab}
-	onChange={tab => {
-		currentTab = tab;
-	}}
 	data={tabs}
-	onCreation={() => {
-		creatingList = true;
-	}}
+	on:add={onAddtab}
+	on:change={onChangeTab}
 />
 
 {#if creatingList || modifyingListId}
