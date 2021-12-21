@@ -14,7 +14,7 @@
 			<svelte:component this={Icons.User} color={$settings.theme} />
 		</div>
 	{:then avatar}
-		<div class="avatar"><img src={avatar} alt={pullRequest.user.name} /></div>
+		<div class="avatar"><img width="60" height="60" loading="lazy" src={avatar} alt={pullRequest.user.name} /></div>
 		{#if pullRequest.provider}
 			<div class="badge">
 				<svelte:component this={Icons[pullRequest.provider]} />
