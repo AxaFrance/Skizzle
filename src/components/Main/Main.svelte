@@ -100,6 +100,8 @@
 		currentTab === 'all'
 			? $pullRequests
 			: filterList($customLists.find(({ id }) => id === currentTab));
+
+	$: customList = $customLists.find(({ id }) => id === modifyingListId) ? {...$customLists.find(({ id }) => id === modifyingListId)} : undefined;
 </script>
 
 <Tabs
@@ -113,9 +115,9 @@
 {#if creatingList || modifyingListId}
 	<Modale on:close={closeModale}>
 		<CustomListSettings
-			customList={$customLists.find(({ id }) => id === modifyingListId)}
+			{customList}
 			isInCreationMode={creatingList}
-			onDone={closeModale}
+			on:done={closeModale}
 		/>
 	</Modale>
 {/if}

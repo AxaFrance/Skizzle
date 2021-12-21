@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import AccountTitle from 'components/AccountTitle';
 	import Button from 'components/Button';
-	import MultiSelector from 'components/MultiSelector';
 	import Checkbox from 'components/Checkbox';
+	import Icons from 'components/icons';
+	import MultiSelector from 'components/MultiSelector';
 	import Switch from 'components/Switch';
 	import type { CustomListType,PullRequestType } from 'models/skizzle';
 	import { remote } from 'shared/remote';
@@ -13,9 +15,7 @@
 	} from 'shared/stores/default.store';
 	import { getLabelsFrom,getPullRequestsFromCustomSettings } from 'shared/utils';
 	import { v4 as uuidv4 } from 'uuid';
-import Icons from 'components/icons';
 
-	export let onDone: () => void;
 	export let isInCreationMode: boolean = false;
 	export let customList: CustomListType = {
 		id: uuidv4(),
@@ -27,8 +27,11 @@ import Icons from 'components/icons';
 	let isListDisplayed = false;
 	let isNameAlreadyTaken = false;
 
+	const dispatch = createEventDispatcher();
+
 	const checkListName = () => {
-		isNameAlreadyTaken = !!$customLists.find(list => list.name === customList.name);
+		const limit = isInCreationMode ? 0 : 1;
+		isNameAlreadyTaken = $customLists.filter(list => list.name.trim().toLocaleLowerCase() === customList.name.trim().toLocaleLowerCase()).length > limit;
 	}
 
 	const onImport = async () => {
@@ -63,6 +66,7 @@ import Icons from 'components/icons';
 	};
 
 	const saveSettings = () => {
+		customList.name = customList.name.trim();
 		updateSettings({
 			...customList,
 			hiddenPullRequestsIds: pullRequestsList.reduce((acc, curr) => {
@@ -82,7 +86,7 @@ import Icons from 'components/icons';
 			}
 		]);
 
-		onDone();
+		dispatch('done');
 	};
 
 	const updateSettings = (list: CustomListType) => {
@@ -107,6 +111,8 @@ import Icons from 'components/icons';
 		customList.repositoriesId = event.detail.value;
 	};
 
+	const onCancel = () => dispatch('done');
+
 
 	$: pullRequestsList = getPullRequestsFromCustomSettings($pullRequests, customList)
 		.filter(pr => !!pr)
@@ -125,7 +131,7 @@ import Icons from 'components/icons';
 
 <div>
 	<AccountTitle>
-		{$customLists.some(x => x.id === customList.id) ? 'List modification' : 'New list'}
+		{isInCreationMode ? 'New list' : 'List modification'}
 		{#if $isElectron}
 			<button class="import" on:click={onImport}>Import</button>
 		{:else}
@@ -225,8 +231,8 @@ import Icons from 'components/icons';
 	</div>
 </div>
 <div class="action">
-	<Button light on:click={() => onDone()}>Cancel</Button>
-	<Button on:click={() => saveSettings()} disabled={!customList.name || isNameAlreadyTaken}
+	<Button light on:click={onCancel}>Cancel</Button>
+	<Button on:click={saveSettings} disabled={!customList.name || isNameAlreadyTaken}
 		>Save</Button
 	>
 </div>
