@@ -52,7 +52,7 @@
 			<Reviews reviews={pullRequest.reviewers} />
 		{/if}
 		<Labels labels={pullRequest.labels} />
-		<button class="more" on:click={openModale} disabled={$isFetchingData}>
+		<button class="more" on:click={openModale} disabled={$isFetchingData || !pullRequest.comments || !pullRequest.comments.length}>
 			<Icons.Ellipsis />
 		</button>
 	</footer>
@@ -143,6 +143,10 @@
 
 	.more:hover {
 		background-color: #333;
+	}
+
+	.more:disabled {
+		display: none;
 	}
 
 	.link {
