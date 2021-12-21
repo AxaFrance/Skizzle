@@ -52,13 +52,13 @@
 			<Reviews reviews={pullRequest.reviewers} />
 		{/if}
 		<Labels labels={pullRequest.labels} />
-		<button class="more" on:click={openModale} disabled={$isFetchingData}>
+		<button class="more" on:click={openModale} disabled={$isFetchingData || !pullRequest.comments || !pullRequest.comments.length}>
 			<Icons.Ellipsis />
 		</button>
 	</footer>
 </div>
 {#if detailsModal}
-	<Modale onClose={closeModale}>
+	<Modale on:close={closeModale}>
 		{#each pullRequest.comments as comment}
 			<Comment {comment} />
 		{:else}
@@ -143,6 +143,10 @@
 
 	.more:hover {
 		background-color: #333;
+	}
+
+	.more:disabled {
+		display: none;
 	}
 
 	.link {

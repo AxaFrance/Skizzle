@@ -18,22 +18,23 @@
 </script>
 
 {#if $error}
-	<main>
+	<div class="main">
 		<h1>Congratulations, you just found a bug on Skizzle 🎉</h1>
 		<p>
-			Well done, this one is pretty rare because not Skizzle development team is not aware of
-			it yet. Now you can
-			<a
-				href="#"
-				on:click={() =>
-					remote.openDefaultBrowser('https://github.com/AxaGuilDEv/Skizzle/issues/new')}
-			>
-				create a Github issue
-			</a>
-			. Thanks!
+			Well done, this one is pretty rare because Skizzle development team is not aware of it yet. Now you can
+			{#if $isElectron}
+				<button class="link" on:click={() => remote.openDefaultBrowser('https://github.com/AxaGuilDEv/Skizzle/issues/new')}>
+					create a Github issue
+				</button>.
+			{:else}
+				<a href="https://github.com/AxaGuilDEv/Skizzle/issues/new">
+					create a Github issue
+				</a>.
+			{/if}
+			Thanks!
 		</p>
 		{#if $isElectron}
-			<button on:click={restart}>Restart Skizzle</button>
+			<button class="restart" on:click={restart}>Restart Skizzle</button>
 		{/if}
 		<div class="frame">
 			<b>{$error.message}</b>
@@ -44,7 +45,7 @@
 				Skizzle bug <i>Anonymous - {new Date().getFullYear()}</i>
 			</span>
 		</div>
-	</main>
+	</div>
 {:else}
 	<slot />
 {/if}
@@ -54,14 +55,12 @@
 	p {
 		margin-bottom: 1rem;
 	}
-	button {
-		margin-bottom: 3rem;
-	}
 
 	a {
 		color: #fff;
 	}
-	main {
+	.main {
+		flex: 1 1 100%;
 		padding: 2rem;
 		text-align: center;
 	}
@@ -85,7 +84,8 @@
 		font-family: monospace;
 	}
 
-	button {
+	.restart {
+		margin-bottom: 3rem;
 		padding: 0.5rem 1rem;
 		color: #fff;
 		font-size: 1rem;
@@ -96,7 +96,7 @@
 		transition: opacity linear 0.2s;
 	}
 
-	button:hover {
+	.restart:hover {
 		opacity: 0.8;
 	}
 
@@ -116,5 +116,12 @@
 		display: block;
 		font-size: 0.7rem;
 		font-weight: normal;
+	}
+
+	.link {
+		text-decoration: underline;
+		color: #fff;
+		font-size: 1rem;
+		background-color: transparent;
 	}
 </style>

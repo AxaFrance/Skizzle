@@ -18,12 +18,16 @@
 			order: 1
 		}
 	};
+
+	const onTabChange = ({ detail: { tab } }) => {
+		provider = tab;
+	};
 </script>
 
 <Tabs
 	current={provider}
-	onChange={currentProvider => (provider = currentProvider)}
 	data={tabs}
+	on:change={onTabChange}
 />
 <div class="content">
 	<ProviderAccount {provider} />
