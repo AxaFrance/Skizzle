@@ -64,7 +64,7 @@
 			x => !customList.hiddenPullRequestsIds?.some(y => x.pullRequestId === y)
 		);
 
-	const getTabs = (lists: CustomListType[]) => {
+	$: getTabs = (lists: CustomListType[]) => {
 		const tabs = {
 			all: {
 				label: 'All',
