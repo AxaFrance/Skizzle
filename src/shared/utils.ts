@@ -105,3 +105,13 @@ export const getPullRequestsFromCustomSettings = (
 				!settings.withoutCheckedByOwner || (settings.withoutCheckedByOwner && !pr.hasReviewed)
 		);
 };
+
+export const displayLocalNotification = (text: string) => {
+	notifications.update(notificationsList => [
+		...notificationsList,
+		{
+			text,
+			id: uuidv4()
+		}
+	]);
+}

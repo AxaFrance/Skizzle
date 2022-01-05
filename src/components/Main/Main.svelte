@@ -4,11 +4,13 @@
 	import Modale from 'components/Modale';
 	import PullRequest from 'components/PullRequest';
 	import Tabs from 'components/Tabs';
-	import type { CustomListType } from 'models/skizzle';
+	import type { CustomListType, PullRequestType } from 'models/skizzle';
 	import { remote } from 'shared/remote';
-	import { customLists, notifications, pullRequests } from 'shared/stores/default.store';
-	import { getPullRequestsFromCustomSettings } from 'shared/utils';
-	import { v4 as uuidv4 } from 'uuid';
+	import { customLists, pullRequests } from 'shared/stores/default.store';
+	import {
+		displayLocalNotification,
+		getPullRequestsFromCustomSettings
+	} from 'shared/utils';
 
 	let creatingList: boolean = false;
 	let modifyingListId: string = null;
@@ -27,13 +29,7 @@
 			const result: boolean = await remote.fileExport(currentTabData);
 
 			if (result) {
-				notifications.update(notifications => [
-					...notifications,
-					{
-						text: 'List exported.',
-						id: uuidv4()
-					}
-				]);
+				displayLocalNotification('List exported.');
 			}
 		}
 	};
@@ -47,14 +43,8 @@
 	};
 
 	const deleteList = () => {
-		customLists.update(list => list.filter(_list => _list.id !== currentTab));
-		notifications.update(notifications => [
-			...notifications,
-			{
-				text: 'List deleted.',
-				id: uuidv4()
-			}
-		]);
+		customLists.update(list => list.filter(({ id }) => id !== currentTab));
+		displayLocalNotification('List deleted.');
 		currentTab = 'all';
 		isConfirmToDeleteDisplayed = false;
 	};
@@ -64,7 +54,7 @@
 			x => !customList.hiddenPullRequestsIds?.some(y => x.pullRequestId === y)
 		);
 
-	$: getTabs = (lists: CustomListType[]) => {
+	const getTabs = (lists: CustomListType[]) => {
 		const tabs = {
 			all: {
 				label: 'All',
@@ -95,13 +85,30 @@
 		isConfirmToDeleteDisplayed = false;
 	};
 
-	$: tabs = getTabs($customLists);
-	$: displayedList =
-		currentTab === 'all'
-			? $pullRequests
-			: filterList($customLists.find(({ id }) => id === currentTab));
+	const getCustomList: (modifyingListId: string) => CustomListType = modifyingListId => {
+		let list;
+		const matchedList = $customLists.find(({ id }) => id === modifyingListId);
 
-	$: customList = $customLists.find(({ id }) => id === modifyingListId) ? {...$customLists.find(({ id }) => id === modifyingListId)} : undefined;
+		if (matchedList) {
+			list = matchedList;
+		}
+
+		return list;
+	};
+
+	const getDisplayedList: (currentTab: string) => PullRequestType[] = currentTab => {
+		let list = $pullRequests;
+
+		if (currentTab !== 'all') {
+			list = filterList($customLists.find(({ id }) => id === currentTab));
+		}
+
+		return list;
+	};
+
+	$: tabs = getTabs($customLists);
+	$: displayedList = getDisplayedList(currentTab);
+	$: customList = getCustomList(modifyingListId);
 </script>
 
 <Tabs

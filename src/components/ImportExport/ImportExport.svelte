@@ -5,11 +5,10 @@
 	import Tabs from 'components/Tabs';
 	import type { RepositoryType } from 'models/skizzle';
 	import { Service } from 'services';
-	import { notifications, pullRequests, repositories } from 'shared/stores/default.store';
-	import { copyToClipboard, isJson } from 'shared/utils';
+	import { pullRequests, repositories } from 'shared/stores/default.store';
+	import { copyToClipboard, displayLocalNotification, isJson } from 'shared/utils';
 	import { HighlightAuto } from 'svelte-highlight';
 	import 'svelte-highlight/src/styles/dark.css';
-	import { v4 as uuidv4 } from 'uuid';
 
 	export let followedRepositories: RepositoryType[];
 	export let shareDisplayed: boolean;
@@ -51,14 +50,7 @@
 		pullRequests.update(x =>
 			[...x, ...values].sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
 		);
-
-		notifications.update(notifications => [
-			...notifications,
-			{
-				text: 'Repositories importés',
-				id: uuidv4()
-			}
-		]);
+		displayLocalNotification('Repositories imported.');
 
 		shareDisplayed = false;
 	};
