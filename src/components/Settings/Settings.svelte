@@ -9,6 +9,7 @@
 	import SkizzleCache from 'shared/cache';
 	import { remote } from 'shared/remote';
 	import { isElectron, settings } from 'shared/stores/default.store';
+	import { displayLocalNotification } from 'shared/utils';
 	import { onMount } from 'svelte';
 
 	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS';
@@ -50,6 +51,11 @@
 
 	const cancelReset = () => {
 		isWarningDisplayed = false;
+	};
+
+	const clearCache = () => {
+		SkizzleCache.clear();
+		displayLocalNotification('Cache have been cleared');
 	};
 </script>
 
@@ -159,7 +165,7 @@
 			title="Cache"
 			intro="If you encounter any dysfunctional behavior from Skizzle, cleaning the application cache is maybe necessary."
 		>
-			<Button on:click={SkizzleCache.clear}>Clean the cache</Button>
+			<Button on:click={clearCache}>Clean the cache</Button>
 		</Fieldset>
 
 		<Fieldset title="Reset application" intro="Reset all application settings and data.">
