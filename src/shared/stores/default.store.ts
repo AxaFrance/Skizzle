@@ -1,18 +1,16 @@
 import type {
 	CommonType,
-	CustomListType,
-	PullRequestType,
+	CustomListType, NotificationType,
+	ProfileType, PullRequestType,
 	RepositoryType,
-	SettingsType,
-	NotificationType,
-	ProfileType
+	SettingsType
 } from 'models/skizzle';
-import { ThemeEnum, ProviderEnum } from 'models/skizzle';
+import { ProviderEnum, ThemeEnum } from 'models/skizzle';
 import { Service } from 'services/Service';
+import { isElectronRenderer, remote } from 'shared/remote';
+import { displayLocalNotification } from 'shared/utils';
 import { get } from 'svelte/store';
 import { createStore } from './store';
-import { v4 as uuidv4 } from 'uuid';
-import { isElectronRenderer, remote } from 'shared/remote';
 
 const predicate = <T extends CommonType>(value: T[], provider: ProviderEnum): T[] => {
 	return value.filter(x => x.provider !== provider);
@@ -80,13 +78,7 @@ export const offline = createStore<boolean>(false, {
 	key: 'offline',
 	subscriber: () => (offline: boolean) => {
 		if (offline) {
-			notifications.update(notifications => [
-				...notifications,
-				{
-					text: 'You are disconnected',
-					id: uuidv4()
-				}
-			]);
+			displayLocalNotification('You are offline.');
 		}
 	}
 });

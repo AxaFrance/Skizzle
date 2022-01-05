@@ -1,19 +1,24 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import AccountTitle from 'components/AccountTitle';
 	import Button from 'components/Button';
 	import Checkbox from 'components/Checkbox';
 	import Icons from 'components/icons';
 	import MultiSelector from 'components/MultiSelector';
 	import Switch from 'components/Switch';
-	import type { CustomListType,PullRequestType } from 'models/skizzle';
+	import type { CustomListType, PullRequestType } from 'models/skizzle';
 	import { remote } from 'shared/remote';
 	import {
-	customLists,isElectron,notifications,
-	pullRequests,
-	repositories
+		customLists,
+		isElectron,
+		pullRequests,
+		repositories
 	} from 'shared/stores/default.store';
-	import { getLabelsFrom,getPullRequestsFromCustomSettings } from 'shared/utils';
+	import {
+		displayLocalNotification,
+		getLabelsFrom,
+		getPullRequestsFromCustomSettings
+	} from 'shared/utils';
+	import { createEventDispatcher } from 'svelte';
 	import { v4 as uuidv4 } from 'uuid';
 
 	export let isInCreationMode: boolean = false;
@@ -31,8 +36,12 @@
 
 	const checkListName = () => {
 		const limit = isInCreationMode ? 0 : 1;
-		isNameAlreadyTaken = $customLists.filter(list => list.name.trim().toLocaleLowerCase() === customList.name.trim().toLocaleLowerCase()).length > limit;
-	}
+		isNameAlreadyTaken =
+			$customLists.filter(
+				list =>
+					list.name.trim().toLocaleLowerCase() === customList.name.trim().toLocaleLowerCase()
+			).length > limit;
+	};
 
 	const onImport = async () => {
 		const result: any = await remote.fileImport();
@@ -54,14 +63,8 @@
 	const readFile = (result: any) => {
 		if (result) {
 			customList = { ...JSON.parse(result), id: uuidv4() } as CustomListType;
-
-			notifications.update(notifications => [
-				...notifications,
-				{
-					text: 'Liste importée.',
-					id: uuidv4()
-				}
-			]);
+			checkListName();
+			displayLocalNotification('list imported.');
 		}
 	};
 
@@ -78,14 +81,7 @@
 			}, [] as string[])
 		});
 
-		notifications.update(notifications => [
-			...notifications,
-			{
-				text: `Liste ${isInCreationMode ? 'créée' : 'modifiée'}`,
-				id: uuidv4()
-			}
-		]);
-
+		displayLocalNotification(`List ${isInCreationMode ? 'created' : 'modified'}`);
 		dispatch('done');
 	};
 
@@ -113,7 +109,6 @@
 
 	const onCancel = () => dispatch('done');
 
-
 	$: pullRequestsList = getPullRequestsFromCustomSettings($pullRequests, customList)
 		.filter(pr => !!pr)
 		.map(x => ({
@@ -123,10 +118,12 @@
 				!customList.hiddenPullRequestsIds.some(y => y === x.pullRequestId)
 		})) as { pullRequest: PullRequestType; show: boolean }[];
 
-		const repositoriesSelectorList = $repositories.reduce((acc, curr )=> {
-			acc[curr.repositoryId] = curr.fullName ? curr.fullName : `${curr.projectName}/${curr.name}`
-			return acc;
-		}, {})
+	const repositoriesSelectorList = $repositories.reduce((acc, curr) => {
+		acc[curr.repositoryId] = curr.fullName
+			? curr.fullName
+			: `${curr.projectName}/${curr.name}`;
+		return acc;
+	}, {});
 </script>
 
 <div>
@@ -147,12 +144,18 @@
 		<div class="field">
 			<label for="list-name">List name</label>
 			<div class="input-container">
-				<input placeholder="Give your list a name" id="list-name" type="text" bind:value={customList.name} on:input={checkListName} />
+				<input
+					placeholder="Give your list a name"
+					id="list-name"
+					type="text"
+					bind:value={customList.name}
+					on:input={checkListName}
+				/>
 				{#if customList.name.length}
 					{#if isNameAlreadyTaken}
 						<span class="name-warning">Another list has the same name</span>
-						{:else}
-						<span class="name-check"><Icons.Check color="#fff" size="16"/></span>
+					{:else}
+						<span class="name-check"><Icons.Check color="#fff" size="16" /></span>
 					{/if}
 				{/if}
 			</div>
@@ -174,10 +177,12 @@
 			<MultiSelector
 				value={customList.tags}
 				on:change={onTagsChange}
-				list={getLabelsFrom($pullRequests).sort().reduce((acc,curr) => {
-					acc[curr] = curr;
-					return acc;
-				}, {})}
+				list={getLabelsFrom($pullRequests)
+					.sort()
+					.reduce((acc, curr) => {
+						acc[curr] = curr;
+						return acc;
+					}, {})}
 				placeholder="Start typing a tag name..."
 				label="Filter pull requests by tags"
 				alreadySelectedError="This tag is already selected."
@@ -201,7 +206,10 @@
 					<Checkbox bind:checked={customList.withoutDraft} label="Draft" />
 				</li>
 				<li>
-					<Checkbox bind:checked={customList.withoutCheckedByOwner} label="I already approved" />
+					<Checkbox
+						bind:checked={customList.withoutCheckedByOwner}
+						label="I already approved"
+					/>
 				</li>
 			</ul>
 		</div>
@@ -227,7 +235,6 @@
 				{/if}
 			</div>
 		{/if}
-		
 	</div>
 </div>
 <div class="action">
@@ -250,7 +257,8 @@
 		margin-bottom: 2rem;
 	}
 
-	label, .label {
+	label,
+	.label {
 		display: inline-block;
 		margin-bottom: 0.5rem;
 	}
@@ -305,7 +313,7 @@
 		top: 50%;
 		display: flex;
 		align-items: center;
-		justify-content: center;;
+		justify-content: center;
 		width: 1.5rem;
 		height: 1.5rem;
 		border-radius: 50%;
