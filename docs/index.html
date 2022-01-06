@@ -128,8 +128,6 @@
 		</p>
 	</footer>
 	<script>
-		var version = '2.1.2';
-
 		function getIsMacOS() {
 			var platform = window.navigator.platform;
 			var macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
@@ -137,8 +135,8 @@
 			return macosPlatforms.indexOf(platform) !== -1;
 		}
 
-		function getFileName() {
-			var url = 'https://github.com/AxaGuilDEv/Skizzle/releases/download/v'
+		function getFileName(version) {
+			var url = 'https://github.com/AxaGuilDEv/Skizzle/releases/download/'
 			var macOSFileName = url + version + '/Skizzle-macos.dmg';
 			var windowsFileName = url + version + '/Skizzle-setup.exe';
 
@@ -149,20 +147,33 @@
 		}
 
 		document.addEventListener('DOMContentLoaded', () => {
-			var { macOSFileName, windowsFileName } = getFileName();
 			var downloadButtons = document.querySelectorAll('.skz-download');
 			var secondariesDownloadButtons = document.querySelectorAll('.skz-secondary-download');
-
 			var isMacOS = getIsMacOS();
 
-			downloadButtons.forEach(function (button) {
+			downloadButtons.forEach(button => {
 				button.textContent = isMacOS ? 'Download Skizzle for macOS' : 'Download Skizzle for Windows';
-				button.setAttribute('href', isMacOS ? macOSFileName : windowsFileName);
 			});
 
-			secondariesDownloadButtons.forEach(function (button) {
+			secondariesDownloadButtons.forEach(button => {
 				button.textContent = isMacOS ? 'Download Skizzle for Windows' : 'Download Skizzle for macOS';
-				button.setAttribute('href', isMacOS ? windowsFileName : macOSFileName);
+			});
+
+			fetch('https://api.github.com/repos/AxaGuilDEv/Skizzle/releases/latest', {
+				headers: {
+					'Accept': 'application/vnd.github.v3+json'
+				}
+			}).then(response => response.json()).then(data => {
+				var version = data.tag_name;
+				var { macOSFileName, windowsFileName } = getFileName(version);
+
+				downloadButtons.forEach(button => {
+					button.setAttribute('href', isMacOS ? macOSFileName : windowsFileName);
+				});
+
+				secondariesDownloadButtons.forEach(button => {
+					button.setAttribute('href', isMacOS ? windowsFileName : macOSFileName);
+				});
 			});
 		});
 	</script>
