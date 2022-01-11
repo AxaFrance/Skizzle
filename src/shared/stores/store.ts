@@ -1,4 +1,4 @@
-import type { ProviderEnum } from 'models/skizzle';
+import type { CustomListType, ProviderEnum } from 'models/skizzle';
 import { addItem, getItem } from 'shared/utils';
 import { get, writable } from 'svelte/store';
 
@@ -16,12 +16,29 @@ const getStoreValue = <T>(storage: T, initialValue: T) => {
 	return storage ? storage : initialValue;
 };
 
+const initStorage = () => {
+	let customLists:CustomListType[] = getItem('customLists');
+
+	customLists = customLists.map(list => {
+		const cleanList = {...list};
+
+		if(cleanList.repositoryId) {
+			cleanList.repositoriesId = [cleanList.repositoryId];
+			delete cleanList.repositoryId;
+		}
+		
+		return cleanList;
+	});
+
+	addItem('customLists', customLists);
+}
+
 export const createStore = <T>(
 	initialValue: T,
 	{ key, predicate, subscriber }: StoreOptionsType<T>
 ) => {
+	initStorage();
 	const storage = getItem<T>(key);
-
 	const store = writable(getStoreValue(storage, initialValue));
 	const { subscribe, set, update } = store;
 
