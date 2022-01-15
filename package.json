@@ -94,7 +94,7 @@
 		"electron-log": "^4.4.4",
 		"electron-updater": "4.6.1",
 		"ky": "^0.28.7",
-		"marked": "^4.0.8",
+		"marked": "^4.0.10",
 		"sirv-cli": "^2.0.1",
 		"uuid": "^8.3.2"
 	},
