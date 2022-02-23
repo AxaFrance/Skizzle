@@ -3,7 +3,7 @@ import type {
 	GithubOrganizationApiType
 } from 'models/api';
 import type { OrganizationType } from 'models/skizzle';
-import { From, Mapper } from './Mapper';
+import { type From, Mapper } from './Mapper';
 
 export type OrganizationMapperType = From<
 	AzureDevOpsOrganizationApiType,

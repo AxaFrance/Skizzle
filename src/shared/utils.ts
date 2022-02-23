@@ -80,7 +80,11 @@ export const getPullRequestsFromCustomSettings = (
 	settings: CustomListType
 ): PullRequestType[] => {
 	return pullRequests
-		.filter(pr => !settings.repositoriesId.length || settings.repositoriesId.includes(String(pr.repositoryId)))
+		.filter(
+			pr =>
+				!settings.repositoriesId.length ||
+				settings.repositoriesId.includes(String(pr.repositoryId))
+		)
 		.filter(
 			pr =>
 				settings.tags.length === 0 ||
@@ -114,4 +118,4 @@ export const displayLocalNotification = (text: string) => {
 			id: uuidv4()
 		}
 	]);
-}
+};

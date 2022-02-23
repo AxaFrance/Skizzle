@@ -1,9 +1,12 @@
 import {
 	OAuthAzureDevOpsConfig,
-	OAuthAzureDevOpsConfigType
+	type OAuthAzureDevOpsConfigType
 } from './OAuthAzureDevOpsConfig.provider';
-import { OAuthGithubConfig, OAuthGithubConfigType } from './OAuthGithubConfig.provider';
-import { OAuthConfig, OAuthConfigType } from './OAuthConfig.provider';
+import {
+	OAuthGithubConfig,
+	type OAuthGithubConfigType
+} from './OAuthGithubConfig.provider';
+import { OAuthConfig, type OAuthConfigType } from './OAuthConfig.provider';
 
 export { OAuthAzureDevOpsConfig, OAuthGithubConfig, OAuthConfig };
 

@@ -1,4 +1,4 @@
-import { OAuthConfig, OAuthConfigType } from './OAuthConfig.provider';
+import { OAuthConfig, type OAuthConfigType } from './OAuthConfig.provider';
 import { ProviderEnum } from 'models/skizzle';
 
 export type OAuthGithubConfigType = {

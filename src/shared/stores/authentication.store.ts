@@ -3,12 +3,12 @@ import type { OAuthConfigType } from 'providers';
 import { ProviderEnum } from 'models/skizzle';
 import {
 	OAuthAzureDevOpsConfig,
-	OAuthAzureDevOpsConfigType
+	type OAuthAzureDevOpsConfigType
 } from 'providers/OAuthAzureDevOpsConfig.provider';
 import { getToken } from 'shared/token';
 import {
 	OAuthGithubConfig,
-	OAuthGithubConfigType
+	type OAuthGithubConfigType
 } from 'providers/OAuthGithubConfig.provider';
 import { createStore } from './store';
 import type { Dictionary } from 'shared/utils';

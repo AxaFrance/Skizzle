@@ -1,6 +1,6 @@
 import type { AzureDevOpsProfileApiType, GithubProfileApiType } from 'models/api';
 import type { ProfileType } from 'models/skizzle';
-import { From, Mapper } from './Mapper';
+import { type From, Mapper } from './Mapper';
 
 export type ProfileMapperType = From<AzureDevOpsProfileApiType, GithubProfileApiType>;
 

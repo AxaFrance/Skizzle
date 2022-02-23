@@ -17,21 +17,23 @@ const getStoreValue = <T>(storage: T, initialValue: T) => {
 };
 
 const initStorage = () => {
-	let customLists:CustomListType[] = getItem('customLists');
+	let customLists: CustomListType[] = getItem('customLists');
 
-	customLists = customLists.map(list => {
-		const cleanList = {...list};
+	if (customLists) {
+		customLists = customLists.map(list => {
+			const cleanList = { ...list };
 
-		if(cleanList.repositoryId) {
-			cleanList.repositoriesId = [cleanList.repositoryId];
-			delete cleanList.repositoryId;
-		}
-		
-		return cleanList;
-	});
+			if (cleanList.repositoryId) {
+				cleanList.repositoriesId = [cleanList.repositoryId];
+				delete cleanList.repositoryId;
+			}
 
-	addItem('customLists', customLists);
-}
+			return cleanList;
+		});
+
+		addItem('customLists', customLists);
+	}
+};
 
 export const createStore = <T>(
 	initialValue: T,

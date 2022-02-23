@@ -21,9 +21,14 @@
 	<div class="main">
 		<h1>Congratulations, you just found a bug on Skizzle 🎉</h1>
 		<p>
-			Well done, this one is pretty rare because Skizzle development team is not aware of it yet. Now you can
+			Well done, this one is pretty rare because Skizzle development team is not aware of it
+			yet. Now you can
 			{#if $isElectron}
-				<button class="link" on:click={() => remote.openDefaultBrowser('https://github.com/AxaGuilDEv/Skizzle/issues/new')}>
+				<button
+					class="link"
+					on:click={() =>
+						remote.openDefaultBrowser('https://github.com/AxaGuilDEv/Skizzle/issues/new')}
+				>
 					create a Github issue
 				</button>.
 			{:else}
