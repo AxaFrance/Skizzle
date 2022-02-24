@@ -18,7 +18,7 @@
 	.checkbox {
 		display: flex;
 	}
-	
+
 	label {
 		position: relative;
 		display: inline-flex;

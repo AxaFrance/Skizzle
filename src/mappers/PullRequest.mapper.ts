@@ -1,13 +1,13 @@
 import { CommentMapper } from './Comment.mapper';
-import { ReviewMapper, ReviewMapperType } from './Review.mapper';
+import { ReviewMapper, type ReviewMapperType } from './Review.mapper';
 import {
-	AzureDevOpsPullRequestApiType,
+	type AzureDevOpsPullRequestApiType,
 	AzureDevOpsVoteEnum,
-	GithubPullRequestApiType,
+	type GithubPullRequestApiType,
 	GithubVoteEnum
 } from 'models/api';
 import type { PullRequestType } from 'models/skizzle';
-import { From, Mapper } from './Mapper';
+import { type From, Mapper } from './Mapper';
 import { get } from 'svelte/store';
 import { profiles } from 'shared/stores/default.store';
 

@@ -24,11 +24,7 @@
 	};
 </script>
 
-<Tabs
-	current={provider}
-	data={tabs}
-	on:change={onTabChange}
-/>
+<Tabs current={provider} data={tabs} on:change={onTabChange} />
 <div class="content">
 	<ProviderAccount {provider} />
 </div>

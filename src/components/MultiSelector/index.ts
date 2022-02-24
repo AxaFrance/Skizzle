@@ -1,1 +1,1 @@
-export { default } from './MultiSelector.svelte';
+export { default } from './MultiSelector.svelte';

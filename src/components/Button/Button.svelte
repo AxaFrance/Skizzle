@@ -1,31 +1,38 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 
-  let className = '';
+	let className = '';
 	export { className as class };
-  export let danger:boolean = false;
-  export let clear:boolean = false;
-  export let disabled:boolean = false;
-  export let light:boolean = false;
-  export let type:string = '';
+	export let danger: boolean = false;
+	export let clear: boolean = false;
+	export let disabled: boolean = false;
+	export let light: boolean = false;
+	export let type: string = '';
 
-  const dispatch = createEventDispatcher();
-  const onClick = (event) => {
-    if(type !== "submit") {
-      event.preventDefault();
-    }
-    dispatch('click');
-  }
+	const dispatch = createEventDispatcher();
+	const onClick = event => {
+		if (type !== 'submit') {
+			event.preventDefault();
+		}
+		dispatch('click');
+	};
 </script>
 
-
-<button {type} class={className} class:danger class:clear class:light on:click={onClick} {disabled}>
-  <slot/>
+<button
+	{type}
+	class={className}
+	class:danger
+	class:clear
+	class:light
+	on:click={onClick}
+	{disabled}
+>
+	<slot />
 </button>
 
 <style>
-  button {
-    display: flex;
+	button {
+		display: flex;
 		align-items: center;
 		padding: 0.5rem 1rem;
 		color: #fff;
@@ -34,17 +41,17 @@
 		border: none;
 		background-color: var(--color);
 		transition: opacity linear 0.2s;
-  }
+	}
 
-  .danger {
-    background-color: red;
-  }
+	.danger {
+		background-color: red;
+	}
 
-  .clear {
-    background-color: #333;
-  }
+	.clear {
+		background-color: #333;
+	}
 
-  .light {
-    background-color: transparent;
-  }
+	.light {
+		background-color: transparent;
+	}
 </style>

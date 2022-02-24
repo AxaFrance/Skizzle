@@ -1,11 +1,11 @@
 import {
-	AzureDevOpsReviewApiType,
+	type AzureDevOpsReviewApiType,
 	AzureDevOpsVoteEnum,
-	GithubReviewApiType,
+	type GithubReviewApiType,
 	GithubVoteEnum
 } from 'models/api';
 import type { ReviewType } from 'models/skizzle';
-import { From, Mapper } from './Mapper';
+import { type From, Mapper } from './Mapper';
 
 export type ReviewMapperType = From<AzureDevOpsReviewApiType, GithubReviewApiType>;
 

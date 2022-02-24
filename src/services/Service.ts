@@ -6,7 +6,6 @@ import type {
 } from 'models/skizzle';
 import { ProviderEnum } from 'models/skizzle';
 import { isFetchingData, profiles } from 'shared/stores/default.store';
-import type { Dictionary } from 'shared/utils';
 import { OAuthAzureDevOpsService } from './OAuthAzureDevOps.service';
 import { OAuthGithubService } from './OAuthGithub.service';
 
@@ -27,7 +26,7 @@ export interface IService {
 }
 
 export class Service {
-	private static readonly INSTANCES: Dictionary<IService> = {
+	private static readonly INSTANCES: Record<ProviderEnum, IService> = {
 		[ProviderEnum.AzureDevOps]: OAuthAzureDevOpsService.getInstance(),
 		[ProviderEnum.Github]: OAuthGithubService.getInstance()
 	};

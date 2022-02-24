@@ -1,6 +1,6 @@
 import type { AzureDevOpsRepositoryApiType, GithubRepositoryApiType } from 'models/api';
 import type { RepositoryType } from 'models/skizzle';
-import { From, Mapper } from './Mapper';
+import { type From, Mapper } from './Mapper';
 
 export type RepositoryMapperType = From<
 	AzureDevOpsRepositoryApiType,

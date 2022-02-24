@@ -1,7 +1,9 @@
 import type {
 	CommonType,
-	CustomListType, NotificationType,
-	ProfileType, PullRequestType,
+	CustomListType,
+	NotificationType,
+	ProfileType,
+	PullRequestType,
 	RepositoryType,
 	SettingsType
 } from 'models/skizzle';
